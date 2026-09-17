@@ -180,7 +180,7 @@
 
                 <!-- Attendance History Modal -->
                 <div class="modal fade" id="historyModal${section.id}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title"><i class="bi bi-clock-history me-2"></i>Attendance History - ${section.courseCode}</h5>
@@ -192,10 +192,10 @@
                                     <div class="p-4 text-center text-muted">No attendance records found.</div>
                                 </c:if>
                                 <c:if test="${not empty records}">
-                                    <table class="table mb-0">
+                                    <table class="table mb-0 align-middle">
                                         <thead class="table-light">
                                             <tr>
-                                                <th class="ps-3">Date</th>
+                                                <th class="ps-3">Date (Click to View Roster)</th>
                                                 <th>Present</th>
                                                 <th>Absent</th>
                                                 <th>Late/Excused</th>
@@ -204,10 +204,42 @@
                                         <tbody>
                                             <c:forEach var="record" items="${records}">
                                                 <tr>
-                                                    <td class="ps-3"><strong>${record.sessionDate}</strong></td>
+                                                    <td class="ps-3">
+                                                        <a class="text-decoration-none fw-bold" data-bs-toggle="collapse" href="#recordDetails_${section.id}_${record.id}" role="button" aria-expanded="false">
+                                                            <i class="bi bi-chevron-down me-1 small"></i>${record.sessionDate}
+                                                        </a>
+                                                    </td>
                                                     <td><span class="badge bg-success">${record.presentCount}</span></td>
                                                     <td><span class="badge bg-danger">${record.absentCount}</span></td>
                                                     <td><span class="badge bg-secondary">${record.lateCount + record.excusedCount}</span></td>
+                                                </tr>
+                                                <tr class="collapse" id="recordDetails_${section.id}_${record.id}">
+                                                    <td colspan="4" class="p-0 bg-light">
+                                                        <div class="p-3 border-start border-end">
+                                                            <div class="small fw-semibold text-muted mb-2">Student Statuses for ${record.sessionDate}:</div>
+                                                            <div class="row row-cols-1 row-cols-md-2 g-2">
+                                                                <c:forEach var="entry" items="${record.entries}">
+                                                                    <div class="col">
+                                                                        <div class="d-flex justify-content-between align-items-center p-2 border rounded bg-white small">
+                                                                            <div>
+                                                                                <strong>${entry.studentName}</strong>
+                                                                                <span class="text-muted ms-1">(${entry.studentIdentifier})</span>
+                                                                            </div>
+                                                                            <div>
+                                                                                <c:choose>
+                                                                                    <c:when test="${entry.status == 'PRESENT'}"><span class="badge bg-success">Present</span></c:when>
+                                                                                    <c:when test="${entry.status == 'ABSENT'}"><span class="badge bg-danger">Absent</span></c:when>
+                                                                                    <c:when test="${entry.status == 'LATE'}"><span class="badge bg-warning text-dark">Late</span></c:when>
+                                                                                    <c:when test="${entry.status == 'EXCUSED'}"><span class="badge bg-info text-dark">Excused</span></c:when>
+                                                                                    <c:otherwise><span class="badge bg-secondary">${entry.status}</span></c:otherwise>
+                                                                                </c:choose>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </c:forEach>
+                                                            </div>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
