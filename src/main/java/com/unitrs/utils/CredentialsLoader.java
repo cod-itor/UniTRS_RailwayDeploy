@@ -24,14 +24,43 @@ public class CredentialsLoader {
             LOGGER.log(Level.WARNING, "Unable to load properties file", e);
         }
 
-        if (System.getenv("DB_URL") != null) {
-            properties.setProperty("db.url", System.getenv("DB_URL"));
+        String dbUrl = System.getenv("DB_URL");
+        if (dbUrl == null) {
+            dbUrl = System.getenv("MYSQL_URL");
         }
-        if (System.getenv("DB_USER") != null) {
-            properties.setProperty("db.user", System.getenv("DB_USER"));
+        if (dbUrl == null) {
+            dbUrl = System.getenv("MYSQLURL");
         }
-        if (System.getenv("DB_PASSWORD") != null) {
-            properties.setProperty("db.password", System.getenv("DB_PASSWORD"));
+        if (dbUrl != null) {
+            if (dbUrl.startsWith("mysql://")) {
+                dbUrl = "jdbc:" + dbUrl;
+            }
+            if (!dbUrl.contains("?")) {
+                dbUrl += "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            }
+            properties.setProperty("db.url", dbUrl);
+        } else if (System.getenv("MYSQLHOST") != null) {
+            String host = System.getenv("MYSQLHOST");
+            String port = System.getenv("MYSQLPORT") != null ? System.getenv("MYSQLPORT") : "3306";
+            String database = System.getenv("MYSQLDATABASE") != null ? System.getenv("MYSQLDATABASE") : "railway";
+            String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            properties.setProperty("db.url", url);
+        }
+
+        String dbUser = System.getenv("DB_USER");
+        if (dbUser == null) {
+            dbUser = System.getenv("MYSQLUSER");
+        }
+        if (dbUser != null) {
+            properties.setProperty("db.user", dbUser);
+        }
+
+        String dbPassword = System.getenv("DB_PASSWORD");
+        if (dbPassword == null) {
+            dbPassword = System.getenv("MYSQLPASSWORD");
+        }
+        if (dbPassword != null) {
+            properties.setProperty("db.password", dbPassword);
         }
 
         if (!properties.containsKey("db.url")) {
