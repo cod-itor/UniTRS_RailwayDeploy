@@ -110,7 +110,7 @@
         <div class="logo"><i class="bi bi-mortarboard-fill"></i> Create Student Account</div>
         <div class="subtitle">Join University Management System</div>
 
-        <!-- Error message -->
+        <!-- Error message (e.g. duplicate full name or duplicate student ID from database) -->
         <c:if test="${not empty error}">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>${error}
@@ -141,7 +141,6 @@
                         <input type="text" class="form-control" id="firstName" name="firstName"
                                placeholder="e.g. Sok" required autocomplete="off" value="${firstName}">
                     </div>
-                    <div id="firstNameValidation" class="validation-message text-muted"></div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="lastName" class="form-label fw-semibold">Last Name <span class="text-danger">*</span></label>
@@ -150,11 +149,9 @@
                         <input type="text" class="form-control" id="lastName" name="lastName"
                                placeholder="e.g. Dara" required autocomplete="off" value="${lastName}">
                     </div>
-                    <div id="lastNameValidation" class="validation-message text-muted"></div>
                 </div>
             </div>
             <input type="hidden" id="fullName" name="fullName" value="${fullName}">
-            <div id="fullNameValidation" class="validation-message mb-3" style="display: none; margin-top: -0.5rem;"></div>
             
             <!-- Email -->
             <div class="mb-3">
@@ -248,11 +245,8 @@
         const identifierVal = document.getElementById('identifierValidation');
         
         const firstNameInput = document.getElementById('firstName');
-        const firstNameVal = document.getElementById('firstNameValidation');
         const lastNameInput = document.getElementById('lastName');
-        const lastNameVal = document.getElementById('lastNameValidation');
         const fullNameInput = document.getElementById('fullName');
-        const fullNameVal = document.getElementById('fullNameValidation');
         
         const emailInput = document.getElementById('email');
         const emailVal = document.getElementById('emailValidation');
@@ -266,14 +260,6 @@
         
         const submitBtn = document.getElementById('submitBtn');
         const registerForm = document.getElementById('registerForm');
-
-        // State
-        let isIdentifierValid = false;
-        let isEmailValid = false;
-        let isFullNameValid = false;
-        let identifierTimer;
-        let emailTimer;
-        let fullNameTimer;
         
         // Handle server-side major restoration
         const serverMajor = '${major}';
@@ -295,166 +281,37 @@
             el.innerHTML = iconClass ? `<i class="bi ${iconClass}"></i> ${msg}` : msg;
         }
 
-        // --- Student ID Validation (Numbers only & exact 8 digits) ---
-        function validateIdentifier() {
-            clearTimeout(identifierTimer);
+        // --- Student ID Real-Time Input Filter (Numbers only warning) ---
+        identifierInput.addEventListener('input', () => {
             const rawVal = identifierInput.value.trim();
-            isIdentifierValid = false;
-            
             if (!rawVal) {
-                setValidationMsg(identifierVal, 'Student ID is required', 'text-danger-custom', 'bi-x-circle');
+                setValidationMsg(identifierVal, 'Must be an 8-digit Student ID (numbers only, e.g. 60240512).', 'text-muted', '');
                 return;
             }
-
-            // Real-time check: Numbers only
             if (!/^\d+$/.test(rawVal)) {
                 setValidationMsg(identifierVal, 'Numbers only! Letters and special characters are not allowed.', 'text-danger-custom', 'bi-x-circle');
-                return;
-            }
-
-            // Check exact length: 8 digits
-            if (rawVal.length !== 8) {
-                setValidationMsg(identifierVal, 'Student ID must be exactly 8 digits (current: ' + rawVal.length + '/8)', 'text-warning-custom', 'bi-exclamation-circle');
-                return;
-            }
-
-            // Uniqueness check via API
-            setValidationMsg(identifierVal, 'Checking Student ID availability...', 'text-warning-custom', 'bi-hourglass-split');
-            
-            identifierTimer = setTimeout(async () => {
-                try {
-                    const res = await fetch(contextPath + '/api/validate/identifier?identifier=' + encodeURIComponent(rawVal));
-                    if (res.status === 429) {
-                        setValidationMsg(identifierVal, 'Rate limit reached, please wait a moment', 'text-warning-custom', 'bi-hourglass-split');
-                        return;
-                    }
-                    const data = await res.json();
-                    if (data.available) {
-                        isIdentifierValid = true;
-                        setValidationMsg(identifierVal, 'Student ID is available!', 'text-success-custom', 'bi-check-circle');
-                    } else {
-                        isIdentifierValid = false;
-                        setValidationMsg(identifierVal, 'This Student ID is already registered.', 'text-danger-custom', 'bi-x-circle');
-                    }
-                } catch (e) {
-                    setValidationMsg(identifierVal, 'Error checking Student ID availability', 'text-danger-custom', 'bi-exclamation-circle');
-                }
-            }, 300);
-        }
-
-        identifierInput.addEventListener('input', validateIdentifier);
-
-        // --- First and Last Name Validation & Full Name Overlap Prevention ---
-        function validateNames() {
-            clearTimeout(fullNameTimer);
-            const first = firstNameInput.value.trim();
-            const last = lastNameInput.value.trim();
-            isFullNameValid = false;
-
-            let firstOk = false;
-            let lastOk = false;
-
-            if (!first) {
-                setValidationMsg(firstNameVal, 'First name is required', 'text-danger-custom', 'bi-x-circle');
-            } else if (!/^[a-zA-Z\s'-]+$/.test(first)) {
-                setValidationMsg(firstNameVal, 'Letters only', 'text-danger-custom', 'bi-x-circle');
+            } else if (rawVal.length < 8) {
+                setValidationMsg(identifierVal, 'Student ID must be 8 digits (current: ' + rawVal.length + '/8)', 'text-warning-custom', 'bi-info-circle');
             } else {
-                firstOk = true;
-                setValidationMsg(firstNameVal, '', 'text-success-custom', '');
+                setValidationMsg(identifierVal, '8-digit Student ID format valid', 'text-success-custom', 'bi-check-circle');
             }
+        });
 
-            if (!last) {
-                setValidationMsg(lastNameVal, 'Last name is required', 'text-danger-custom', 'bi-x-circle');
-            } else if (!/^[a-zA-Z\s'-]+$/.test(last)) {
-                setValidationMsg(lastNameVal, 'Letters only', 'text-danger-custom', 'bi-x-circle');
-            } else {
-                lastOk = true;
-                setValidationMsg(lastNameVal, '', 'text-success-custom', '');
-            }
-
-            if (!firstOk || !lastOk) {
-                fullNameVal.style.display = 'none';
-                return;
-            }
-
-            const combined = (first + ' ' + last).replace(/\s+/g, ' ').trim();
-            if (fullNameInput) {
-                fullNameInput.value = combined;
-            }
-
-            fullNameVal.style.display = 'flex';
-            setValidationMsg(fullNameVal, 'Checking name availability...', 'text-warning-custom', 'bi-hourglass-split');
-
-            fullNameTimer = setTimeout(async () => {
-                try {
-                    const res = await fetch(contextPath + '/api/validate/fullname?fullName=' + encodeURIComponent(combined));
-                    const data = await res.json();
-                    if (data.available) {
-                        isFullNameValid = true;
-                        setValidationMsg(fullNameVal, 'Full name is available: ' + combined, 'text-success-custom', 'bi-check-circle');
-                    } else {
-                        isFullNameValid = false;
-                        setValidationMsg(fullNameVal, 'A user with this full name already exists in the system (' + combined + '). Duplicate names are not allowed.', 'text-danger-custom', 'bi-x-circle');
-                    }
-                } catch (e) {
-                    isFullNameValid = true;
-                    fullNameVal.style.display = 'none';
-                }
-            }, 350);
-        }
-
-        firstNameInput.addEventListener('input', validateNames);
-        lastNameInput.addEventListener('input', validateNames);
-
-        // --- Email Validation ---
-        function validateEmail() {
-            clearTimeout(emailTimer);
+        // --- Email Input Formatting Helper ---
+        emailInput.addEventListener('input', () => {
             const val = emailInput.value.trim().toLowerCase();
-            isEmailValid = false;
-            
             if (!val) {
                 setValidationMsg(emailVal, 'Make sure the email can receive messages because you need to verify it.', 'text-muted', '');
                 return;
             }
-            
-            if (val.length > 64) {
-                setValidationMsg(emailVal, 'Max 64 characters allowed', 'text-danger-custom', 'bi-x-circle');
-                return;
-            }
-
             if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(val)) {
-                setValidationMsg(emailVal, 'Please enter a valid email address format', 'text-danger-custom', 'bi-x-circle');
-                return;
-            }
-            
-            if (!val.endsWith('@gmail.com') && !val.endsWith('.edu')) {
+                setValidationMsg(emailVal, 'Please enter a valid email format', 'text-warning-custom', 'bi-info-circle');
+            } else if (!val.endsWith('@gmail.com') && !val.endsWith('.edu')) {
                 setValidationMsg(emailVal, 'Must be a @gmail.com or .edu address', 'text-danger-custom', 'bi-x-circle');
-                return;
+            } else {
+                setValidationMsg(emailVal, 'Valid email format', 'text-success-custom', 'bi-check-circle');
             }
-            
-            setValidationMsg(emailVal, 'Checking availability...', 'text-warning-custom', 'bi-hourglass-split');
-            emailTimer = setTimeout(async () => {
-                try {
-                    const res = await fetch(contextPath + '/api/validate/email?email=' + encodeURIComponent(val));
-                    if (res.status === 429) {
-                        setValidationMsg(emailVal, 'Rate limit reached, please wait a moment', 'text-warning-custom', 'bi-hourglass-split');
-                        return;
-                    }
-                    const data = await res.json();
-                    if (data.available) {
-                        isEmailValid = true;
-                        setValidationMsg(emailVal, 'Email is available!', 'text-success-custom', 'bi-check-circle');
-                    } else {
-                        isEmailValid = false;
-                        setValidationMsg(emailVal, 'Email is already registered', 'text-danger-custom', 'bi-x-circle');
-                    }
-                } catch (e) {
-                    setValidationMsg(emailVal, 'Error checking availability', 'text-danger-custom', 'bi-exclamation-circle');
-                }
-            }, 300);
-        }
-
-        emailInput.addEventListener('input', validateEmail);
+        });
 
         // --- Major Handling ---
         majorSelect.addEventListener('change', () => {
@@ -553,27 +410,36 @@
             }
         }
 
-        // --- Form Submit Check ---
+        // --- Form Submit Check: Validate & Submit to Database ---
         registerForm.addEventListener('submit', (e) => {
-            validateNames();
-
-            if (!isIdentifierValid) {
+            const rawId = identifierInput.value.trim();
+            if (!rawId || !/^\d{8}$/.test(rawId)) {
                 e.preventDefault();
-                alert("Please provide a valid 8-digit Student ID (numbers only).");
+                alert("Please provide a valid 8-digit Student ID (numbers only, e.g. 60240512).");
                 identifierInput.focus();
                 return;
             }
 
-            if (!isFullNameValid) {
+            const first = firstNameInput.value.trim();
+            const last = lastNameInput.value.trim();
+            if (!first || !last) {
                 e.preventDefault();
-                alert("Please check your First and Last Name. Duplicate full names are not allowed in the system.");
-                firstNameInput.focus();
+                alert("Please provide both First Name and Last Name.");
+                if (!first) firstNameInput.focus();
+                else lastNameInput.focus();
                 return;
             }
 
-            if (!isEmailValid) {
+            if (!/^[a-zA-Z\s'-]+$/.test(first) || !/^[a-zA-Z\s'-]+$/.test(last)) {
                 e.preventDefault();
-                alert("Please provide a valid, available @gmail.com or .edu email address.");
+                alert("First and Last Name can only contain letters, spaces, hyphens, and apostrophes.");
+                return;
+            }
+
+            const emailVal = emailInput.value.trim().toLowerCase();
+            if (!emailVal || !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(emailVal) || (!emailVal.endsWith('@gmail.com') && !emailVal.endsWith('.edu'))) {
+                e.preventDefault();
+                alert("Please provide a valid @gmail.com or .edu email address.");
                 emailInput.focus();
                 return;
             }
@@ -599,9 +465,7 @@
                 return;
             }
 
-            // Sync fullName input value before submitting
-            const first = firstNameInput.value.trim();
-            const last = lastNameInput.value.trim();
+            // Sync fullName before submitting to server
             fullNameInput.value = (first + ' ' + last).replace(/\s+/g, ' ').trim();
 
             // Map major safely without creating duplicate hidden inputs
@@ -636,17 +500,6 @@
             }
             if (!majorInput.value && localStorage.getItem('reg_majorInput')) {
                 majorInput.value = localStorage.getItem('reg_majorInput');
-            }
-
-            // Trigger validations for pre-filled fields
-            if (identifierInput.value.trim() !== '') {
-                validateIdentifier();
-            }
-            if (firstNameInput.value.trim() !== '' || lastNameInput.value.trim() !== '') {
-                validateNames();
-            }
-            if (emailInput.value.trim() !== '') {
-                validateEmail();
             }
         });
 
