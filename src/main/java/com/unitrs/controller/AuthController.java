@@ -6,6 +6,7 @@ import com.unitrs.exceptions.ValidationException;
 import com.unitrs.model.entity.Role;
 import com.unitrs.model.entity.User;
 import com.unitrs.repository.OtpRepository;
+import com.unitrs.repository.SchoolRepository;
 import com.unitrs.repository.UserRepository;
 import com.unitrs.service.OtpService;
 import com.unitrs.service.UserService;
@@ -27,12 +28,14 @@ public class AuthController extends HttpServlet {
 
     private UserService userService;
     private OtpService otpService;
+    private SchoolRepository schoolRepository;
 
     @Override
     public void init() throws ServletException {
         UserRepository userRepository = new UserRepository();
         this.userService = new UserServiceImpl(userRepository);
         this.otpService = new OtpServiceImpl(new OtpRepository(), userRepository);
+        this.schoolRepository = new SchoolRepository();
     }
 
     @Override
@@ -49,6 +52,7 @@ public class AuthController extends HttpServlet {
                 handleLogout(request, response);
                 break;
             case "/register":
+                request.setAttribute("schools", schoolRepository.findAll());
                 request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
                 break;
             case "/verify-registration":
@@ -277,7 +281,12 @@ public class AuthController extends HttpServlet {
     private void handleRegister(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        boolean isAjax = "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))
+                || (request.getHeader("Accept") != null && request.getHeader("Accept").contains("application/json"));
+
         String identifier = request.getParameter("identifier");
+        String roleStr = request.getParameter("role");
+        String applicantType = request.getParameter("applicantType");
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String fullName = request.getParameter("fullName");
@@ -289,15 +298,39 @@ public class AuthController extends HttpServlet {
         String confirmPassword = request.getParameter("confirmPassword");
         String major = request.getParameter("major");
 
+        if ((identifier == null || identifier.trim().isEmpty()) && "new".equalsIgnoreCase(applicantType)) {
+            identifier = "9" + (int) (1000000 + (Math.random() * 9000000));
+        }
+
         try {
-            userService.registerNewUser(identifier, fullName, email, password, confirmPassword, major);
+            userService.registerNewUser(identifier, fullName, email, password, confirmPassword, major, roleStr);
 
             otpService.sendRegistrationOtp(email, fullName);
+
+            if (isAjax) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_OK);
+                String safeApplicantType = applicantType != null ? applicantType : "";
+                String safeRole = roleStr != null ? roleStr : "student";
+                response.getWriter().write("{\"status\":\"success\",\"applicantType\":\"" + safeApplicantType
+                        + "\",\"role\":\"" + safeRole + "\",\"email\":\"" + email + "\"}");
+                return;
+            }
 
             response.sendRedirect(request.getContextPath() + "/auth/verify-registration?email="
                     + URLEncoder.encode(email, StandardCharsets.UTF_8));
 
         } catch (ValidationException e) {
+            if (isAjax) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                String msg = e.getMessage() != null ? e.getMessage().replace("\"", "\\\"") : "Validation failed";
+                response.getWriter().write("{\"status\":\"error\",\"message\":\"" + msg + "\"}");
+                return;
+            }
+
             request.setAttribute("error", e.getMessage());
             request.setAttribute("identifier", identifier);
             request.setAttribute("firstName", firstName);
@@ -305,6 +338,7 @@ public class AuthController extends HttpServlet {
             request.setAttribute("fullName", fullName);
             request.setAttribute("email", email);
             request.setAttribute("major", major);
+            request.setAttribute("schools", schoolRepository.findAll());
             request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
         }
     }
@@ -312,13 +346,31 @@ public class AuthController extends HttpServlet {
     private void handleVerifyRegistration(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        boolean isAjax = "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))
+                || (request.getHeader("Accept") != null && request.getHeader("Accept").contains("application/json"));
+
         String email = request.getParameter("email");
         String otpCode = request.getParameter("otpCode");
 
         if (otpService.verifyRegistrationOtp(email, otpCode)) {
-            request.setAttribute("success", "Email verified successfully! Your account is now pending administrator approval. You will receive an email once your account has been verified.");
-            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+            if (isAjax) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write("{\"status\":\"success\",\"message\":\"Email verified successfully! Your account is now pending administrator approval.\"}");
+                return;
+            }
+            request.setAttribute("email", email);
+            request.setAttribute("verifiedSuccess", true);
+            request.getRequestDispatcher("/WEB-INF/views/auth/verify_registration.jsp").forward(request, response);
         } else {
+            if (isAjax) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"status\":\"error\",\"message\":\"Invalid or expired verification code. Please check your code or request a new one.\"}");
+                return;
+            }
             request.setAttribute("email", email);
             request.setAttribute("error", "Invalid or expired verification code. Please check your code or request a new one.");
             request.getRequestDispatcher("/WEB-INF/views/auth/verify_registration.jsp").forward(request, response);
@@ -328,11 +380,22 @@ public class AuthController extends HttpServlet {
     private void handleResendRegistrationOtp(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        boolean isAjax = "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))
+                || (request.getHeader("Accept") != null && request.getHeader("Accept").contains("application/json"));
+
         String email = request.getParameter("email");
         if (email != null && !email.trim().isEmpty()) {
             User user = userService.findByEmail(email.trim());
             String fullName = user != null ? user.getFullName() : null;
             otpService.sendRegistrationOtp(email.trim(), fullName);
+        }
+
+        if (isAjax) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write("{\"status\":\"success\",\"message\":\"A new verification code has been sent to your email.\"}");
+            return;
         }
 
         request.setAttribute("email", email);
