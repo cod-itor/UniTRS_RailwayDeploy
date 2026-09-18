@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
     
     <style>
         :root {
@@ -239,6 +240,9 @@
             <i class="bi bi-mortarboard-fill"></i> UniTRS
         </a>
         <div class="d-flex align-items-center gap-3">
+            <button id="pwaInstallBtn" class="btn btn-outline-info rounded-pill px-3 py-2 text-decoration-none" style="display: none;" onclick="window.promptPwaInstall()">
+                <i class="bi bi-download me-1"></i> Install App
+            </button>
             <a href="${pageContext.request.contextPath}/auth/login" class="text-decoration-none nav-link-custom d-none d-md-block">Sign In</a>
             <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-gradient text-decoration-none">Get Started</a>
         </div>

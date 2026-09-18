@@ -1,10 +1,18 @@
 package com.unitrs.controller;
 
 import com.unitrs.exceptions.ValidationException;
+import com.unitrs.model.entity.ClassSection;
 import com.unitrs.model.entity.Course;
+import com.unitrs.model.entity.Room;
+import com.unitrs.model.entity.School;
 import com.unitrs.model.entity.Term;
+import com.unitrs.model.entity.User;
+import com.unitrs.repository.ClassSectionRepository;
 import com.unitrs.repository.CourseRepository;
+import com.unitrs.repository.RoomRepository;
+import com.unitrs.repository.SchoolRepository;
 import com.unitrs.repository.TermRepository;
+import com.unitrs.repository.UserRepository;
 import com.unitrs.service.DeanService;
 import com.unitrs.service.impl.DeanServiceImpl;
 import jakarta.servlet.ServletException;
@@ -27,10 +35,10 @@ public class DeanController extends HttpServlet {
         this.deanService = new DeanServiceImpl(
             new CourseRepository(),
             new TermRepository(),
-            new com.unitrs.repository.UserRepository(),
-            new com.unitrs.repository.ClassSectionRepository(),
-            new com.unitrs.repository.RoomRepository(),
-            new com.unitrs.repository.SchoolRepository()
+            new UserRepository(),
+            new ClassSectionRepository(),
+            new RoomRepository(),
+            new SchoolRepository()
         );
     }
 
@@ -46,21 +54,21 @@ public class DeanController extends HttpServlet {
     }
 
     private void showDashboard(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        com.unitrs.model.entity.User user = (com.unitrs.model.entity.User) request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
         if (user == null || user.getDeanSchoolId() == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
         int deanSchoolId = user.getDeanSchoolId();
-        com.unitrs.model.entity.School deanSchool = deanService.getSchoolById(deanSchoolId);
+        School deanSchool = deanService.getSchoolById(deanSchoolId);
 
         List<Course> courses = deanService.getAllCourses(deanSchoolId);
         List<Term> terms = deanService.getAllTerms();
         Map<Term, List<Course>> curriculumMap = deanService.getTermCurriculumMap(deanSchoolId);
-        List<com.unitrs.model.entity.User> professors = deanService.getAllProfessors();
-        List<com.unitrs.model.entity.User> students = deanService.getStudentsBySchool(deanSchoolId);
-        List<com.unitrs.model.entity.ClassSection> sections = deanService.getAllClassSections();
-        List<com.unitrs.model.entity.Room> rooms = deanService.getAllRooms();
+        List<User> professors = deanService.getAllProfessors();
+        List<User> students = deanService.getStudentsBySchool(deanSchoolId);
+        List<ClassSection> sections = deanService.getAllClassSections();
+        List<Room> rooms = deanService.getAllRooms();
 
         request.setAttribute("deanSchool", deanSchool);
         request.setAttribute("courses", courses);
@@ -84,7 +92,7 @@ public class DeanController extends HttpServlet {
         String activeTab = "courses";
 
         try {
-            com.unitrs.model.entity.User user = (com.unitrs.model.entity.User) request.getSession().getAttribute("user");
+            User user = (User) request.getSession().getAttribute("user");
             if (user == null || user.getDeanSchoolId() == null) {
                 response.sendRedirect(request.getContextPath() + "/auth/login");
                 return;

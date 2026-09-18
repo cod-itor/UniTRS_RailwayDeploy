@@ -14,7 +14,6 @@ public class OtpServiceImpl implements OtpService {
 
     private static final Logger LOGGER = Logger.getLogger(OtpServiceImpl.class.getName());
     private static final SecureRandom RANDOM = new SecureRandom();
-
     private final OtpRepository otpRepository;
     private final UserRepository userRepository;
 
@@ -35,7 +34,8 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public void sendRegistrationOtp(String email, String fullName) {
-        if (email == null || email.trim().isEmpty()) return;
+        if (email == null || email.trim().isEmpty())
+            return;
         String code = generateSixDigitCode();
         otpRepository.createOtp(email.trim(), code, "REGISTRATION", 10);
         EmailService.sendRegistrationOtp(email.trim(), fullName, code);
@@ -44,7 +44,8 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public void sendLogin2faOtp(User user) {
-        if (user == null || user.getEmail() == null) return;
+        if (user == null || user.getEmail() == null)
+            return;
         String code = generateSixDigitCode();
         otpRepository.createOtp(user.getEmail().trim(), code, "LOGIN_2FA", 5);
         EmailService.sendLogin2faOtp(user.getEmail().trim(), user.getFullName(), code);
@@ -53,7 +54,8 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public void sendPasswordResetOtp(String email) {
-        if (email == null || email.trim().isEmpty()) return;
+        if (email == null || email.trim().isEmpty())
+            return;
         User user = userRepository.findByEmail(email.trim());
         if (user == null) {
             LOGGER.warning("Password reset requested for non-existing email: " + email);
@@ -67,7 +69,8 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public boolean verifyRegistrationOtp(String email, String otpCode) {
-        if (email == null || otpCode == null) return false;
+        if (email == null || otpCode == null)
+            return false;
         OtpVerification otp = otpRepository.findValidOtp(email.trim(), otpCode.trim(), "REGISTRATION");
         if (otp != null) {
             otpRepository.markOtpUsed(otp.getId());
@@ -79,7 +82,8 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public boolean verifyLogin2faOtp(String email, String otpCode) {
-        if (email == null || otpCode == null) return false;
+        if (email == null || otpCode == null)
+            return false;
         OtpVerification otp = otpRepository.findValidOtp(email.trim(), otpCode.trim(), "LOGIN_2FA");
         if (otp != null) {
             otpRepository.markOtpUsed(otp.getId());
@@ -91,7 +95,8 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public boolean verifyPasswordResetOtp(String email, String otpCode) {
-        if (email == null || otpCode == null) return false;
+        if (email == null || otpCode == null)
+            return false;
         OtpVerification otp = otpRepository.findValidOtp(email.trim(), otpCode.trim(), "PASSWORD_RESET");
         if (otp != null) {
             otpRepository.markOtpUsed(otp.getId());

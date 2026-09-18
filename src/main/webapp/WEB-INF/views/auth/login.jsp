@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
     <style>
         body {
             background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #0d6efd 100%);

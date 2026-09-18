@@ -1,6 +1,8 @@
 package com.unitrs.service.impl;
 
+import com.unitrs.model.entity.Role;
 import com.unitrs.model.entity.User;
+import com.unitrs.utils.EmailService;
 import com.unitrs.utils.SecurityUtils;
 import com.unitrs.exceptions.UnauthorizedException;
 import com.unitrs.exceptions.UserNotFoundException;
@@ -10,15 +12,16 @@ import com.unitrs.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userDAO;
+    private final UserRepository userRepository;
 
     @Override
     public User authenticate(String identifierOrEmail, String password) {
-        User user = userDAO.findByEmailOrIdentifier(identifierOrEmail);
+        User user = userRepository.findByEmailOrIdentifier(identifierOrEmail);
         if (user == null) {
             throw new UserNotFoundException("User not found or inactive.");
         }
@@ -34,86 +37,90 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Password must be at least 6 characters.");
         }
         user.setPassword(SecurityUtils.hashPassword(user.getPassword()));
-        return userDAO.register(user);
+        return userRepository.register(user);
     }
 
     @Override
     public User findById(int id) {
-        return userDAO.findById(id);
+        return userRepository.findById(id);
     }
 
     @Override
     public User findByIdentifier(String identifier) {
-        return userDAO.findByIdentifier(identifier);
+        return userRepository.findByIdentifier(identifier);
     }
 
     @Override
     public User findByEmail(String email) {
-        return userDAO.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Override
     public boolean isIdentifierAvailable(String identifier) {
-        if (identifier == null || identifier.trim().isEmpty()) return false;
-        return userDAO.findByIdentifier(identifier.trim()) == null;
+        if (identifier == null || identifier.trim().isEmpty())
+            return false;
+        return userRepository.findByIdentifier(identifier.trim()) == null;
     }
 
     @Override
     public boolean isEmailAvailable(String email) {
-        if (email == null || email.trim().isEmpty()) return false;
-        return userDAO.findByEmail(email.trim()) == null;
+        if (email == null || email.trim().isEmpty())
+            return false;
+        return userRepository.findByEmail(email.trim()) == null;
     }
 
     @Override
     public boolean isFullNameAvailable(String fullName) {
-        if (fullName == null || fullName.trim().isEmpty()) return false;
-        return userDAO.findByFullName(fullName.trim()) == null;
+        if (fullName == null || fullName.trim().isEmpty())
+            return false;
+        return userRepository.findByFullName(fullName.trim()) == null;
     }
 
     @Override
     public List<User> findUnverifiedStudents() {
-        return userDAO.findUnverifiedStudents();
+        return userRepository.findUnverifiedStudents();
     }
 
     @Override
     public List<User> findUnverifiedUsers() {
-        return userDAO.findUnverifiedUsers();
+        return userRepository.findUnverifiedUsers();
     }
 
     @Override
     public boolean verifyStudent(int id, boolean isVerified) {
-        return userDAO.verifyStudent(id, isVerified);
+        return userRepository.verifyStudent(id, isVerified);
     }
 
     @Override
     public boolean updateRole(int id, String role) {
-        return userDAO.updateRole(id, role);
+        return userRepository.updateRole(id, role);
     }
 
     @Override
     public void processUserVerification(int userId, boolean isApproved, String role) {
-        userDAO.verifyStudent(userId, isApproved);
+        userRepository.verifyStudent(userId, isApproved);
         if (isApproved && role != null && !role.trim().isEmpty()) {
-            userDAO.updateRole(userId, role);
+            userRepository.updateRole(userId, role);
         }
         if (isApproved) {
-            User user = userDAO.findById(userId);
+            User user = userRepository.findById(userId);
             if (user != null && user.getEmail() != null && !user.getEmail().trim().isEmpty()) {
                 String assignedRole = (role != null && !role.trim().isEmpty()) ? role : user.getRole().name();
-                java.util.concurrent.CompletableFuture.runAsync(() -> {
-                    com.unitrs.utils.EmailService.sendAccountVerifiedEmail(user.getEmail().trim(), user.getFullName(), assignedRole);
+                CompletableFuture.runAsync(() -> {
+                    EmailService.sendAccountVerifiedEmail(user.getEmail().trim(), user.getFullName(), assignedRole);
                 });
             }
         }
     }
 
     @Override
-    public void registerNewUser(String identifier, String fullName, String email, String password, String confirmPassword, String major) {
+    public void registerNewUser(String identifier, String fullName, String email, String password,
+            String confirmPassword, String major) {
         if (identifier == null || identifier.trim().isEmpty() ||
-            fullName == null || fullName.trim().isEmpty() ||
-            email == null || email.trim().isEmpty() ||
-            password == null || password.trim().isEmpty() ||
-            confirmPassword == null || confirmPassword.trim().isEmpty()) {
+                fullName == null || fullName.trim().isEmpty() ||
+                email == null || email.trim().isEmpty() ||
+                password == null || password.trim().isEmpty() ||
+                confirmPassword == null || confirmPassword.trim().isEmpty()) {
             throw new ValidationException("Please fill in all required fields.");
         }
 
@@ -195,7 +202,7 @@ public class UserServiceImpl implements UserService {
         newUser.setEmail(email);
         newUser.setPassword(password);
         newUser.setMajor(major != null && !major.isEmpty() ? major : null);
-        newUser.setRole(com.unitrs.model.entity.Role.STUDENT);
+        newUser.setRole(Role.STUDENT);
         newUser.setVerified(false);
         newUser.setActive(true);
 
@@ -207,22 +214,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllUsers() {
-        return userDAO.findAllUsers();
+        return userRepository.findAllUsers();
     }
 
     @Override
     public List<User> findProfessors() {
-        return userDAO.findProfessors();
+        return userRepository.findProfessors();
     }
 
     @Override
     public boolean updateUserStatus(int id, boolean isActive) {
-        return userDAO.updateUserStatus(id, isActive);
+        return userRepository.updateUserStatus(id, isActive);
     }
 
     @Override
     public boolean createStaffUser(User user) {
-        return userDAO.createStaffUser(user);
+        return userRepository.createStaffUser(user);
     }
 
     @Override
@@ -255,13 +262,13 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Password must contain at least one special character.");
         }
 
-        User user = userDAO.findByEmail(email.trim());
+        User user = userRepository.findByEmail(email.trim());
         if (user == null) {
             throw new ValidationException("No user found with the provided email.");
         }
 
         String hashedPassword = SecurityUtils.hashPassword(newPassword);
-        boolean updated = userDAO.updatePasswordByEmail(email.trim(), hashedPassword);
+        boolean updated = userRepository.updatePasswordByEmail(email.trim(), hashedPassword);
         if (!updated) {
             throw new ValidationException("Failed to update password. Please try again.");
         }
@@ -269,6 +276,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateTwoFactorEnabled(int userId, boolean enabled) {
-        userDAO.updateTwoFactorEnabled(userId, enabled);
+        userRepository.updateTwoFactorEnabled(userId, enabled);
     }
 }

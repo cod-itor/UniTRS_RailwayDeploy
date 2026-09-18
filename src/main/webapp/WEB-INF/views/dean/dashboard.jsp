@@ -8,6 +8,7 @@
     <title>Dean Dashboard - Curriculum Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
     <style>
         body { background-color: #f8f9fa; }
         .dashboard-header { background-color: #343a40; color: white; padding: 2rem 0; margin-bottom: 2rem; }

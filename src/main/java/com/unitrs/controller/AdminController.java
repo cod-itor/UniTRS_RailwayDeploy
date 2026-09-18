@@ -1,8 +1,16 @@
 package com.unitrs.controller;
 
+import com.unitrs.model.entity.School;
 import com.unitrs.model.entity.User;
+import com.unitrs.repository.ClassSectionRepository;
+import com.unitrs.repository.CourseRepository;
+import com.unitrs.repository.RoomRepository;
+import com.unitrs.repository.SchoolRepository;
+import com.unitrs.repository.TermRepository;
 import com.unitrs.repository.UserRepository;
+import com.unitrs.service.DeanService;
 import com.unitrs.service.UserService;
+import com.unitrs.service.impl.DeanServiceImpl;
 import com.unitrs.service.impl.UserServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,7 +19,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/admin/*")
 public class AdminController extends HttpServlet {
@@ -92,19 +102,19 @@ public class AdminController extends HttpServlet {
     private void showDeans(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        com.unitrs.service.DeanService deanService = new com.unitrs.service.impl.DeanServiceImpl(
-                new com.unitrs.repository.CourseRepository(),
-                new com.unitrs.repository.TermRepository(),
-                new com.unitrs.repository.UserRepository(),
-                new com.unitrs.repository.ClassSectionRepository(),
-                new com.unitrs.repository.RoomRepository(),
-                new com.unitrs.repository.SchoolRepository()
+        DeanService deanService = new DeanServiceImpl(
+                new CourseRepository(),
+                new TermRepository(),
+                new UserRepository(),
+                new ClassSectionRepository(),
+                new RoomRepository(),
+                new SchoolRepository()
         );
 
-        List<com.unitrs.model.entity.School> schools = deanService.getAllSchools();
+        List<School> schools = deanService.getAllSchools();
         List<User> professors = userService.findProfessors();
 
-        java.util.Map<Integer, User> currentDeans = new java.util.HashMap<>();
+        Map<Integer, User> currentDeans = new HashMap<>();
         for (User prof : professors) {
             if (prof.getDeanSchoolId() != null) {
                 currentDeans.put(prof.getDeanSchoolId(), prof);
