@@ -1,7 +1,12 @@
 package com.unitrs.service;
 
+import com.unitrs.model.entity.ClassSection;
 import com.unitrs.model.entity.Course;
+import com.unitrs.model.entity.Room;
+import com.unitrs.model.entity.School;
 import com.unitrs.model.entity.Term;
+import com.unitrs.model.entity.User;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +20,9 @@ public interface DeanService {
 
     void updateCourse(int id, String courseCode, String courseTitle, int credits, int schoolId);
 
-    List<com.unitrs.model.entity.School> getAllSchools();
+    List<School> getAllSchools();
 
-    com.unitrs.model.entity.School getSchoolById(int id);
+    School getSchoolById(int id);
 
     List<Term> getAllTerms();
 
@@ -33,18 +38,18 @@ public interface DeanService {
 
     Map<Term, List<Course>> getTermCurriculumMap(int schoolId);
 
-    List<com.unitrs.model.entity.User> getAllProfessors();
+    List<User> getAllProfessors();
 
-    List<com.unitrs.model.entity.User> getStudentsBySchool(int schoolId);
+    List<User> getStudentsBySchool(int schoolId);
 
-    List<com.unitrs.model.entity.ClassSection> getAllClassSections();
+    List<ClassSection> getAllClassSections();
 
     void addClassSection(int termId, int courseId, int professorId, int roomId, String sessionShift, String daysOfWeek,
             String academicYear);
 
     void removeClassSection(int id);
 
-    List<com.unitrs.model.entity.Room> getAllRooms();
+    List<Room> getAllRooms();
 
     void addRoom(String roomNumber, int floorNumber, int capacity);
 

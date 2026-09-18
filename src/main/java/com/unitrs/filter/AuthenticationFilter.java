@@ -1,6 +1,7 @@
 package com.unitrs.filter;
 
 import com.unitrs.model.entity.Role;
+import com.unitrs.model.entity.User;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,7 +32,7 @@ public class AuthenticationFilter implements Filter {
         boolean isLoggedIn = (session != null && session.getAttribute("user") != null);
 
         if (isLoggedIn && (path.equals("/") || path.equals("/index.jsp") || path.equals("/auth/login") || path.equals("/auth/register"))) {
-            com.unitrs.model.entity.User userObj = (com.unitrs.model.entity.User) session.getAttribute("user");
+            User userObj = (User) session.getAttribute("user");
             Role userRole = (Role) session.getAttribute("role");
 
             if (userObj != null && userObj.getDeanSchoolId() != null) {
@@ -60,6 +61,10 @@ public class AuthenticationFilter implements Filter {
         if (path.startsWith("/auth/")
                 || path.startsWith("/api/validate/")
                 || path.startsWith("/static/")
+                || path.equals("/manifest.json")
+                || path.equals("/sw.js")
+                || path.equals("/offline.html")
+                || path.equals("/favicon.ico")
                 || path.equals("/error.jsp")
                 || path.equals("/")
                 || path.equals("/index.jsp")) {
@@ -73,7 +78,7 @@ public class AuthenticationFilter implements Filter {
         }
 
         Role userRole = (Role) session.getAttribute("role");
-        com.unitrs.model.entity.User userObj = (com.unitrs.model.entity.User) session.getAttribute("user");
+        User userObj = (User) session.getAttribute("user");
         boolean isAssignedDean = userObj != null && userObj.getDeanSchoolId() != null;
 
         if (path.startsWith("/admin/") && userRole != Role.ADMIN) {

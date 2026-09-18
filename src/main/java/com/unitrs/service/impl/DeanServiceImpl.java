@@ -1,38 +1,31 @@
 package com.unitrs.service.impl;
 
 import com.unitrs.exceptions.ValidationException;
+import com.unitrs.model.entity.ClassSection;
 import com.unitrs.model.entity.Course;
+import com.unitrs.model.entity.Room;
+import com.unitrs.model.entity.School;
+import com.unitrs.model.entity.SessionShift;
 import com.unitrs.model.entity.Term;
-import com.unitrs.repository.CourseRepository;
-import com.unitrs.repository.TermRepository;
+import com.unitrs.model.entity.User;
+import com.unitrs.repository.*;
 import com.unitrs.service.DeanService;
+import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+@RequiredArgsConstructor
 
 public class DeanServiceImpl implements DeanService {
 
     private final CourseRepository courseRepository;
     private final TermRepository termRepository;
-    private final com.unitrs.repository.UserRepository userRepository;
-    private final com.unitrs.repository.ClassSectionRepository classSectionRepository;
-    private final com.unitrs.repository.RoomRepository roomRepository;
-    private final com.unitrs.repository.SchoolRepository schoolRepository;
+    private final UserRepository userRepository;
+    private final ClassSectionRepository classSectionRepository;
+    private final RoomRepository roomRepository;
+    private final SchoolRepository schoolRepository;
 
-    public DeanServiceImpl(CourseRepository courseRepository,
-                           TermRepository termRepository,
-                           com.unitrs.repository.UserRepository userRepository,
-                           com.unitrs.repository.ClassSectionRepository classSectionRepository,
-                           com.unitrs.repository.RoomRepository roomRepository,
-                           com.unitrs.repository.SchoolRepository schoolRepository) {
-        this.courseRepository = courseRepository;
-        this.termRepository = termRepository;
-        this.userRepository = userRepository;
-        this.classSectionRepository = classSectionRepository;
-        this.roomRepository = roomRepository;
-        this.schoolRepository = schoolRepository;
-    }
 
     @Override
     public List<Course> getAllCourses(int schoolId) {
@@ -45,12 +38,12 @@ public class DeanServiceImpl implements DeanService {
     }
 
     @Override
-    public List<com.unitrs.model.entity.School> getAllSchools() {
+    public List<School> getAllSchools() {
         return schoolRepository.findAll();
     }
 
     @Override
-    public com.unitrs.model.entity.School getSchoolById(int id) {
+    public School getSchoolById(int id) {
         return schoolRepository.findById(id);
     }
 
@@ -194,17 +187,17 @@ public class DeanServiceImpl implements DeanService {
     }
 
     @Override
-    public List<com.unitrs.model.entity.User> getAllProfessors() {
+    public List<User> getAllProfessors() {
         return userRepository.findProfessors();
     }
 
     @Override
-    public List<com.unitrs.model.entity.User> getStudentsBySchool(int schoolId) {
+    public List<User> getStudentsBySchool(int schoolId) {
         return userRepository.findStudentsBySchool(schoolId);
     }
 
     @Override
-    public List<com.unitrs.model.entity.ClassSection> getAllClassSections() {
+    public List<ClassSection> getAllClassSections() {
         return classSectionRepository.findAllSections();
     }
 
@@ -224,7 +217,7 @@ public class DeanServiceImpl implements DeanService {
         }
 
         String exactDays = daysOfWeek.trim();
-        List<com.unitrs.model.entity.ClassSection> allSections = classSectionRepository.findAllSections();
+        List<ClassSection> allSections = classSectionRepository.findAllSections();
 
         if ("Mon-Fri".equalsIgnoreCase(exactDays)) {
             int totalCourses = coursesInTerm.size();
@@ -239,7 +232,7 @@ public class DeanServiceImpl implements DeanService {
             exactDays = calculateMonFriDays(totalCourses, slotIndex);
         }
 
-        for (com.unitrs.model.entity.ClassSection existing : allSections) {
+        for (ClassSection existing : allSections) {
             if (existing.getProfessorId() == professorId &&
                 existing.getAcademicYear().equals(academicYear.trim()) &&
                 existing.getTermId() == termId &&
@@ -251,7 +244,7 @@ public class DeanServiceImpl implements DeanService {
             }
         }
 
-        for (com.unitrs.model.entity.ClassSection existing : allSections) {
+        for (ClassSection existing : allSections) {
             if (existing.getRoomId() == roomId &&
                 existing.getAcademicYear().equals(academicYear.trim()) &&
                 existing.getTermId() == termId &&
@@ -263,12 +256,12 @@ public class DeanServiceImpl implements DeanService {
             }
         }
 
-        com.unitrs.model.entity.ClassSection section = new com.unitrs.model.entity.ClassSection();
+        ClassSection section = new ClassSection();
         section.setTermId(termId);
         section.setCourseId(courseId);
         section.setProfessorId(professorId);
         section.setRoomId(roomId);
-        section.setSessionShift(com.unitrs.model.entity.SessionShift.valueOf(sessionShift));
+        section.setSessionShift(SessionShift.valueOf(sessionShift));
         section.setDaysOfWeek(exactDays);
         section.setAcademicYear(academicYear.trim());
 
@@ -327,7 +320,7 @@ public class DeanServiceImpl implements DeanService {
     }
 
     @Override
-    public List<com.unitrs.model.entity.Room> getAllRooms() {
+    public List<Room> getAllRooms() {
         return roomRepository.findAllRooms();
     }
 
@@ -340,12 +333,12 @@ public class DeanServiceImpl implements DeanService {
             throw new ValidationException("Capacity must be greater than 0.");
         }
 
-        com.unitrs.model.entity.Room existing = roomRepository.findByNumber(roomNumber.trim());
+        Room existing = roomRepository.findByNumber(roomNumber.trim());
         if (existing != null) {
             throw new ValidationException("Room " + roomNumber + " already exists.");
         }
 
-        com.unitrs.model.entity.Room room = new com.unitrs.model.entity.Room();
+        Room room = new Room();
         room.setRoomNumber(roomNumber.trim());
         room.setFloorNumber(floorNumber);
         room.setCapacity(capacity);
@@ -370,9 +363,9 @@ public class DeanServiceImpl implements DeanService {
 
         while (roomsCreated < numberOfRooms) {
             String roomNumStr = "Room " + (baseRoomNumber + i);
-            com.unitrs.model.entity.Room existing = roomRepository.findByNumber(roomNumStr);
+            Room existing = roomRepository.findByNumber(roomNumStr);
             if (existing == null) {
-                com.unitrs.model.entity.Room room = new com.unitrs.model.entity.Room();
+                Room room = new Room();
                 room.setRoomNumber(roomNumStr);
                 room.setFloorNumber(floorNumber);
                 room.setCapacity(capacityPerRoom);
