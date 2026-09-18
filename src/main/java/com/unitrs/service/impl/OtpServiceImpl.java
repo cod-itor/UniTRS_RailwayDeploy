@@ -71,7 +71,6 @@ public class OtpServiceImpl implements OtpService {
         OtpVerification otp = otpRepository.findValidOtp(email.trim(), otpCode.trim(), "REGISTRATION");
         if (otp != null) {
             otpRepository.markOtpUsed(otp.getId());
-            userRepository.verifyUserByEmail(email.trim());
             LOGGER.info("Registration OTP verified for " + email);
             return true;
         }

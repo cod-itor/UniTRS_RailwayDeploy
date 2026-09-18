@@ -16,7 +16,7 @@ public class EmailService {
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
-    public static boolean sendOtpEmail(String toEmail, String subject, String title, String message, String otpCode) {
+    public static boolean sendHtmlEmail(String toEmail, String subject, String htmlContent) {
         String apiKey = CredentialsLoader.getResendApiKey();
         String from = CredentialsLoader.getMailFrom();
 
@@ -25,12 +25,9 @@ public class EmailService {
             LOGGER.info("[EmailService LOCAL MOCK] No Resend API Key found.");
             LOGGER.info("To: " + toEmail);
             LOGGER.info("Subject: " + subject);
-            LOGGER.info("OTP CODE: " + otpCode);
             LOGGER.info("===============================================================");
             return true;
         }
-
-        String htmlContent = buildEmailTemplate(title, message, otpCode);
 
         String jsonPayload = String.format(
                 "{\"from\":\"%s\",\"to\":[\"%s\"],\"subject\":\"%s\",\"html\":\"%s\"}",
@@ -64,6 +61,22 @@ public class EmailService {
         }
     }
 
+    public static boolean sendOtpEmail(String toEmail, String subject, String title, String message, String otpCode) {
+        String apiKey = CredentialsLoader.getResendApiKey();
+        if (apiKey == null || apiKey.trim().isEmpty() || apiKey.equals("re_your_api_key_here")) {
+            LOGGER.info("===============================================================");
+            LOGGER.info("[EmailService LOCAL MOCK] No Resend API Key found.");
+            LOGGER.info("To: " + toEmail);
+            LOGGER.info("Subject: " + subject);
+            LOGGER.info("OTP CODE: " + otpCode);
+            LOGGER.info("===============================================================");
+            return true;
+        }
+
+        String htmlContent = buildEmailTemplate(title, message, otpCode);
+        return sendHtmlEmail(toEmail, subject, htmlContent);
+    }
+
     public static boolean sendRegistrationOtp(String toEmail, String fullName, String otpCode) {
         String title = "Verify Your UniTRS Account";
         String message = "Hello " + (fullName != null ? fullName : "Student") + ",<br><br>"
@@ -83,6 +96,48 @@ public class EmailService {
         String message = "Hello " + (fullName != null ? fullName : "User") + ",<br><br>"
                 + "We received a request to reset your UniTRS account password. Use the verification code below to set your new password:";
         return sendOtpEmail(toEmail, "UniTRS - Password Reset Code", title, message, otpCode);
+    }
+
+    public static boolean sendAccountVerifiedEmail(String toEmail, String fullName, String role) {
+        String roleDisplay = (role != null && !role.isEmpty())
+                ? role.substring(0, 1).toUpperCase() + role.substring(1).toLowerCase()
+                : "Student";
+        String title = "Account Verified Successfully!";
+        String message = "Hello " + (fullName != null ? fullName : "User") + ",<br><br>"
+                + "Great news! Your UniTRS <strong>" + roleDisplay + "</strong> account has been reviewed and approved by the school administrator.<br><br>"
+                + "You can now sign in and begin using the UniTRS University Management System.";
+        String htmlContent = buildApprovalTemplate(title, message);
+        return sendHtmlEmail(toEmail, "UniTRS - Your Account Has Been Verified!", htmlContent);
+    }
+
+    private static String buildApprovalTemplate(String title, String message) {
+        return "<!DOCTYPE html>"
+                + "<html>"
+                + "<head><meta charset='UTF-8'></head>"
+                + "<body style='font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; background-color: #0f172a; margin: 0; padding: 30px 15px; color: #f8fafc;'>"
+                + "<div style='max-width: 520px; margin: 0 auto; background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);'>"
+                + "  <div style='background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 24px; text-align: center;'>"
+                + "    <h1 style='margin: 0; font-size: 24px; color: #ffffff; letter-spacing: 1px; font-weight: 800;'>UniTRS</h1>"
+                + "    <p style='margin: 4px 0 0 0; font-size: 13px; color: #d1fae5;'>University Management System</p>"
+                + "  </div>"
+                + "  <div style='padding: 30px;'>"
+                + "    <h2 style='margin-top: 0; font-size: 20px; color: #34d399; text-align: center;'>" + title + "</h2>"
+                + "    <p style='font-size: 14px; line-height: 1.6; color: #cbd5e1;'>" + message + "</p>"
+                + "    <div style='margin: 28px 0; text-align: center;'>"
+                + "      <a href='https://unitrs.ditarector.tech/auth/login' style='display: inline-block; background-color: #0284c7; color: #ffffff; text-decoration: none; padding: 14px 32px; font-size: 16px; font-weight: 700; border-radius: 8px;'>"
+                + "        Sign In to UniTRS"
+                + "      </a>"
+                + "    </div>"
+                + "    <p style='font-size: 13px; color: #94a3b8; text-align: center; margin: 0;'>"
+                + "      If you have questions, please contact your university administrator."
+                + "    </p>"
+                + "  </div>"
+                + "  <div style='background-color: #0f172a; padding: 16px; text-align: center; border-top: 1px solid #334155; font-size: 12px; color: #64748b;'>"
+                + "    &copy; " + java.time.Year.now().getValue() + " UniTRS. All rights reserved."
+                + "  </div>"
+                + "</div>"
+                + "</body>"
+                + "</html>";
     }
 
     private static String buildEmailTemplate(String title, String message, String otpCode) {

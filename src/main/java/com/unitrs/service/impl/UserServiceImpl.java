@@ -90,6 +90,15 @@ public class UserServiceImpl implements UserService {
         if (isApproved && role != null && !role.trim().isEmpty()) {
             userDAO.updateRole(userId, role);
         }
+        if (isApproved) {
+            User user = userDAO.findById(userId);
+            if (user != null && user.getEmail() != null && !user.getEmail().trim().isEmpty()) {
+                String assignedRole = (role != null && !role.trim().isEmpty()) ? role : user.getRole().name();
+                java.util.concurrent.CompletableFuture.runAsync(() -> {
+                    com.unitrs.utils.EmailService.sendAccountVerifiedEmail(user.getEmail().trim(), user.getFullName(), assignedRole);
+                });
+            }
+        }
     }
 
     @Override

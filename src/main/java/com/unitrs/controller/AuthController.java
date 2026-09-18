@@ -150,9 +150,9 @@ public class AuthController extends HttpServlet {
             }
 
             if (!user.isVerified()) {
-                otpService.sendRegistrationOtp(user.getEmail(), user.getFullName());
-                response.sendRedirect(request.getContextPath() + "/auth/verify-registration?email="
-                        + URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8) + "&unverified=true");
+                request.setAttribute("error", "Your account is pending administrator verification. You will receive an email once your account has been approved.");
+                request.setAttribute("identifier", identifierOrEmail);
+                request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -309,7 +309,7 @@ public class AuthController extends HttpServlet {
         String otpCode = request.getParameter("otpCode");
 
         if (otpService.verifyRegistrationOtp(email, otpCode)) {
-            request.setAttribute("success", "Your email has been verified successfully! You can now sign in.");
+            request.setAttribute("success", "Email verified successfully! Your account is now pending administrator approval. You will receive an email once your account has been verified.");
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         } else {
             request.setAttribute("email", email);

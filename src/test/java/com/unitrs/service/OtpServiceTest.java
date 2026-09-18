@@ -104,7 +104,7 @@ public class OtpServiceTest {
 
         boolean successVerify = otpService.verifyRegistrationOtp(email, storedOtp.getOtpCode());
         assertTrue(successVerify);
-        assertTrue(userVerifiedCalled);
+        assertFalse(userVerifiedCalled);
         assertTrue(storedOtp.isUsed());
 
         boolean reuseVerify = otpService.verifyRegistrationOtp(email, storedOtp.getOtpCode());
