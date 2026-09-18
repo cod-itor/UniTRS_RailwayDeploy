@@ -20,5 +20,14 @@ public class User {
     private boolean isActive;
     private Integer deanSchoolId;
     private Integer studentSchoolId;
+    private boolean twoFactorEnabled;
     private Timestamp createdAt;
+
+    public boolean isTwoFactorEnabled() {
+        return twoFactorEnabled;
+    }
+
+    public void setTwoFactorEnabled(boolean twoFactorEnabled) {
+        this.twoFactorEnabled = twoFactorEnabled;
+    }
 }

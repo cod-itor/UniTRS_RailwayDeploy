@@ -221,4 +221,51 @@ public class UserServiceImpl implements UserService {
     public boolean createStaffUser(User user) {
         return userDAO.createStaffUser(user);
     }
+
+    @Override
+    public void resetPassword(String email, String newPassword, String confirmPassword) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new ValidationException("Email is required.");
+        }
+        if (newPassword == null || newPassword.isEmpty() || confirmPassword == null || confirmPassword.isEmpty()) {
+            throw new ValidationException("Both password fields are required.");
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            throw new ValidationException("Passwords do not match.");
+        }
+        if (newPassword.length() < 8) {
+            throw new ValidationException("Password must be at least 8 characters long.");
+        }
+        if (newPassword.length() > 64) {
+            throw new ValidationException("Password must not exceed 64 characters.");
+        }
+        if (!newPassword.matches(".*[A-Z].*")) {
+            throw new ValidationException("Password must contain at least one uppercase letter.");
+        }
+        if (!newPassword.matches(".*[a-z].*")) {
+            throw new ValidationException("Password must contain at least one lowercase letter.");
+        }
+        if (!newPassword.matches(".*[0-9].*")) {
+            throw new ValidationException("Password must contain at least one number.");
+        }
+        if (!newPassword.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?~`].*")) {
+            throw new ValidationException("Password must contain at least one special character.");
+        }
+
+        User user = userDAO.findByEmail(email.trim());
+        if (user == null) {
+            throw new ValidationException("No user found with the provided email.");
+        }
+
+        String hashedPassword = SecurityUtils.hashPassword(newPassword);
+        boolean updated = userDAO.updatePasswordByEmail(email.trim(), hashedPassword);
+        if (!updated) {
+            throw new ValidationException("Failed to update password. Please try again.");
+        }
+    }
+
+    @Override
+    public void updateTwoFactorEnabled(int userId, boolean enabled) {
+        userDAO.updateTwoFactorEnabled(userId, enabled);
+    }
 }

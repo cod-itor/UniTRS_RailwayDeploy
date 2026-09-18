@@ -1,5 +1,5 @@
 target/
-test/
+/test/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -38,3 +38,16 @@ build/
 ### Mac OS ###
 .DS_Store
 .idea
+
+### Local Credentials & Environment Variables (NEVER COMMITTED) ###
+*.local.properties
+*local.properties
+db.local.properties
+credentials.properties
+secret.properties
+secrets.properties
+*.secret
+*.secrets
+.env
+.env.*
+*.env

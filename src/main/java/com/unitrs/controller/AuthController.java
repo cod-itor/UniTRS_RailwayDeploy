@@ -1,11 +1,15 @@
 package com.unitrs.controller;
 
-import com.unitrs.model.entity.Role;
-import com.unitrs.model.entity.User;
 import com.unitrs.exceptions.UnauthorizedException;
 import com.unitrs.exceptions.UserNotFoundException;
+import com.unitrs.exceptions.ValidationException;
+import com.unitrs.model.entity.Role;
+import com.unitrs.model.entity.User;
+import com.unitrs.repository.OtpRepository;
 import com.unitrs.repository.UserRepository;
+import com.unitrs.service.OtpService;
 import com.unitrs.service.UserService;
+import com.unitrs.service.impl.OtpServiceImpl;
 import com.unitrs.service.impl.UserServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,15 +19,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/auth/*")
 public class AuthController extends HttpServlet {
 
     private UserService userService;
+    private OtpService otpService;
 
     @Override
     public void init() throws ServletException {
-        this.userService = new UserServiceImpl(new UserRepository());
+        UserRepository userRepository = new UserRepository();
+        this.userService = new UserServiceImpl(userRepository);
+        this.otpService = new OtpServiceImpl(new OtpRepository(), userRepository);
     }
 
     @Override
@@ -31,13 +40,37 @@ public class AuthController extends HttpServlet {
             throws ServletException, IOException {
 
         String path = request.getPathInfo();
+        if (path == null) {
+            path = "/login";
+        }
 
-        if ("/logout".equals(path)) {
-            handleLogout(request, response);
-        } else if ("/register".equals(path)) {
-            request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+        switch (path) {
+            case "/logout":
+                handleLogout(request, response);
+                break;
+            case "/register":
+                request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
+                break;
+            case "/verify-registration":
+                request.setAttribute("email", request.getParameter("email"));
+                request.getRequestDispatcher("/WEB-INF/views/auth/verify_registration.jsp").forward(request, response);
+                break;
+            case "/verify-2fa":
+                handleGet2fa(request, response);
+                break;
+            case "/forgot-password":
+                request.getRequestDispatcher("/WEB-INF/views/auth/forgot_password.jsp").forward(request, response);
+                break;
+            case "/verify-reset-otp":
+                request.setAttribute("email", request.getParameter("email"));
+                request.getRequestDispatcher("/WEB-INF/views/auth/verify_reset_otp.jsp").forward(request, response);
+                break;
+            case "/set-new-password":
+                handleGetSetNewPassword(request, response);
+                break;
+            default:
+                request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+                break;
         }
     }
 
@@ -46,13 +79,47 @@ public class AuthController extends HttpServlet {
             throws ServletException, IOException {
 
         String path = request.getPathInfo();
+        if (path == null) {
+            path = "/login";
+        }
 
-        if ("/login".equals(path)) {
-            handleLogin(request, response);
-        } else if ("/register".equals(path)) {
-            handleRegister(request, response);
-        } else {
-            response.sendRedirect(request.getContextPath() + "/auth/login");
+        switch (path) {
+            case "/login":
+                handleLogin(request, response);
+                break;
+            case "/register":
+                handleRegister(request, response);
+                break;
+            case "/verify-registration":
+                handleVerifyRegistration(request, response);
+                break;
+            case "/resend-registration-otp":
+                handleResendRegistrationOtp(request, response);
+                break;
+            case "/verify-2fa":
+                handleVerify2fa(request, response);
+                break;
+            case "/resend-2fa-otp":
+                handleResend2faOtp(request, response);
+                break;
+            case "/forgot-password":
+                handleForgotPassword(request, response);
+                break;
+            case "/verify-reset-otp":
+                handleVerifyResetOtp(request, response);
+                break;
+            case "/resend-reset-otp":
+                handleResendResetOtp(request, response);
+                break;
+            case "/set-new-password":
+                handleSetNewPassword(request, response);
+                break;
+            case "/update-2fa":
+                handleUpdate2fa(request, response);
+                break;
+            default:
+                response.sendRedirect(request.getContextPath() + "/auth/login");
+                break;
         }
     }
 
@@ -72,39 +139,37 @@ public class AuthController extends HttpServlet {
 
         try {
             User user = userService.authenticate(identifierOrEmail.trim(), password);
+
+            if (user.getRole() == Role.ADMIN) {
+                HttpSession session = request.getSession(true);
+                session.setAttribute("user", user);
+                session.setAttribute("role", user.getRole());
+                session.setMaxInactiveInterval(30 * 60);
+                redirectToUserDashboard(user, request, response);
+                return;
+            }
+
             if (!user.isVerified()) {
-                request.setAttribute("error",
-                        "Your account has not been verified yet. An administrator must verify your account before you can log in.");
-                request.setAttribute("identifier", identifierOrEmail);
-                request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
-                return;
-            }
-            HttpSession session = request.getSession(true);
-            session.setAttribute("user", user);
-            session.setAttribute("role", user.getRole());
-            session.setMaxInactiveInterval(30 * 60);
-            String contextPath = request.getContextPath();
-
-            if (user.getDeanSchoolId() != null) {
-                response.sendRedirect(contextPath + "/dean/dashboard");
+                otpService.sendRegistrationOtp(user.getEmail(), user.getFullName());
+                response.sendRedirect(request.getContextPath() + "/auth/verify-registration?email="
+                        + URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8) + "&unverified=true");
                 return;
             }
 
-            switch (user.getRole()) {
-                case ADMIN:
-                    response.sendRedirect(contextPath + "/admin/dashboard");
-                    break;
-                case DEAN:
-                    response.sendRedirect(contextPath + "/dean/dashboard");
-                    break;
-                case PROFESSOR:
-                    response.sendRedirect(contextPath + "/professor/dashboard");
-                    break;
-                case STUDENT:
-                    response.sendRedirect(contextPath + "/student/dashboard");
-                    break;
-                default:
-                    response.sendRedirect(contextPath + "/auth/login");
+            if (user.isTwoFactorEnabled()) {
+                otpService.sendLogin2faOtp(user);
+
+                HttpSession session = request.getSession(true);
+                session.setAttribute("pending_2fa_user", user);
+
+                response.sendRedirect(request.getContextPath() + "/auth/verify-2fa");
+            } else {
+                HttpSession session = request.getSession(true);
+                session.setAttribute("user", user);
+                session.setAttribute("role", user.getRole());
+                session.setMaxInactiveInterval(30 * 60);
+
+                redirectToUserDashboard(user, request, response);
             }
 
         } catch (UserNotFoundException e) {
@@ -116,6 +181,97 @@ public class AuthController extends HttpServlet {
             request.setAttribute("identifier", identifierOrEmail);
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         }
+    }
+
+    private void handleUpdate2fa(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+
+        User user = (User) session.getAttribute("user");
+        if (user.getRole() == Role.ADMIN) {
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+            return;
+        }
+
+        String twoFactorEnabledParam = request.getParameter("twoFactorEnabled");
+        boolean enabled = "true".equalsIgnoreCase(twoFactorEnabledParam) || "enabled".equalsIgnoreCase(twoFactorEnabledParam);
+
+        userService.updateTwoFactorEnabled(user.getId(), enabled);
+        user.setTwoFactorEnabled(enabled);
+        session.setAttribute("user", user);
+
+        String redirect = request.getParameter("redirect");
+        if (redirect == null || redirect.trim().isEmpty() || !redirect.startsWith("/")) {
+            if (user.getRole() == Role.DEAN || user.getDeanSchoolId() != null) {
+                redirect = "/dean/dashboard";
+            } else if (user.getRole() == Role.PROFESSOR) {
+                redirect = "/professor/dashboard";
+            } else {
+                redirect = "/student/dashboard";
+            }
+        }
+
+        String separator = redirect.contains("?") ? "&" : "?";
+        response.sendRedirect(request.getContextPath() + redirect + separator + "twoFactorUpdated=" + enabled);
+    }
+
+    private void handleGet2fa(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("pending_2fa_user") == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+
+        User user = (User) session.getAttribute("pending_2fa_user");
+        request.setAttribute("email", user.getEmail());
+        request.getRequestDispatcher("/WEB-INF/views/auth/verify_2fa.jsp").forward(request, response);
+    }
+
+    private void handleVerify2fa(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("pending_2fa_user") == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+
+        User user = (User) session.getAttribute("pending_2fa_user");
+        String otpCode = request.getParameter("otpCode");
+
+        if (otpService.verifyLogin2faOtp(user.getEmail(), otpCode)) {
+            session.removeAttribute("pending_2fa_user");
+            session.setAttribute("user", user);
+            session.setAttribute("role", user.getRole());
+            session.setMaxInactiveInterval(30 * 60);
+
+            redirectToUserDashboard(user, request, response);
+        } else {
+            request.setAttribute("email", user.getEmail());
+            request.setAttribute("error", "Invalid or expired 2FA code. Please try again.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/verify_2fa.jsp").forward(request, response);
+        }
+    }
+
+    private void handleResend2faOtp(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("pending_2fa_user") == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+
+        User user = (User) session.getAttribute("pending_2fa_user");
+        otpService.sendLogin2faOtp(user);
+
+        request.setAttribute("email", user.getEmail());
+        request.setAttribute("info", "A new 2FA code has been sent to your email.");
+        request.getRequestDispatcher("/WEB-INF/views/auth/verify_2fa.jsp").forward(request, response);
     }
 
     private void handleRegister(HttpServletRequest request, HttpServletResponse response)
@@ -130,16 +286,168 @@ public class AuthController extends HttpServlet {
 
         try {
             userService.registerNewUser(identifier, fullName, email, password, confirmPassword, major);
-            request.setAttribute("success",
-                    "Registration successful! Your account is pending verification by an administrator.");
-            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
-        } catch (com.unitrs.exceptions.ValidationException e) {
+
+            otpService.sendRegistrationOtp(email, fullName);
+
+            response.sendRedirect(request.getContextPath() + "/auth/verify-registration?email="
+                    + URLEncoder.encode(email, StandardCharsets.UTF_8));
+
+        } catch (ValidationException e) {
             request.setAttribute("error", e.getMessage());
             request.setAttribute("identifier", identifier);
             request.setAttribute("fullName", fullName);
             request.setAttribute("email", email);
             request.setAttribute("major", major);
             request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
+        }
+    }
+
+    private void handleVerifyRegistration(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        String otpCode = request.getParameter("otpCode");
+
+        if (otpService.verifyRegistrationOtp(email, otpCode)) {
+            request.setAttribute("success", "Your email has been verified successfully! You can now sign in.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+        } else {
+            request.setAttribute("email", email);
+            request.setAttribute("error", "Invalid or expired verification code. Please check your code or request a new one.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/verify_registration.jsp").forward(request, response);
+        }
+    }
+
+    private void handleResendRegistrationOtp(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        if (email != null && !email.trim().isEmpty()) {
+            User user = userService.findByEmail(email.trim());
+            String fullName = user != null ? user.getFullName() : null;
+            otpService.sendRegistrationOtp(email.trim(), fullName);
+        }
+
+        request.setAttribute("email", email);
+        request.setAttribute("info", "A new verification code has been sent to your email.");
+        request.getRequestDispatcher("/WEB-INF/views/auth/verify_registration.jsp").forward(request, response);
+    }
+
+    private void handleForgotPassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        if (email == null || email.trim().isEmpty()) {
+            request.setAttribute("error", "Please enter your email address.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/forgot_password.jsp").forward(request, response);
+            return;
+        }
+
+        otpService.sendPasswordResetOtp(email.trim());
+
+        response.sendRedirect(request.getContextPath() + "/auth/verify-reset-otp?email="
+                + URLEncoder.encode(email.trim(), StandardCharsets.UTF_8));
+    }
+
+    private void handleVerifyResetOtp(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        String otpCode = request.getParameter("otpCode");
+
+        if (otpService.verifyPasswordResetOtp(email, otpCode)) {
+
+            HttpSession session = request.getSession(true);
+            session.setAttribute("verified_reset_email", email.trim());
+
+            response.sendRedirect(request.getContextPath() + "/auth/set-new-password");
+        } else {
+            request.setAttribute("email", email);
+            request.setAttribute("error", "Invalid or expired code. Please enter the 6-digit code sent to your email.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/verify_reset_otp.jsp").forward(request, response);
+        }
+    }
+
+    private void handleResendResetOtp(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        if (email != null && !email.trim().isEmpty()) {
+            otpService.sendPasswordResetOtp(email.trim());
+        }
+
+        request.setAttribute("email", email);
+        request.setAttribute("info", "A new verification code has been sent to your email.");
+        request.getRequestDispatcher("/WEB-INF/views/auth/verify_reset_otp.jsp").forward(request, response);
+    }
+
+    private void handleGetSetNewPassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("verified_reset_email") == null) {
+
+            response.sendRedirect(request.getContextPath() + "/auth/forgot-password");
+            return;
+        }
+
+        request.setAttribute("email", session.getAttribute("verified_reset_email"));
+        request.getRequestDispatcher("/WEB-INF/views/auth/set_new_password.jsp").forward(request, response);
+    }
+
+    private void handleSetNewPassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("verified_reset_email") == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/forgot-password");
+            return;
+        }
+
+        String email = (String) session.getAttribute("verified_reset_email");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
+
+        try {
+            userService.resetPassword(email, password, confirmPassword);
+
+            session.removeAttribute("verified_reset_email");
+
+            request.setAttribute("success", "Your password has been successfully reset! Please sign in with your new password.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+
+        } catch (ValidationException e) {
+            request.setAttribute("email", email);
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/auth/set_new_password.jsp").forward(request, response);
+        }
+    }
+
+    private void redirectToUserDashboard(User user, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String contextPath = request.getContextPath();
+
+        if (user.getDeanSchoolId() != null) {
+            response.sendRedirect(contextPath + "/dean/dashboard");
+            return;
+        }
+
+        switch (user.getRole()) {
+            case ADMIN:
+                response.sendRedirect(contextPath + "/admin/dashboard");
+                break;
+            case DEAN:
+                response.sendRedirect(contextPath + "/dean/dashboard");
+                break;
+            case PROFESSOR:
+                response.sendRedirect(contextPath + "/professor/dashboard");
+                break;
+            case STUDENT:
+                response.sendRedirect(contextPath + "/student/dashboard");
+                break;
+            default:
+                response.sendRedirect(contextPath + "/auth/login");
+                break;
         }
     }
 

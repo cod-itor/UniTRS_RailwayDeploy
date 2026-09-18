@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
     is_active BOOLEAN DEFAULT TRUE,
     dean_school_id INT UNIQUE DEFAULT NULL,      -- A user can be the Dean of at most one school
     student_school_id INT DEFAULT NULL,          -- The school a student officially belongs to
+    two_factor_enabled BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (dean_school_id) REFERENCES schools(id) ON DELETE SET NULL,
     FOREIGN KEY (student_school_id) REFERENCES schools(id) ON DELETE SET NULL
@@ -129,6 +130,18 @@ CREATE TABLE IF NOT EXISTS grades (
     gpa_point DECIMAL(3,2) DEFAULT 0.00,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (enrollment_id) REFERENCES enrollments(id) ON DELETE CASCADE
+);
+
+-- 10. OTP Verifications Table (Handles Email OTPs for Registration, 2FA, and Password Reset)
+CREATE TABLE IF NOT EXISTS otp_verifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL,
+    otp_code VARCHAR(6) NOT NULL,
+    otp_type ENUM('REGISTRATION', 'LOGIN_2FA', 'PASSWORD_RESET') NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    is_used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_email_type_used (email, otp_type, is_used)
 );
 
 -- ==============================================

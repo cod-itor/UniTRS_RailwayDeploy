@@ -91,13 +91,18 @@
                            placeholder="e.g. admin or dean@unitrs.edu" required value="${identifier}">
                 </div>
             </div>
-            <div class="mb-4">
+            <div class="mb-3">
                 <label for="password" class="form-label fw-semibold">Password</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
                     <input type="password" class="form-control" id="password" name="password"
                            placeholder="Enter your password" required>
                 </div>
+            </div>
+            <div class="d-flex justify-content-end mb-3">
+                <a href="${pageContext.request.contextPath}/auth/forgot-password" class="text-decoration-none small">
+                    Forgot password?
+                </a>
             </div>
             <button type="submit" class="btn btn-primary w-100 mb-3">
                 <i class="bi bi-box-arrow-in-right me-2"></i>Sign In

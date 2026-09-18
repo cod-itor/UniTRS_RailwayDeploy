@@ -17,7 +17,15 @@
             <a class="navbar-brand" href="${pageContext.request.contextPath}/professor/dashboard">
                 <i class="bi bi-person-workspace me-2"></i>UniTRS Professor
             </a>
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto align-items-center">
+                <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="d-flex align-items-center me-3 bg-secondary bg-opacity-25 px-2 py-1 rounded">
+                    <input type="hidden" name="redirect" value="/professor/dashboard">
+                    <label for="twoFactorSelectProf" class="text-white-50 me-2 small mb-0"><i class="bi bi-shield-lock me-1"></i>2FA:</label>
+                    <select id="twoFactorSelectProf" name="twoFactorEnabled" class="form-select form-select-sm bg-dark text-white border-secondary py-0" style="font-size: 0.8rem; width: auto;" onchange="this.form.submit()">
+                        <option value="false" ${!sessionScope.user.twoFactorEnabled ? 'selected' : ''}>Disabled</option>
+                        <option value="true" ${sessionScope.user.twoFactorEnabled ? 'selected' : ''}>Enabled</option>
+                    </select>
+                </form>
                 <span class="navbar-text me-3">
                     <i class="bi bi-person-circle me-1"></i>${sessionScope.user.fullName}
                 </span>
@@ -34,6 +42,19 @@
     <div class="container mt-4 mb-5">
         <h2 class="mb-4">My Assigned Classes</h2>
         
+        <c:if test="${param.twoFactorUpdated == 'true'}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-shield-check me-2"></i>Two-Factor Authentication (2FA) is now <strong>enabled</strong> for your account. You will receive an email code upon login.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
+        <c:if test="${param.twoFactorUpdated == 'false'}">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="bi bi-shield-slash me-2"></i>Two-Factor Authentication (2FA) has been <strong>disabled</strong> for your account. You will log in directly.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
+
         <c:if test="${not empty successMessage}">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle me-2"></i>${successMessage}

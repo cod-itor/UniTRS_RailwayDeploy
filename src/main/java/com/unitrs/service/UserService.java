@@ -21,4 +21,6 @@ public interface UserService {
     List<User> findProfessors();
     boolean updateUserStatus(int id, boolean isActive);
     boolean createStaffUser(User user);
+    void resetPassword(String email, String newPassword, String confirmPassword);
+    void updateTwoFactorEnabled(int userId, boolean enabled);
 }

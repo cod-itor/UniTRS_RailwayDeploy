@@ -17,6 +17,18 @@ public class DataSeeder implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        try (java.sql.Connection conn = DatabaseUtils.getConnection();
+             java.sql.ResultSet rs = conn.getMetaData().getColumns(null, null, "users", "two_factor_enabled")) {
+            if (!rs.next()) {
+                try (java.sql.Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate("ALTER TABLE users ADD COLUMN two_factor_enabled BOOLEAN DEFAULT FALSE");
+                    LOGGER.info("DataSeeder: Added two_factor_enabled column to users table.");
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "DataSeeder: Column check skipped: " + e.getMessage());
+        }
+
         LOGGER.info("DataSeeder: Checking seed passwords...");
 
         UserRepository userRepository = new UserRepository();

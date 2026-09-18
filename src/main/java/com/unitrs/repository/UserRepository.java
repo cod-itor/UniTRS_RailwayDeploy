@@ -116,6 +116,16 @@ public class UserRepository extends BaseRepository {
         return executeUpdate(sql, hashedPassword, id) > 0;
     }
 
+    public boolean updatePasswordByEmail(String email, String hashedPassword) {
+        String sql = "UPDATE users SET password = ? WHERE LOWER(email) = LOWER(?)";
+        return executeUpdate(sql, hashedPassword, email) > 0;
+    }
+
+    public boolean verifyUserByEmail(String email) {
+        String sql = "UPDATE users SET is_verified = TRUE WHERE LOWER(email) = LOWER(?)";
+        return executeUpdate(sql, email) > 0;
+    }
+
     public boolean assignDeanToSchool(int userId, Integer schoolId) {
         String sql = "UPDATE users SET dean_school_id = ? WHERE id = ?";
         return executeUpdate(sql, schoolId, userId) > 0;
@@ -139,6 +149,11 @@ public class UserRepository extends BaseRepository {
         return executeQuery(sql, this::mapResultSetToUser, classSectionId);
     }
 
+    public boolean updateTwoFactorEnabled(int userId, boolean enabled) {
+        String sql = "UPDATE users SET two_factor_enabled = ? WHERE id = ?";
+        return executeUpdate(sql, enabled, userId) > 0;
+    }
+
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getInt("id"));
@@ -156,6 +171,12 @@ public class UserRepository extends BaseRepository {
 
         int studentSchoolId = rs.getInt("student_school_id");
         user.setStudentSchoolId(rs.wasNull() ? null : studentSchoolId);
+
+        try {
+            user.setTwoFactorEnabled(rs.getBoolean("two_factor_enabled"));
+        } catch (SQLException ignored) {
+            user.setTwoFactorEnabled(false);
+        }
 
         user.setCreatedAt(rs.getTimestamp("created_at"));
         return user;

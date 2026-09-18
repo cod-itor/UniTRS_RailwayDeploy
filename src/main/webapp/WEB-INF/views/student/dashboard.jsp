@@ -28,8 +28,16 @@
                     <p class="mb-0 text-white-50"><i class="bi bi-building me-1"></i> ${studentSchool.schoolName} | Major: ${user.major}</p>
                 </c:if>
             </div>
-            <div>
-                <span class="me-3"><i class="bi bi-person-circle me-1"></i> ${user.fullName} (${user.userIdentifier})</span>
+            <div class="d-flex align-items-center">
+                <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="d-flex align-items-center me-3 bg-white bg-opacity-10 px-2 py-1 rounded">
+                    <input type="hidden" name="redirect" value="/student/dashboard">
+                    <label for="twoFactorSelect" class="text-white me-2 small mb-0"><i class="bi bi-shield-lock me-1"></i>2FA:</label>
+                    <select id="twoFactorSelect" name="twoFactorEnabled" class="form-select form-select-sm bg-light text-dark border-0 py-0" style="font-size: 0.8rem; width: auto;" onchange="this.form.submit()">
+                        <option value="false" ${!user.twoFactorEnabled ? 'selected' : ''}>Disabled</option>
+                        <option value="true" ${user.twoFactorEnabled ? 'selected' : ''}>Enabled</option>
+                    </select>
+                </form>
+                <span class="me-3 text-white"><i class="bi bi-person-circle me-1"></i> ${user.fullName} (${user.userIdentifier})</span>
                 <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-light btn-sm"><i class="bi bi-box-arrow-right"></i> Logout</a>
             </div>
         </div>
@@ -38,6 +46,18 @@
     <div class="container mb-5">
 
         <!-- Alerts -->
+        <c:if test="${param.twoFactorUpdated == 'true'}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-shield-check me-2"></i>Two-Factor Authentication (2FA) is now <strong>enabled</strong> for your account. You will receive an email code upon login.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
+        <c:if test="${param.twoFactorUpdated == 'false'}">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="bi bi-shield-slash me-2"></i>Two-Factor Authentication (2FA) has been <strong>disabled</strong> for your account. You will log in directly.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
         <c:if test="${not empty successMessage}">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i>${successMessage}
