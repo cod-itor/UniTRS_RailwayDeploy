@@ -49,11 +49,12 @@
                         <thead class="table-light">
                             <tr>
                                 <th>ID</th>
-                                <th>Student ID</th>
+                                <th>Identifier / ID</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
-                                <th>Major</th>
-                                <th>Actions</th>
+                                <th>Requested Role</th>
+                                <th>Major / Department</th>
+                                <th>Authorize Role & Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,16 +64,38 @@
                                     <td><code>${student.userIdentifier}</code></td>
                                     <td>${student.fullName}</td>
                                     <td>${student.email}</td>
-                                    <td>${student.major}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${student.role == 'PROFESSOR'}">
+                                                <span class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                                                    <i class="bi bi-mortarboard-fill me-1"></i>Professor
+                                                </span>
+                                            </c:when>
+                                            <c:when test="${student.role == 'STUDENT'}">
+                                                <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">
+                                                    <i class="bi bi-person-fill me-1"></i>Student
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary px-2 py-1">
+                                                    ${student.role}
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td><c:out value="${not empty student.major ? student.major : '—'}" /></td>
                                     <td>
                                         <form action="${pageContext.request.contextPath}/admin/users/verify" method="POST" class="d-flex align-items-center gap-2">
                                             <input type="hidden" name="userId" value="${student.id}">
-                                            <select name="role" class="form-select form-select-sm" style="width: auto;" required>
-                                                <option value="STUDENT" selected>Student</option>
-                                                <option value="PROFESSOR">Professor</option>
-                                                <option value="DEAN">Dean</option>
-                                                <option value="ADMIN">Admin</option>
-                                            </select>
+                                            <div class="input-group input-group-sm" style="width: auto;">
+                                                <span class="input-group-text bg-light text-muted small"><i class="bi bi-person-badge"></i></span>
+                                                <select name="role" class="form-select form-select-sm" style="width: auto;" required>
+                                                    <option value="STUDENT" ${student.role == 'STUDENT' ? 'selected' : ''}>Student</option>
+                                                    <option value="PROFESSOR" ${student.role == 'PROFESSOR' ? 'selected' : ''}>Professor</option>
+                                                    <option value="DEAN" ${student.role == 'DEAN' ? 'selected' : ''}>Dean</option>
+                                                    <option value="ADMIN" ${student.role == 'ADMIN' ? 'selected' : ''}>Admin</option>
+                                                </select>
+                                            </div>
                                             <button type="submit" name="action" value="approve" class="btn btn-success btn-sm text-nowrap">
                                                 <i class="bi bi-check-lg"></i> Approve
                                             </button>

@@ -116,6 +116,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerNewUser(String identifier, String fullName, String email, String password,
             String confirmPassword, String major) {
+        registerNewUser(identifier, fullName, email, password, confirmPassword, major, "STUDENT");
+    }
+
+    @Override
+    public void registerNewUser(String identifier, String fullName, String email, String password,
+            String confirmPassword, String major, String role) {
         if (identifier == null || identifier.trim().isEmpty() ||
                 fullName == null || fullName.trim().isEmpty() ||
                 email == null || email.trim().isEmpty() ||
@@ -124,12 +130,14 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Please fill in all required fields.");
         }
 
+        String roleLabel = (role != null && role.trim().equalsIgnoreCase("professor")) ? "Professor" : "Student";
+
         identifier = identifier.trim();
         if (!identifier.matches("^\\d+$")) {
-            throw new ValidationException("Student ID must contain numbers only.");
+            throw new ValidationException(roleLabel + " ID must contain numbers only.");
         }
         if (identifier.length() != 8) {
-            throw new ValidationException("Student ID must be exactly 8 digits (e.g. 60240512).");
+            throw new ValidationException(roleLabel + " ID must be exactly 8 digits (e.g. 60240512).");
         }
 
         fullName = fullName.trim().replaceAll("\\s+", " ");
@@ -190,7 +198,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (!isIdentifierAvailable(identifier)) {
-            throw new ValidationException("A student with this Student ID already exists.");
+            throw new ValidationException("A user with this " + roleLabel + " ID already exists.");
         }
         if (!isEmailAvailable(email)) {
             throw new ValidationException("User with this email already exists.");
@@ -202,7 +210,8 @@ public class UserServiceImpl implements UserService {
         newUser.setEmail(email);
         newUser.setPassword(password);
         newUser.setMajor(major != null && !major.isEmpty() ? major : null);
-        newUser.setRole(Role.STUDENT);
+        Role userRole = (role != null && role.trim().equalsIgnoreCase("professor")) ? Role.PROFESSOR : Role.STUDENT;
+        newUser.setRole(userRole);
         newUser.setVerified(false);
         newUser.setActive(true);
 
