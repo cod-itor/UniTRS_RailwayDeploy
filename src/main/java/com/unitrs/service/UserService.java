@@ -11,6 +11,7 @@ public interface UserService {
     User findByEmail(String email);
     boolean isIdentifierAvailable(String identifier);
     boolean isEmailAvailable(String email);
+    boolean isFullNameAvailable(String fullName);
     List<User> findUnverifiedStudents();
     List<User> findUnverifiedUsers();
     boolean verifyStudent(int id, boolean isVerified);

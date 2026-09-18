@@ -84,11 +84,11 @@
 
         <form action="${pageContext.request.contextPath}/auth/login" method="POST">
             <div class="mb-3">
-                <label for="identifier" class="form-label fw-semibold">Username or Email</label>
+                <label for="identifier" class="form-label fw-semibold">Email or Student ID</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                    <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
                     <input type="text" class="form-control" id="identifier" name="identifier"
-                           placeholder="e.g. admin or dean@unitrs.edu" required value="${identifier}">
+                           placeholder="e.g. 60240512 or admin@unitrs.edu" required value="${identifier}">
                 </div>
             </div>
             <div class="mb-3">
@@ -97,6 +97,9 @@
                     <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
                     <input type="password" class="form-control" id="password" name="password"
                            placeholder="Enter your password" required>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleLoginPassword" aria-label="Toggle password visibility">
+                        <i class="bi bi-eye" id="toggleLoginPasswordIcon"></i>
+                    </button>
                 </div>
             </div>
             <div class="d-flex justify-content-end mb-3">
@@ -122,6 +125,8 @@
             if (successAlert) {
                 // Clear the register form cache
                 localStorage.removeItem('reg_identifier');
+                localStorage.removeItem('reg_firstName');
+                localStorage.removeItem('reg_lastName');
                 localStorage.removeItem('reg_fullName');
                 localStorage.removeItem('reg_email');
                 localStorage.removeItem('reg_majorSelect');
@@ -138,6 +143,18 @@
             identifierInput.addEventListener('input', () => {
                 localStorage.setItem('login_identifier', identifierInput.value);
             });
+
+            // Toggle password visibility
+            const toggleBtn = document.getElementById('toggleLoginPassword');
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleLoginPasswordIcon');
+            if (toggleBtn && passwordInput && toggleIcon) {
+                toggleBtn.addEventListener('click', () => {
+                    const isPassword = passwordInput.getAttribute('type') === 'password';
+                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                    toggleIcon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+                });
+            }
         });
     </script>
 </body>

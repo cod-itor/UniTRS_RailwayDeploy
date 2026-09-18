@@ -62,6 +62,9 @@
                     <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
                     <input type="password" class="form-control" id="password" name="password"
                            placeholder="Min 8 chars, uppercase, lowercase, digit, symbol" required autofocus>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleNewPassword" aria-label="Toggle password visibility">
+                        <i class="bi bi-eye" id="toggleNewPasswordIcon"></i>
+                    </button>
                 </div>
             </div>
 
@@ -71,6 +74,9 @@
                     <span class="input-group-text"><i class="bi bi-check2-circle"></i></span>
                     <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
                            placeholder="Re-enter new password" required>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword" aria-label="Toggle password visibility">
+                        <i class="bi bi-eye" id="toggleConfirmPasswordIcon"></i>
+                    </button>
                 </div>
             </div>
 
@@ -87,5 +93,21 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function setupToggle(btnId, inputId, iconId) {
+            const btn = document.getElementById(btnId);
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (btn && input && icon) {
+                btn.addEventListener('click', () => {
+                    const isPwd = input.getAttribute('type') === 'password';
+                    input.setAttribute('type', isPwd ? 'text' : 'password');
+                    icon.className = isPwd ? 'bi bi-eye-slash' : 'bi bi-eye';
+                });
+            }
+        }
+        setupToggle('toggleNewPassword', 'password', 'toggleNewPasswordIcon');
+        setupToggle('toggleConfirmPassword', 'confirmPassword', 'toggleConfirmPasswordIcon');
+    </script>
 </body>
 </html>

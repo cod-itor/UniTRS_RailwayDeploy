@@ -131,7 +131,7 @@ public class AuthController extends HttpServlet {
 
         if (identifierOrEmail == null || identifierOrEmail.trim().isEmpty()
                 || password == null || password.trim().isEmpty()) {
-            request.setAttribute("error", "Please enter both username and password.");
+            request.setAttribute("error", "Please enter both Email/Student ID and password.");
             request.setAttribute("identifier", identifierOrEmail);
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
             return;
@@ -278,7 +278,12 @@ public class AuthController extends HttpServlet {
             throws ServletException, IOException {
 
         String identifier = request.getParameter("identifier");
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
         String fullName = request.getParameter("fullName");
+        if ((fullName == null || fullName.trim().isEmpty()) && firstName != null && lastName != null) {
+            fullName = (firstName.trim() + " " + lastName.trim()).trim();
+        }
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
@@ -295,6 +300,8 @@ public class AuthController extends HttpServlet {
         } catch (ValidationException e) {
             request.setAttribute("error", e.getMessage());
             request.setAttribute("identifier", identifier);
+            request.setAttribute("firstName", firstName);
+            request.setAttribute("lastName", lastName);
             request.setAttribute("fullName", fullName);
             request.setAttribute("email", email);
             request.setAttribute("major", major);
@@ -339,6 +346,14 @@ public class AuthController extends HttpServlet {
         String email = request.getParameter("email");
         if (email == null || email.trim().isEmpty()) {
             request.setAttribute("error", "Please enter your email address.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/forgot_password.jsp").forward(request, response);
+            return;
+        }
+
+        User user = userService.findByEmail(email.trim());
+        if (user == null) {
+            request.setAttribute("error", "No account found with this email address.");
+            request.setAttribute("email", email);
             request.getRequestDispatcher("/WEB-INF/views/auth/forgot_password.jsp").forward(request, response);
             return;
         }

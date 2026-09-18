@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -36,7 +38,8 @@ public class StudentController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String path = request.getPathInfo();
         User user = (User) request.getSession().getAttribute("user");
 
@@ -56,7 +59,8 @@ public class StudentController extends HttpServlet {
                 School studentSchool = schoolRepository.findById(user.getStudentSchoolId());
                 request.setAttribute("studentSchool", studentSchool);
 
-                List<ClassSection> availableClasses = enrollmentRepository.findAvailableClassSections(user.getStudentSchoolId());
+                List<ClassSection> availableClasses = enrollmentRepository
+                        .findAvailableClassSections(user.getStudentSchoolId());
                 request.setAttribute("availableClasses", availableClasses);
 
                 List<Enrollment> schedule = enrollmentRepository.findStudentSchedule(user.getId());
@@ -83,7 +87,8 @@ public class StudentController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
         User user = (User) request.getSession().getAttribute("user");
 
@@ -100,8 +105,7 @@ public class StudentController extends HttpServlet {
                     request.getSession().setAttribute("user", user);
                 }
                 response.sendRedirect(request.getContextPath() + "/student/dashboard?success=1");
-            }
-            else if ("enroll".equals(action)) {
+            } else if ("enroll".equals(action)) {
                 int classSectionId = Integer.parseInt(request.getParameter("classSectionId"));
 
                 List<Enrollment> currentSchedule = enrollmentRepository.findStudentSchedule(user.getId());
@@ -112,13 +116,13 @@ public class StudentController extends HttpServlet {
 
                 enrollmentRepository.enrollStudent(user.getId(), classSectionId);
                 response.sendRedirect(request.getContextPath() + "/student/dashboard?success=1");
-            }
-            else {
+            } else {
                 response.sendRedirect(request.getContextPath() + "/student/dashboard");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/student/dashboard?error=" + java.net.URLEncoder.encode("Operation failed: " + e.getMessage(), "UTF-8"));
+            response.sendRedirect(request.getContextPath() + "/student/dashboard?error="
+                    + java.net.URLEncoder.encode("Operation failed: " + e.getMessage(), "UTF-8"));
         }
     }
 }

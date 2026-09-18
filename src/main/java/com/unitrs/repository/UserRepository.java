@@ -70,6 +70,11 @@ public class UserRepository extends BaseRepository {
         return executeQueryForObject(sql, this::mapResultSetToUser, email);
     }
 
+    public User findByFullName(String fullName) {
+        String sql = "SELECT * FROM users WHERE LOWER(TRIM(full_name)) = LOWER(TRIM(?))";
+        return executeQueryForObject(sql, this::mapResultSetToUser, fullName);
+    }
+
     public List<User> findUnverifiedStudents() {
         String sql = "SELECT * FROM users WHERE role = 'STUDENT' AND is_verified = FALSE AND is_active = TRUE ORDER BY created_at DESC";
         return executeQuery(sql, this::mapResultSetToUser);

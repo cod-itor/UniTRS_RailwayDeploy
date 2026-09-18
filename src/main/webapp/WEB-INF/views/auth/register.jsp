@@ -107,7 +107,7 @@
 </head>
 <body>
     <div class="register-card">
-        <div class="logo"><i class="bi bi-person-plus-fill"></i> Create Account</div>
+        <div class="logo"><i class="bi bi-mortarboard-fill"></i> Create Student Account</div>
         <div class="subtitle">Join University Management System</div>
 
         <!-- Error message -->
@@ -119,31 +119,42 @@
         </c:if>
 
         <form action="${pageContext.request.contextPath}/auth/register" method="POST" id="registerForm">
-            <!-- Identifier -->
+            <!-- Student ID -->
             <div class="mb-3">
-                <label for="identifier" class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
+                <label for="identifier" class="form-label fw-semibold">Student ID <span class="text-danger">*</span></label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                    <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
                     <input type="text" class="form-control" id="identifier" name="identifier"
-                           placeholder="e.g. 60-24-04-91 or john.doe" required autocomplete="off" value="${identifier}">
+                           placeholder="e.g. 60240512" maxlength="8" required autocomplete="off" value="${identifier}">
                 </div>
                 <div id="identifierValidation" class="validation-message text-muted">
-                    Must be 3-30 characters long (letters, numbers, dots, hyphens, underscores).
+                    Must be an 8-digit Student ID (numbers only, e.g. 60240512).
                 </div>
             </div>
             
-            <!-- Full Name -->
-            <div class="mb-3">
-                <label for="fullName" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-person"></i></span>
-                    <input type="text" class="form-control" id="fullName" name="fullName"
-                           placeholder="First Last" required autocomplete="off" value="${fullName}">
+            <!-- Separate First Name and Last Name -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstName" class="form-label fw-semibold">First Name <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control" id="firstName" name="firstName"
+                               placeholder="e.g. Sok" required autocomplete="off" value="${firstName}">
+                    </div>
+                    <div id="firstNameValidation" class="validation-message text-muted"></div>
                 </div>
-                <div id="fullNameValidation" class="validation-message text-muted">
-                    Please provide both first and last name.
+                <div class="col-md-6 mb-3">
+                    <label for="lastName" class="form-label fw-semibold">Last Name <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                        <input type="text" class="form-control" id="lastName" name="lastName"
+                               placeholder="e.g. Dara" required autocomplete="off" value="${lastName}">
+                    </div>
+                    <div id="lastNameValidation" class="validation-message text-muted"></div>
                 </div>
             </div>
+            <input type="hidden" id="fullName" name="fullName" value="${fullName}">
+            <div id="fullNameValidation" class="validation-message mb-3" style="display: none; margin-top: -0.5rem;"></div>
             
             <!-- Email -->
             <div class="mb-3">
@@ -176,13 +187,16 @@
                 <input type="text" class="form-control d-none" id="majorInput" name="majorInput" placeholder="Enter your major">
             </div>
             
-            <!-- Password -->
+            <!-- Password with Show/Hide Toggle -->
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="password" class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
                         <input type="password" class="form-control" id="password" name="password" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn" aria-label="Toggle password visibility">
+                            <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -190,6 +204,9 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        <button class="btn btn-outline-secondary" type="button" id="toggleConfirmBtn" aria-label="Toggle password visibility">
+                            <i class="bi bi-eye" id="toggleConfirmIcon"></i>
+                        </button>
                     </div>
                     <div id="confirmValidation" class="validation-message"></div>
                 </div>
@@ -230,6 +247,10 @@
         const identifierInput = document.getElementById('identifier');
         const identifierVal = document.getElementById('identifierValidation');
         
+        const firstNameInput = document.getElementById('firstName');
+        const firstNameVal = document.getElementById('firstNameValidation');
+        const lastNameInput = document.getElementById('lastName');
+        const lastNameVal = document.getElementById('lastNameValidation');
         const fullNameInput = document.getElementById('fullName');
         const fullNameVal = document.getElementById('fullNameValidation');
         
@@ -252,6 +273,7 @@
         let isFullNameValid = false;
         let identifierTimer;
         let emailTimer;
+        let fullNameTimer;
         
         // Handle server-side major restoration
         const serverMajor = '${major}';
@@ -273,46 +295,35 @@
             el.innerHTML = iconClass ? `<i class="bi ${iconClass}"></i> ${msg}` : msg;
         }
 
-        // --- Identifier Validation ---
+        // --- Student ID Validation (Numbers only & exact 8 digits) ---
         function validateIdentifier() {
             clearTimeout(identifierTimer);
-            const val = identifierInput.value.trim();
+            const rawVal = identifierInput.value.trim();
             isIdentifierValid = false;
             
-            if (!val) {
-                setValidationMsg(identifierVal, 'Required', 'text-danger-custom', 'bi-x-circle');
-                return;
-            }
-            
-            // Format checks (allow letters, numbers, dots, hyphens, underscores)
-            if (!/^[A-Za-z0-9._-]{3,30}$/.test(val)) {
-                setValidationMsg(identifierVal, '3-30 chars. Only letters, numbers, dots, hyphens, underscores.', 'text-danger-custom', 'bi-x-circle');
-                return;
-            }
-            if (/^[._-]|[._-]$/.test(val)) {
-                setValidationMsg(identifierVal, 'Cannot start or end with ., -, or _', 'text-danger-custom', 'bi-x-circle');
-                return;
-            }
-            if (/\.\.|\_\_|\-\-|\.\_|\_\.|\.\-|\-\.|\_\-|\-\_/.test(val)) {
-                setValidationMsg(identifierVal, 'Cannot contain consecutive punctuation', 'text-danger-custom', 'bi-x-circle');
-                return;
-            }
-            if (/^\d+$/.test(val)) {
-                setValidationMsg(identifierVal, 'Cannot be purely numeric', 'text-danger-custom', 'bi-x-circle');
-                return;
-            }
-            const reserved = ["admin", "root", "support", "null", "undefined", "system", "moderator", "superuser"];
-            if (reserved.includes(val.toLowerCase())) {
-                setValidationMsg(identifierVal, 'This identifier is reserved', 'text-danger-custom', 'bi-x-circle');
+            if (!rawVal) {
+                setValidationMsg(identifierVal, 'Student ID is required', 'text-danger-custom', 'bi-x-circle');
                 return;
             }
 
-            // Async Uniqueness Check
-            setValidationMsg(identifierVal, 'Checking availability...', 'text-warning-custom', 'bi-hourglass-split');
+            // Real-time check: Numbers only
+            if (!/^\d+$/.test(rawVal)) {
+                setValidationMsg(identifierVal, 'Numbers only! Letters and special characters are not allowed.', 'text-danger-custom', 'bi-x-circle');
+                return;
+            }
+
+            // Check exact length: 8 digits
+            if (rawVal.length !== 8) {
+                setValidationMsg(identifierVal, 'Student ID must be exactly 8 digits (current: ' + rawVal.length + '/8)', 'text-warning-custom', 'bi-exclamation-circle');
+                return;
+            }
+
+            // Uniqueness check via API
+            setValidationMsg(identifierVal, 'Checking Student ID availability...', 'text-warning-custom', 'bi-hourglass-split');
             
             identifierTimer = setTimeout(async () => {
                 try {
-                    const res = await fetch(contextPath + '/api/validate/identifier?identifier=' + encodeURIComponent(val));
+                    const res = await fetch(contextPath + '/api/validate/identifier?identifier=' + encodeURIComponent(rawVal));
                     if (res.status === 429) {
                         setValidationMsg(identifierVal, 'Rate limit reached, please wait a moment', 'text-warning-custom', 'bi-hourglass-split');
                         return;
@@ -320,42 +331,80 @@
                     const data = await res.json();
                     if (data.available) {
                         isIdentifierValid = true;
-                        setValidationMsg(identifierVal, 'Identifier is available!', 'text-success-custom', 'bi-check-circle');
+                        setValidationMsg(identifierVal, 'Student ID is available!', 'text-success-custom', 'bi-check-circle');
                     } else {
                         isIdentifierValid = false;
-                        setValidationMsg(identifierVal, 'Identifier is taken', 'text-danger-custom', 'bi-x-circle');
+                        setValidationMsg(identifierVal, 'This Student ID is already registered.', 'text-danger-custom', 'bi-x-circle');
                     }
                 } catch (e) {
-                    setValidationMsg(identifierVal, 'Error checking availability', 'text-danger-custom', 'bi-exclamation-circle');
+                    setValidationMsg(identifierVal, 'Error checking Student ID availability', 'text-danger-custom', 'bi-exclamation-circle');
                 }
-            }, 400);
+            }, 300);
         }
 
         identifierInput.addEventListener('input', validateIdentifier);
 
-        // --- Full Name Validation ---
-        function validateFullName() {
-            let val = fullNameInput.value.replace(/\s+/g, ' ').trim();
-            fullNameInput.value = val;
+        // --- First and Last Name Validation & Full Name Overlap Prevention ---
+        function validateNames() {
+            clearTimeout(fullNameTimer);
+            const first = firstNameInput.value.trim();
+            const last = lastNameInput.value.trim();
             isFullNameValid = false;
-            
-            if (!val) {
-                setValidationMsg(fullNameVal, 'Required', 'text-danger-custom', 'bi-x-circle');
-            } else if (val.length < 2 || val.length > 100) {
-                setValidationMsg(fullNameVal, 'Full name must be between 2 and 100 characters', 'text-danger-custom', 'bi-x-circle');
-            } else if (/^[-']|[-']$/.test(val)) {
-                setValidationMsg(fullNameVal, 'Cannot start/end with hyphens or apostrophes', 'text-danger-custom', 'bi-x-circle');
-            } else if (!/^[a-zA-Z\s'-]+$/.test(val)) {
-                setValidationMsg(fullNameVal, 'Full name can only contain letters, spaces, hyphens, and apostrophes', 'text-danger-custom', 'bi-x-circle');
-            } else if (!val.includes(' ')) {
-                setValidationMsg(fullNameVal, 'Please provide both first and last name (separated by space)', 'text-danger-custom', 'bi-x-circle');
+
+            let firstOk = false;
+            let lastOk = false;
+
+            if (!first) {
+                setValidationMsg(firstNameVal, 'First name is required', 'text-danger-custom', 'bi-x-circle');
+            } else if (!/^[a-zA-Z\s'-]+$/.test(first)) {
+                setValidationMsg(firstNameVal, 'Letters only', 'text-danger-custom', 'bi-x-circle');
             } else {
-                isFullNameValid = true;
-                setValidationMsg(fullNameVal, 'Looks good!', 'text-success-custom', 'bi-check-circle');
+                firstOk = true;
+                setValidationMsg(firstNameVal, '', 'text-success-custom', '');
             }
+
+            if (!last) {
+                setValidationMsg(lastNameVal, 'Last name is required', 'text-danger-custom', 'bi-x-circle');
+            } else if (!/^[a-zA-Z\s'-]+$/.test(last)) {
+                setValidationMsg(lastNameVal, 'Letters only', 'text-danger-custom', 'bi-x-circle');
+            } else {
+                lastOk = true;
+                setValidationMsg(lastNameVal, '', 'text-success-custom', '');
+            }
+
+            if (!firstOk || !lastOk) {
+                fullNameVal.style.display = 'none';
+                return;
+            }
+
+            const combined = (first + ' ' + last).replace(/\s+/g, ' ').trim();
+            if (fullNameInput) {
+                fullNameInput.value = combined;
+            }
+
+            fullNameVal.style.display = 'flex';
+            setValidationMsg(fullNameVal, 'Checking name availability...', 'text-warning-custom', 'bi-hourglass-split');
+
+            fullNameTimer = setTimeout(async () => {
+                try {
+                    const res = await fetch(contextPath + '/api/validate/fullname?fullName=' + encodeURIComponent(combined));
+                    const data = await res.json();
+                    if (data.available) {
+                        isFullNameValid = true;
+                        setValidationMsg(fullNameVal, 'Full name is available: ' + combined, 'text-success-custom', 'bi-check-circle');
+                    } else {
+                        isFullNameValid = false;
+                        setValidationMsg(fullNameVal, 'A user with this full name already exists in the system (' + combined + '). Duplicate names are not allowed.', 'text-danger-custom', 'bi-x-circle');
+                    }
+                } catch (e) {
+                    isFullNameValid = true;
+                    fullNameVal.style.display = 'none';
+                }
+            }, 350);
         }
 
-        fullNameInput.addEventListener('blur', validateFullName);
+        firstNameInput.addEventListener('input', validateNames);
+        lastNameInput.addEventListener('input', validateNames);
 
         // --- Email Validation ---
         function validateEmail() {
@@ -402,7 +451,7 @@
                 } catch (e) {
                     setValidationMsg(emailVal, 'Error checking availability', 'text-danger-custom', 'bi-exclamation-circle');
                 }
-            }, 400);
+            }, 300);
         }
 
         emailInput.addEventListener('input', validateEmail);
@@ -418,6 +467,22 @@
                 majorInput.value = '';
             }
         });
+
+        // --- Show / Hide Password Toggles ---
+        function setupPasswordToggle(btnId, inputId, iconId) {
+            const btn = document.getElementById(btnId);
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (btn && input && icon) {
+                btn.addEventListener('click', () => {
+                    const isPwd = input.getAttribute('type') === 'password';
+                    input.setAttribute('type', isPwd ? 'text' : 'password');
+                    icon.className = isPwd ? 'bi bi-eye-slash' : 'bi bi-eye';
+                });
+            }
+        }
+        setupPasswordToggle('togglePasswordBtn', 'password', 'togglePasswordIcon');
+        setupPasswordToggle('toggleConfirmBtn', 'confirmPassword', 'toggleConfirmIcon');
 
         // --- Password Strength ---
         function checkPasswordRules(val) {
@@ -488,21 +553,21 @@
             }
         }
 
-        // Form Submit Check
+        // --- Form Submit Check ---
         registerForm.addEventListener('submit', (e) => {
-            validateFullName();
+            validateNames();
 
             if (!isIdentifierValid) {
                 e.preventDefault();
-                alert("Please provide a valid and available identifier/username before registering.");
+                alert("Please provide a valid 8-digit Student ID (numbers only).");
                 identifierInput.focus();
                 return;
             }
 
             if (!isFullNameValid) {
                 e.preventDefault();
-                alert("Please provide a valid first and last name.");
-                fullNameInput.focus();
+                alert("Please check your First and Last Name. Duplicate full names are not allowed in the system.");
+                firstNameInput.focus();
                 return;
             }
 
@@ -534,6 +599,11 @@
                 return;
             }
 
+            // Sync fullName input value before submitting
+            const first = firstNameInput.value.trim();
+            const last = lastNameInput.value.trim();
+            fullNameInput.value = (first + ' ' + last).replace(/\s+/g, ' ').trim();
+
             // Map major safely without creating duplicate hidden inputs
             let finalMajor = document.getElementById('finalMajorInput');
             if (!finalMajor) {
@@ -548,12 +618,14 @@
 
         // --- Local Storage & Autofill Management ---
         window.addEventListener('DOMContentLoaded', () => {
-            // Restore from localStorage if input is empty
             if (!identifierInput.value && localStorage.getItem('reg_identifier')) {
                 identifierInput.value = localStorage.getItem('reg_identifier');
             }
-            if (!fullNameInput.value && localStorage.getItem('reg_fullName')) {
-                fullNameInput.value = localStorage.getItem('reg_fullName');
+            if (!firstNameInput.value && localStorage.getItem('reg_firstName')) {
+                firstNameInput.value = localStorage.getItem('reg_firstName');
+            }
+            if (!lastNameInput.value && localStorage.getItem('reg_lastName')) {
+                lastNameInput.value = localStorage.getItem('reg_lastName');
             }
             if (!emailInput.value && localStorage.getItem('reg_email')) {
                 emailInput.value = localStorage.getItem('reg_email');
@@ -566,12 +638,12 @@
                 majorInput.value = localStorage.getItem('reg_majorInput');
             }
 
-            // Trigger validations for pre-filled / restored fields
+            // Trigger validations for pre-filled fields
             if (identifierInput.value.trim() !== '') {
                 validateIdentifier();
             }
-            if (fullNameInput.value.trim() !== '') {
-                validateFullName();
+            if (firstNameInput.value.trim() !== '' || lastNameInput.value.trim() !== '') {
+                validateNames();
             }
             if (emailInput.value.trim() !== '') {
                 validateEmail();
@@ -580,11 +652,11 @@
 
         // Save values on change
         identifierInput.addEventListener('input', () => localStorage.setItem('reg_identifier', identifierInput.value));
-        fullNameInput.addEventListener('input', () => localStorage.setItem('reg_fullName', fullNameInput.value));
+        firstNameInput.addEventListener('input', () => localStorage.setItem('reg_firstName', firstNameInput.value));
+        lastNameInput.addEventListener('input', () => localStorage.setItem('reg_lastName', lastNameInput.value));
         emailInput.addEventListener('input', () => localStorage.setItem('reg_email', emailInput.value));
         majorSelect.addEventListener('change', () => localStorage.setItem('reg_majorSelect', majorSelect.value));
         majorInput.addEventListener('input', () => localStorage.setItem('reg_majorInput', majorInput.value));
-
     </script>
 </body>
 </html>

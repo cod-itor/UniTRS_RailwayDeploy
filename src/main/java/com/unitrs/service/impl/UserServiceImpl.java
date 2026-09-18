@@ -65,6 +65,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean isFullNameAvailable(String fullName) {
+        if (fullName == null || fullName.trim().isEmpty()) return false;
+        return userDAO.findByFullName(fullName.trim()) == null;
+    }
+
+    @Override
     public List<User> findUnverifiedStudents() {
         return userDAO.findUnverifiedStudents();
     }
@@ -112,26 +118,11 @@ public class UserServiceImpl implements UserService {
         }
 
         identifier = identifier.trim();
-        if (!identifier.matches("^[A-Za-z0-9._-]{3,30}$")) {
-            throw new ValidationException("Identifier must be 3-30 characters long and contain only letters, numbers, dots, hyphens, and underscores.");
+        if (!identifier.matches("^\\d+$")) {
+            throw new ValidationException("Student ID must contain numbers only.");
         }
-        if (identifier.startsWith(".") || identifier.startsWith("_") || identifier.startsWith("-")
-                || identifier.endsWith(".") || identifier.endsWith("_") || identifier.endsWith("-")) {
-            throw new ValidationException("Identifier cannot start or end with a dot, hyphen, or underscore.");
-        }
-        if (identifier.contains("..") || identifier.contains("__") || identifier.contains("--")
-                || identifier.contains("._") || identifier.contains("_.") || identifier.contains(".-")
-                || identifier.contains("-.") || identifier.contains("_-") || identifier.contains("-_")) {
-            throw new ValidationException("Identifier cannot contain consecutive punctuation.");
-        }
-        if (identifier.matches("^\\d+$")) {
-            throw new ValidationException("Identifier cannot be purely numeric.");
-        }
-        String[] reservedWords = {"admin", "root", "support", "null", "undefined", "system", "moderator", "superuser"};
-        for (String word : reservedWords) {
-            if (identifier.equalsIgnoreCase(word)) {
-                throw new ValidationException("This identifier is reserved and cannot be used.");
-            }
+        if (identifier.length() != 8) {
+            throw new ValidationException("Student ID must be exactly 8 digits (e.g. 60240512).");
         }
 
         fullName = fullName.trim().replaceAll("\\s+", " ");
@@ -145,7 +136,10 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Full name can only contain letters, spaces, hyphens, and apostrophes.");
         }
         if (!fullName.contains(" ")) {
-            throw new ValidationException("Please provide both first and last name (separated by space).");
+            throw new ValidationException("Please provide both first and last name.");
+        }
+        if (!isFullNameAvailable(fullName)) {
+            throw new ValidationException("A user with this full name already exists in the system.");
         }
 
         email = email.trim().toLowerCase();
@@ -189,7 +183,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (!isIdentifierAvailable(identifier)) {
-            throw new ValidationException("User with this identifier already exists.");
+            throw new ValidationException("A student with this Student ID already exists.");
         }
         if (!isEmailAvailable(email)) {
             throw new ValidationException("User with this email already exists.");

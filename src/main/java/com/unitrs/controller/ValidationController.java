@@ -60,6 +60,15 @@ public class ValidationController extends HttpServlet {
             boolean available = userService.isEmailAvailable(email.trim());
             response.getWriter().write("{\"available\": " + available + "}");
 
+        } else if ("/fullname".equals(path)) {
+            String fullName = request.getParameter("fullName");
+            if (fullName == null || fullName.trim().isEmpty()) {
+                response.getWriter().write("{\"available\": false}");
+                return;
+            }
+            boolean available = userService.isFullNameAvailable(fullName.trim());
+            response.getWriter().write("{\"available\": " + available + "}");
+
         } else {
             response.setStatus(404);
             response.getWriter().write("{\"error\": \"Not found\"}");
