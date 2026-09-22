@@ -156,8 +156,10 @@ CREATE OR REPLACE VIEW student_schedule_view AS
 SELECT 
     e.id AS enrollment_id,
     e.student_id,
+    e.class_section_id,
     c.course_code,
     c.course_title,
+    c.credits,
     t.term_name,
     cs.session_shift,
     cs.days_of_week,

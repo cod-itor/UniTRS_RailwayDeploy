@@ -48,6 +48,22 @@ public class AttendanceRepository extends BaseRepository {
         return executeQuery(sql, this::mapResultSetToAttendanceEntry, recordId);
     }
 
+    public List<AttendanceEntry> findStudentAttendanceByEnrollmentId(int classSectionId, int studentId) {
+        String sql = "SELECT ae.id, ae.attendance_record_id, ae.student_id, ae.status, " +
+                     "ar.session_date, " +
+                     "u.full_name as student_name, u.user_identifier as student_identifier " +
+                     "FROM attendance_entries ae " +
+                     "JOIN attendance_records ar ON ae.attendance_record_id = ar.id " +
+                     "JOIN users u ON ae.student_id = u.id " +
+                     "WHERE ar.class_section_id = ? AND ae.student_id = ? " +
+                     "ORDER BY ar.session_date ASC";
+        return executeQuery(sql, rs -> {
+            AttendanceEntry entry = mapResultSetToAttendanceEntry(rs);
+            entry.setSessionDate(rs.getDate("session_date"));
+            return entry;
+        }, classSectionId, studentId);
+    }
+
     public int createRecord(int classSectionId, Date sessionDate) {
         String sql = "INSERT INTO attendance_records (class_section_id, session_date) VALUES (?, ?)";
         return executeInsertAndReturnKey(sql, classSectionId, sessionDate);

@@ -66,8 +66,10 @@ public class EnrollmentRepository extends BaseRepository {
         Enrollment e = new Enrollment();
         e.setId(rs.getInt("enrollment_id"));
         e.setStudentId(rs.getInt("student_id"));
+        e.setClassSectionId(rs.getInt("class_section_id"));
         e.setCourseCode(rs.getString("course_code"));
         e.setCourseTitle(rs.getString("course_title"));
+        e.setCredits(rs.getInt("credits"));
         e.setTermName(rs.getString("term_name"));
         e.setSessionShift(SessionShift.valueOf(rs.getString("session_shift")));
         e.setDaysOfWeek(rs.getString("days_of_week"));
