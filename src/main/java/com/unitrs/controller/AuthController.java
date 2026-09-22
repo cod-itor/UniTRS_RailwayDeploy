@@ -297,13 +297,14 @@ public class AuthController extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
         String major = request.getParameter("major");
+        String gender = request.getParameter("gender");
 
         if ((identifier == null || identifier.trim().isEmpty()) && "new".equalsIgnoreCase(applicantType)) {
             identifier = "9" + (int) (1000000 + (Math.random() * 9000000));
         }
 
         try {
-            userService.registerNewUser(identifier, fullName, email, password, confirmPassword, major, roleStr);
+            userService.registerNewUser(identifier, fullName, email, password, confirmPassword, major, roleStr, gender);
 
             otpService.sendRegistrationOtp(email, fullName);
 

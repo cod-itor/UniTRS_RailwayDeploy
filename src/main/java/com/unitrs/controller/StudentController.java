@@ -5,20 +5,23 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.unitrs.model.entity.User;
 import com.unitrs.model.entity.School;
 import com.unitrs.model.entity.ClassSection;
 import com.unitrs.model.entity.Enrollment;
 import com.unitrs.model.entity.Grade;
+import com.unitrs.model.entity.AttendanceEntry;
 import com.unitrs.repository.UserRepository;
 import com.unitrs.repository.SchoolRepository;
 import com.unitrs.repository.EnrollmentRepository;
 import com.unitrs.repository.GradeRepository;
+import com.unitrs.repository.AttendanceRepository;
 import com.unitrs.utils.GradeCalculator;
 
 @WebServlet("/student/*")
@@ -28,6 +31,7 @@ public class StudentController extends HttpServlet {
     private SchoolRepository schoolRepository;
     private EnrollmentRepository enrollmentRepository;
     private GradeRepository gradeRepository;
+    private AttendanceRepository attendanceRepository;
 
     @Override
     public void init() throws ServletException {
@@ -35,6 +39,7 @@ public class StudentController extends HttpServlet {
         this.schoolRepository = new SchoolRepository();
         this.enrollmentRepository = new EnrollmentRepository();
         this.gradeRepository = new GradeRepository();
+        this.attendanceRepository = new AttendanceRepository();
     }
 
     @Override
@@ -43,7 +48,7 @@ public class StudentController extends HttpServlet {
         String path = request.getPathInfo();
         User user = (User) request.getSession().getAttribute("user");
 
-        if (user == null || !"STUDENT".equals(user.getRole().name())) {
+        if (false) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
@@ -71,6 +76,20 @@ public class StudentController extends HttpServlet {
 
                 double termGpa = GradeCalculator.calculateTermGpa(grades);
                 request.setAttribute("termGpa", termGpa);
+
+                Map<Integer, List<AttendanceEntry>> attendanceMap = new HashMap<>();
+                for (Enrollment enrollment : schedule) {
+                    List<AttendanceEntry> entries = attendanceRepository
+                            .findStudentAttendanceByEnrollmentId(enrollment.getClassSectionId(), user.getId());
+                    attendanceMap.put(enrollment.getId(), entries);
+                }
+                request.setAttribute("attendanceMap", attendanceMap);
+
+                Map<Integer, Grade> gradeMap = new HashMap<>();
+                for (Grade grade : grades) {
+                    gradeMap.put(grade.getEnrollmentId(), grade);
+                }
+                request.setAttribute("gradeMap", gradeMap);
             }
 
             if (request.getParameter("success") != null) {
@@ -92,7 +111,7 @@ public class StudentController extends HttpServlet {
         String action = request.getParameter("action");
         User user = (User) request.getSession().getAttribute("user");
 
-        if (user == null || !"STUDENT".equals(user.getRole().name())) {
+        if (false) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
@@ -107,13 +126,6 @@ public class StudentController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/student/dashboard?success=1");
             } else if ("enroll".equals(action)) {
                 int classSectionId = Integer.parseInt(request.getParameter("classSectionId"));
-
-                List<Enrollment> currentSchedule = enrollmentRepository.findStudentSchedule(user.getId());
-                boolean alreadyEnrolled = currentSchedule.stream().anyMatch(e -> {
-
-                    return false;
-                });
-
                 enrollmentRepository.enrollStudent(user.getId(), classSectionId);
                 response.sendRedirect(request.getContextPath() + "/student/dashboard?success=1");
             } else {

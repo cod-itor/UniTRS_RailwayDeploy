@@ -17,8 +17,8 @@ public interface UserService {
     boolean verifyStudent(int id, boolean isVerified);
     void processUserVerification(int userId, boolean isApproved, String role);
     boolean updateRole(int id, String role);
-    void registerNewUser(String identifier, String fullName, String email, String password, String confirmPassword, String major);
-    void registerNewUser(String identifier, String fullName, String email, String password, String confirmPassword, String major, String role);
+    void registerNewUser(String identifier, String fullName, String email, String password, String confirmPassword, String major, String gender);
+    void registerNewUser(String identifier, String fullName, String email, String password, String confirmPassword, String major, String role, String gender);
     List<User> findAllUsers();
     List<User> findProfessors();
     boolean updateUserStatus(int id, boolean isActive);

@@ -723,13 +723,26 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="emailInput" class="form-label">Email Address <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                        <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@gmail.com or name@unitrs.edu" required autocomplete="off">
+                <div class="row">
+                    <div class="col-md-7 mb-3">
+                        <label for="emailInput" class="form-label">Email Address <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@gmail.com or name@unitrs.edu" required autocomplete="off">
+                        </div>
+                        <div id="emailValidation" class="validation-message text-muted">Must be a valid @gmail.com or university .edu address.</div>
                     </div>
-                    <div id="emailValidation" class="validation-message text-muted">Must be a valid @gmail.com or university .edu address.</div>
+                    <div class="col-md-5 mb-3">
+                        <label for="genderSelect" class="form-label">Gender <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+                            <select class="form-select" id="genderSelect" name="gender" required>
+                                <option value="" disabled selected>-- Select --</option>
+                                <option value="MALE">Male</option>
+                                <option value="FEMALE">Female</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mb-3 d-none" id="majorFieldContainer">
@@ -1366,6 +1379,9 @@
             }
         }
 
+        const genderSelect = document.getElementById('genderSelect');
+        const finalGender = genderSelect ? genderSelect.value : '';
+
         const formData = new URLSearchParams();
         formData.append('role', flowState.role);
         formData.append('applicantType', flowState.applicantType);
@@ -1379,6 +1395,7 @@
         formData.append('password', password);
         formData.append('confirmPassword', confirmPassword);
         formData.append('major', finalMajor);
+        formData.append('gender', finalGender);
 
         submitBtn.disabled = true;
         const originalBtnText = submitBtn.innerHTML;

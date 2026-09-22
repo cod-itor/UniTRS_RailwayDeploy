@@ -15,6 +15,7 @@ public class User {
     private String fullName;
     private String email;
     private Role role;
+    private String gender;
     private String major;
     private boolean isVerified;
     private boolean isActive;
