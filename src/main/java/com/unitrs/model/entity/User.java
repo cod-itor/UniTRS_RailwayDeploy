@@ -29,4 +29,8 @@ public class User {
     public String getFormattedIdentifier() {
         return FormatUtils.formatIdentifier(this.userIdentifier);
     }
+
+    public String getYearLevel() {
+        return null;
+    }
 }

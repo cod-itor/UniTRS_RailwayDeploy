@@ -14,13 +14,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <script>
-        // Automatic Mobile Redirect: Dual-role / mobile devices are routed to professor portal (full mobile UI)
-        if (window.innerWidth < 768 && !window.location.search.includes('force=desktop')) {
-            window.location.replace('${pageContext.request.contextPath}/professor/dashboard');
-        }
-    </script>
-
     <style>
         :root {
             --brand-primary: #2563eb;
@@ -609,6 +602,547 @@
         .bundle-card .list-group-item {
             border-color: #f1f5f9;
             padding: 14px 20px;
+        }
+
+        /* ========================================================
+           MOBILE UNIFIED DESIGN SYSTEM FOR DEAN
+           ======================================================== */
+        @media (max-width: 767.98px) {
+            .desktop-layout {
+                display: none !important;
+            }
+
+            .mobile-app-container {
+                display: block !important;
+                padding: 0 16px calc(84px + env(safe-area-inset-bottom, 16px));
+                max-width: 540px;
+                margin: 0 auto;
+                background: #f8fafc;
+                min-height: 100vh;
+                box-sizing: border-box;
+            }
+
+            /* Sticky Safe-Area Aware Top Bar */
+            .dean-mobile-topbar {
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                background: rgba(248, 250, 252, 0.92);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+                padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px;
+                margin-left: -16px;
+                margin-right: -16px;
+                margin-bottom: 16px;
+            }
+
+            .dean-top-avatar {
+                width: 42px;
+                height: 42px;
+                border-radius: 14px;
+                overflow: hidden;
+                background: #eff6ff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid #ffffff;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+                flex-shrink: 0;
+            }
+
+            .dean-prof-switch-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 12px;
+                border-radius: 99px;
+                background: #eff6ff;
+                border: 1px solid #bfdbfe;
+                font-size: 0.75rem;
+                font-weight: 700;
+                color: #1d4ed8;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                min-height: 36px;
+            }
+
+            .dean-prof-switch-pill:active {
+                background: #dbeafe;
+                transform: scale(0.97);
+            }
+
+            /* Sub Views Animation */
+            .mobile-sub-view {
+                display: none;
+                padding: 0 0 16px;
+            }
+
+            .mobile-sub-view.active {
+                display: block;
+                animation: deanMobileFadeIn 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            @keyframes deanMobileFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(6px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Hero Banner */
+            .dean-hero-banner {
+                background: linear-gradient(135deg, #091e3a 0%, #1e3a8a 60%, #2563eb 100%);
+                border-radius: 24px;
+                padding: 20px;
+                color: #ffffff;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 14px 34px rgba(15, 23, 42, 0.14);
+                margin-bottom: 16px;
+            }
+
+            .dean-hero-banner::before {
+                content: '';
+                position: absolute;
+                top: -50px;
+                right: -50px;
+                width: 160px;
+                height: 160px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+                pointer-events: none;
+            }
+
+            /* KPI 2x2 Grid */
+            .dean-kpi-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+
+            .dean-kpi-card {
+                background: #ffffff;
+                border-radius: 20px;
+                padding: 14px 16px;
+                border: 1px solid rgba(226, 232, 240, 0.75);
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                min-height: 94px;
+                transition: transform 0.15s ease;
+            }
+
+            .dean-kpi-card:active {
+                transform: scale(0.98);
+            }
+
+            .kpi-icon-box {
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1rem;
+                margin-bottom: 8px;
+            }
+
+            .kpi-icon-box.blue { background: #eff6ff; color: #2563eb; }
+            .kpi-icon-box.purple { background: #f5f3ff; color: #7c3aed; }
+            .kpi-icon-box.indigo { background: #e0e7ff; color: #4338ca; }
+            .kpi-icon-box.emerald { background: #ecfdf5; color: #059669; }
+
+            .dean-kpi-val {
+                font-size: 1.5rem;
+                font-weight: 800;
+                color: #0f172a;
+                line-height: 1.1;
+                letter-spacing: -0.02em;
+            }
+
+            .dean-kpi-label {
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: #64748b;
+                margin-top: 2px;
+            }
+
+            /* Action Strip */
+            .dean-action-strip {
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                margin-bottom: 16px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .dean-action-strip::-webkit-scrollbar {
+                display: none;
+            }
+
+            .dean-action-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                border-radius: 99px;
+                background: #ffffff;
+                border: 1px solid rgba(226, 232, 240, 0.85);
+                font-size: 0.82rem;
+                font-weight: 700;
+                color: #1e293b;
+                white-space: nowrap;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+                min-height: 44px;
+                cursor: pointer;
+                transition: all 0.18s ease;
+            }
+
+            .dean-action-pill:active {
+                background: #f8fafc;
+                transform: scale(0.97);
+            }
+
+            .dean-action-pill.primary {
+                background: #2563eb;
+                color: #ffffff;
+                border-color: #2563eb;
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            }
+
+            .dean-action-pill.primary:active {
+                background: #1d4ed8;
+            }
+
+            /* Course and Schedule Card */
+            .mobile-course-card {
+                background: #ffffff;
+                border-radius: 20px;
+                padding: 16px;
+                border: 1px solid rgba(226, 232, 240, 0.75);
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.025);
+                margin-bottom: 12px;
+                transition: transform 0.15s ease, box-shadow 0.15s ease;
+            }
+
+            .mobile-course-card:active {
+                transform: scale(0.985);
+            }
+
+            .mc-code {
+                font-size: 0.78rem;
+                font-weight: 800;
+                letter-spacing: 0.04em;
+                color: #2563eb;
+                background: #eff6ff;
+                padding: 3px 9px;
+                border-radius: 8px;
+                display: inline-block;
+            }
+
+            .mc-title {
+                font-size: 0.96rem;
+                font-weight: 700;
+                color: #0f172a;
+                margin: 8px 0 6px;
+                line-height: 1.35;
+            }
+
+            .mc-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                font-size: 0.78rem;
+                color: #64748b;
+                font-weight: 500;
+            }
+
+            .mc-meta-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            /* Capacity bar */
+            .cap-bar-track {
+                height: 7px;
+                background: #f1f5f9;
+                border-radius: 99px;
+                overflow: hidden;
+                width: 100%;
+                margin-top: 6px;
+            }
+
+            .cap-bar-fill {
+                height: 100%;
+                border-radius: 99px;
+                transition: width 0.3s ease;
+            }
+
+            .cap-bar-fill.normal { background: linear-gradient(90deg, #10b981, #059669); }
+            .cap-bar-fill.warning { background: linear-gradient(90deg, #f59e0b, #d97706); }
+            .cap-bar-fill.danger { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+            /* Search bar */
+            .mobile-search-bar {
+                position: relative;
+                margin-bottom: 14px;
+            }
+
+            .mobile-search-bar input {
+                width: 100%;
+                background: #ffffff;
+                border: 1px solid rgba(226, 232, 240, 0.85);
+                border-radius: 14px;
+                padding: 12px 14px 12px 42px;
+                font-size: 0.88rem;
+                color: #0f172a;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+                min-height: 46px;
+            }
+
+            .mobile-search-bar input:focus {
+                outline: none;
+                border-color: #2563eb;
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+            }
+
+            .mobile-search-bar i {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+                font-size: 1rem;
+                pointer-events: none;
+            }
+
+            /* Segmented Control for People Directory */
+            .dean-segmented-ctrl {
+                display: flex;
+                background: #e2e8f0;
+                padding: 4px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+                gap: 4px;
+            }
+
+            .dean-seg-btn {
+                flex: 1;
+                border: none;
+                background: transparent;
+                padding: 8px 12px;
+                border-radius: 12px;
+                font-size: 0.82rem;
+                font-weight: 700;
+                color: #64748b;
+                transition: all 0.2s ease;
+                min-height: 42px;
+            }
+
+            .dean-seg-btn.active {
+                background: #ffffff;
+                color: #0f172a;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+            }
+
+            /* Executive Dean Digital Credential ID Card */
+            .dean-cred-card {
+                background: linear-gradient(135deg, #091e3a 0%, #172554 45%, #1e3a8a 100%);
+                border-radius: 24px;
+                padding: 22px;
+                color: #ffffff;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 16px 36px rgba(9, 30, 58, 0.3);
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                margin-bottom: 16px;
+            }
+
+            .dean-cred-card::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    105deg,
+                    transparent 20%,
+                    rgba(255, 215, 0, 0.08) 35%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    rgba(255, 215, 0, 0.08) 65%,
+                    transparent 80%
+                );
+                background-size: 200% 200%;
+                animation: foilSweep 7s infinite ease-in-out;
+                pointer-events: none;
+            }
+
+            @keyframes foilSweep {
+                0% { background-position: -100% -100%; }
+                50% { background-position: 100% 100%; }
+                100% { background-position: -100% -100%; }
+            }
+
+            .dean-barcode {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+                height: 26px;
+                opacity: 0.85;
+            }
+
+            .dean-bar {
+                background: #ffffff;
+                height: 100%;
+                border-radius: 1px;
+            }
+
+            /* Floating Island Bottom Dock (Unified Standard) */
+            .mobile-dock, .mobile-bottom-dock {
+                position: fixed;
+                bottom: calc(12px + env(safe-area-inset-bottom, 8px));
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100% - 24px);
+                max-width: 480px;
+                background: rgba(255, 255, 255, 0.92);
+                backdrop-filter: blur(24px) saturate(180%);
+                -webkit-backdrop-filter: blur(24px) saturate(180%);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                border-radius: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                padding: 6px 8px;
+                z-index: 1040;
+                box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+            }
+
+            .dock-tab-btn {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: transparent;
+                border: none;
+                color: #64748b;
+                font-size: 0.68rem;
+                font-weight: 600;
+                letter-spacing: -0.01em;
+                flex: 1;
+                max-width: 84px;
+                min-height: 46px;
+                padding: 5px 4px;
+                border-radius: 18px;
+                cursor: pointer;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                text-decoration: none;
+                position: relative;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .dock-tab-btn:active {
+                transform: scale(0.92);
+            }
+
+            .dock-tab-btn.active {
+                color: #2563eb;
+                background: rgba(37, 99, 235, 0.09);
+                font-weight: 700;
+            }
+
+            .dock-tab-btn i {
+                font-size: 1.25rem;
+                line-height: 1;
+                margin-bottom: 2px;
+                transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+            }
+
+            .dock-tab-btn.active i {
+                transform: translateY(-1px);
+                color: #2563eb;
+            }
+
+            /* Mobile Toast */
+            .mobile-toast {
+                position: fixed;
+                bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
+                left: 50%;
+                transform: translateX(-50%) translateY(20px);
+                background: #0f172a;
+                color: #ffffff;
+                padding: 9px 18px;
+                border-radius: 99px;
+                font-size: 0.8rem;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+                z-index: 1060;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .mobile-toast.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+                pointer-events: auto;
+            }
+
+            /* Filter chip strip */
+            .filter-chip-strip {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+                padding-bottom: 6px;
+                margin-bottom: 12px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .filter-chip-strip::-webkit-scrollbar {
+                display: none;
+            }
+
+            .filter-chip {
+                border: 1px solid #e2e8f0;
+                background: #ffffff;
+                color: #475569;
+                font-size: 0.76rem;
+                font-weight: 600;
+                padding: 6px 14px;
+                border-radius: 99px;
+                white-space: nowrap;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                min-height: 36px;
+                display: inline-flex;
+                align-items: center;
+            }
+
+            .filter-chip.active {
+                background: #2563eb;
+                color: #ffffff;
+                border-color: #2563eb;
+                font-weight: 700;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .mobile-app-container {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -1240,6 +1774,564 @@
         </main>
     </div>
 
+    <!-- ============================================================= -->
+    <!-- DEAN NATIVE MOBILE EXPERIENCE (VIEWPORT < 768px)               -->
+    <!-- ============================================================= -->
+    <div class="mobile-app-container d-block d-md-none">
+
+        <!-- Sticky Safe-Area Aware Top Bar -->
+        <header class="dean-mobile-topbar" role="banner">
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="dean-top-avatar">
+                        <c:choose>
+                            <c:when test="${user.gender == 'FEMALE'}">
+                                <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="fw-extrabold text-dark" style="font-size: 1.05rem; letter-spacing: -0.02em;">Dean Admin</span>
+                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-2 py-0" style="font-size:0.65rem; font-weight:700;">DEAN</span>
+                        </div>
+                        <div class="text-muted small fw-medium text-truncate" style="max-width: 170px; font-size: 0.75rem;">${user.fullName}</div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <a href="${pageContext.request.contextPath}/professor/dashboard" class="dean-prof-switch-pill text-decoration-none" title="Switch to Professor View">
+                        <i class="bi bi-person-workspace text-primary"></i>
+                        <span>Prof View</span>
+                    </a>
+                    <button type="button" class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center shadow-xs" style="width: 38px; height: 38px; border: 1px solid rgba(226,232,240,0.8);" onclick="switchDeanMobileTab('profile')" aria-label="Open profile settings">
+                        <i class="bi bi-gear-fill text-secondary" style="font-size: 1rem;"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== TAB 1: OVERVIEW / HUB ===== -->
+        <section id="mobile-view-home" class="mobile-sub-view active" role="tabpanel" aria-labelledby="dock-tab-home">
+            <!-- Hero Banner -->
+            <div class="dean-hero-banner">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-1 font-monospace" style="font-size:0.75rem; font-weight:700;">
+                        <i class="bi bi-mortarboard-fill me-1 text-warning"></i>${deanSchool.schoolName}
+                    </span>
+                    <span class="badge bg-success bg-opacity-90 text-white rounded-pill px-2 py-1" style="font-size:0.7rem; font-weight:700;">
+                        <i class="bi bi-circle-fill me-1" style="font-size:0.5rem;"></i>Active Term
+                    </span>
+                </div>
+                <h2 class="fw-extrabold text-white mb-1" style="font-size:1.35rem; letter-spacing:-0.02em;">Dean Leadership Hub</h2>
+                <p class="text-white text-opacity-80 small mb-3">Academic Curriculum & Department Administration</p>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="${pageContext.request.contextPath}/professor/dashboard" class="btn btn-sm btn-light rounded-pill px-3 py-1 fw-bold text-dark" style="font-size:0.78rem;">
+                        <i class="bi bi-person-workspace text-primary me-1"></i> Switch to Professor Portal
+                    </a>
+                </div>
+            </div>
+
+            <!-- KPI 2x2 Grid -->
+            <div class="dean-kpi-grid">
+                <div class="dean-kpi-card" onclick="switchDeanMobileTab('courses')" role="button" tabindex="0">
+                    <div class="kpi-icon-box blue"><i class="bi bi-book-half"></i></div>
+                    <div>
+                        <div class="dean-kpi-val">${courses.size()}</div>
+                        <div class="dean-kpi-label">Master Courses</div>
+                    </div>
+                </div>
+                <div class="dean-kpi-card" onclick="switchDeanMobileTab('schedules')" role="button" tabindex="0">
+                    <div class="kpi-icon-box indigo"><i class="bi bi-clock-history"></i></div>
+                    <div>
+                        <div class="dean-kpi-val">${sections.size()}</div>
+                        <div class="dean-kpi-label">Class Sections</div>
+                    </div>
+                </div>
+                <div class="dean-kpi-card" onclick="switchDeanMobileTab('people'); toggleDeanPeopleSegment('faculty');" role="button" tabindex="0">
+                    <div class="kpi-icon-box purple"><i class="bi bi-person-badge-fill"></i></div>
+                    <div>
+                        <div class="dean-kpi-val">${professors.size()}</div>
+                        <div class="dean-kpi-label">Faculty Staff</div>
+                    </div>
+                </div>
+                <div class="dean-kpi-card" onclick="switchDeanMobileTab('people'); toggleDeanPeopleSegment('students');" role="button" tabindex="0">
+                    <div class="kpi-icon-box emerald"><i class="bi bi-people-fill"></i></div>
+                    <div>
+                        <div class="dean-kpi-val">${students.size()}</div>
+                        <div class="dean-kpi-label">Enrolled Students</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Horizontal Strip -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-dark small">Administrative Quick Actions</span>
+            </div>
+            <div class="dean-action-strip">
+                <button type="button" class="dean-action-pill primary" data-bs-toggle="modal" data-bs-target="#addCourseModal">
+                    <i class="bi bi-plus-circle-fill"></i> Add Course
+                </button>
+                <button type="button" class="dean-action-pill" data-bs-toggle="modal" data-bs-target="#scheduleClassModal">
+                    <i class="bi bi-calendar-plus text-primary"></i> Schedule Class
+                </button>
+                <button type="button" class="dean-action-pill" data-bs-toggle="modal" data-bs-target="#addTermModal">
+                    <i class="bi bi-calendar2-range text-indigo"></i> Add Term
+                </button>
+                <button type="button" class="dean-action-pill" data-bs-toggle="modal" data-bs-target="#addRoomModal">
+                    <i class="bi bi-door-open text-success"></i> Add Room
+                </button>
+                <button type="button" class="dean-action-pill" data-bs-toggle="modal" data-bs-target="#batchRoomModal">
+                    <i class="bi bi-layers text-secondary"></i> Batch Rooms
+                </button>
+            </div>
+
+            <!-- Active Class Sections Spotlight -->
+            <div class="d-flex justify-content-between align-items-center mb-3 mt-1">
+                <div>
+                    <h3 class="fw-extrabold text-dark mb-0" style="font-size:1.05rem;">Scheduled Classes</h3>
+                    <span class="text-muted" style="font-size:0.75rem;">${sections.size()} active class offerings</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-link text-primary fw-bold text-decoration-none p-0" onclick="switchDeanMobileTab('schedules')">
+                    See All <i class="bi bi-arrow-right"></i>
+                </button>
+            </div>
+
+            <c:forEach var="section" items="${sections}" end="3">
+                <div class="mobile-course-card" onclick="switchDeanMobileTab('schedules')" role="button" tabindex="0">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <span class="mc-code me-1">${section.courseCode}</span>
+                            <span class="badge bg-light border text-muted">${section.termName}</span>
+                        </div>
+                        <span class="badge bg-primary bg-opacity-10 text-primary fw-bold">${section.sessionShift}</span>
+                    </div>
+                    <div class="mc-title">${section.courseTitle}</div>
+                    <div class="mc-meta mb-2">
+                        <div class="mc-meta-item"><i class="bi bi-person-badge text-primary"></i>${section.professorName}</div>
+                        <div class="mc-meta-item"><i class="bi bi-geo-alt text-primary"></i>Room ${section.roomName}</div>
+                        <div class="mc-meta-item"><i class="bi bi-calendar3 text-primary"></i>${section.daysOfWeek}</div>
+                    </div>
+                    <div class="pt-2 border-top">
+                        <div class="d-flex justify-content-between align-items-center text-muted" style="font-size:0.75rem;">
+                            <span>Enrollment Capacity</span>
+                            <span class="fw-bold ${section.enrolledCount >= section.roomCapacity ? 'text-danger' : 'text-dark'}">${section.enrolledCount} / ${section.roomCapacity}</span>
+                        </div>
+                        <div class="cap-bar-track">
+                            <div class="cap-bar-fill ${section.enrolledCount >= section.roomCapacity ? 'danger' : ((section.roomCapacity > 0 && (section.enrolledCount * 100 / section.roomCapacity >= 75)) ? 'warning' : 'normal')}"
+                                 style="width: ${section.roomCapacity > 0 ? (section.enrolledCount * 100 / section.roomCapacity) : 0}%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </c:forEach>
+            <c:if test="${empty sections}">
+                <div class="mobile-course-card text-center py-4">
+                    <i class="bi bi-calendar-x text-muted fs-2 mb-2 d-block"></i>
+                    <div class="fw-bold small text-dark mb-1">No class sections scheduled</div>
+                    <div class="small text-muted mb-3">Schedule your first class section to get started</div>
+                    <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#scheduleClassModal">
+                        <i class="bi bi-plus-lg me-1"></i> Schedule Class
+                    </button>
+                </div>
+            </c:if>
+
+            <!-- Terms Spotlight -->
+            <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
+                <h3 class="fw-extrabold text-dark mb-0" style="font-size:1.05rem;">Academic Terms</h3>
+                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold" data-bs-toggle="modal" data-bs-target="#addTermModal" style="font-size:0.75rem;">
+                    + Add Term
+                </button>
+            </div>
+            <div class="mobile-course-card p-2 mb-3">
+                <div class="list-group list-group-flush">
+                    <c:forEach var="term" items="${terms}">
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-2 py-3 border-bottom border-light">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-light border text-primary rounded-pill px-2 py-1 fw-bold font-monospace">T${term.termNumber}</span>
+                                <span class="fw-bold text-dark small">${term.termName}</span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-light rounded-pill px-3 border" data-bs-toggle="modal" data-bs-target="#editTermModal${term.id}" style="font-size:0.75rem;">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TAB 2: MASTER COURSES ===== -->
+        <section id="mobile-view-courses" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-courses">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="fw-extrabold text-dark mb-0" style="font-size:1.25rem;">Master Courses</h2>
+                    <span class="text-muted" style="font-size:0.75rem;">${courses.size()} courses in curriculum catalog</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#addCourseModal" style="font-size:0.8rem; min-height:42px;">
+                    <i class="bi bi-plus-lg me-1"></i> New Course
+                </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="mobile-search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" id="mobileDeanCourseSearch" placeholder="Search by course code or title..." aria-label="Search courses" oninput="filterMobileDeanCourses(this.value)">
+            </div>
+
+            <!-- Course Items List -->
+            <div id="mobileDeanCoursesContainer">
+                <c:forEach var="course" items="${courses}">
+                    <div class="mobile-course-card mobile-dean-course-item">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="mc-code">${course.courseCode}</span>
+                            <span class="badge bg-info-subtle text-info-emphasis border rounded-pill px-2 py-1">${course.credits} Credits</span>
+                        </div>
+                        <h3 class="mc-title mb-3">${course.courseTitle}</h3>
+                        <div class="d-flex justify-content-end align-items-center gap-2 pt-2 border-top">
+                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold" data-bs-toggle="modal" data-bs-target="#editCourseModal${course.id}" style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                            <form action="${pageContext.request.contextPath}/dean/dashboard" method="post" class="d-inline">
+                                <input type="hidden" name="action" value="deleteCourse">
+                                <input type="hidden" name="courseId" value="${course.id}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold" onclick="return confirm('Are you sure you want to delete course ${course.courseCode}?');" style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </c:forEach>
+                <div id="mobileDeanCoursesEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+                    <i class="bi bi-search text-muted fs-2 mb-2 d-block"></i>
+                    <div class="fw-bold small text-dark mb-1">No matching courses</div>
+                    <div class="small text-muted mb-2">Try adjusting your search keywords</div>
+                    <button type="button" class="btn btn-sm btn-light border rounded-pill px-3" onclick="clearMobileDeanCourseSearch()">Clear Search</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TAB 3: CLASS SCHEDULES ===== -->
+        <section id="mobile-view-schedules" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-schedules">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="fw-extrabold text-dark mb-0" style="font-size:1.25rem;">Class Schedules</h2>
+                    <span class="text-muted" style="font-size:0.75rem;">${sections.size()} active class offerings</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#scheduleClassModal" style="font-size:0.8rem; min-height:42px;">
+                    <i class="bi bi-plus-lg me-1"></i> Schedule
+                </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="mobile-search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" id="mobileDeanScheduleSearch" placeholder="Search by course, prof, room..." aria-label="Search schedules" oninput="filterMobileDeanSchedules(this.value)">
+            </div>
+
+            <!-- Shift Filter Pills -->
+            <div class="filter-chip-strip" id="deanScheduleFilterStrip">
+                <button type="button" class="filter-chip active" onclick="filterDeanScheduleShift('all', this)">All</button>
+                <button type="button" class="filter-chip" onclick="filterDeanScheduleShift('morning', this)">Morning</button>
+                <button type="button" class="filter-chip" onclick="filterDeanScheduleShift('afternoon', this)">Afternoon</button>
+                <button type="button" class="filter-chip" onclick="filterDeanScheduleShift('evening', this)">Evening</button>
+                <button type="button" class="filter-chip" onclick="filterDeanScheduleShift('weekend', this)">Weekend</button>
+            </div>
+
+            <!-- Schedules List -->
+            <div id="mobileDeanSchedulesContainer">
+                <c:forEach var="section" items="${sections}">
+                    <div class="mobile-course-card mobile-dean-section-item" data-shift="${section.sessionShift}" data-days="${section.daysOfWeek}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <span class="mc-code me-1">${section.courseCode}</span>
+                                <span class="badge bg-light border text-muted">${section.termName}</span>
+                            </div>
+                            <span class="badge bg-primary bg-opacity-10 text-primary fw-bold">${section.sessionShift}</span>
+                        </div>
+                        <h3 class="mc-title mb-2">${section.courseTitle}</h3>
+                        <div class="mc-meta mb-3">
+                            <div class="mc-meta-item"><i class="bi bi-person-badge text-primary"></i>${section.professorName}</div>
+                            <div class="mc-meta-item"><i class="bi bi-geo-alt text-primary"></i>Room ${section.roomName}</div>
+                            <div class="mc-meta-item"><i class="bi bi-calendar3 text-primary"></i>${section.daysOfWeek}</div>
+                        </div>
+
+                        <div class="pt-2 border-top mb-3">
+                            <div class="d-flex justify-content-between align-items-center text-muted" style="font-size:0.75rem;">
+                                <span>Enrollment: <strong class="text-dark">${section.enrolledCount} / ${section.roomCapacity}</strong></span>
+                                <span class="${section.enrolledCount >= section.roomCapacity ? 'text-danger fw-bold' : ''}">${section.roomCapacity > 0 ? (section.enrolledCount * 100 / section.roomCapacity) : 0}%</span>
+                            </div>
+                            <div class="cap-bar-track">
+                                <div class="cap-bar-fill ${section.enrolledCount >= section.roomCapacity ? 'danger' : ((section.roomCapacity > 0 && (section.enrolledCount * 100 / section.roomCapacity >= 75)) ? 'warning' : 'normal')}"
+                                     style="width: ${section.roomCapacity > 0 ? (section.enrolledCount * 100 / section.roomCapacity) : 0}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end align-items-center">
+                            <form action="${pageContext.request.contextPath}/dean/dashboard" method="post" class="d-inline">
+                                <input type="hidden" name="action" value="removeClassSection">
+                                <input type="hidden" name="sectionId" value="${section.id}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold" onclick="return confirm('Are you sure you want to delete this scheduled class section?');" style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
+                                    <i class="bi bi-trash"></i> Delete Section
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </c:forEach>
+                <div id="mobileDeanSchedulesEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+                    <i class="bi bi-calendar-x text-muted fs-2 mb-2 d-block"></i>
+                    <div class="fw-bold small text-dark mb-1">No matching class sections</div>
+                    <div class="small text-muted">Try clearing search or filters</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TAB 4: PEOPLE DIRECTORY ===== -->
+        <section id="mobile-view-people" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-people">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="fw-extrabold text-dark mb-0" style="font-size:1.25rem;">People Directory</h2>
+                    <span class="text-muted" style="font-size:0.75rem;">Faculty members and enrolled students</span>
+                </div>
+            </div>
+
+            <!-- Segmented Control -->
+            <div class="dean-segmented-ctrl">
+                <button type="button" id="deanSegFacultyBtn" class="dean-seg-btn active" onclick="toggleDeanPeopleSegment('faculty')">
+                    <i class="bi bi-person-badge-fill me-1"></i> Faculty (${professors.size()})
+                </button>
+                <button type="button" id="deanSegStudentsBtn" class="dean-seg-btn" onclick="toggleDeanPeopleSegment('students')">
+                    <i class="bi bi-people-fill me-1"></i> Students (${students.size()})
+                </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="mobile-search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" id="mobileDeanPeopleSearch" placeholder="Search by name, ID, or email..." aria-label="Search people" oninput="filterMobileDeanPeople(this.value)">
+            </div>
+
+            <!-- Faculty List -->
+            <div id="deanFacultyContainer">
+                <c:forEach var="prof" items="${professors}">
+                    <div class="mobile-course-card mobile-dean-person-item faculty-person-item p-3 mb-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width:44px; height:44px; border-radius:14px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center; font-size:1.15rem; flex-shrink:0; border:1px solid #dbeafe;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold text-dark text-truncate" style="font-size:0.92rem;">${prof.fullName}</span>
+                                    <span class="badge bg-primary-subtle text-primary border rounded-pill px-2 py-0" style="font-size:0.65rem;">FACULTY</span>
+                                </div>
+                                <div class="text-muted small text-truncate" style="font-size:0.78rem;">${prof.email}</div>
+                                <div class="mt-1">
+                                    <button type="button" class="btn btn-sm btn-light border rounded-pill px-2 py-0 fw-bold font-monospace" style="font-size:0.7rem;" data-id="${prof.formattedIdentifier}" onclick="copyDeanId(this.getAttribute('data-id'), this)" title="Copy Faculty ID">
+                                        <i class="bi bi-copy text-muted me-1"></i>${prof.formattedIdentifier}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+
+            <!-- Students List -->
+            <div id="deanStudentsContainer" style="display:none;">
+                <c:forEach var="student" items="${students}">
+                    <div class="mobile-course-card mobile-dean-person-item student-person-item p-3 mb-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width:44px; height:44px; border-radius:14px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center; font-size:1.15rem; flex-shrink:0; border:1px solid #a7f3d0;">
+                                <i class="bi bi-mortarboard"></i>
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold text-dark text-truncate" style="font-size:0.92rem;">${student.fullName}</span>
+                                    <span class="badge bg-success-subtle text-success border rounded-pill px-2 py-0" style="font-size:0.65rem;">STUDENT</span>
+                                </div>
+                                <div class="text-muted small text-truncate" style="font-size:0.78rem;">${student.email}</div>
+                                <div class="mt-1 d-flex align-items-center gap-2">
+                                    <button type="button" class="btn btn-sm btn-light border rounded-pill px-2 py-0 fw-bold font-monospace" style="font-size:0.7rem;" data-id="${student.formattedIdentifier}" onclick="copyDeanId(this.getAttribute('data-id'), this)" title="Copy Student ID">
+                                        <i class="bi bi-copy text-muted me-1"></i>${student.formattedIdentifier}
+                                    </button>
+                                    <c:if test="${not empty student.major}">
+                                        <span class="badge bg-light text-muted border rounded-pill px-2 py-0" style="font-size:0.65rem;">${student.major}</span>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+
+            <div id="mobileDeanPeopleEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+                <i class="bi bi-people text-muted fs-2 mb-2 d-block"></i>
+                <div class="fw-bold small text-dark mb-1">No people found</div>
+                <div class="small text-muted">Try adjusting your search criteria</div>
+            </div>
+        </section>
+
+        <!-- ===== TAB 5: PROFILE & CREDENTIALS ===== -->
+        <section id="mobile-view-profile" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-profile">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="fw-extrabold text-dark mb-0" style="font-size:1.25rem;">Executive Profile</h2>
+                    <span class="text-muted" style="font-size:0.75rem;">Official credential and administrative controls</span>
+                </div>
+            </div>
+
+            <!-- Executive Dean Digital Credential ID Card -->
+            <div class="dean-cred-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.25);">
+                            <i class="bi bi-mortarboard-fill text-warning" style="font-size:1.1rem;"></i>
+                        </div>
+                        <div>
+                            <div class="fw-extrabold text-white text-uppercase" style="font-size:0.72rem; letter-spacing:0.08em;">UniTRS University</div>
+                            <div class="text-white text-opacity-70" style="font-size:0.65rem;">Office of Academic Affairs</div>
+                        </div>
+                    </div>
+                    <span class="badge bg-warning text-dark fw-extrabold rounded-pill px-2 py-1" style="font-size:0.65rem; letter-spacing:0.04em;">EXECUTIVE DEAN</span>
+                </div>
+
+                <div class="mb-3">
+                    <div class="text-white text-opacity-70 small mb-0" style="font-size:0.72rem;">Dean of School</div>
+                    <div class="fw-bold text-white text-truncate mb-2" style="font-size:0.95rem;">${deanSchool.schoolName}</div>
+                    <div class="fw-extrabold text-white" style="font-size:1.25rem; letter-spacing:-0.02em;">${user.fullName}</div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-end pt-3 border-top border-white border-opacity-20">
+                    <div>
+                        <div class="text-white text-opacity-70" style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.05em;">Dean ID / Barcode</div>
+                        <div class="d-flex align-items-center gap-2 mt-1">
+                            <button type="button" class="btn btn-sm btn-white bg-white text-dark rounded-pill px-3 py-1 fw-bold font-monospace border-0" data-id="${user.formattedIdentifier}" onclick="copyDeanId(this.getAttribute('data-id'), this)" style="font-size:0.78rem;" title="Click to copy Dean ID">
+                                <i class="bi bi-copy text-primary me-1"></i>${user.formattedIdentifier}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Simulated Barcode -->
+                    <div class="dean-barcode" aria-hidden="true">
+                        <span class="dean-bar" style="width:3px;"></span>
+                        <span class="dean-bar" style="width:1px; margin-left:1px;"></span>
+                        <span class="dean-bar" style="width:2px; margin-left:2px;"></span>
+                        <span class="dean-bar" style="width:4px; margin-left:1px;"></span>
+                        <span class="dean-bar" style="width:1px; margin-left:2px;"></span>
+                        <span class="dean-bar" style="width:3px; margin-left:1px;"></span>
+                        <span class="dean-bar" style="width:2px; margin-left:1px;"></span>
+                        <span class="dean-bar" style="width:4px; margin-left:2px;"></span>
+                        <span class="dean-bar" style="width:1px; margin-left:1px;"></span>
+                        <span class="dean-bar" style="width:3px; margin-left:2px;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campus Facilities Card -->
+            <div class="mobile-course-card p-3 mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="kpi-icon-box emerald mb-0"><i class="bi bi-building-fill"></i></div>
+                        <div>
+                            <div class="fw-bold text-dark small">Physical Facilities</div>
+                            <div class="text-muted" style="font-size:0.72rem;">${rooms.size()} campus rooms registered</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2 mt-1">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-outline-primary w-100 rounded-pill py-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#addRoomModal" style="min-height:44px; display:flex; align-items:center; justify-content:center; gap:6px;">
+                            <i class="bi bi-plus-lg"></i> Add Room
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-outline-secondary w-100 rounded-pill py-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#batchRoomModal" style="min-height:44px; display:flex; align-items:center; justify-content:center; gap:6px;">
+                            <i class="bi bi-layers"></i> Batch Rooms
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-Factor Authentication Security Card -->
+            <div class="mobile-course-card p-3 mb-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="kpi-icon-box blue mb-0"><i class="bi bi-shield-lock-fill"></i></div>
+                        <div>
+                            <div class="fw-bold text-dark small">Two-Factor Authentication</div>
+                            <div class="text-muted" style="font-size:0.72rem;">Enhance account login security</div>
+                        </div>
+                    </div>
+                    <span class="badge ${user.twoFactorEnabled ? 'bg-success' : 'bg-warning text-dark'} rounded-pill px-2 py-1" style="font-size:0.68rem; font-weight:700;">
+                        ${user.twoFactorEnabled ? 'Enabled' : 'Disabled'}
+                    </span>
+                </div>
+                <p class="text-muted small mb-3" style="font-size:0.78rem;">Requires a one-time OTP email code upon every login attempt.</p>
+                <form action="${pageContext.request.contextPath}/auth/toggle-2fa" method="post" class="d-inline">
+                    <input type="hidden" name="redirect" value="/dean/dashboard?tab=profile">
+                    <button type="submit" class="btn btn-sm ${user.twoFactorEnabled ? 'btn-outline-danger' : 'btn-primary'} w-100 rounded-pill py-2 fw-bold" style="min-height:44px;">
+                        <i class="bi ${user.twoFactorEnabled ? 'bi-shield-slash' : 'bi-shield-check'} me-1"></i>
+                        ${user.twoFactorEnabled ? 'Disable 2-Step Verification' : 'Enable 2-Step Verification'}
+                    </button>
+                </form>
+            </div>
+
+            <!-- Switch to Professor Portal Card -->
+            <div class="mobile-course-card p-3 mb-3">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <div class="kpi-icon-box purple mb-0"><i class="bi bi-person-workspace"></i></div>
+                    <div>
+                        <div class="fw-bold text-dark small">Professor Portal</div>
+                        <div class="text-muted" style="font-size:0.72rem;">Record attendance and submit grades</div>
+                    </div>
+                </div>
+                <p class="text-muted small mb-3" style="font-size:0.78rem;">Switch to faculty mode to manage your courses, view student rosters, and run roll call.</p>
+                <a href="${pageContext.request.contextPath}/professor/dashboard" class="btn btn-sm btn-outline-dark w-100 rounded-pill py-2 fw-bold text-decoration-none" style="min-height:44px; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <i class="bi bi-arrow-left-right text-primary"></i> Switch to Professor View
+                </a>
+            </div>
+
+            <!-- Sign Out Button -->
+            <div class="pt-2 mb-4">
+                <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-danger w-100 rounded-pill py-3 fw-bold text-decoration-none shadow-sm" style="min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i class="bi bi-box-arrow-right"></i> Sign Out of Dean Account
+                </a>
+            </div>
+        </section>
+
+        <!-- Floating Island Bottom Dock -->
+        <nav class="mobile-bottom-dock mobile-dock" role="navigation" aria-label="Dean Mobile Navigation">
+            <button type="button" class="dock-tab-btn active" id="dock-tab-home" data-tab="home" onclick="switchDeanMobileTab('home')" role="tab" aria-selected="true" aria-controls="mobile-view-home" aria-label="Home Overview">
+                <i class="bi bi-house-door-fill"></i>
+                <span>Home</span>
+            </button>
+            <button type="button" class="dock-tab-btn" id="dock-tab-courses" data-tab="courses" onclick="switchDeanMobileTab('courses')" role="tab" aria-selected="false" aria-controls="mobile-view-courses" aria-label="Courses Catalog">
+                <i class="bi bi-book"></i>
+                <span>Courses</span>
+            </button>
+            <button type="button" class="dock-tab-btn" id="dock-tab-schedules" data-tab="schedules" onclick="switchDeanMobileTab('schedules')" role="tab" aria-selected="false" aria-controls="mobile-view-schedules" aria-label="Class Schedules">
+                <i class="bi bi-clock-history"></i>
+                <span>Schedules</span>
+            </button>
+            <button type="button" class="dock-tab-btn" id="dock-tab-people" data-tab="people" onclick="switchDeanMobileTab('people')" role="tab" aria-selected="false" aria-controls="mobile-view-people" aria-label="People Directory">
+                <i class="bi bi-people"></i>
+                <span>People</span>
+            </button>
+            <button type="button" class="dock-tab-btn" id="dock-tab-profile" data-tab="profile" onclick="switchDeanMobileTab('profile')" role="tab" aria-selected="false" aria-controls="mobile-view-profile" aria-label="Executive Profile">
+                <i class="bi bi-person-badge"></i>
+                <span>Profile</span>
+            </button>
+        </nav>
+
+        <!-- Floating Toast Notification -->
+        <div id="deanMobileToast" class="mobile-toast" role="status" aria-live="polite">
+            <i class="bi bi-check-circle-fill text-success"></i>
+            <span id="deanMobileToastText">Copied to clipboard!</span>
+        </div>
+
+    </div>
+
     <%-- ============================================================= --%>
     <%-- ALL MODALS (AT ROOT LEVEL TO PREVENT GLITCHES & CLIPPING)     --%>
     <%-- ============================================================= --%>
@@ -1644,6 +2736,203 @@
                 updateCourseOptions();
             });
         }
+
+        // ========================================================
+        // DEAN MOBILE SCRIPTS
+        // ========================================================
+        function switchDeanMobileTab(tabName) {
+            var views = document.querySelectorAll('.mobile-sub-view');
+            views.forEach(function(v) { v.classList.remove('active'); });
+
+            var target = document.getElementById('mobile-view-' + tabName);
+            if (target) {
+                target.classList.add('active');
+            }
+
+            var btns = document.querySelectorAll('.dock-tab-btn');
+            var iconMap = {
+                home: ['bi-house-door-fill', 'bi-house-door'],
+                courses: ['bi-book-fill', 'bi-book'],
+                schedules: ['bi-clock-history', 'bi-clock'],
+                people: ['bi-people-fill', 'bi-people'],
+                profile: ['bi-person-badge-fill', 'bi-person-badge']
+            };
+
+            btns.forEach(function(b) {
+                var bTab = b.getAttribute('data-tab');
+                var ic = b.querySelector('i');
+                if (bTab === tabName) {
+                    b.classList.add('active');
+                    b.setAttribute('aria-selected', 'true');
+                    if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][0];
+                } else {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                    if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][1];
+                }
+            });
+
+            try {
+                var url = new URL(window.location);
+                url.searchParams.set('tab', tabName);
+                window.history.replaceState({}, '', url);
+            } catch(e) {}
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterMobileDeanCourses(q) {
+            q = (q || '').toLowerCase().trim();
+            var items = document.querySelectorAll('.mobile-dean-course-item');
+            var visible = 0;
+            items.forEach(function(item) {
+                var match = (item.textContent || '').toLowerCase().indexOf(q) !== -1;
+                item.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            var empty = document.getElementById('mobileDeanCoursesEmpty');
+            if (empty) {
+                empty.style.display = (visible === 0 && items.length > 0) ? 'block' : 'none';
+            }
+        }
+
+        function clearMobileDeanCourseSearch() {
+            var inp = document.getElementById('mobileDeanCourseSearch');
+            if (inp) inp.value = '';
+            filterMobileDeanCourses('');
+        }
+
+        function filterMobileDeanSchedules(q) {
+            q = (q || '').toLowerCase().trim();
+            var items = document.querySelectorAll('.mobile-dean-section-item');
+            var visible = 0;
+            items.forEach(function(item) {
+                var match = (item.textContent || '').toLowerCase().indexOf(q) !== -1;
+                item.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            var empty = document.getElementById('mobileDeanSchedulesEmpty');
+            if (empty) {
+                empty.style.display = (visible === 0 && items.length > 0) ? 'block' : 'none';
+            }
+        }
+
+        function filterDeanScheduleShift(shift, btn) {
+            var strip = document.getElementById('deanScheduleFilterStrip');
+            if (strip) {
+                strip.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
+            }
+            if (btn) btn.classList.add('active');
+
+            var items = document.querySelectorAll('.mobile-dean-section-item');
+            var visible = 0;
+            shift = (shift || 'all').toLowerCase();
+
+            items.forEach(function(item) {
+                var itemShift = (item.getAttribute('data-shift') || '').toLowerCase();
+                var match = (shift === 'all') || (itemShift.indexOf(shift) !== -1);
+                item.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+
+            var empty = document.getElementById('mobileDeanSchedulesEmpty');
+            if (empty) {
+                empty.style.display = (visible === 0 && items.length > 0) ? 'block' : 'none';
+            }
+        }
+
+        function toggleDeanPeopleSegment(target) {
+            var btnFaculty = document.getElementById('deanSegFacultyBtn');
+            var btnStudents = document.getElementById('deanSegStudentsBtn');
+            var facultyList = document.getElementById('deanFacultyContainer');
+            var studentsList = document.getElementById('deanStudentsContainer');
+
+            if (target === 'faculty') {
+                if (btnFaculty) btnFaculty.classList.add('active');
+                if (btnStudents) btnStudents.classList.remove('active');
+                if (facultyList) facultyList.style.display = '';
+                if (studentsList) studentsList.style.display = 'none';
+            } else {
+                if (btnStudents) btnStudents.classList.add('active');
+                if (btnFaculty) btnFaculty.classList.remove('active');
+                if (facultyList) facultyList.style.display = 'none';
+                if (studentsList) studentsList.style.display = '';
+            }
+
+            var search = document.getElementById('mobileDeanPeopleSearch');
+            if (search) {
+                filterMobileDeanPeople(search.value);
+            }
+        }
+
+        function filterMobileDeanPeople(q) {
+            q = (q || '').toLowerCase().trim();
+            var activeFaculty = document.getElementById('deanSegFacultyBtn').classList.contains('active');
+            var items = activeFaculty
+                ? document.querySelectorAll('#deanFacultyContainer .faculty-person-item')
+                : document.querySelectorAll('#deanStudentsContainer .student-person-item');
+            var visible = 0;
+
+            items.forEach(function(item) {
+                var match = (item.textContent || '').toLowerCase().indexOf(q) !== -1;
+                item.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+
+            var empty = document.getElementById('mobileDeanPeopleEmpty');
+            if (empty) {
+                empty.style.display = (visible === 0 && items.length > 0) ? 'block' : 'none';
+            }
+        }
+
+        function copyDeanId(idText, btnEl) {
+            if (!idText) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(idText).then(onCopySuccess).catch(fallbackCopy);
+            } else {
+                fallbackCopy();
+            }
+
+            function fallbackCopy() {
+                var ta = document.createElement('textarea');
+                ta.value = idText;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); onCopySuccess(); } catch (e) {}
+                document.body.removeChild(ta);
+            }
+
+            function onCopySuccess() {
+                var toast = document.getElementById('deanMobileToast');
+                var toastText = document.getElementById('deanMobileToastText');
+                if (toast) {
+                    if (toastText) toastText.textContent = 'ID copied: ' + idText;
+                    toast.classList.add('show');
+                    clearTimeout(window._deanToastTimer);
+                    window._deanToastTimer = setTimeout(function () {
+                        toast.classList.remove('show');
+                    }, 2500);
+                }
+                if (btnEl) {
+                    var origHtml = btnEl.innerHTML;
+                    btnEl.innerHTML = '<i class="bi bi-check2 text-success"></i> <span>Copied!</span>';
+                    setTimeout(function () { btnEl.innerHTML = origHtml; }, 1800);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                var params = new URLSearchParams(window.location.search);
+                var tab = params.get('tab');
+                if (tab) {
+                    if (document.getElementById('mobile-view-' + tab)) {
+                        switchDeanMobileTab(tab);
+                    }
+                }
+            } catch(e) {}
+        });
     </script>
 </body>
 </html>

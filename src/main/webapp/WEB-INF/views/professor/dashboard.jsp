@@ -15,300 +15,723 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         @media (max-width: 767.98px) {
-            body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f6f8fb; padding-bottom: 90px; }
-            .mobile-app-container { padding: 16px 16px 20px; }
+            :root {
+                --mobile-safe-bottom: env(safe-area-inset-bottom, 16px);
+                --mobile-safe-top: env(safe-area-inset-top, 0px);
+            }
 
-            /* Top Bar */
-                    .mobile-top-bar {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-bottom: 20px;
-                    }
+            body {
+                font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+                background: #f8fafc;
+                padding-bottom: 0 !important;
+                -webkit-font-smoothing: antialiased;
+            }
 
-                    .mobile-user-info {
-                        display: flex;
-                        align-items: center;
-                        gap: 12px;
-                    }
+            /* WCAG 2.1 AA Focus Rings */
+            button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+                outline: 2px solid #2563eb !important;
+                outline-offset: 3px !important;
+            }
 
-                    .mobile-avatar-frame {
-                        width: 46px;
-                        height: 46px;
-                        border-radius: 14px;
-                        overflow: hidden;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                        border: 2px solid #fff;
-                        flex-shrink: 0;
-                        background: #e2e8f0;
-                    }
+            .mobile-app-container {
+                padding: 0 16px calc(84px + env(safe-area-inset-bottom, 16px));
+                max-width: 540px;
+                margin: 0 auto;
+                box-sizing: border-box;
+            }
 
-                    .mobile-avatar-frame img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    }
+            /* Top Bar with Safe Area Inset */
+            .mobile-top-bar {
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                background: rgba(248, 250, 252, 0.92);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px;
+                margin-left: -16px;
+                margin-right: -16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+                margin-bottom: 16px;
+            }
 
-                    .mobile-user-greeting {
-                        font-size: 1.05rem;
-                        font-weight: 800;
-                        color: #0f172a;
-                        margin-bottom: 2px;
-                        line-height: 1.2;
-                    }
+            .mobile-user-info {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                min-width: 0;
+            }
 
-                    .mobile-badge-pill {
-                        display: inline-block;
-                        background: #e9edf2;
-                        color: #64748b;
-                        font-size: 0.72rem;
-                        font-weight: 600;
-                        padding: 2px 10px;
-                        border-radius: 20px;
-                    }
+            .mobile-avatar-frame {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+                border: 2px solid #fff;
+                flex-shrink: 0;
+                background: #e2e8f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
 
-                    .mobile-top-action-btn {
-                        width: 42px;
-                        height: 42px;
-                        background: #fff;
-                        border-radius: 14px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        border: 1px solid #edf2f7;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-                        color: #334155;
-                        font-size: 1.15rem;
-                        cursor: pointer;
-                        transition: transform 0.15s ease, background 0.15s ease;
-                    }
+            .mobile-avatar-frame img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
 
-                    .mobile-top-action-btn:active {
-                        transform: scale(0.92);
-                        background: #f1f5f9;
-                    }
+            .mobile-user-greeting {
+                font-size: 1.0rem;
+                font-weight: 800;
+                color: #0f172a;
+                margin-bottom: 2px;
+                line-height: 1.2;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-                    
-            /* Hero Banner */
+            .mobile-badge-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                background: #e0f2fe;
+                color: #0369a1;
+                font-size: 0.7rem;
+                font-weight: 700;
+                padding: 2px 10px;
+                border-radius: 20px;
+            }
+
+            .mobile-top-action-btn {
+                width: 44px;
+                height: 44px;
+                min-width: 44px;
+                min-height: 44px;
+                background: #fff;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(226, 232, 240, 0.8);
+                box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+                color: #334155;
+                font-size: 1.15rem;
+                cursor: pointer;
+                transition: transform 0.15s ease, background 0.15s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .mobile-top-action-btn:active {
+                transform: scale(0.92);
+                background: #f1f5f9;
+            }
+
+            /* Live Next Lecture Hero Banner */
             .mobile-hero-banner {
-                background: linear-gradient(135deg, #0284c7 0%, #3b82f6 30%, #4338ca 70%, #312e81 100%);
-                border-radius: 24px; padding: 16px; color: #fff;
-                box-shadow: 0 12px 28px rgba(59,130,246,0.28);
-                display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
-                position: relative; overflow: hidden;
+                background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
+                border-radius: 24px;
+                padding: 18px;
+                color: #fff;
+                box-shadow: 0 12px 28px rgba(37, 99, 235, 0.25);
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                margin-bottom: 20px;
+                position: relative;
+                overflow: hidden;
             }
+
             .mobile-hero-banner::after {
-                content: ''; position: absolute; top: -40%; right: -40%; width: 100%; height: 100%;
-                background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, transparent 60%); pointer-events: none;
+                content: '';
+                position: absolute;
+                top: -30%;
+                right: -30%;
+                width: 80%;
+                height: 80%;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, transparent 70%);
+                pointer-events: none;
             }
+
             .hero-avatar-box {
-                width: 86px; height: 86px; border-radius: 18px; overflow: hidden; flex-shrink: 0;
-                background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.45);
-                box-shadow: 0 6px 14px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center;
-                font-size: 2.5rem; color: #fff;
+                width: 76px;
+                height: 76px;
+                border-radius: 20px;
+                overflow: hidden;
+                flex-shrink: 0;
+                background: rgba(255, 255, 255, 0.15);
+                border: 2px solid rgba(255, 255, 255, 0.4);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.2rem;
+                color: #fff;
             }
+
             .hero-avatar-box img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
             }
-            .hero-content { flex: 1; min-width: 0; z-index: 1; }
-            .hero-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.8px; color: rgba(255,255,255,0.85); text-transform: uppercase; margin-bottom: 3px; }
-            .hero-title { font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 4px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-            .hero-meta-row { font-size: 0.72rem; color: rgba(255,255,255,0.92); display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
-            .hero-status-tag {
-                display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.92);
-                color: #0369a1; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 12px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+            .hero-content {
+                flex: 1;
+                min-width: 0;
+                z-index: 1;
             }
 
-            /* Multi-day Date Strip */
-                    .mobile-date-strip {
-                        display: flex;
-                        gap: 8px;
-                        overflow-x: auto;
-                        margin-bottom: 20px;
-                        padding-bottom: 5px;
-                        scrollbar-width: none;
-                    }
+            .hero-label {
+                font-size: 0.65rem;
+                font-weight: 800;
+                letter-spacing: 0.8px;
+                color: rgba(255, 255, 255, 0.85);
+                text-transform: uppercase;
+                margin-bottom: 3px;
+            }
 
-                    .mobile-date-strip::-webkit-scrollbar {
-                        display: none;
-                    }
+            .hero-title {
+                font-size: 1.05rem;
+                font-weight: 800;
+                color: #fff;
+                margin-bottom: 4px;
+                line-height: 1.25;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-                    .date-strip-item {
-                        flex: 0 0 calc(100% / 5.5);
-                        background: #fff;
-                        border: 1px solid #e2e8f0;
-                        border-radius: 16px;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        padding: 12px 0;
-                        color: #64748b;
-                        transition: all 0.2s;
-                        cursor: pointer;
-                        user-select: none;
-                    }
+            .hero-meta-row {
+                font-size: 0.75rem;
+                color: rgba(255, 255, 255, 0.92);
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-bottom: 3px;
+            }
 
-                    .date-strip-item:active {
-                        transform: scale(0.95);
-                    }
+            .hero-status-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                background: rgba(255, 255, 255, 0.95);
+                color: #0369a1;
+                font-size: 0.68rem;
+                font-weight: 700;
+                padding: 3px 10px;
+                border-radius: 12px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            }
 
-                    .date-strip-item.is-today:not(.active) {
-                        border-color: #3b82f6;
-                        color: #2563eb;
-                        background: #eff6ff;
-                    }
+            /* 7-Day Date Strip */
+            .mobile-date-strip {
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                margin-bottom: 20px;
+                padding-bottom: 4px;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+            }
 
-                    .date-strip-item.active {
-                        background: #11141a;
-                        border-color: #11141a;
-                        color: #fff;
-                        box-shadow: 0 6px 12px rgba(17, 20, 26, 0.15);
-                        transform: translateY(-2px);
-                    }
+            .mobile-date-strip::-webkit-scrollbar {
+                display: none;
+            }
 
-                    .ds-day {
-                        font-size: 0.7rem;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        margin-bottom: 4px;
-                    }
+            .date-strip-item {
+                flex: 0 0 calc((100% - 32px) / 5.2);
+                min-width: 60px;
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 18px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 12px 0;
+                color: #64748b;
+                transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+                cursor: pointer;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+            }
 
-                    .ds-date {
-                        font-size: 1.25rem;
-                        font-weight: 800;
-                        line-height: 1;
-                    }
+            .date-strip-item:active {
+                transform: scale(0.95);
+            }
 
-                    .date-strip-item.active .ds-day {
-                        color: rgba(255, 255, 255, 0.7);
-                    }
+            .date-strip-item.is-today:not(.active) {
+                border-color: #3b82f6;
+                color: #2563eb;
+                background: #eff6ff;
+            }
 
-                    .date-strip-item.active .ds-date {
-                        color: #fff;
-                    }
+            .date-strip-item.active {
+                background: #0f172a;
+                border-color: #0f172a;
+                color: #fff;
+                box-shadow: 0 8px 16px rgba(15, 23, 42, 0.18);
+                transform: translateY(-2px);
+            }
 
-                    .date-strip-item.active::after {
-                        content: '';
-                        display: block;
-                        width: 6px;
-                        height: 6px;
-                        background: #22c55e;
-                        border-radius: 50%;
-                        margin-top: 6px;
-                        animation: pulse 1.8s infinite;
-                    }
+            .ds-day {
+                font-size: 0.68rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
 
-                    @keyframes pulse {
+            .ds-date {
+                font-size: 1.25rem;
+                font-weight: 800;
+                line-height: 1;
+            }
 
-                        0%,
-                        100% {
-                            transform: scale(0.9);
-                            opacity: 0.8;
-                        }
+            .date-strip-item.active .ds-day {
+                color: rgba(255, 255, 255, 0.7);
+            }
 
-                        50% {
-                            transform: scale(1.4);
-                            opacity: 1;
-                        }
-                    }
+            .date-strip-item.active .ds-date {
+                color: #fff;
+            }
+
+            .date-strip-item.active::after {
+                content: '';
+                display: block;
+                width: 6px;
+                height: 6px;
+                background: #22c55e;
+                border-radius: 50%;
+                margin-top: 6px;
+                animation: pulseDot 1.8s infinite;
+            }
+
+            @keyframes pulseDot {
+                0%, 100% { transform: scale(0.85); opacity: 0.8; }
+                50% { transform: scale(1.35); opacity: 1; }
+            }
+
+            /* Schedule Day Filter Strip (Schedule tab) */
+            .schedule-day-filter-strip {
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                margin-bottom: 16px;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .schedule-day-filter-strip::-webkit-scrollbar {
+                display: none;
+            }
+
+            .schedule-filter-pill {
+                flex: 0 0 auto;
+                padding: 7px 16px;
+                border-radius: 999px;
+                font-size: 0.78rem;
+                font-weight: 700;
+                border: 1px solid #e2e8f0;
+                background: #fff;
+                color: #64748b;
+                cursor: pointer;
+                transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+                min-height: 38px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .schedule-filter-pill.active {
+                background: #2563eb;
+                color: #fff;
+                border-color: #2563eb;
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            }
+
+            /* Teaching Stats Carousel */
+            .stats-swiper {
+                display: flex;
+                gap: 12px;
+                overflow-x: auto;
+                padding-bottom: 6px;
+                margin-bottom: 20px;
+                scroll-snap-type: x mandatory;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .stats-swiper::-webkit-scrollbar {
+                display: none;
+            }
+
+            .stat-card-item {
+                flex: 0 0 calc(50% - 6px);
+                scroll-snap-align: start;
+                background: #fff;
+                border-radius: 20px;
+                padding: 16px;
+                border: 1px solid rgba(226, 232, 240, 0.8);
+                box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .stat-icon-box {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+                flex-shrink: 0;
+            }
 
             /* Class Cards */
-                    .section-header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-bottom: 12px;
-                    }
+            .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+            }
 
-                    .section-title {
-                        font-size: 1.0rem;
-                        font-weight: 800;
-                        color: #0f172a;
-                    }
+            .section-title {
+                font-size: 1.05rem;
+                font-weight: 800;
+                color: #0f172a;
+            }
 
-                    .mobile-course-card,
-                    .mobile-class-card {
-                        background: #fff;
-                        border-radius: 18px;
-                        padding: 15px;
-                        margin-bottom: 12px;
-                        border: 1px solid #edf2f7;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-                        cursor: pointer;
-                        transition: transform 0.15s ease, box-shadow 0.15s ease;
-                    }
+            .mobile-course-card,
+            .mobile-class-card {
+                background: #fff;
+                border-radius: 20px;
+                padding: 16px;
+                margin-bottom: 14px;
+                border: 1px solid rgba(226, 232, 240, 0.8);
+                box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+                cursor: pointer;
+                transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
 
-                    .mobile-course-card:active,
-                    .mobile-class-card:active {
-                        transform: scale(0.98);
-                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-                    }
+            .mobile-course-card:active,
+            .mobile-class-card:active {
+                transform: scale(0.98);
+                box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+            }
 
-                    .mc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-                    .mc-code { font-size: 0.78rem; font-weight: 800; color: #0369a1; background: #e0f2fe; padding: 3px 10px; border-radius: 12px; }
-                    .mc-badge { font-size: 0.7rem; font-weight: 700; background: #f1f5f9; color: #64748b; padding: 3px 8px; border-radius: 8px; }
-                    .mc-title { font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 12px; line-height: 1.25; }
-                    .mc-meta { display: flex; flex-wrap: wrap; gap: 15px; font-size: 0.75rem; color: #64748b; }
-                    .mc-meta-item { display: flex; align-items: center; gap: 5px; }
-                    
-                    .mc-students { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 12px; margin-top: 12px; display: inline-flex; }
+            .mc-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 8px;
+            }
 
-            /* Bottom dock */
-                    .mobile-bottom-dock {
-                        position: fixed;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        background: rgba(255, 255, 255, 0.96);
-                        backdrop-filter: blur(18px);
-                        -webkit-backdrop-filter: blur(18px);
-                        border-top: 1px solid #eef2f6;
-                        display: flex;
-                        justify-content: space-around;
-                        align-items: center;
-                        padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 8px));
-                        z-index: 1040;
-                        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03);
-                    }
+            .mc-code {
+                font-size: 0.78rem;
+                font-weight: 800;
+                color: #0369a1;
+                background: #e0f2fe;
+                padding: 3px 10px;
+                border-radius: 12px;
+            }
 
-                    .dock-tab-btn {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        background: transparent;
-                        border: none;
-                        color: #94a3b8;
-                        font-size: 0.68rem;
-                        font-weight: 600;
-                        padding: 4px 6px;
-                        cursor: pointer;
-                        transition: all 0.18s ease;
-                        text-decoration: none;
-                    }
+            .mc-badge {
+                font-size: 0.7rem;
+                font-weight: 700;
+                background: #f1f5f9;
+                color: #64748b;
+                padding: 3px 8px;
+                border-radius: 8px;
+            }
 
-                    .dock-tab-btn i {
-                        font-size: 1.25rem;
-                        margin-bottom: 2px;
-                        transition: transform 0.18s ease;
-                    }
+            .mc-title {
+                font-size: 0.98rem;
+                font-weight: 800;
+                color: #0f172a;
+                margin-bottom: 10px;
+                line-height: 1.3;
+            }
 
-                    .dock-tab-btn.active {
-                        color: #0f172a;
-                        font-weight: 700;
-                    }
+            .mc-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                font-size: 0.78rem;
+                color: #64748b;
+                margin-bottom: 10px;
+            }
 
-                    .dock-tab-btn.active i {
-                        transform: translateY(-2px);
-                    }
+            .mc-meta-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
 
-                    
-            .mobile-sub-view { display: none; animation: fadeUp 0.22s ease; }
-            .mobile-sub-view.active { display: block; }
-            @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+            .mc-students {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 0.78rem;
+                font-weight: 700;
+                color: #16a34a;
+                background: #dcfce7;
+                padding: 4px 10px;
+                border-radius: 12px;
+            }
+
+            /* Capacity Meter */
+            .capacity-bar-wrap {
+                background: #e2e8f0;
+                height: 6px;
+                border-radius: 99px;
+                overflow: hidden;
+                margin-top: 6px;
+            }
+
+            .capacity-bar {
+                height: 100%;
+                border-radius: 99px;
+                transition: width 0.4s ease;
+            }
+
+            /* Digital Faculty Credential ID Card */
+            .faculty-id-card {
+                background: linear-gradient(135deg, #091e3a 0%, #1e3a8a 50%, #0f172a 100%);
+                border-radius: 24px;
+                padding: 20px;
+                color: #fff;
+                box-shadow: 0 16px 36px rgba(15, 23, 42, 0.35);
+                position: relative;
+                overflow: hidden;
+                border: 1px solid rgba(255, 215, 0, 0.35);
+                margin-bottom: 20px;
+            }
+
+            .faculty-id-card::before {
+                content: '';
+                position: absolute;
+                top: 0; right: 0; bottom: 0; left: 0;
+                background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 215, 0, 0.12) 50%, transparent 55%);
+                pointer-events: none;
+            }
+
+            .id-card-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+
+            .id-card-univ-title {
+                font-size: 0.72rem;
+                font-weight: 800;
+                letter-spacing: 1.2px;
+                color: #fbbf24;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .id-card-body {
+                display: flex;
+                gap: 16px;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+
+            .id-photo-box {
+                width: 72px;
+                height: 72px;
+                border-radius: 18px;
+                overflow: hidden;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+                background: #1e293b;
+                flex-shrink: 0;
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            }
+
+            .id-photo-box img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .id-info-col {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .id-faculty-name {
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: #fff;
+                margin-bottom: 3px;
+                line-height: 1.2;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .id-number-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: rgba(255, 255, 255, 0.15);
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.78rem;
+                font-family: monospace;
+                font-weight: 700;
+                color: #fff;
+                cursor: pointer;
+                transition: background 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .id-number-pill:active {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            .id-card-barcode-row {
+                border-top: 1px solid rgba(255, 255, 255, 0.15);
+                padding-top: 12px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .barcode-mock {
+                display: flex;
+                gap: 2px;
+                align-items: center;
+                height: 22px;
+            }
+
+            .barcode-mock span {
+                background: rgba(255, 255, 255, 0.7);
+                height: 100%;
+                display: inline-block;
+                border-radius: 1px;
+            }
+
+            /* Floating Island Bottom Dock */
+            .mobile-bottom-dock {
+                position: fixed;
+                bottom: calc(12px + env(safe-area-inset-bottom, 8px));
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100% - 24px);
+                max-width: 480px;
+                background: rgba(255, 255, 255, 0.92);
+                backdrop-filter: blur(24px) saturate(180%);
+                -webkit-backdrop-filter: blur(24px) saturate(180%);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                border-radius: 28px;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                padding: 6px 8px;
+                z-index: 1040;
+                box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+            }
+
+            .dock-tab-btn {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: transparent;
+                border: none;
+                color: #64748b;
+                font-size: 0.68rem;
+                font-weight: 600;
+                letter-spacing: -0.01em;
+                flex: 1;
+                max-width: 84px;
+                min-height: 46px;
+                padding: 5px 4px;
+                border-radius: 18px;
+                cursor: pointer;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                text-decoration: none;
+                position: relative;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .dock-tab-btn:active {
+                transform: scale(0.92);
+            }
+
+            .dock-tab-btn.active {
+                color: #2563eb;
+                background: rgba(37, 99, 235, 0.09);
+                font-weight: 700;
+            }
+
+            .dock-tab-btn i {
+                font-size: 1.25rem;
+                line-height: 1;
+                margin-bottom: 2px;
+                transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+            }
+
+            .dock-tab-btn.active i {
+                transform: translateY(-1px);
+                color: #2563eb;
+            }
+
+            /* Sub-views Animation */
+            .mobile-sub-view {
+                display: none;
+                animation: fadeInUpView 0.26s cubic-bezier(0.34, 1.25, 0.64, 1);
+            }
+
+            .mobile-sub-view.active {
+                display: block;
+            }
+
+            @keyframes fadeInUpView {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            /* Floating Toast */
+            .mobile-toast {
+                position: fixed;
+                bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
+                left: 50%;
+                transform: translateX(-50%) translateY(20px);
+                background: #0f172a;
+                color: #ffffff;
+                padding: 9px 18px;
+                border-radius: 99px;
+                font-size: 0.8rem;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+                z-index: 1060;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .mobile-toast.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
 
             
             /* Action Sheets */
@@ -2431,30 +2854,30 @@
 <div class="d-block d-md-none mobile-app-container">
 
     <c:if test="${param.twoFactorUpdated == 'true'}">
-        <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small">
-            <i class="bi bi-shield-check me-1"></i>2FA <strong>enabled</strong>.<button type="button" class="btn-close py-2" data-bs-dismiss="alert"></button>
+        <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
+            <i class="bi bi-shield-check me-1"></i>2FA <strong>enabled</strong>.<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>
     <c:if test="${param.twoFactorUpdated == 'false'}">
-        <div class="alert alert-info alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small">
-            <i class="bi bi-shield-slash me-1"></i>2FA <strong>disabled</strong>.<button type="button" class="btn-close py-2" data-bs-dismiss="alert"></button>
+        <div class="alert alert-info alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
+            <i class="bi bi-shield-slash me-1"></i>2FA <strong>disabled</strong>.<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>
     <c:if test="${not empty successMessage}">
-        <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small">
-            <i class="bi bi-check-circle-fill me-1"></i>${successMessage}<button type="button" class="btn-close py-2" data-bs-dismiss="alert"></button>
+        <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
+            <i class="bi bi-check-circle-fill me-1"></i>${successMessage}<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>
     <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small">
-            <i class="bi bi-exclamation-triangle-fill me-1"></i>${errorMessage}<button type="button" class="btn-close py-2" data-bs-dismiss="alert"></button>
+        <div class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>${errorMessage}<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>
     
-    <!-- Top Bar -->
-    <div class="mobile-top-bar">
+    <!-- Top Bar with Safe Area Awareness -->
+    <header class="mobile-top-bar" role="banner">
         <div class="mobile-user-info">
-            <div class="mobile-avatar-frame">
+            <div class="mobile-avatar-frame" aria-hidden="true">
                 <c:choose>
                     <c:when test="${sessionScope.user.gender == 'FEMALE'}">
                         <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Avatar">
@@ -2466,103 +2889,150 @@
             </div>
             <div>
                 <div class="mobile-user-greeting">Hello, ${sessionScope.user.fullName}</div>
-                <span class="mobile-badge-pill">Faculty Member</span>
+                <span class="mobile-badge-pill"><i class="bi bi-mortarboard-fill me-1"></i>Faculty Member</span>
             </div>
         </div>
-        <button class="mobile-top-action-btn" type="button" data-bs-toggle="modal" data-bs-target="#mobileSecurityModal">
+        <button class="mobile-top-action-btn" type="button" data-bs-toggle="modal" data-bs-target="#mobileSecurityModal" aria-label="Security & Notifications">
             <i class="bi bi-bell"></i>
         </button>
-    </div>
+    </header>
 
-    <!-- Home View -->
-    <div id="mobile-view-home" class="mobile-sub-view active">
-        <div class="mobile-date-strip" id="mobileDateStrip"></div>
+    <!-- ===== HOME VIEW ===== -->
+    <section id="mobile-view-home" class="mobile-sub-view active" role="tabpanel" aria-labelledby="dock-tab-home">
+        <!-- Interactive 7-Day Date Strip -->
+        <div class="mobile-date-strip" id="mobileDateStrip" role="tablist" aria-label="Select day of week"></div>
 
-        <%-- Hero Banner --%>
-        <div class="mobile-hero-banner">
-            <div class="hero-avatar-box">
-                <c:choose>
-                    <c:when test="${sessionScope.user.gender == 'FEMALE'}">
-                        <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Faculty">
-                    </c:when>
-                    <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Faculty">
-                    </c:otherwise>
-                </c:choose>
+        <!-- Next Lecture Live Banner -->
+        <div class="mobile-hero-banner" role="region" aria-label="Next Upcoming Session">
+            <div class="hero-avatar-box" aria-hidden="true">
+                <i class="bi bi-broadcast"></i>
             </div>
             <div class="hero-content">
-                <div class="hero-label">FACULTY STATUS</div>
-                <div class="hero-title">${sessionScope.user.fullName}</div>
-                <div class="hero-meta-row">
-                    <i class="bi bi-journal-bookmark-fill"></i> ${sectionStudentsMap.size()} Classes Assigned
-                </div>
-                <div class="hero-meta-row">
-                    <i class="bi bi-building"></i> ${not empty sessionScope.user.major ? sessionScope.user.major : 'Faculty of Science & Technology'}
-                </div>
+                <div class="hero-label"><i class="bi bi-dot text-success fs-6"></i>UPCOMING LECTURE</div>
+                <c:choose>
+                    <c:when test="${not empty sectionStudentsMap}">
+                        <c:forEach var="entry" items="${sectionStudentsMap}" begin="0" end="0">
+                            <c:set var="firstSec" value="${entry.key}" />
+                            <c:set var="firstStus" value="${entry.value}" />
+                            <div class="hero-title">${firstSec.courseCode}: ${firstSec.courseTitle}</div>
+                            <div class="hero-meta-row">
+                                <i class="bi bi-clock me-1"></i>${firstSec.sessionShift} &bull; ${firstSec.daysOfWeek}
+                            </div>
+                            <div class="hero-meta-row">
+                                <i class="bi bi-door-open me-1"></i>Room ${firstSec.roomName} &bull; <i class="bi bi-people me-1 ms-1"></i>${firstStus.size()} Enrolled
+                            </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="hero-title">No Lectures Scheduled</div>
+                        <div class="hero-meta-row">Enjoy your preparation time</div>
+                    </c:otherwise>
+                </c:choose>
                 <div class="mt-2">
-                    <span class="hero-status-tag"><span style="width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.8s infinite;"></span> Active Faculty</span>
+                    <span class="hero-status-tag"><span style="width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulseDot 1.8s infinite;"></span> Active Faculty Status</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teaching Stats Swiper -->
+        <div class="stats-swiper" role="region" aria-label="Teaching Overview">
+            <div class="stat-card-item">
+                <div class="stat-icon-box bg-primary bg-opacity-10 text-primary">
+                    <i class="bi bi-journal-bookmark-fill"></i>
+                </div>
+                <div>
+                    <div class="fs-4 fw-bold text-dark lh-1">${sectionStudentsMap.size()}</div>
+                    <div class="text-muted small" style="font-size:0.72rem;">Assigned Classes</div>
+                </div>
+            </div>
+            <c:set var="totalEnrolledStudents" value="0" />
+            <c:forEach var="entry" items="${sectionStudentsMap}">
+                <c:set var="totalEnrolledStudents" value="${totalEnrolledStudents + entry.value.size()}" />
+            </c:forEach>
+            <div class="stat-card-item">
+                <div class="stat-icon-box bg-success bg-opacity-10 text-success">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div>
+                    <div class="fs-4 fw-bold text-dark lh-1">${totalEnrolledStudents}</div>
+                    <div class="text-muted small" style="font-size:0.72rem;">Total Students</div>
+                </div>
+            </div>
+            <div class="stat-card-item">
+                <div class="stat-icon-box bg-info bg-opacity-10 text-info">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div>
+                    <div class="fs-4 fw-bold text-dark lh-1">${not empty professorSchool ? 'COST' : 'Faculty'}</div>
+                    <div class="text-muted small" style="font-size:0.72rem;">Academic Department</div>
                 </div>
             </div>
         </div>
         
         <div class="section-header mt-2">
-            <div class="section-title" id="profHomeScheduleTitle">Class Schedule</div>
-            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill small" id="profHomeScheduleCount">${sectionStudentsMap.size()} Classes</span>
+            <h2 class="section-title mb-0" id="profHomeScheduleTitle">Class Schedule</h2>
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-1 small fw-bold" id="profHomeScheduleCount">${sectionStudentsMap.size()} Classes</span>
         </div>
         
         <div id="profHomeScheduleContainer">
             <c:if test="${empty sectionStudentsMap}">
-                <div class="text-center p-4 bg-white rounded-4 border" style="border-color:#e2e8f0;">
-                    <i class="bi bi-cup-hot text-muted" style="font-size:2rem;"></i>
-                    <div class="fw-bold mt-2 text-dark">No Classes Today</div>
-                    <div class="small text-muted">Enjoy your free time!</div>
+                <div class="mobile-course-card text-center py-4">
+                    <i class="bi bi-cup-hot text-muted fs-2 mb-2 d-block"></i>
+                    <div class="fw-bold small text-dark mb-1">No Classes Assigned</div>
+                    <div class="small text-muted">Enjoy your research & preparation time!</div>
                 </div>
             </c:if>
             
             <c:forEach var="entry" items="${sectionStudentsMap}">
                 <c:set var="section" value="${entry.key}" />
                 <c:set var="students" value="${entry.value}" />
-                <div class="mobile-course-card mobile-class-card prof-home-schedule-card" data-days="${section.daysOfWeek}" onclick="openCourseSheet('${section.id}')">
+                <div class="mobile-course-card prof-home-schedule-card" data-days="${section.daysOfWeek}" onclick="openCourseSheet('${section.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseSheet('${section.id}')" aria-label="Manage ${section.courseCode}: ${section.courseTitle}">
                     <div class="mc-header">
-                        <div class="mc-code">${section.courseCode}</div>
-                        <div class="mc-badge">${section.termName}</div>
+                        <span class="mc-code">${section.courseCode}</span>
+                        <span class="badge bg-light border text-secondary rounded-pill">${section.termName}</span>
                     </div>
                     <div class="mc-title">${section.courseTitle}</div>
                     <div class="mc-meta">
-                        <div class="mc-meta-item"><i class="bi bi-clock"></i>${section.sessionShift}</div>
-                        <div class="mc-meta-item"><i class="bi bi-door-open"></i>Room ${section.roomName}</div>
-                        <div class="mc-meta-item"><i class="bi bi-people"></i>${students.size()} Students</div>
+                        <div class="mc-meta-item"><i class="bi bi-clock text-primary"></i>${section.sessionShift} &bull; ${section.daysOfWeek}</div>
+                        <div class="mc-meta-item"><i class="bi bi-door-open text-primary"></i>Room ${section.roomName}</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <span class="mc-students m-0"><i class="bi bi-people-fill"></i> ${students.size()} Students</span>
+                        <span class="small text-primary fw-semibold" style="font-size:0.75rem;"><i class="bi bi-sliders me-1"></i>Manage Class <i class="bi bi-chevron-right ms-1"></i></span>
                     </div>
                 </div>
             </c:forEach>
-            <div id="profHomeScheduleEmpty" class="text-center p-4 bg-white rounded-4 border my-2" style="border-color:#e2e8f0; display:none;">
-                <i class="bi bi-cup-hot text-muted" style="font-size:2rem;"></i>
-                <div class="fw-bold mt-2 text-dark" id="profHomeScheduleEmptyText">No Classes Scheduled</div>
-                <div class="small text-muted">Enjoy your free time!</div>
+            <div id="profHomeScheduleEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+                <i class="bi bi-cup-hot text-muted fs-2 mb-2 d-block"></i>
+                <div class="fw-bold small text-dark mb-1" id="profHomeScheduleEmptyText">No Classes Scheduled</div>
+                <div class="small text-muted">Enjoy your time off!</div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Classes View -->
-    <div id="mobile-view-classes" class="mobile-sub-view">
+    <!-- ===== CLASSES VIEW ===== -->
+    <section id="mobile-view-classes" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-classes">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-                <h5 class="fw-bold mb-0">Assigned Classes</h5>
-                <span class="text-muted" style="font-size:0.75rem;">Teaching schedule & enrolled students</span>
+                <h2 class="section-title mb-0">Assigned Classes</h2>
+                <span class="text-muted" style="font-size:0.75rem;">Sections, rosters & grading</span>
             </div>
-            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-bold">${sectionStudentsMap.size()} Classes</span>
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-bold" id="mobileClassCountBadge">${sectionStudentsMap.size()} Classes</span>
         </div>
 
-        <div class="input-group mb-3 shadow-sm rounded-4 overflow-hidden border">
+        <div class="input-group mb-3 shadow-sm rounded-4 overflow-hidden border bg-white">
             <span class="input-group-text bg-white border-0 text-muted ps-3"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control border-0 py-2" placeholder="Search class code or course title..." oninput="filterMobileClasses(this.value)">
+            <input type="text" id="mobileClassSearchInput" class="form-control border-0 py-2" placeholder="Search class code or title..." oninput="filterMobileClasses(this.value)" aria-label="Search assigned classes">
+            <button type="button" class="btn bg-white border-0 text-muted pe-3" id="clearMobileClassSearchBtn" style="display:none;" onclick="clearMobileClassSearch()" aria-label="Clear search">
+                <i class="bi bi-x-circle-fill"></i>
+            </button>
         </div>
         
         <c:if test="${empty sectionStudentsMap}">
-            <div class="text-center p-4 bg-white rounded-4 border" style="border-color:#e2e8f0;">
-                <i class="bi bi-journal-x text-muted" style="font-size:2rem;"></i>
-                <div class="fw-bold mt-2 text-dark">No classes assigned</div>
-                <div class="small text-muted">Contact the academic registrar or dean.</div>
+            <div class="mobile-course-card text-center py-4">
+                <i class="bi bi-journal-x text-muted fs-2 mb-2 d-block"></i>
+                <div class="fw-bold small text-dark mb-1">No classes assigned</div>
+                <div class="small text-muted">Contact the academic dean or registrar.</div>
             </div>
         </c:if>
         
@@ -2570,44 +3040,184 @@
             <c:forEach var="entry" items="${sectionStudentsMap}">
                 <c:set var="section" value="${entry.key}" />
                 <c:set var="students" value="${entry.value}" />
-                <div class="mobile-course-card mobile-class-card mobile-class-item" onclick="openCourseSheet('${section.id}')">
+                <div class="mobile-course-card mobile-class-item" onclick="openCourseSheet('${section.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseSheet('${section.id}')" aria-label="Open management for ${section.courseCode}">
                     <div class="mc-header">
-                        <div class="mc-code">${section.courseCode}</div>
-                        <div class="mc-badge">${section.termName}</div>
+                        <div>
+                            <span class="mc-code me-1">${section.courseCode}</span>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary">${section.termName}</span>
+                        </div>
+                        <span class="badge bg-light border text-dark fw-bold">${section.sessionShift}</span>
                     </div>
                     <div class="mc-title">${section.courseTitle}</div>
                     <div class="mc-meta">
-                        <div class="mc-meta-item"><i class="bi bi-calendar-event"></i>${section.daysOfWeek}</div>
-                        <div class="mc-meta-item"><i class="bi bi-clock"></i>${section.sessionShift}</div>
-                        <div class="mc-meta-item"><i class="bi bi-door-open"></i>Room ${section.roomName}</div>
+                        <div class="mc-meta-item"><i class="bi bi-calendar-event text-primary"></i>${section.daysOfWeek}</div>
+                        <div class="mc-meta-item"><i class="bi bi-door-open text-primary"></i>Room ${section.roomName}</div>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-3">
-                        <span class="mc-students m-0"><i class="bi bi-people-fill"></i> ${students.size()} Students Enrolled</span>
-                        <span class="small text-primary fw-semibold" style="font-size:0.75rem;">Manage <i class="bi bi-chevron-right ms-1"></i></span>
+                    
+                    <%-- Seat Capacity Bar --%>
+                    <c:set var="roomCap" value="${section.roomCapacity > 0 ? section.roomCapacity : 40}" />
+                    <c:set var="capPercent" value="${students.size() * 100 / roomCap}" />
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small text-muted" style="font-size:0.72rem;">
+                            <span><i class="bi bi-people-fill me-1"></i>Enrolled / Capacity</span>
+                            <span class="fw-bold text-dark">${students.size()} / ${roomCap} Students</span>
+                        </div>
+                        <div class="capacity-bar-wrap">
+                            <div class="capacity-bar" style="width:${capPercent > 100 ? 100 : capPercent}%;background:#2563eb;"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <span class="mc-students m-0"><i class="bi bi-people-fill"></i> ${students.size()} Enrolled</span>
+                        <span class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-semibold" style="font-size:0.75rem;">Manage <i class="bi bi-chevron-right ms-1"></i></span>
                     </div>
                 </div>
             </c:forEach>
         </div>
-    </div>
+    </section>
 
-    <!-- Profile View -->
-    <div id="mobile-view-profile" class="mobile-sub-view">
-        <h5 class="fw-bold mb-3">Professor Profile</h5>
-        
-        <div class="mobile-course-card text-center p-4 mb-3" style="cursor:default;">
-            <div class="mobile-avatar-frame mx-auto mb-3" style="width:72px;height:72px;border-radius:20px;">
-                <c:choose>
-                    <c:when test="${sessionScope.user.gender == 'FEMALE'}">
-                        <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Avatar">
-                    </c:when>
-                    <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Avatar">
-                    </c:otherwise>
-                </c:choose>
+    <!-- ===== SCHEDULE VIEW ===== -->
+    <section id="mobile-view-schedule" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-schedule">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2 class="section-title mb-0">Teaching Timetable</h2>
+                <span class="text-muted" style="font-size:0.75rem;">7-Day lecture & room breakdown</span>
             </div>
-            <h5 class="fw-bold text-dark mb-1">${sessionScope.user.fullName}</h5>
-            <div class="badge bg-light border text-dark mb-2 px-3 py-1">ID: ${sessionScope.user.formattedIdentifier}</div>
-            <div class="text-muted small">${sessionScope.user.email}</div>
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-bold" id="profScheduleTabCount">${sectionStudentsMap.size()} Classes</span>
+        </div>
+
+        <%-- Day Filter Pills --%>
+        <div class="schedule-day-filter-strip" id="profScheduleDayFilterStrip" role="tablist" aria-label="Schedule Day Filter">
+            <button type="button" class="schedule-filter-pill active" onclick="filterProfScheduleTabView('all', this)">All Week</button>
+            <button type="button" class="schedule-filter-pill" onclick="filterProfScheduleTabView('mon', this)">Mon</button>
+            <button type="button" class="schedule-filter-pill" onclick="filterProfScheduleTabView('tue', this)">Tue</button>
+            <button type="button" class="schedule-filter-pill" onclick="filterProfScheduleTabView('wed', this)">Wed</button>
+            <button type="button" class="schedule-filter-pill" onclick="filterProfScheduleTabView('thu', this)">Thu</button>
+            <button type="button" class="schedule-filter-pill" onclick="filterProfScheduleTabView('fri', this)">Fri</button>
+            <button type="button" class="schedule-filter-pill" onclick="filterProfScheduleTabView('sat', this)">Sat</button>
+            <button type="button" class="schedule-filter-pill" onclick="filterProfScheduleTabView('sun', this)">Sun</button>
+        </div>
+
+        <div id="profScheduleListContainer">
+            <c:forEach var="entry" items="${sectionStudentsMap}">
+                <c:set var="section" value="${entry.key}" />
+                <c:set var="students" value="${entry.value}" />
+                <div class="mobile-course-card prof-schedule-tab-card" data-days="${section.daysOfWeek}" onclick="openCourseSheet('${section.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseSheet('${section.id}')">
+                    <div class="mc-header">
+                        <div>
+                            <span class="mc-code me-1">${section.courseCode}</span>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary">${section.termName}</span>
+                        </div>
+                        <span class="badge bg-light border text-dark fw-bold">${section.sessionShift}</span>
+                    </div>
+                    <div class="mc-title">${section.courseTitle}</div>
+                    <div class="mc-meta">
+                        <div class="mc-meta-item"><i class="bi bi-calendar3 text-primary"></i>${section.daysOfWeek}</div>
+                        <div class="mc-meta-item"><i class="bi bi-door-open text-primary"></i>Room ${section.roomName}</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <span class="small text-muted"><i class="bi bi-people-fill me-1 text-primary"></i>${students.size()} Students Enrolled</span>
+                        <span class="small text-primary fw-bold">Open Sheet <i class="bi bi-chevron-right ms-1"></i></span>
+                    </div>
+                </div>
+            </c:forEach>
+            <div id="profScheduleTabEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+                <i class="bi bi-calendar-x text-muted fs-2 mb-2 d-block"></i>
+                <div class="fw-bold small text-dark mb-1" id="profScheduleTabEmptyText">No classes on this day</div>
+                <div class="small text-muted">Enjoy your time off!</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ROSTER & QUICK ACTIONS VIEW ===== -->
+    <section id="mobile-view-roster" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-roster">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2 class="section-title mb-0">Roster & Attendance</h2>
+                <span class="text-muted" style="font-size:0.75rem;">Fast-track grading and roll call</span>
+            </div>
+            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3 py-2 fw-bold">Active Term</span>
+        </div>
+
+        <c:forEach var="entry" items="${sectionStudentsMap}">
+            <c:set var="section" value="${entry.key}" />
+            <c:set var="students" value="${entry.value}" />
+            <div class="mobile-course-card p-3 mb-3" style="cursor:default;">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="mc-code me-1">${section.courseCode}</span>
+                        <span class="badge bg-light border text-dark">${section.roomName}</span>
+                    </div>
+                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">${students.size()} Students</span>
+                </div>
+                <h3 class="mc-title mb-3" style="font-size:0.95rem;">${section.courseTitle}</h3>
+                
+                <div class="row g-2">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-outline-primary w-100 rounded-pill py-2 fw-semibold" onclick="currentActiveSectionId='${section.id}'; openSubSheet('rosterSheet');" style="min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;">
+                            <i class="bi bi-people-fill"></i> View Roster
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-primary w-100 rounded-pill py-2 fw-semibold" onclick="currentActiveSectionId='${section.id}'; openSubSheet('attendanceSheet');" style="min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;">
+                            <i class="bi bi-clipboard-check-fill"></i> Roll Call
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-success w-100 rounded-pill py-2 fw-semibold" onclick="currentActiveSectionId='${section.id}'; openSubSheet('gradesSheet');" style="min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;">
+                            <i class="bi bi-journal-check"></i> Grades
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-light border w-100 rounded-pill py-2 fw-semibold text-secondary" onclick="currentActiveSectionId='${section.id}'; openSubSheet('historySheet');" style="min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;">
+                            <i class="bi bi-clock-history"></i> History
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+    </section>
+
+    <!-- ===== PROFILE VIEW ===== -->
+    <section id="mobile-view-profile" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-profile">
+        <h2 class="section-title mb-3">Faculty Profile</h2>
+        
+        <!-- Digital University Faculty ID Card -->
+        <div class="faculty-id-card" role="region" aria-label="Digital Faculty ID Card">
+            <div class="id-card-top">
+                <div class="id-card-univ-title">
+                    <i class="bi bi-award-fill"></i> UniTRS FACULTY CREDENTIAL
+                </div>
+                <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2 py-1" style="font-size:0.68rem;">ACTIVE 2024-25</span>
+            </div>
+            <div class="id-card-body">
+                <div class="id-photo-box" aria-hidden="true">
+                    <c:choose>
+                        <c:when test="${sessionScope.user.gender == 'FEMALE'}">
+                            <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Faculty Photo">
+                        </c:when>
+                        <c:otherwise>
+                            <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Faculty Photo">
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <div class="id-info-col">
+                    <div class="id-faculty-name">${sessionScope.user.fullName}</div>
+                    <div class="text-white-50 small mb-2" style="font-size:0.75rem;">${not empty sessionScope.user.major ? sessionScope.user.major : 'Faculty Professor'}</div>
+                    <button type="button" class="id-number-pill border-0" onclick="copyFacultyId('${sessionScope.user.formattedIdentifier}', this)" title="Click to copy Faculty ID" aria-label="Copy faculty ID ${sessionScope.user.formattedIdentifier}">
+                        <i class="bi bi-copy"></i>
+                        <span>${sessionScope.user.formattedIdentifier}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="id-card-barcode-row">
+                <div class="barcode-mock" aria-hidden="true">
+                    <span style="width:3px;"></span><span style="width:1px;"></span><span style="width:4px;"></span><span style="width:2px;"></span><span style="width:1px;"></span><span style="width:3px;"></span><span style="width:5px;"></span><span style="width:2px;"></span><span style="width:1px;"></span><span style="width:4px;"></span><span style="width:2px;"></span><span style="width:3px;"></span><span style="width:1px;"></span><span style="width:4px;"></span>
+                </div>
+                <div class="text-white-50 small" style="font-size:0.7rem;font-family:monospace;">
+                    <i class="bi bi-shield-check me-1"></i>UniTRS VERIFIED
+                </div>
+            </div>
         </div>
 
         <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
@@ -2617,12 +3227,12 @@
                 <span class="fw-semibold text-dark">Professor / Faculty</span>
             </div>
             <div class="d-flex justify-content-between py-2 border-bottom small">
-                <span class="text-muted">Department:</span>
-                <span class="fw-semibold text-dark">${not empty sessionScope.user.major ? sessionScope.user.major : 'Faculty of Science & Technology'}</span>
+                <span class="text-muted">Department / School:</span>
+                <span class="fw-semibold text-dark">${not empty professorSchool ? professorSchool.schoolName : (not empty sessionScope.user.major ? sessionScope.user.major : 'Science & Technology')}</span>
             </div>
             <div class="d-flex justify-content-between py-2 border-bottom small">
                 <span class="text-muted">Classes Assigned:</span>
-                <span class="fw-bold text-primary">${sectionStudentsMap.size()} Classes</span>
+                <span class="fw-bold text-primary">${sectionStudentsMap.size()} Sections</span>
             </div>
             <div class="d-flex justify-content-between py-2 small">
                 <span class="text-muted">Account Status:</span>
@@ -2634,7 +3244,7 @@
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <div>
                     <div class="fw-bold small text-dark"><i class="bi bi-shield-lock me-2 text-primary"></i>Two-Factor Authentication</div>
-                    <div class="text-muted" style="font-size:0.72rem;">Email OTP on login</div>
+                    <div class="text-muted" style="font-size:0.72rem;">Email OTP on login verification</div>
                 </div>
                 <span class="badge ${sessionScope.user.twoFactorEnabled ? 'bg-success' : 'bg-secondary'} rounded-pill">${sessionScope.user.twoFactorEnabled ? 'Enabled' : 'Disabled'}</span>
             </div>
@@ -2652,22 +3262,45 @@
         </div>
 
         <c:if test="${sessionScope.user.deanSchoolId != null}">
-            <a href="${pageContext.request.contextPath}/dean/dashboard?force=desktop" class="btn btn-dark w-100 rounded-pill py-2 fw-bold mb-3 d-flex align-items-center justify-content-center gap-2 shadow-sm text-white text-decoration-none">
-                <i class="bi bi-mortarboard-fill text-info"></i> Switch to Dean Dashboard (Desktop)
+            <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-dark w-100 rounded-pill py-3 fw-bold mb-3 d-flex align-items-center justify-content-center gap-2 shadow-sm text-white text-decoration-none" style="min-height:48px;">
+                <i class="bi bi-mortarboard-fill text-warning"></i> Switch to Dean Portal
             </a>
         </c:if>
 
-        <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold">
+        <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
             <i class="bi bi-box-arrow-right me-2"></i>Sign Out
         </a>
-    </div>
+    </section>
 
-    <!-- Bottom Navigation Dock -->
-    <nav class="mobile-bottom-dock">
-        <button type="button" class="dock-tab-btn active" data-tab="home" onclick="switchMobileTab('home')"><i class="bi bi-house-door-fill"></i><span>Home</span></button>
-        <button type="button" class="dock-tab-btn" data-tab="classes" onclick="switchMobileTab('classes')"><i class="bi bi-journal-bookmark"></i><span>Classes</span></button>
-        <button type="button" class="dock-tab-btn" data-tab="profile" onclick="switchMobileTab('profile')"><i class="bi bi-person"></i><span>Profile</span></button>
+    <!-- Floating Island Bottom Navigation Dock (5 Tabs) -->
+    <nav class="mobile-bottom-dock" role="navigation" aria-label="Professor Mobile Navigation">
+        <button type="button" class="dock-tab-btn active" id="dock-tab-home" data-tab="home" onclick="switchMobileTab('home')" role="tab" aria-selected="true" aria-controls="mobile-view-home">
+            <i class="bi bi-house-door-fill"></i>
+            <span>Home</span>
+        </button>
+        <button type="button" class="dock-tab-btn" id="dock-tab-classes" data-tab="classes" onclick="switchMobileTab('classes')" role="tab" aria-selected="false" aria-controls="mobile-view-classes">
+            <i class="bi bi-journal-bookmark"></i>
+            <span>Classes</span>
+        </button>
+        <button type="button" class="dock-tab-btn" id="dock-tab-schedule" data-tab="schedule" onclick="switchMobileTab('schedule')" role="tab" aria-selected="false" aria-controls="mobile-view-schedule">
+            <i class="bi bi-calendar3"></i>
+            <span>Schedule</span>
+        </button>
+        <button type="button" class="dock-tab-btn" id="dock-tab-roster" data-tab="roster" onclick="switchMobileTab('roster')" role="tab" aria-selected="false" aria-controls="mobile-view-roster">
+            <i class="bi bi-people"></i>
+            <span>Roster</span>
+        </button>
+        <button type="button" class="dock-tab-btn" id="dock-tab-profile" data-tab="profile" onclick="switchMobileTab('profile')" role="tab" aria-selected="false" aria-controls="mobile-view-profile">
+            <i class="bi bi-person"></i>
+            <span>Profile</span>
+        </button>
     </nav>
+
+    <!-- Toast Notification for Clipboard -->
+    <div id="mobileToast" class="mobile-toast" role="status" aria-live="polite">
+        <i class="bi bi-check2-circle text-success fs-6"></i>
+        <span id="mobileToastText">Copied to clipboard!</span>
+    </div>
 </div>
 
 <!-- Mobile Security / Notifications Modal -->
@@ -2960,15 +3593,19 @@
         var iconMap = {
             home: ['bi-house-door-fill', 'bi-house-door'],
             classes: ['bi-journal-bookmark-fill', 'bi-journal-bookmark'],
+            schedule: ['bi-calendar2-week-fill', 'bi-calendar2-week'],
+            roster: ['bi-people-fill', 'bi-people'],
             profile: ['bi-person-fill', 'bi-person']
         };
         for (var j = 0; j < btns.length; j++) {
             var b = btns[j], bTab = b.getAttribute('data-tab'), ic = b.querySelector('i');
             if (bTab === tabName) {
                 b.classList.add('active');
+                b.setAttribute('aria-selected', 'true');
                 if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][0];
             } else {
                 b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
                 if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][1];
             }
         }
@@ -2983,10 +3620,116 @@
     function filterMobileClasses(q) {
         q = (q || '').toLowerCase().trim();
         var items = document.querySelectorAll('.mobile-class-item');
+        var visibleCount = 0;
         for (var i = 0; i < items.length; i++) {
-            items[i].style.display = (items[i].textContent || '').toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+            var match = (items[i].textContent || '').toLowerCase().indexOf(q) !== -1;
+            items[i].style.display = match ? '' : 'none';
+            if (match) visibleCount++;
+        }
+        var emptyEl = document.getElementById('profClassesTabEmpty');
+        if (emptyEl) {
+            emptyEl.style.display = (visibleCount === 0 && items.length > 0) ? 'block' : 'none';
         }
     }
+
+    function clearMobileClassSearch() {
+        var inp = document.getElementById('mobileClassSearch');
+        if (inp) inp.value = '';
+        filterMobileClasses('');
+    }
+
+    function filterProfScheduleTabView(dayShort, element) {
+        var strip = document.getElementById('profScheduleFilterStrip');
+        if (strip) {
+            var pills = strip.querySelectorAll('.schedule-filter-pill');
+            pills.forEach(function (p) { p.classList.remove('active'); });
+        }
+        if (element) {
+            element.classList.add('active');
+        }
+
+        var cards = document.querySelectorAll('.prof-schedule-tab-card');
+        var emptyBox = document.getElementById('profScheduleTabEmpty');
+        var emptyText = document.getElementById('profScheduleTabEmptyText');
+        var visibleCount = 0;
+
+        cards.forEach(function (card) {
+            var days = (card.getAttribute('data-days') || '').toLowerCase();
+            var match = false;
+
+            if (dayShort === 'all') {
+                match = true;
+            } else if (days.indexOf('mon-fri') !== -1) {
+                match = ['mon', 'tue', 'wed', 'thu', 'fri'].indexOf(dayShort) !== -1;
+            } else if (days.indexOf('sat-sun') !== -1) {
+                match = ['sat', 'sun'].indexOf(dayShort) !== -1;
+            } else {
+                match = days.indexOf(dayShort) !== -1;
+            }
+
+            if (match) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        if (emptyBox) {
+            if (visibleCount === 0 && cards.length > 0) {
+                emptyBox.style.display = 'block';
+                if (emptyText) emptyText.textContent = 'No classes scheduled for this day';
+            } else {
+                emptyBox.style.display = 'none';
+            }
+        }
+    }
+
+    function copyFacultyId(idText, btnEl) {
+        if (!idText) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(idText).then(onCopySuccess).catch(fallbackCopy);
+        } else {
+            fallbackCopy();
+        }
+
+        function fallbackCopy() {
+            var ta = document.createElement('textarea');
+            ta.value = idText;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); onCopySuccess(); } catch (e) {}
+            document.body.removeChild(ta);
+        }
+
+        function onCopySuccess() {
+            var toast = document.getElementById('mobileToast');
+            var toastText = document.getElementById('mobileToastText');
+            if (toast) {
+                if (toastText) toastText.textContent = 'Faculty ID copied: ' + idText;
+                toast.classList.add('show');
+                clearTimeout(window._profToastTimer);
+                window._profToastTimer = setTimeout(function () {
+                    toast.classList.remove('show');
+                }, 2500);
+            }
+            if (btnEl) {
+                var origHtml = btnEl.innerHTML;
+                btnEl.innerHTML = '<i class="bi bi-check2 text-success"></i> <span>Copied!</span>';
+                setTimeout(function () { btnEl.innerHTML = origHtml; }, 1800);
+            }
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            var openSheets = document.querySelectorAll('.course-action-sheet.open');
+            openSheets.forEach(function(sh) { sh.classList.remove('open'); });
+            document.body.style.overflow = '';
+        }
+    });
 
     function openCourseSheet(id) {
         currentActiveSectionId = id;

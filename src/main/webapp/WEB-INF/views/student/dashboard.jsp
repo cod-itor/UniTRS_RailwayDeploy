@@ -54,14 +54,15 @@
                 @media (max-width: 767.98px) {
                     body {
                         background: #f8fafc;
-                        padding-bottom: calc(96px + env(safe-area-inset-bottom, 16px));
+                        padding-bottom: 0 !important;
                         -webkit-tap-highlight-color: transparent;
                     }
 
                     .mobile-app-container {
-                        padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 16px));
-                        max-width: 520px;
+                        padding: 0 16px calc(84px + env(safe-area-inset-bottom, 16px));
+                        max-width: 540px;
                         margin: 0 auto;
+                        box-sizing: border-box;
                     }
 
                     /* Accessible Focus Rings */
@@ -72,11 +73,20 @@
 
                     /* Top Bar */
                     .mobile-top-bar {
+                        position: sticky;
+                        top: 0;
+                        z-index: 1020;
+                        background: rgba(248, 250, 252, 0.92);
+                        backdrop-filter: blur(20px) saturate(180%);
+                        -webkit-backdrop-filter: blur(20px) saturate(180%);
+                        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+                        padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px;
+                        margin-left: -16px;
+                        margin-right: -16px;
+                        margin-bottom: 16px;
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        margin-bottom: 20px;
-                        padding-top: 4px;
                     }
 
                     .mobile-user-info {
@@ -833,21 +843,21 @@
                     .mobile-bottom-dock {
                         position: fixed;
                         bottom: calc(12px + env(safe-area-inset-bottom, 8px));
-                        left: 16px;
-                        right: 16px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: calc(100% - 24px);
                         max-width: 480px;
-                        margin: 0 auto;
-                        background: rgba(255, 255, 255, 0.88);
-                        backdrop-filter: blur(24px);
-                        -webkit-backdrop-filter: blur(24px);
-                        border: 1px solid rgba(255, 255, 255, 0.6);
-                        border-radius: 32px;
+                        background: rgba(255, 255, 255, 0.92);
+                        backdrop-filter: blur(24px) saturate(180%);
+                        -webkit-backdrop-filter: blur(24px) saturate(180%);
+                        border: 1px solid rgba(255, 255, 255, 0.8);
+                        border-radius: 28px;
                         display: flex;
                         justify-content: space-around;
                         align-items: center;
-                        padding: 8px 6px;
+                        padding: 6px 8px;
                         z-index: 1040;
-                        box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
+                        box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
                     }
 
                     .dock-tab-btn {
@@ -859,22 +869,26 @@
                         border: none;
                         color: #64748b;
                         font-size: 0.68rem;
-                        font-weight: 700;
-                        min-width: 58px;
-                        min-height: 48px;
-                        padding: 4px 8px;
-                        border-radius: 20px;
+                        font-weight: 600;
+                        letter-spacing: -0.01em;
+                        flex: 1;
+                        max-width: 84px;
+                        min-height: 46px;
+                        padding: 5px 4px;
+                        border-radius: 18px;
                         cursor: pointer;
                         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                         text-decoration: none;
                         position: relative;
                         user-select: none;
+                        -webkit-tap-highlight-color: transparent;
                     }
 
                     .dock-tab-btn i {
-                        font-size: 1.3rem;
+                        font-size: 1.25rem;
+                        line-height: 1;
                         margin-bottom: 2px;
-                        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+                        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
                     }
 
                     .dock-tab-btn:active {
@@ -882,12 +896,13 @@
                     }
 
                     .dock-tab-btn.active {
-                        color: #0f172a;
-                        background: #f1f5f9;
+                        color: #2563eb;
+                        background: rgba(37, 99, 235, 0.09);
+                        font-weight: 700;
                     }
 
                     .dock-tab-btn.active i {
-                        transform: translateY(-2px);
+                        transform: translateY(-1px);
                         color: #2563eb;
                     }
 
@@ -1112,23 +1127,23 @@
                     /* Toast Notification for ID copy */
                     .mobile-toast {
                         position: fixed;
-                        bottom: 80px;
+                        bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
                         left: 50%;
                         transform: translateX(-50%) translateY(20px);
                         background: #0f172a;
-                        color: #fff;
-                        padding: 8px 18px;
+                        color: #ffffff;
+                        padding: 9px 18px;
                         border-radius: 99px;
-                        font-size: 0.78rem;
+                        font-size: 0.8rem;
                         font-weight: 700;
-                        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+                        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
                         z-index: 1060;
                         opacity: 0;
                         pointer-events: none;
-                        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
                         display: flex;
                         align-items: center;
-                        gap: 6px;
+                        gap: 8px;
                     }
 
                     .mobile-toast.show {
@@ -3935,7 +3950,7 @@
 
                                                             </c:otherwise>
                                                         </c:choose>
-                                                    </div>            </div>
+                                                    </div>
 
 
                                                     <%--==================================================================--%>
