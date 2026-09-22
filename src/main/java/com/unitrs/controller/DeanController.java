@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -79,8 +81,22 @@ public class DeanController extends HttpServlet {
         request.setAttribute("sections", sections);
         request.setAttribute("rooms", rooms);
 
+        String successParam = request.getParameter("success");
+        if (successParam != null && !successParam.trim().isEmpty()) {
+            request.setAttribute("successMessage", successParam.trim());
+        }
+        String errorParam = request.getParameter("error");
+        if (errorParam != null && !errorParam.trim().isEmpty()) {
+            request.setAttribute("errorMessage", errorParam.trim());
+        }
+
         String activeTab = request.getParameter("tab");
-        if (activeTab == null) activeTab = "courses";
+        if (activeTab == null || activeTab.trim().isEmpty()) {
+            activeTab = (String) request.getAttribute("tab");
+        }
+        if (activeTab == null || activeTab.trim().isEmpty()) {
+            activeTab = "courses";
+        }
         request.setAttribute("activeTab", activeTab);
 
         request.getRequestDispatcher("/WEB-INF/views/dean/dashboard.jsp").forward(request, response);
@@ -90,6 +106,10 @@ public class DeanController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         String activeTab = "courses";
+        String tabFromReq = request.getParameter("tab");
+        if (tabFromReq != null && !tabFromReq.trim().isEmpty()) {
+            activeTab = tabFromReq.trim();
+        }
 
         try {
             User user = (User) request.getSession().getAttribute("user");
@@ -98,6 +118,7 @@ public class DeanController extends HttpServlet {
                 return;
             }
             int deanSchoolId = user.getDeanSchoolId();
+            String successMessage = null;
 
             if ("addCourse".equals(action)) {
                 activeTab = "courses";
@@ -105,7 +126,7 @@ public class DeanController extends HttpServlet {
                 String title = request.getParameter("courseTitle");
                 int credits = Integer.parseInt(request.getParameter("credits"));
                 deanService.addCourse(code, title, credits, deanSchoolId);
-                request.setAttribute("successMessage", "Course successfully added.");
+                successMessage = "Course successfully added.";
 
             } else if ("updateCourse".equals(action)) {
                 activeTab = "courses";
@@ -114,14 +135,14 @@ public class DeanController extends HttpServlet {
                 String title = request.getParameter("courseTitle");
                 int credits = Integer.parseInt(request.getParameter("credits"));
                 deanService.updateCourse(id, code, title, credits, deanSchoolId);
-                request.setAttribute("successMessage", "Course successfully updated.");
+                successMessage = "Course successfully updated.";
 
             } else if ("addTerm".equals(action)) {
                 activeTab = "terms";
                 int termNumber = Integer.parseInt(request.getParameter("termNumber"));
                 String termName = request.getParameter("termName");
                 deanService.addTerm(termNumber, termName);
-                request.setAttribute("successMessage", "Term successfully added.");
+                successMessage = "Term successfully added.";
 
             } else if ("updateTerm".equals(action)) {
                 activeTab = "terms";
@@ -129,21 +150,21 @@ public class DeanController extends HttpServlet {
                 int termNumber = Integer.parseInt(request.getParameter("termNumber"));
                 String termName = request.getParameter("termName");
                 deanService.updateTerm(id, termNumber, termName);
-                request.setAttribute("successMessage", "Term successfully updated.");
+                successMessage = "Term successfully updated.";
 
             } else if ("bundleCourse".equals(action)) {
                 activeTab = "bundles";
                 int termId = Integer.parseInt(request.getParameter("termId"));
                 int courseId = Integer.parseInt(request.getParameter("courseId"));
                 deanService.assignCourseToTerm(termId, courseId);
-                request.setAttribute("successMessage", "Course bundled to Term successfully.");
+                successMessage = "Course bundled to Term successfully.";
 
             } else if ("unbundleCourse".equals(action)) {
                 activeTab = "bundles";
                 int termId = Integer.parseInt(request.getParameter("termId"));
                 int courseId = Integer.parseInt(request.getParameter("courseId"));
                 deanService.removeCourseFromTerm(termId, courseId);
-                request.setAttribute("successMessage", "Course removed from Term.");
+                successMessage = "Course removed from Term.";
 
             } else if ("addClassSection".equals(action)) {
                 activeTab = "schedules";
@@ -156,13 +177,13 @@ public class DeanController extends HttpServlet {
                 String academicYear = request.getParameter("academicYear");
 
                 deanService.addClassSection(termId, courseId, professorId, roomId, sessionShift, daysOfWeek, academicYear);
-                request.setAttribute("successMessage", "Class Section successfully scheduled.");
+                successMessage = "Class Section successfully scheduled.";
 
             } else if ("removeClassSection".equals(action)) {
                 activeTab = "schedules";
                 int id = Integer.parseInt(request.getParameter("sectionId"));
                 deanService.removeClassSection(id);
-                request.setAttribute("successMessage", "Class Section removed.");
+                successMessage = "Class Section removed.";
 
             } else if ("addRoom".equals(action)) {
                 activeTab = "facilities";
@@ -170,7 +191,7 @@ public class DeanController extends HttpServlet {
                 int floorNumber = Integer.parseInt(request.getParameter("floorNumber"));
                 int capacity = Integer.parseInt(request.getParameter("capacity"));
                 deanService.addRoom(roomNumber, floorNumber, capacity);
-                request.setAttribute("successMessage", "Room successfully created.");
+                successMessage = "Room successfully created.";
 
             } else if ("addRoomsBatch".equals(action)) {
                 activeTab = "facilities";
@@ -178,23 +199,29 @@ public class DeanController extends HttpServlet {
                 int numberOfRooms = Integer.parseInt(request.getParameter("numberOfRooms"));
                 int capacityPerRoom = Integer.parseInt(request.getParameter("capacityPerRoom"));
                 deanService.addRoomsBatch(floorNumber, numberOfRooms, capacityPerRoom);
-                request.setAttribute("successMessage", numberOfRooms + " rooms successfully generated for Floor " + floorNumber + ".");
+                successMessage = numberOfRooms + " rooms successfully generated for Floor " + floorNumber + ".";
 
             } else if ("deleteRoom".equals(action)) {
                 activeTab = "facilities";
                 int id = Integer.parseInt(request.getParameter("roomId"));
                 deanService.deleteRoom(id);
-                request.setAttribute("successMessage", "Room deleted.");
+                successMessage = "Room deleted.";
             }
+
+            String tabParam = "&tab=" + URLEncoder.encode(activeTab, StandardCharsets.UTF_8);
+            String successParam = (successMessage != null) ? "success=" + URLEncoder.encode(successMessage, StandardCharsets.UTF_8) : "success=1";
+            response.sendRedirect(request.getContextPath() + "/dean/dashboard?" + successParam + tabParam);
 
         } catch (ValidationException | NumberFormatException e) {
             String msg = (e instanceof NumberFormatException) ? "Invalid number format." : e.getMessage();
-            request.setAttribute("errorMessage", msg);
+            String tabParam = "&tab=" + URLEncoder.encode(activeTab, StandardCharsets.UTF_8);
+            response.sendRedirect(request.getContextPath() + "/dean/dashboard?error="
+                    + URLEncoder.encode(msg, StandardCharsets.UTF_8) + tabParam);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
+            String msg = (e.getMessage() != null && !e.getMessage().trim().isEmpty()) ? e.getMessage() : "An unexpected error occurred.";
+            String tabParam = "&tab=" + URLEncoder.encode(activeTab, StandardCharsets.UTF_8);
+            response.sendRedirect(request.getContextPath() + "/dean/dashboard?error="
+                    + URLEncoder.encode("An unexpected error occurred: " + msg, StandardCharsets.UTF_8) + tabParam);
         }
-
-        request.setAttribute("tab", activeTab);
-        showDashboard(request, response);
     }
 }

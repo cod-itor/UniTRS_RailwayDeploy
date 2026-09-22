@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.sql.Date;
 
+import com.unitrs.utils.FormatUtils;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,4 +22,7 @@ public class AttendanceEntry {
     private String studentIdentifier;
     private Date sessionDate;
 
+    public String getFormattedStudentIdentifier() {
+        return FormatUtils.formatIdentifier(this.studentIdentifier);
+    }
 }

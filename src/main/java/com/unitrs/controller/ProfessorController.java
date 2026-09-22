@@ -22,6 +22,8 @@ import com.unitrs.repository.ClassSectionRepository;
 import com.unitrs.repository.UserRepository;
 import com.unitrs.repository.AttendanceRepository;
 import com.unitrs.repository.GradeRepository;
+import com.unitrs.model.entity.School;
+import com.unitrs.repository.SchoolRepository;
 import com.unitrs.utils.GradeCalculator;
 import com.unitrs.exceptions.ValidationException;
 
@@ -34,6 +36,7 @@ public class ProfessorController extends HttpServlet {
     private UserRepository userRepository;
     private AttendanceRepository attendanceRepository;
     private GradeRepository gradeRepository;
+    private SchoolRepository schoolRepository;
 
     @Override
     public void init() throws ServletException {
@@ -41,6 +44,7 @@ public class ProfessorController extends HttpServlet {
         this.userRepository = new UserRepository();
         this.attendanceRepository = new AttendanceRepository();
         this.gradeRepository = new GradeRepository();
+        this.schoolRepository = new SchoolRepository();
     }
 
     @Override
@@ -77,6 +81,17 @@ public class ProfessorController extends HttpServlet {
             request.setAttribute("sectionStudentsMap", sectionStudentsMap);
             request.setAttribute("sectionAttendanceMap", sectionAttendanceMap);
             request.setAttribute("sectionGradesMap", sectionGradesMap);
+
+            School professorSchool = null;
+            if (user.getDeanSchoolId() != null) {
+                professorSchool = schoolRepository.findById(user.getDeanSchoolId());
+            } else if (user.getStudentSchoolId() != null) {
+                professorSchool = schoolRepository.findById(user.getStudentSchoolId());
+            } else {
+                professorSchool = schoolRepository.findById(7);
+            }
+            request.setAttribute("professorSchool", professorSchool);
+            request.setAttribute("user", user);
 
             String success = request.getParameter("success");
             if (success != null) {
@@ -152,11 +167,15 @@ public class ProfessorController extends HttpServlet {
                     }
                 }
 
-                response.sendRedirect(request.getContextPath() + "/professor/dashboard?success=attendance");
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + URLEncoder.encode(tab.trim(), StandardCharsets.UTF_8) : "&tab=classes";
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?success=attendance" + tabParam);
             } catch (Exception e) {
                 e.printStackTrace();
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + URLEncoder.encode(tab.trim(), StandardCharsets.UTF_8) : "&tab=classes";
                 String msg = (e.getMessage() != null && !e.getMessage().trim().isEmpty()) ? e.getMessage() : "Failed to save attendance.";
-                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode(msg, StandardCharsets.UTF_8));
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode(msg, StandardCharsets.UTF_8) + tabParam);
             }
         } else if (path != null && path.equals("/grades/save")) {
             try {
@@ -207,11 +226,15 @@ public class ProfessorController extends HttpServlet {
 
                     gradeRepository.saveGrade(eid, att, ass, mid, fin, total, letter, gpa);
                 }
-                response.sendRedirect(request.getContextPath() + "/professor/dashboard?success=grades");
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + URLEncoder.encode(tab.trim(), StandardCharsets.UTF_8) : "&tab=classes";
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?success=grades" + tabParam);
             } catch (Exception e) {
                 e.printStackTrace();
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + URLEncoder.encode(tab.trim(), StandardCharsets.UTF_8) : "&tab=classes";
                 String msg = (e.getMessage() != null && !e.getMessage().trim().isEmpty()) ? e.getMessage() : "Failed to save grades.";
-                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode(msg, StandardCharsets.UTF_8));
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode(msg, StandardCharsets.UTF_8) + tabParam);
             }
         } else {
             response.sendRedirect(request.getContextPath() + "/professor/dashboard");

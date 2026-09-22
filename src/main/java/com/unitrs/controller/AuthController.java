@@ -7,6 +7,7 @@ import com.unitrs.model.entity.Role;
 import com.unitrs.model.entity.User;
 import com.unitrs.repository.OtpRepository;
 import com.unitrs.repository.SchoolRepository;
+import com.unitrs.utils.FormatUtils;
 import com.unitrs.repository.UserRepository;
 import com.unitrs.service.OtpService;
 import com.unitrs.service.UserService;
@@ -73,6 +74,9 @@ public class AuthController extends HttpServlet {
                 handleGetSetNewPassword(request, response);
                 break;
             default:
+                if ("true".equalsIgnoreCase(request.getParameter("resetSuccess"))) {
+                    request.setAttribute("success", "Your password has been successfully reset! Please sign in with your new password.");
+                }
                 request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
                 break;
         }
@@ -212,7 +216,11 @@ public class AuthController extends HttpServlet {
         String redirect = request.getParameter("redirect");
         if (redirect == null || redirect.trim().isEmpty() || !redirect.startsWith("/")) {
             if (user.getRole() == Role.DEAN || user.getDeanSchoolId() != null) {
-                redirect = "/dean/dashboard";
+                if (user.getDeanSchoolId() != null && FormatUtils.isMobile(request)) {
+                    redirect = "/professor/dashboard";
+                } else {
+                    redirect = "/dean/dashboard";
+                }
             } else if (user.getRole() == Role.PROFESSOR) {
                 redirect = "/professor/dashboard";
             } else {
@@ -492,8 +500,7 @@ public class AuthController extends HttpServlet {
 
             session.removeAttribute("verified_reset_email");
 
-            request.setAttribute("success", "Your password has been successfully reset! Please sign in with your new password.");
-            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/auth/login?resetSuccess=true");
 
         } catch (ValidationException e) {
             request.setAttribute("email", email);
@@ -507,7 +514,11 @@ public class AuthController extends HttpServlet {
         String contextPath = request.getContextPath();
 
         if (user.getDeanSchoolId() != null) {
-            response.sendRedirect(contextPath + "/dean/dashboard");
+            if (FormatUtils.isMobile(request)) {
+                response.sendRedirect(contextPath + "/professor/dashboard");
+            } else {
+                response.sendRedirect(contextPath + "/dean/dashboard");
+            }
             return;
         }
 

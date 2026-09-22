@@ -1,0 +1,293 @@
+/* ==========================================================================
+   UniTRS Authentication Design System (auth.css)
+   Shared Dark Cyber-Glassmorphism Styles for all Auth Flows
+   ========================================================================== */
+
+:root {
+    --dark-bg: #0d1b2a;
+    --surface-bg: rgba(18, 30, 49, 0.85);
+    --surface-card: rgba(255, 255, 255, 0.05);
+    --surface-border: rgba(255, 255, 255, 0.12);
+    --surface-hover: rgba(79, 172, 254, 0.12);
+    --primary-blue: #4facfe;
+    --primary-cyan: #00f2fe;
+    --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --accent-green: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-red: #ef4444;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.auth-page {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+    background-image: 
+        radial-gradient(circle at 15% 20%, rgba(79, 172, 254, 0.18), transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(0, 242, 254, 0.15), transparent 35%),
+        radial-gradient(circle at 50% 50%, rgba(13, 27, 42, 0.6), transparent 70%);
+    background-attachment: fixed;
+}
+
+.auth-container {
+    max-width: 460px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.auth-card {
+    background: var(--surface-bg);
+    border: 1px solid var(--surface-border);
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 2.5rem 2.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+    }
+}
+
+/* Header & Branding */
+.auth-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+}
+
+.auth-brand i {
+    font-size: 2.2rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.auth-brand span {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-bottom: 1.75rem;
+}
+
+/* Step Badge */
+.step-badge {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: var(--primary-cyan);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0, 242, 254, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 242, 254, 0.25);
+    margin-bottom: 0.75rem;
+}
+
+/* Form Controls */
+.form-label-dark {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.45rem;
+    display: block;
+}
+
+.input-group-dark {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--surface-border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.input-group-dark:focus-within {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.2);
+}
+
+.input-icon-dark {
+    color: var(--text-muted);
+    padding: 0 1rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-control-dark {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    padding: 0.85rem 1rem 0.85rem 0;
+    font-size: 0.95rem;
+    width: 100%;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.form-control-dark::placeholder {
+    color: rgba(255, 255, 255, 0.45) !important;
+    opacity: 1 !important;
+}
+
+.form-control-dark:-webkit-autofill,
+.form-control-dark:-webkit-autofill:hover, 
+.form-control-dark:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px #132238 inset !important;
+    box-shadow: 0 0 0px 1000px #132238 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: #ffffff !important;
+}
+
+.text-muted {
+    color: #94a3b8 !important;
+}
+
+.text-secondary {
+    color: #94a3b8 !important;
+}
+
+.btn-toggle-eye {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0 1rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.15s ease;
+}
+
+.btn-toggle-eye:hover {
+    color: #ffffff;
+}
+
+/* Primary Gradient Button */
+.btn-auth-primary {
+    background: var(--primary-gradient);
+    border: none;
+    color: #0d1b2a;
+    font-weight: 700;
+    font-size: 0.98rem;
+    border-radius: 14px;
+    padding: 0.85rem 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 242, 254, 0.35);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-auth-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 242, 254, 0.5);
+    color: #0d1b2a;
+}
+
+.btn-auth-primary:active {
+    transform: translateY(0);
+}
+
+/* Links & Text Utilities */
+.auth-link {
+    color: var(--primary-cyan);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.auth-link:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+}
+
+.auth-footer-text {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.auth-divider {
+    border-top: 1px solid var(--surface-border);
+    margin: 1.5rem 0;
+}
+
+/* OTP Code Input */
+.otp-input-dark {
+    letter-spacing: 12px;
+    font-size: 1.9rem;
+    font-weight: 700;
+    text-align: center;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: var(--primary-cyan) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--surface-border) !important;
+    border-radius: 14px !important;
+    padding: 0.75rem 0.5rem 0.75rem 1.25rem !important;
+    transition: all 0.2s ease !important;
+    width: 100%;
+}
+
+.otp-input-dark:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--primary-cyan) !important;
+    box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.25) !important;
+}
+
+/* Informational Badge / Box */
+.auth-info-box {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    border-radius: 14px;
+    padding: 0.85rem 1.15rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.86rem;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.auth-info-box i {
+    font-size: 1.35rem;
+    color: var(--primary-cyan);
+    flex-shrink: 0;
+}
