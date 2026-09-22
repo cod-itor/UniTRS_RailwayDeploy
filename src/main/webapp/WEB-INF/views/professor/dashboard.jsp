@@ -148,6 +148,18 @@
                         padding: 12px 0;
                         color: #64748b;
                         transition: all 0.2s;
+                        cursor: pointer;
+                        user-select: none;
+                    }
+
+                    .date-strip-item:active {
+                        transform: scale(0.95);
+                    }
+
+                    .date-strip-item.is-today:not(.active) {
+                        border-color: #3b82f6;
+                        color: #2563eb;
+                        background: #eff6ff;
                     }
 
                     .date-strip-item.active {
@@ -319,15 +331,70 @@
             .sheet-footer { padding: 16px 20px; border-top: 1px solid #f1f5f9; flex-shrink: 0; background: #fff; }
 
             /* Action Buttons inside Course Sheet */
-            .action-btn { display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: 16px; margin-bottom: 12px; font-weight: 700; border: none; width: 100%; text-align: left; transition: all 0.15s; }
-            .action-btn-primary { background: #e0e7ff; color: #4338ca; }
-            .action-btn-success { background: #dcfce7; color: #15803d; }
-            .action-btn-info { background: #e0f2fe; color: #0369a1; }
-            .action-btn-secondary { background: #f1f5f9; color: #475569; }
-            .action-btn:active { transform: scale(0.98); filter: brightness(0.95); }
-            .action-btn i { font-size: 1.4rem; }
-            .action-btn-text { display: flex; flex-direction: column; }
-            .action-btn-desc { font-size: 0.7rem; font-weight: 600; opacity: 0.8; margin-top: 2px; }
+            .sheet-menu-btn {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 14px 16px;
+                border-radius: 16px;
+                margin-bottom: 12px;
+                border: 1px solid #f1f5f9;
+                width: 100%;
+                text-align: left;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                cursor: pointer;
+                background: #ffffff;
+                box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+            }
+            .sheet-menu-btn:hover {
+                border-color: #cbd5e1;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+            }
+            .sheet-menu-btn:active {
+                transform: scale(0.98);
+                box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            }
+            .sheet-btn-icon {
+                width: 46px;
+                height: 46px;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.35rem;
+                flex-shrink: 0;
+            }
+            .sheet-menu-btn-info .sheet-btn-icon { background: #e0f2fe; color: #0284c7; }
+            .sheet-menu-btn-primary .sheet-btn-icon { background: #e0e7ff; color: #4f46e5; }
+            .sheet-menu-btn-success .sheet-btn-icon { background: #dcfce7; color: #16a34a; }
+            .sheet-menu-btn-secondary .sheet-btn-icon { background: #f1f5f9; color: #475569; }
+
+            .sheet-menu-text {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                min-width: 0;
+            }
+            .sheet-menu-title {
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: #0f172a;
+                line-height: 1.25;
+            }
+            .sheet-menu-desc {
+                font-size: 0.74rem;
+                font-weight: 500;
+                color: #64748b;
+                margin-top: 2px;
+                line-height: 1.2;
+            }
+            .sheet-menu-arrow {
+                color: #94a3b8;
+                font-size: 1.05rem;
+                margin-left: auto;
+                flex-shrink: 0;
+            }
 
             /* Mobile Forms */
             .form-section-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 10px; margin-top: 15px; }
@@ -358,6 +425,36 @@
 <body>
 <div class="d-none d-md-flex desktop-app-container">
     <style>
+        body.modal-open {
+            padding-right: 0 !important;
+            overflow-y: hidden !important;
+        }
+
+        .modal {
+            --bs-modal-zindex: 1065;
+            padding-right: 0 !important;
+        }
+
+        .modal-backdrop {
+            --bs-backdrop-zindex: 1060;
+            background-color: #0f172a;
+        }
+
+        .modal-backdrop.show {
+            opacity: 0.6;
+        }
+
+        .modal.fade .modal-dialog {
+            transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease-out;
+            transform: scale(0.96) translateY(-8px);
+            opacity: 0;
+        }
+
+        .modal.show .modal-dialog {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
         .desktop-app-container {
             min-height: 100vh;
             background-color: #f3f5f8;
@@ -959,6 +1056,336 @@
             outline: 2px solid #2563eb !important;
             outline-offset: 2px !important;
         }
+
+        .timetable-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(226, 232, 240, 0.7);
+        }
+
+        .timetable-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .view-toggle-group {
+            display: inline-flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 99px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .view-toggle-btn {
+            border: none;
+            background: transparent;
+            padding: 6px 18px;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .view-toggle-btn.active {
+            background: #ffffff;
+            color: #2563eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .timetable-scroll {
+            overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid #edf2f7;
+            background: #ffffff;
+        }
+
+        .timetable-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 980px;
+        }
+
+        .timetable-table th, .timetable-table td {
+            border-right: 1px solid #edf2f7;
+            border-bottom: 1px solid #edf2f7;
+            padding: 14px;
+            vertical-align: top;
+            transition: opacity 0.2s ease, filter 0.2s ease;
+        }
+
+        .timetable-table th:last-child, .timetable-table td:last-child {
+            border-right: none;
+        }
+
+        .timetable-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timetable-header-cell {
+            background: #f8fafc;
+            text-align: center;
+            padding: 16px 14px;
+            position: relative;
+        }
+
+        .timetable-header-cell.is-today {
+            background: #eff6ff;
+            border-bottom: 2px solid #2563eb;
+        }
+
+        .timetable-day-name {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: 0.3px;
+        }
+
+        .timetable-today-badge {
+            display: inline-block;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 99px;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .timetable-shift-cell {
+            width: 150px;
+            min-width: 150px;
+            background: #fafbfc;
+            border-right: 2px solid #e2e8f0 !important;
+        }
+
+        .shift-badge-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .shift-name-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .shift-time-range {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .timetable-slot-cell {
+            min-width: 170px;
+            background: #ffffff;
+            transition: background 0.15s ease, opacity 0.2s ease;
+        }
+
+        .timetable-slot-cell.is-today {
+            background: #fafcff;
+        }
+
+        .timetable-slot-cell:hover {
+            background: #f8fafc;
+        }
+
+        .timetable-course-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #2563eb;
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timetable-course-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .timetable-course-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+            border-color: #93c5fd;
+        }
+
+        .tt-code-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #2563eb;
+            background: #eff6ff;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .tt-course-title {
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .tt-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .tt-room-pill {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tt-students-pill {
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .tt-actions-row {
+            display: flex;
+            gap: 6px;
+            padding-top: 8px;
+            border-top: 1px dashed #edf2f7;
+        }
+
+        .tt-action-btn {
+            flex: 1;
+            border: none;
+            border-radius: 8px;
+            padding: 5px 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tt-action-btn.att-btn {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        .tt-action-btn.att-btn:hover {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        .tt-action-btn.grade-btn {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        .tt-action-btn.grade-btn:hover {
+            background: #16a34a;
+            color: #ffffff;
+        }
+
+        .timetable-empty-slot {
+            height: 100%;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #e2e8f0;
+            border-radius: 12px;
+            background: #fafbfc;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+
+        .timetable-empty-slot:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .timetable-stats-bar {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .tt-stat-chip {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .tt-stat-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+        }
+
+        .tt-stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tt-stat-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .tt-stat-val {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        .day-pill-btn {
+            transition: all 0.15s ease;
+        }
     </style>
 
     <!-- Accessible Skip to Content Link -->
@@ -1023,6 +1450,11 @@
             </div>
 
             <div class="header-actions">
+                <c:if test="${sessionScope.user.deanSchoolId != null}">
+                    <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2" style="font-size: 0.85rem;">
+                        <i class="bi bi-mortarboard-fill text-primary" aria-hidden="true"></i> Switch to Dean View
+                    </a>
+                </c:if>
                 <button type="button" class="action-btn has-dot" aria-label="Notifications (1 new)">
                     <i class="bi bi-bell" aria-hidden="true"></i>
                 </button>
@@ -1031,7 +1463,7 @@
                 </button>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="professorProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User profile menu for ${sessionScope.user.fullName}">
+                    <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="professorProfileDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="User profile menu for ${sessionScope.user.fullName}">
                         <div class="user-avatar">
                             <c:choose>
                                 <c:when test="${sessionScope.user.gender == 'FEMALE'}">
@@ -1048,7 +1480,7 @@
                         </div>
                     </button>
 
-                    <div class="dropdown-menu dropdown-menu-end shadow-lg rounded-4 p-0 border-0 mt-2 overflow-hidden user-dropdown-menu" aria-labelledby="professorProfileDropdown" style="width: 300px; z-index: 1060;">
+                    <div class="dropdown-menu dropdown-menu-end shadow-lg rounded-4 p-0 border-0 mt-2 overflow-hidden user-dropdown-menu" aria-labelledby="professorProfileDropdown" style="width: 300px; z-index: 1060;" onclick="event.stopPropagation();">
                         <!-- Header Banner -->
                         <div class="p-3 border-bottom" style="background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);">
                             <div class="d-flex align-items-center gap-3">
@@ -1096,6 +1528,14 @@
                                 </span>
                             </div>
                         </div>
+
+                        <c:if test="${sessionScope.user.deanSchoolId != null}">
+                            <div class="px-3 pb-2">
+                                <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-dark w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2 text-white text-decoration-none" style="font-size: 0.85rem;">
+                                    <i class="bi bi-mortarboard-fill text-info"></i> Switch to Dean Dashboard
+                                </a>
+                            </div>
+                        </c:if>
 
                         <!-- Logout Button -->
                         <div class="p-3 bg-light border-top">
@@ -1425,68 +1865,137 @@
         <%-- TAB: SCHEDULE                                                      --%>
         <%-- ================================================================== --%>
         <div id="dt-schedule" class="tab-panel" role="tabpanel" aria-labelledby="tab-schedule" tabindex="0">
-            <div class="mb-4">
-                <h2 class="h4 fw-bold text-dark mb-1">Weekly Teaching Timetable</h2>
-                <p class="text-muted small mb-0">Overview of classroom allocations, schedule shifts, and lecture sessions</p>
+            <div class="timetable-toolbar">
+                <div>
+                    <h2 class="h4 fw-bold text-dark mb-1">Weekly Teaching Timetable</h2>
+                    <p class="text-muted small mb-0">Overview of classroom allocations, schedule shifts, and lecture sessions</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="view-toggle-group" role="group" aria-label="Schedule View Switcher">
+                        <button type="button" class="view-toggle-btn active" id="btnViewTimetable" onclick="setScheduleView('grid')">
+                            <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i> Timetable Grid
+                        </button>
+                        <button type="button" class="view-toggle-btn" id="btnViewCards" onclick="setScheduleView('cards')">
+                            <i class="bi bi-card-list" aria-hidden="true"></i> Card View
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div class="row g-4">
-                <c:if test="${empty sectionStudentsMap}">
-                    <div class="col-12">
-                        <div class="table-card text-center py-5">
-                            <i class="bi bi-calendar-x fs-1 text-muted d-block mb-3" aria-hidden="true"></i>
-                            <p class="text-muted mb-0">No classes scheduled for the current academic term.</p>
-                        </div>
-                    </div>
-                </c:if>
+            <c:if test="${empty sectionStudentsMap}">
+                <div class="table-card text-center py-5">
+                    <i class="bi bi-calendar-x fs-1 text-muted d-block mb-3" aria-hidden="true"></i>
+                    <p class="text-muted mb-0">No classes scheduled for the current academic term.</p>
+                </div>
+            </c:if>
 
-                <c:forEach var="entry" items="${sectionStudentsMap}">
-                    <c:set var="section" value="${entry.key}" />
-                    <c:set var="students" value="${entry.value}" />
-                    <div class="col-md-6 col-xl-4">
-                        <div class="table-card h-100 mb-0 d-flex flex-column justify-content-between">
-                            <div>
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill fw-bold">${section.courseCode}</span>
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill"><i class="bi bi-people me-1" aria-hidden="true"></i>${students.size()} Students</span>
-                                </div>
-                                <h3 class="h6 fw-bold text-dark mb-3">${section.courseTitle}</h3>
-                                <div class="p-3 bg-light rounded-4 mb-3">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="bi bi-calendar3 text-primary me-2 fs-5" aria-hidden="true"></i>
-                                        <div>
-                                            <div class="small fw-bold text-dark">${section.daysOfWeek}</div>
-                                            <div class="text-muted" style="font-size:0.75rem;">Session Days</div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="bi bi-clock text-primary me-2 fs-5" aria-hidden="true"></i>
-                                        <div>
-                                            <div class="small fw-bold text-dark">${section.sessionShift}</div>
-                                            <div class="text-muted" style="font-size:0.75rem;">Shift Time</div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-door-open text-primary me-2 fs-5" aria-hidden="true"></i>
-                                        <div>
-                                            <div class="small fw-bold text-dark">Room ${section.roomName}</div>
-                                            <div class="text-muted" style="font-size:0.75rem;">Assigned Classroom</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="pt-2 border-top d-flex gap-2">
-                                <button type="button" class="btn btn-sm btn-primary w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}">
-                                    <i class="bi bi-clipboard-check me-1" aria-hidden="true"></i> Attendance
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-success w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#gradesModal${section.id}">
-                                    <i class="bi bi-journal-text me-1" aria-hidden="true"></i> Grades
-                                </button>
-                            </div>
+            <c:if test="${not empty sectionStudentsMap}">
+                <div class="timetable-stats-bar">
+                    <div class="tt-stat-chip">
+                        <div class="tt-stat-icon" style="background:#eff6ff; color:#2563eb;">
+                            <i class="bi bi-journal-bookmark-fill"></i>
+                        </div>
+                        <div class="tt-stat-info">
+                            <span class="tt-stat-label">Assigned Sections</span>
+                            <span class="tt-stat-val">${sectionStudentsMap.size()}</span>
                         </div>
                     </div>
-                </c:forEach>
-            </div>
+                    <div class="tt-stat-chip">
+                        <div class="tt-stat-icon" style="background:#f0fdf4; color:#16a34a;">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <div class="tt-stat-info">
+                            <span class="tt-stat-label">Total Students</span>
+                            <span class="tt-stat-val">
+                                <c:set var="totalEnrolled" value="0" />
+                                <c:forEach var="entry" items="${sectionStudentsMap}">
+                                    <c:set var="totalEnrolled" value="${totalEnrolled + entry.value.size()}" />
+                                </c:forEach>
+                                ${totalEnrolled}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="tt-stat-chip">
+                        <div class="tt-stat-icon" style="background:#fdf4ff; color:#a855f7;">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <div class="tt-stat-info">
+                            <span class="tt-stat-label">Academic Year</span>
+                            <span class="tt-stat-val" style="font-size:0.95rem;">
+                                <c:forEach var="entry" items="${sectionStudentsMap}" begin="0" end="0">
+                                    ${entry.key.academicYear != null ? entry.key.academicYear : '2026-2027'}
+                                </c:forEach>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 1: TIMETABLE GRID -->
+                <div id="scheduleTimetableView" class="timetable-card mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill small fw-semibold">
+                                <i class="bi bi-calendar-week me-1 text-primary"></i> Weekly Academic Matrix
+                            </span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 flex-wrap" id="timetableDayFilterGroup"></div>
+                    </div>
+
+                    <div class="timetable-scroll">
+                        <div id="timetableGridContainer"></div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: CARDS GRID (PRESERVED) -->
+                <div id="scheduleCardsView" class="row g-4" style="display: none;">
+                    <c:forEach var="entry" items="${sectionStudentsMap}">
+                        <c:set var="section" value="${entry.key}" />
+                        <c:set var="students" value="${entry.value}" />
+                        <div class="col-md-6 col-xl-4">
+                            <div class="table-card h-100 mb-0 d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill fw-bold">${section.courseCode}</span>
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill"><i class="bi bi-people me-1" aria-hidden="true"></i>${students.size()} Students</span>
+                                    </div>
+                                    <h3 class="h6 fw-bold text-dark mb-3">${section.courseTitle}</h3>
+                                    <div class="p-3 bg-light rounded-4 mb-3">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="bi bi-calendar3 text-primary me-2 fs-5" aria-hidden="true"></i>
+                                            <div>
+                                                <div class="small fw-bold text-dark">${section.daysOfWeek}</div>
+                                                <div class="text-muted" style="font-size:0.75rem;">Session Days</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="bi bi-clock text-primary me-2 fs-5" aria-hidden="true"></i>
+                                            <div>
+                                                <div class="small fw-bold text-dark">${section.sessionShift}</div>
+                                                <div class="text-muted" style="font-size:0.75rem;">Shift Time</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-door-open text-primary me-2 fs-5" aria-hidden="true"></i>
+                                            <div>
+                                                <div class="small fw-bold text-dark">Room ${section.roomName}</div>
+                                                <div class="text-muted" style="font-size:0.75rem;">Assigned Classroom</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pt-2 border-top d-flex gap-2">
+                                    <button type="button" class="btn btn-sm btn-primary w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}">
+                                        <i class="bi bi-clipboard-check me-1" aria-hidden="true"></i> Attendance
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-success w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#gradesModal${section.id}">
+                                        <i class="bi bi-journal-text me-1" aria-hidden="true"></i> Grades
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </c:if>
         </div>
 
         <%-- ================================================================== --%>
@@ -1579,6 +2088,7 @@
             </div>
         </div>
     </main>
+</div><!-- End Desktop App Container -->
 
     <%-- ================================================================== --%>
     <%-- DESKTOP MODALS (ACCESSIBLE & MODERNIZED)                            --%>
@@ -1840,6 +2350,9 @@
             const targetPanel = document.getElementById('dt-' + tabId);
             if (targetPanel) {
                 targetPanel.classList.add('active');
+                if (tabId === 'schedule' && typeof renderWeeklyTimetable === 'function') {
+                    renderWeeklyTimetable();
+                }
             }
 
             // Announce to screen reader
@@ -1914,7 +2427,6 @@
             });
         });
     </script>
-</div><!-- End Desktop App Container -->
 
 <div class="d-block d-md-none mobile-app-container">
 
@@ -1994,33 +2506,41 @@
         </div>
         
         <div class="section-header mt-2">
-            <div class="section-title">Today's Schedule</div>
+            <div class="section-title" id="profHomeScheduleTitle">Class Schedule</div>
+            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill small" id="profHomeScheduleCount">${sectionStudentsMap.size()} Classes</span>
         </div>
         
-        <c:if test="${empty sectionStudentsMap}">
-            <div class="text-center p-4 bg-white rounded-4 border" style="border-color:#e2e8f0;">
+        <div id="profHomeScheduleContainer">
+            <c:if test="${empty sectionStudentsMap}">
+                <div class="text-center p-4 bg-white rounded-4 border" style="border-color:#e2e8f0;">
+                    <i class="bi bi-cup-hot text-muted" style="font-size:2rem;"></i>
+                    <div class="fw-bold mt-2 text-dark">No Classes Today</div>
+                    <div class="small text-muted">Enjoy your free time!</div>
+                </div>
+            </c:if>
+            
+            <c:forEach var="entry" items="${sectionStudentsMap}">
+                <c:set var="section" value="${entry.key}" />
+                <c:set var="students" value="${entry.value}" />
+                <div class="mobile-course-card mobile-class-card prof-home-schedule-card" data-days="${section.daysOfWeek}" onclick="openCourseSheet('${section.id}')">
+                    <div class="mc-header">
+                        <div class="mc-code">${section.courseCode}</div>
+                        <div class="mc-badge">${section.termName}</div>
+                    </div>
+                    <div class="mc-title">${section.courseTitle}</div>
+                    <div class="mc-meta">
+                        <div class="mc-meta-item"><i class="bi bi-clock"></i>${section.sessionShift}</div>
+                        <div class="mc-meta-item"><i class="bi bi-door-open"></i>Room ${section.roomName}</div>
+                        <div class="mc-meta-item"><i class="bi bi-people"></i>${students.size()} Students</div>
+                    </div>
+                </div>
+            </c:forEach>
+            <div id="profHomeScheduleEmpty" class="text-center p-4 bg-white rounded-4 border my-2" style="border-color:#e2e8f0; display:none;">
                 <i class="bi bi-cup-hot text-muted" style="font-size:2rem;"></i>
-                <div class="fw-bold mt-2 text-dark">No Classes Today</div>
+                <div class="fw-bold mt-2 text-dark" id="profHomeScheduleEmptyText">No Classes Scheduled</div>
                 <div class="small text-muted">Enjoy your free time!</div>
             </div>
-        </c:if>
-        
-        <c:forEach var="entry" items="${sectionStudentsMap}">
-            <c:set var="section" value="${entry.key}" />
-            <c:set var="students" value="${entry.value}" />
-            <div class="mobile-course-card mobile-class-card" onclick="openCourseSheet('${section.id}')">
-                <div class="mc-header">
-                    <div class="mc-code">${section.courseCode}</div>
-                    <div class="mc-badge">${section.termName}</div>
-                </div>
-                <div class="mc-title">${section.courseTitle}</div>
-                <div class="mc-meta">
-                    <div class="mc-meta-item"><i class="bi bi-clock"></i>${section.sessionShift}</div>
-                    <div class="mc-meta-item"><i class="bi bi-door-open"></i>Room ${section.roomName}</div>
-                    <div class="mc-meta-item"><i class="bi bi-people"></i>${students.size()} Students</div>
-                </div>
-            </div>
-        </c:forEach>
+        </div>
     </div>
 
     <!-- Classes View -->
@@ -2132,8 +2652,8 @@
         </div>
 
         <c:if test="${sessionScope.user.deanSchoolId != null}">
-            <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-outline-info w-100 rounded-3 py-2 fw-semibold mb-3">
-                <i class="bi bi-mortarboard me-2"></i>Switch to Dean Dashboard
+            <a href="${pageContext.request.contextPath}/dean/dashboard?force=desktop" class="btn btn-dark w-100 rounded-pill py-2 fw-bold mb-3 d-flex align-items-center justify-content-center gap-2 shadow-sm text-white text-decoration-none">
+                <i class="bi bi-mortarboard-fill text-info"></i> Switch to Dean Dashboard (Desktop)
             </a>
         </c:if>
 
@@ -2190,33 +2710,45 @@
             <button class="btn btn-light rounded-circle" onclick="closeSheet('courseActionSheet')"><i class="bi bi-x fs-5"></i></button>
         </div>
         <div class="sheet-body pb-4">
-            <button class="action-btn action-btn-info" onclick="openSubSheet('rosterSheet')">
-                <i class="bi bi-people-fill"></i>
-                <div class="action-btn-text">
-                    Student Roster
-                    <span class="action-btn-desc">View enrolled students &amp; emails</span>
+            <button class="sheet-menu-btn sheet-menu-btn-info" onclick="openSubSheet('rosterSheet')">
+                <div class="sheet-btn-icon">
+                    <i class="bi bi-people-fill"></i>
                 </div>
+                <div class="sheet-menu-text">
+                    <span class="sheet-menu-title">Student Roster</span>
+                    <span class="sheet-menu-desc">View enrolled students &amp; emails</span>
+                </div>
+                <i class="bi bi-chevron-right sheet-menu-arrow"></i>
             </button>
-            <button class="action-btn action-btn-primary" onclick="openSubSheet('attendanceSheet')">
-                <i class="bi bi-clipboard-check"></i>
-                <div class="action-btn-text">
-                    Take Attendance
-                    <span class="action-btn-desc">Record today's session</span>
+            <button class="sheet-menu-btn sheet-menu-btn-primary" onclick="openSubSheet('attendanceSheet')">
+                <div class="sheet-btn-icon">
+                    <i class="bi bi-clipboard-check-fill"></i>
                 </div>
+                <div class="sheet-menu-text">
+                    <span class="sheet-menu-title">Take Attendance</span>
+                    <span class="sheet-menu-desc">Record today's session</span>
+                </div>
+                <i class="bi bi-chevron-right sheet-menu-arrow"></i>
             </button>
-            <button class="action-btn action-btn-success" onclick="openSubSheet('gradesSheet')">
-                <i class="bi bi-journal-check"></i>
-                <div class="action-btn-text">
-                    Manage Grades
-                    <span class="action-btn-desc">Update student scores</span>
+            <button class="sheet-menu-btn sheet-menu-btn-success" onclick="openSubSheet('gradesSheet')">
+                <div class="sheet-btn-icon">
+                    <i class="bi bi-journal-check"></i>
                 </div>
+                <div class="sheet-menu-text">
+                    <span class="sheet-menu-title">Manage Grades</span>
+                    <span class="sheet-menu-desc">Update student scores</span>
+                </div>
+                <i class="bi bi-chevron-right sheet-menu-arrow"></i>
             </button>
-            <button class="action-btn action-btn-secondary" onclick="openSubSheet('historySheet')">
-                <i class="bi bi-clock-history"></i>
-                <div class="action-btn-text">
-                    Attendance History
-                    <span class="action-btn-desc">View past records</span>
+            <button class="sheet-menu-btn sheet-menu-btn-secondary" onclick="openSubSheet('historySheet')">
+                <div class="sheet-btn-icon">
+                    <i class="bi bi-clock-history"></i>
                 </div>
+                <div class="sheet-menu-text">
+                    <span class="sheet-menu-title">Attendance History</span>
+                    <span class="sheet-menu-desc">View past records</span>
+                </div>
+                <i class="bi bi-chevron-right sheet-menu-arrow"></i>
             </button>
         </div>
     </div>
@@ -2500,26 +3032,287 @@
         var diffToMonday = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
         var monday = new Date(today.setDate(diffToMonday));
         var html = '';
+
+        // "All" option
+        html += '<div class="date-strip-item active" onclick="filterScheduleByDay(\'all\', this, \'All\')">' +
+                '<div class="ds-day">All</div>' +
+                '<div class="ds-date"><i class="bi bi-grid-fill" style="font-size:1.1rem;"></i></div></div>';
+
         for (var i = 0; i < 7; i++) {
             var d = new Date(monday);
             d.setDate(monday.getDate() + i);
             var isToday = (d.getDate() === new Date().getDate() && d.getMonth() === new Date().getMonth());
-            html += '<div class="date-strip-item ' + (isToday ? 'active' : '') + '">' +
-                    '<div class="ds-day">' + days[d.getDay()] + '</div>' +
+            var dayShort = days[d.getDay()].toLowerCase();
+            var dayLabel = days[d.getDay()];
+
+            html += '<div class="date-strip-item' + (isToday ? ' is-today' : '') + '" onclick="filterScheduleByDay(\'' + dayShort + '\', this, \'' + dayLabel + '\')">' +
+                    '<div class="ds-day">' + dayLabel + (isToday ? ' &bull;' : '') + '</div>' +
                     '<div class="ds-date">' + d.getDate() + '</div></div>';
         }
         strip.innerHTML = html;
+    }
 
-        setTimeout(function () {
-            var active = strip.querySelector('.active');
-            if (active) {
-                strip.scrollLeft = active.offsetLeft - (strip.offsetWidth / 2) + (active.offsetWidth / 2);
+    function filterScheduleByDay(dayShort, element, dayLabel) {
+        var strip = document.getElementById('mobileDateStrip');
+        if (strip) {
+            var items = strip.querySelectorAll('.date-strip-item');
+            items.forEach(function (item) { item.classList.remove('active'); });
+        }
+        if (element) {
+            element.classList.add('active');
+        }
+
+        var cards = document.querySelectorAll('.prof-home-schedule-card');
+        var emptyBox = document.getElementById('profHomeScheduleEmpty');
+        var emptyText = document.getElementById('profHomeScheduleEmptyText');
+        var titleEl = document.getElementById('profHomeScheduleTitle');
+        var countEl = document.getElementById('profHomeScheduleCount');
+
+        var visibleCount = 0;
+
+        cards.forEach(function (card) {
+            var days = (card.getAttribute('data-days') || '').toLowerCase();
+            var match = false;
+
+            if (dayShort === 'all') {
+                match = true;
+            } else if (days.indexOf('mon-fri') !== -1) {
+                match = ['mon', 'tue', 'wed', 'thu', 'fri'].indexOf(dayShort) !== -1;
+            } else if (days.indexOf('sat-sun') !== -1) {
+                match = ['sat', 'sun'].indexOf(dayShort) !== -1;
+            } else {
+                match = days.indexOf(dayShort) !== -1;
             }
-        }, 100);
+
+            if (match) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        if (emptyBox) {
+            if (visibleCount === 0 && cards.length > 0) {
+                emptyBox.style.display = 'block';
+                if (emptyText) emptyText.textContent = 'No classes scheduled for ' + (dayLabel || 'this day');
+            } else {
+                emptyBox.style.display = 'none';
+            }
+        }
+
+        if (titleEl) {
+            if (dayShort === 'all') {
+                titleEl.textContent = "Class Schedule";
+            } else {
+                titleEl.textContent = (dayLabel || 'Day') + "'s Schedule";
+            }
+        }
+
+        if (countEl) {
+            countEl.textContent = visibleCount + (visibleCount === 1 ? ' Class' : ' Classes');
+        }
+    }
+    
+    var timetableSections = [
+        <c:forEach var="entry" items="${sectionStudentsMap}">
+        <c:set var="sec" value="${entry.key}" />
+        <c:set var="secStudents" value="${entry.value}" />
+        {
+            id: ${sec.id},
+            code: '${sec.courseCode}',
+            title: '${sec.courseTitle.replace("'", "\\'")}',
+            shift: '${sec.sessionShift != null ? sec.sessionShift : ""}',
+            daysOfWeek: '${sec.daysOfWeek != null ? sec.daysOfWeek : ""}',
+            room: '${sec.roomName != null ? sec.roomName : ""}',
+            studentCount: ${secStudents.size()}
+        },
+        </c:forEach>
+    ];
+
+    function matchesDay(daysOfWeek, dayCode) {
+        if (!daysOfWeek) return false;
+        var d = daysOfWeek.toLowerCase();
+        var target = dayCode.toLowerCase();
+        if (d.indexOf('mon-fri') !== -1) {
+            return ['mon', 'tue', 'wed', 'thu', 'fri'].indexOf(target) !== -1;
+        }
+        if (d.indexOf('sat-sun') !== -1) {
+            return ['sat', 'sun'].indexOf(target) !== -1;
+        }
+        return d.indexOf(target) !== -1;
+    }
+
+    function setScheduleView(view) {
+        var grid = document.getElementById('scheduleTimetableView');
+        var cards = document.getElementById('scheduleCardsView');
+        var btnGrid = document.getElementById('btnViewTimetable');
+        var btnCards = document.getElementById('btnViewCards');
+        if (!grid || !cards) return;
+
+        if (view === 'cards') {
+            grid.style.display = 'none';
+            cards.style.display = 'flex';
+            if (btnGrid) btnGrid.classList.remove('active');
+            if (btnCards) btnCards.classList.add('active');
+            try { localStorage.setItem('prof_schedule_view', 'cards'); } catch(e){}
+        } else {
+            grid.style.display = 'block';
+            cards.style.display = 'none';
+            if (btnGrid) btnGrid.classList.add('active');
+            if (btnCards) btnCards.classList.remove('active');
+            try { localStorage.setItem('prof_schedule_view', 'grid'); } catch(e){}
+        }
+    }
+
+    function renderWeeklyTimetable() {
+        var container = document.getElementById('timetableGridContainer');
+        if (!container) return;
+
+        var hasWeekend = timetableSections.some(function(s) {
+            return (s.shift && s.shift.toUpperCase() === 'WEEKEND') ||
+                   matchesDay(s.daysOfWeek, 'sat') ||
+                   matchesDay(s.daysOfWeek, 'sun');
+        });
+
+        var days = [
+            { key: 'mon', label: 'Monday', short: 'Mon' },
+            { key: 'tue', label: 'Tuesday', short: 'Tue' },
+            { key: 'wed', label: 'Wednesday', short: 'Wed' },
+            { key: 'thu', label: 'Thursday', short: 'Thu' },
+            { key: 'fri', label: 'Friday', short: 'Fri' },
+            { key: 'sat', label: 'Saturday', short: 'Sat' },
+            { key: 'sun', label: 'Sunday', short: 'Sun' }
+        ];
+
+        var shifts = [
+            { key: 'MORNING', label: 'Morning', time: '08:00 - 11:15', icon: 'bi-sun-fill text-warning' },
+            { key: 'AFTERNOON', label: 'Afternoon', time: '14:00 - 17:15', icon: 'bi-cloud-sun-fill text-primary' },
+            { key: 'EVENING', label: 'Evening', time: '17:45 - 20:45', icon: 'bi-moon-stars-fill text-indigo' }
+        ];
+
+        var hasWeekendShift = timetableSections.some(function(s) {
+            return s.shift && s.shift.toUpperCase() === 'WEEKEND';
+        });
+        if (hasWeekendShift) {
+            shifts.push({ key: 'WEEKEND', label: 'Weekend Shift', time: '08:00 - 16:30', icon: 'bi-calendar2-week-fill text-success' });
+        }
+
+        var todayIndex = new Date().getDay();
+        var dayMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+        var todayKey = dayMap[todayIndex];
+
+        var tableHtml = '<table class="timetable-table">';
+        tableHtml += '<thead><tr><th class="timetable-shift-cell text-center"><span class="small fw-bold text-muted text-uppercase">Time / Shift</span></th>';
+        days.forEach(function(d) {
+            var isToday = (d.key === todayKey);
+            tableHtml += '<th class="timetable-header-cell ' + (isToday ? 'is-today' : '') + '" data-day="' + d.key + '">';
+            tableHtml += '<div class="timetable-day-name">' + d.label + '</div>';
+            if (isToday) {
+                tableHtml += '<span class="timetable-today-badge"><i class="bi bi-clock me-1"></i>Today</span>';
+            }
+            tableHtml += '</th>';
+        });
+        tableHtml += '</tr></thead>';
+
+        tableHtml += '<tbody>';
+        shifts.forEach(function(sh) {
+            tableHtml += '<tr>';
+            tableHtml += '<td class="timetable-shift-cell">';
+            tableHtml += '<div class="shift-badge-box">';
+            tableHtml += '<span class="shift-name-title"><i class="bi ' + sh.icon + '"></i> ' + sh.label + '</span>';
+            tableHtml += '<span class="shift-time-range">' + sh.time + '</span>';
+            tableHtml += '</div>';
+            tableHtml += '</td>';
+
+            days.forEach(function(d) {
+                var isToday = (d.key === todayKey);
+                tableHtml += '<td class="timetable-slot-cell ' + (isToday ? 'is-today' : '') + '" data-day="' + d.key + '" data-shift="' + sh.key + '">';
+
+                var matched = timetableSections.filter(function(sec) {
+                    var shiftMatch = (sec.shift && sec.shift.toUpperCase() === sh.key);
+                    return shiftMatch && matchesDay(sec.daysOfWeek, d.key);
+                });
+
+                if (matched.length > 0) {
+                    matched.forEach(function(sec) {
+                        tableHtml += '<div class="timetable-course-card">';
+                        tableHtml += '<div class="d-flex justify-content-between align-items-center">';
+                        tableHtml += '<span class="tt-code-badge">' + sec.code + '</span>';
+                        tableHtml += '<span class="tt-students-pill"><i class="bi bi-people-fill me-1"></i>' + sec.studentCount + '</span>';
+                        tableHtml += '</div>';
+                        tableHtml += '<div class="tt-course-title" title="' + sec.title + '">' + sec.title + '</div>';
+                        tableHtml += '<div class="tt-meta-row">';
+                        tableHtml += '<span class="tt-room-pill"><i class="bi bi-geo-alt-fill text-primary"></i> ' + (sec.room ? 'Room ' + sec.room : 'TBA') + '</span>';
+                        tableHtml += '</div>';
+                        tableHtml += '<div class="tt-actions-row">';
+                        tableHtml += '<button type="button" class="tt-action-btn att-btn" data-bs-toggle="modal" data-bs-target="#attendanceModal' + sec.id + '"><i class="bi bi-clipboard-check"></i> Attendance</button>';
+                        tableHtml += '<button type="button" class="tt-action-btn grade-btn" data-bs-toggle="modal" data-bs-target="#gradesModal' + sec.id + '"><i class="bi bi-journal-text"></i> Grades</button>';
+                        tableHtml += '</div>';
+                        tableHtml += '</div>';
+                    });
+                } else {
+                    tableHtml += '<div class="timetable-empty-slot"><span>&bull; Free Slot &bull;</span></div>';
+                }
+
+                tableHtml += '</td>';
+            });
+            tableHtml += '</tr>';
+        });
+        tableHtml += '</tbody></table>';
+
+        container.innerHTML = tableHtml;
+
+        var filterGroup = document.getElementById('timetableDayFilterGroup');
+        if (filterGroup) {
+            var fHtml = '<button class="btn btn-sm btn-primary text-white border rounded-pill px-3 py-1 fw-bold small active day-pill-btn" onclick="highlightTimetableDay(\'all\', this)">All Week</button>';
+            days.forEach(function(d) {
+                var isToday = (d.key === todayKey);
+                fHtml += '<button class="btn btn-sm btn-light border rounded-pill px-3 py-1 fw-bold small day-pill-btn" onclick="highlightTimetableDay(\'' + d.key + '\', this)">' + d.short + (isToday ? ' &bull;' : '') + '</button>';
+            });
+            filterGroup.innerHTML = fHtml;
+        }
+
+        try {
+            var savedView = localStorage.getItem('prof_schedule_view');
+            if (savedView === 'cards') {
+                setScheduleView('cards');
+            }
+        } catch(e) {}
+    }
+
+    function highlightTimetableDay(dayKey, btn) {
+        var btns = document.querySelectorAll('.day-pill-btn');
+        btns.forEach(function(b) { b.classList.remove('active', 'btn-primary', 'text-white'); b.classList.add('btn-light'); });
+        if (btn) {
+            btn.classList.remove('btn-light');
+            btn.classList.add('active', 'btn-primary', 'text-white');
+        }
+
+        var cells = document.querySelectorAll('.timetable-table th, .timetable-table td');
+        if (dayKey === 'all') {
+            cells.forEach(function(c) {
+                c.style.opacity = '1';
+                c.style.filter = 'none';
+            });
+        } else {
+            cells.forEach(function(c) {
+                var cDay = c.getAttribute('data-day');
+                if (!cDay) return;
+                if (cDay === dayKey) {
+                    c.style.opacity = '1';
+                    c.style.filter = 'none';
+                } else {
+                    c.style.opacity = '0.32';
+                    c.style.filter = 'grayscale(70%)';
+                }
+            });
+        }
     }
     
     document.addEventListener('DOMContentLoaded', function() {
         initMobileDateStrip();
+        renderWeeklyTimetable();
         try {
             var urlParams = new URLSearchParams(window.location.search);
             var tab = urlParams.get('tab');

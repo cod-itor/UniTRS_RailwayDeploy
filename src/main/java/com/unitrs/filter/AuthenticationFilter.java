@@ -2,6 +2,7 @@ package com.unitrs.filter;
 
 import com.unitrs.model.entity.Role;
 import com.unitrs.model.entity.User;
+import com.unitrs.utils.FormatUtils;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,7 +37,11 @@ public class AuthenticationFilter implements Filter {
             Role userRole = (Role) session.getAttribute("role");
 
             if (userObj != null && userObj.getDeanSchoolId() != null) {
-                httpResponse.sendRedirect(contextPath + "/dean/dashboard");
+                if (FormatUtils.isMobile(httpRequest)) {
+                    httpResponse.sendRedirect(contextPath + "/professor/dashboard");
+                } else {
+                    httpResponse.sendRedirect(contextPath + "/dean/dashboard");
+                }
                 return;
             } else if (userRole != null) {
                 switch (userRole) {

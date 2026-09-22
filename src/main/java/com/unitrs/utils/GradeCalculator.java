@@ -3,7 +3,7 @@ package com.unitrs.utils;
 import com.unitrs.model.entity.Grade;
 import java.util.List;
 
-public class    GradeCalculator {
+public class GradeCalculator {
 
     public static final double MAX_ATTENDANCE = 15.0;
     public static final double MAX_ASSIGNMENT = 25.0;
@@ -70,6 +70,15 @@ public class    GradeCalculator {
         int totalCredits = 0;
 
         for (Grade grade : grades) {
+            String letter = grade.getLetterGrade();
+
+            if (letter == null || letter.trim().isEmpty()
+                    || "N/A".equalsIgnoreCase(letter.trim())
+                    || "IN PROGRESS".equalsIgnoreCase(letter.trim())
+                    || "PENDING".equalsIgnoreCase(letter.trim())) {
+                continue;
+            }
+
             int credits = grade.getCredits() > 0 ? grade.getCredits() : 3;
             totalWeightedPoints += (grade.getGpaPoint() * credits);
             totalCredits += credits;

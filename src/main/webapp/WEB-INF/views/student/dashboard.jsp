@@ -832,6 +832,36 @@
                                     <%--==================================================================--%>
                                         <div class="d-none d-md-flex desktop-app-container">
                                             <style>
+                                                body.modal-open {
+                                                    padding-right: 0 !important;
+                                                    overflow-y: hidden !important;
+                                                }
+
+                                                .modal {
+                                                    --bs-modal-zindex: 1065;
+                                                    padding-right: 0 !important;
+                                                }
+
+                                                .modal-backdrop {
+                                                    --bs-backdrop-zindex: 1060;
+                                                    background-color: #0f172a;
+                                                }
+
+                                                .modal-backdrop.show {
+                                                    opacity: 0.6;
+                                                }
+
+                                                .modal.fade .modal-dialog {
+                                                    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease-out;
+                                                    transform: scale(0.96) translateY(-8px);
+                                                    opacity: 0;
+                                                }
+
+                                                .modal.show .modal-dialog {
+                                                    transform: scale(1) translateY(0);
+                                                    opacity: 1;
+                                                }
+
                                                 .desktop-app-container {
                                                     min-height: 100vh;
                                                     background-color: #f3f5f8;
@@ -1600,7 +1630,339 @@
                                                         height: 0;
                                                     }
                                                 }
-                                            </style>
+
+                                                 .timetable-card {
+                                                     background: #ffffff;
+                                                     border-radius: 24px;
+                                                     padding: 24px;
+                                                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+                                                     border: 1px solid rgba(226, 232, 240, 0.7);
+                                                 }
+
+                                                 .timetable-toolbar {
+                                                     display: flex;
+                                                     justify-content: space-between;
+                                                     align-items: center;
+                                                     flex-wrap: wrap;
+                                                     gap: 16px;
+                                                     margin-bottom: 20px;
+                                                 }
+
+                                                 .view-toggle-group {
+                                                     display: inline-flex;
+                                                     background: #f1f5f9;
+                                                     padding: 4px;
+                                                     border-radius: 99px;
+                                                     border: 1px solid #e2e8f0;
+                                                 }
+
+                                                 .view-toggle-btn {
+                                                     border: none;
+                                                     background: transparent;
+                                                     padding: 6px 18px;
+                                                     border-radius: 99px;
+                                                     font-size: 0.8rem;
+                                                     font-weight: 700;
+                                                     color: #64748b;
+                                                     cursor: pointer;
+                                                     transition: all 0.2s ease;
+                                                     display: inline-flex;
+                                                     align-items: center;
+                                                     gap: 6px;
+                                                 }
+
+                                                 .view-toggle-btn.active {
+                                                     background: #ffffff;
+                                                     color: #2563eb;
+                                                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+                                                 }
+
+                                                 .timetable-scroll {
+                                                     overflow-x: auto;
+                                                     border-radius: 18px;
+                                                     border: 1px solid #edf2f7;
+                                                     background: #ffffff;
+                                                 }
+
+                                                 .timetable-table {
+                                                     width: 100%;
+                                                     border-collapse: separate;
+                                                     border-spacing: 0;
+                                                     min-width: 980px;
+                                                 }
+
+                                                 .timetable-table th, .timetable-table td {
+                                                     border-right: 1px solid #edf2f7;
+                                                     border-bottom: 1px solid #edf2f7;
+                                                     padding: 14px;
+                                                     vertical-align: top;
+                                                     transition: opacity 0.2s ease, filter 0.2s ease;
+                                                 }
+
+                                                 .timetable-table th:last-child, .timetable-table td:last-child {
+                                                     border-right: none;
+                                                 }
+
+                                                 .timetable-table tr:last-child td {
+                                                     border-bottom: none;
+                                                 }
+
+                                                 .timetable-header-cell {
+                                                     background: #f8fafc;
+                                                     text-align: center;
+                                                     padding: 16px 14px;
+                                                     position: relative;
+                                                 }
+
+                                                 .timetable-header-cell.is-today {
+                                                     background: #eff6ff;
+                                                     border-bottom: 2px solid #2563eb;
+                                                 }
+
+                                                 .timetable-day-name {
+                                                     font-size: 0.92rem;
+                                                     font-weight: 800;
+                                                     color: #0f172a;
+                                                     letter-spacing: 0.3px;
+                                                 }
+
+                                                 .timetable-today-badge {
+                                                     display: inline-block;
+                                                     background: #2563eb;
+                                                     color: #ffffff;
+                                                     font-size: 0.62rem;
+                                                     font-weight: 800;
+                                                     padding: 2px 8px;
+                                                     border-radius: 99px;
+                                                     margin-top: 4px;
+                                                     letter-spacing: 0.5px;
+                                                     text-transform: uppercase;
+                                                 }
+
+                                                 .timetable-shift-cell {
+                                                     width: 150px;
+                                                     min-width: 150px;
+                                                     background: #fafbfc;
+                                                     border-right: 2px solid #e2e8f0 !important;
+                                                 }
+
+                                                 .shift-badge-box {
+                                                     display: flex;
+                                                     flex-direction: column;
+                                                     gap: 4px;
+                                                 }
+
+                                                 .shift-name-title {
+                                                     font-size: 0.85rem;
+                                                     font-weight: 800;
+                                                     color: #0f172a;
+                                                     display: flex;
+                                                     align-items: center;
+                                                     gap: 6px;
+                                                 }
+
+                                                 .shift-time-range {
+                                                     font-size: 0.72rem;
+                                                     font-weight: 600;
+                                                     color: #64748b;
+                                                 }
+
+                                                 .timetable-slot-cell {
+                                                     min-width: 170px;
+                                                     background: #ffffff;
+                                                     transition: background 0.15s ease, opacity 0.2s ease;
+                                                 }
+
+                                                 .timetable-slot-cell.is-today {
+                                                     background: #fafcff;
+                                                 }
+
+                                                 .timetable-slot-cell:hover {
+                                                     background: #f8fafc;
+                                                 }
+
+                                                 .timetable-course-card {
+                                                     background: #ffffff;
+                                                     border: 1px solid #e2e8f0;
+                                                     border-left: 4px solid #2563eb;
+                                                     border-radius: 14px;
+                                                     padding: 12px 14px;
+                                                     margin-bottom: 8px;
+                                                     box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+                                                     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                                                 }
+
+                                                 .timetable-course-card:last-child {
+                                                     margin-bottom: 0;
+                                                 }
+
+                                                 .timetable-course-card:hover {
+                                                     transform: translateY(-2px);
+                                                     box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+                                                     border-color: #93c5fd;
+                                                 }
+
+                                                 .tt-code-badge {
+                                                     display: inline-block;
+                                                     font-size: 0.72rem;
+                                                     font-weight: 800;
+                                                     color: #2563eb;
+                                                     background: #eff6ff;
+                                                     padding: 3px 8px;
+                                                     border-radius: 6px;
+                                                     margin-bottom: 6px;
+                                                 }
+
+                                                 .tt-course-title {
+                                                     font-size: 0.84rem;
+                                                     font-weight: 700;
+                                                     color: #0f172a;
+                                                     line-height: 1.3;
+                                                     margin-bottom: 8px;
+                                                     display: -webkit-box;
+                                                     -webkit-line-clamp: 2;
+                                                     -webkit-box-orient: vertical;
+                                                     overflow: hidden;
+                                                 }
+
+                                                 .tt-meta-row {
+                                                     display: flex;
+                                                     justify-content: space-between;
+                                                     align-items: center;
+                                                     font-size: 0.72rem;
+                                                     color: #64748b;
+                                                     margin-bottom: 8px;
+                                                 }
+
+                                                 .tt-room-pill {
+                                                     background: #f1f5f9;
+                                                     color: #334155;
+                                                     font-weight: 600;
+                                                     padding: 2px 7px;
+                                                     border-radius: 6px;
+                                                     display: inline-flex;
+                                                     align-items: center;
+                                                     gap: 4px;
+                                                 }
+
+                                                 .tt-prof-row {
+                                                     font-size: 0.72rem;
+                                                     font-weight: 600;
+                                                     color: #475569;
+                                                     margin-bottom: 8px;
+                                                     display: flex;
+                                                     align-items: center;
+                                                     gap: 5px;
+                                                     overflow: hidden;
+                                                     text-overflow: ellipsis;
+                                                     white-space: nowrap;
+                                                 }
+
+                                                 .tt-actions-row {
+                                                     display: flex;
+                                                     gap: 6px;
+                                                     padding-top: 8px;
+                                                     border-top: 1px dashed #edf2f7;
+                                                     align-items: center;
+                                                     justify-content: space-between;
+                                                 }
+
+                                                 .tt-action-btn {
+                                                     border: none;
+                                                     border-radius: 8px;
+                                                     padding: 4px 10px;
+                                                     font-size: 0.72rem;
+                                                     font-weight: 700;
+                                                     display: inline-flex;
+                                                     align-items: center;
+                                                     justify-content: center;
+                                                     gap: 4px;
+                                                     cursor: pointer;
+                                                     transition: all 0.15s ease;
+                                                 }
+
+                                                 .tt-action-btn.drop-btn {
+                                                     background: #fef2f2;
+                                                     color: #dc2626;
+                                                     border: 1px solid #fecaca;
+                                                 }
+                                                 .tt-action-btn.drop-btn:hover {
+                                                     background: #dc2626;
+                                                     color: #ffffff;
+                                                     border-color: #dc2626;
+                                                 }
+
+                                                 .timetable-empty-slot {
+                                                     height: 100%;
+                                                     min-height: 80px;
+                                                     display: flex;
+                                                     align-items: center;
+                                                     justify-content: center;
+                                                     border: 1px dashed #e2e8f0;
+                                                     border-radius: 12px;
+                                                     background: #fafbfc;
+                                                     color: #94a3b8;
+                                                     font-size: 0.75rem;
+                                                     font-weight: 600;
+                                                     transition: all 0.15s ease;
+                                                 }
+
+                                                 .timetable-empty-slot:hover {
+                                                     background: #f1f5f9;
+                                                     border-color: #cbd5e1;
+                                                 }
+
+                                                 .timetable-stats-bar {
+                                                     display: flex;
+                                                     gap: 16px;
+                                                     flex-wrap: wrap;
+                                                     margin-bottom: 20px;
+                                                 }
+
+                                                 .tt-stat-chip {
+                                                     background: #ffffff;
+                                                     border: 1px solid #e2e8f0;
+                                                     border-radius: 14px;
+                                                     padding: 10px 16px;
+                                                     display: flex;
+                                                     align-items: center;
+                                                     gap: 12px;
+                                                     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+                                                 }
+
+                                                 .tt-stat-icon {
+                                                     width: 38px;
+                                                     height: 38px;
+                                                     border-radius: 10px;
+                                                     display: flex;
+                                                     align-items: center;
+                                                     justify-content: center;
+                                                     font-size: 1.15rem;
+                                                 }
+
+                                                 .tt-stat-info {
+                                                     display: flex;
+                                                     flex-direction: column;
+                                                 }
+
+                                                 .tt-stat-label {
+                                                     font-size: 0.7rem;
+                                                     font-weight: 600;
+                                                     color: #64748b;
+                                                     text-transform: uppercase;
+                                                 }
+
+                                                 .tt-stat-val {
+                                                     font-size: 1.15rem;
+                                                     font-weight: 800;
+                                                     color: #0f172a;
+                                                     line-height: 1;
+                                                 }
+
+                                                 .day-pill-btn {
+                                                     transition: all 0.15s ease;
+                                                 }
+                                             </style>
 
                                             <%-- SIDEBAR --%>
                                                 <aside class="desktop-sidebar">
@@ -1662,7 +2024,7 @@
                                                                             class="bi bi-chat-dots"></i></button>
 
                                                                     <div class="dropdown">
-                                                                        <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="studentProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User profile menu for ${user.fullName}">
+                                                                        <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="studentProfileDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="User profile menu for ${user.fullName}">
                                                                             <div class="user-avatar">
                                                                                 <c:choose>
                                                                                     <c:when test="${user.gender == 'FEMALE'}">
@@ -1679,7 +2041,7 @@
                                                                             </div>
                                                                         </button>
 
-                                                                        <div class="dropdown-menu dropdown-menu-end shadow-lg rounded-4 p-0 border-0 mt-2 overflow-hidden user-dropdown-menu" aria-labelledby="studentProfileDropdown" style="width: 300px; z-index: 1060;">
+                                                                        <div class="dropdown-menu dropdown-menu-end shadow-lg rounded-4 p-0 border-0 mt-2 overflow-hidden user-dropdown-menu" aria-labelledby="studentProfileDropdown" style="width: 300px; z-index: 1060;" onclick="event.stopPropagation();">
                                                                             <!-- Header Banner -->
                                                                             <div class="p-3 border-bottom" style="background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);">
                                                                                 <div class="d-flex align-items-center gap-3">
@@ -2205,90 +2567,140 @@
                                                                                     </div>
                                                                                 </div>
 
-                                                                                <%-- TAB: SCHEDULE --%>
-                                                                                    <div id="dt-schedule"
-                                                                                        class="tab-panel">
-                                                                                        <div class="table-card">
-                                                                                            <div class="tc-header">
-                                                                                                <h3>My Current Schedule
-                                                                                                </h3>
-                                                                                            </div>
-                                                                                            <div class="tc-table-wrap">
-                                                                                                <table class="tc-table">
-                                                                                                    <thead>
-                                                                                                        <tr>
-                                                                                                            <th>Term
-                                                                                                            </th>
-                                                                                                            <th>Course
-                                                                                                            </th>
-                                                                                                            <th>Professor
-                                                                                                            </th>
-                                                                                                            <th>Schedule
-                                                                                                            </th>
-                                                                                                            <th>Room
-                                                                                                            </th>
-                                                                                                            <th>Status
-                                                                                                            </th>
-                                                                                                        </tr>
-                                                                                                    </thead>
-                                                                                                    <tbody>
-                                                                                                        <c:forEach
-                                                                                                            var="enrollment"
-                                                                                                            items="${schedule}">
-                                                                                                            <tr>
-                                                                                                                <td><span
-                                                                                                                        class="tc-badge purple">${enrollment.termName}</span>
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div
-                                                                                                                        class="fw-bold text-dark">
-                                                                                                                        ${enrollment.courseCode}
-                                                                                                                    </div>
-                                                                                                                    <div
-                                                                                                                        class="small text-muted">
-                                                                                                                        ${enrollment.courseTitle}
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>${enrollment.professorName}
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div
-                                                                                                                        class="fw-bold">
-                                                                                                                        ${enrollment.sessionShift}
-                                                                                                                    </div>
-                                                                                                                    <div
-                                                                                                                        class="small text-muted">
-                                                                                                                        ${enrollment.daysOfWeek}
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td><span
-                                                                                                                        class="tc-badge info"><i
-                                                                                                                            class="bi bi-geo-alt-fill me-1"></i>
-                                                                                                                        ${enrollment.room}</span>
-                                                                                                                </td>
-                                                                                                                <td><span
-                                                                                                                        class="tc-badge success">Enrolled</span>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </c:forEach>
-                                                                                                        <c:if
-                                                                                                            test="${empty schedule}">
-                                                                                                            <tr>
-                                                                                                                <td colspan="6"
-                                                                                                                    class="text-center py-4 text-muted">
-                                                                                                                    No
-                                                                                                                    enrolled
-                                                                                                                    classes.
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </c:if>
-                                                                                                    </tbody>
-                                                                                                </table>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
 
-                                                                                    <%-- TAB: TRANSCRIPT --%>
+                                                        <%-- TAB: SCHEDULE --%>
+                                                        <div id="dt-schedule" class="tab-panel">
+                                                            <div class="timetable-toolbar">
+                                                                <div>
+                                                                    <h2 class="h4 fw-bold text-dark mb-1">Weekly Academic Timetable</h2>
+                                                                    <p class="text-muted small mb-0">Overview of your enrolled courses, lecture shifts, and classroom locations</p>
+                                                                </div>
+                                                                <div class="d-flex align-items-center gap-3">
+                                                                    <div class="view-toggle-group" role="group" aria-label="Schedule View Switcher">
+                                                                        <button type="button" class="view-toggle-btn active" id="btnStudentViewTimetable" onclick="setStudentScheduleView('grid')">
+                                                                            <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i> Timetable Grid
+                                                                        </button>
+                                                                        <button type="button" class="view-toggle-btn" id="btnStudentViewTable" onclick="setStudentScheduleView('table')">
+                                                                            <i class="bi bi-table" aria-hidden="true"></i> Table View
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <c:if test="${empty schedule}">
+                                                                <div class="table-card text-center py-5">
+                                                                    <i class="bi bi-calendar-x fs-1 text-muted d-block mb-3" aria-hidden="true"></i>
+                                                                    <h5 class="fw-bold text-dark">No Enrolled Classes</h5>
+                                                                    <p class="text-muted mb-0">You are not currently enrolled in any courses for this academic term.</p>
+                                                                </div>
+                                                            </c:if>
+
+                                                            <c:if test="${not empty schedule}">
+                                                                <c:set var="totalCreditsEnrolled" value="0" />
+                                                                <c:forEach var="enr" items="${schedule}">
+                                                                    <c:set var="totalCreditsEnrolled" value="${totalCreditsEnrolled + enr.credits}" />
+                                                                </c:forEach>
+                                                                <c:set var="schedAcademicYear" value="2026-2027" />
+                                                                <c:set var="schedTermName" value="Fall Term" />
+                                                                <c:forEach var="enr" items="${schedule}" begin="0" end="0">
+                                                                    <c:if test="${not empty enr.academicYear}">
+                                                                        <c:set var="schedAcademicYear" value="${enr.academicYear}" />
+                                                                    </c:if>
+                                                                    <c:if test="${not empty enr.termName}">
+                                                                        <c:set var="schedTermName" value="${enr.termName}" />
+                                                                    </c:if>
+                                                                </c:forEach>
+
+                                                                <div class="timetable-stats-bar">
+                                                                    <div class="tt-stat-chip">
+                                                                        <div class="tt-stat-icon" style="background:#eff6ff; color:#2563eb;">
+                                                                            <i class="bi bi-journal-bookmark-fill"></i>
+                                                                        </div>
+                                                                        <div class="tt-stat-info">
+                                                                            <span class="tt-stat-label">Enrolled Courses</span>
+                                                                            <span class="tt-stat-val">${schedule.size()}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tt-stat-chip">
+                                                                        <div class="tt-stat-icon" style="background:#f0fdf4; color:#16a34a;">
+                                                                            <i class="bi bi-mortarboard-fill"></i>
+                                                                        </div>
+                                                                        <div class="tt-stat-info">
+                                                                            <span class="tt-stat-label">Total Credits</span>
+                                                                            <span class="tt-stat-val">${totalCreditsEnrolled} <span style="font-size:0.75rem; font-weight:600; color:#64748b;">Credits</span></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tt-stat-chip">
+                                                                        <div class="tt-stat-icon" style="background:#fdf4ff; color:#a855f7;">
+                                                                            <i class="bi bi-clock-history"></i>
+                                                                        </div>
+                                                                        <div class="tt-stat-info">
+                                                                            <span class="tt-stat-label">Term & Year</span>
+                                                                            <span class="tt-stat-val" style="font-size:0.95rem;">${schedTermName} &bull; ${schedAcademicYear}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- VIEW 1: TIMETABLE GRID -->
+                                                                <div id="studentTimetableView" class="timetable-card mb-4">
+                                                                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                                                        <div class="d-flex align-items-center gap-2">
+                                                                            <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill small fw-semibold">
+                                                                                <i class="bi bi-calendar-week me-1 text-primary"></i> Weekly Academic Matrix
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="d-flex align-items-center gap-2 flex-wrap" id="studentTimetableDayFilterGroup"></div>
+                                                                    </div>
+
+                                                                    <div class="timetable-scroll">
+                                                                        <div id="studentTimetableGridContainer"></div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- VIEW 2: TABLE VIEW (PRESERVED) -->
+                                                                <div id="studentScheduleListView" style="display: none;">
+                                                                    <div class="table-card">
+                                                                        <div class="tc-header">
+                                                                            <h3>My Current Schedule</h3>
+                                                                        </div>
+                                                                        <div class="tc-table-wrap">
+                                                                            <table class="tc-table">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Term</th>
+                                                                                        <th>Course</th>
+                                                                                        <th>Professor</th>
+                                                                                        <th>Schedule</th>
+                                                                                        <th>Room</th>
+                                                                                        <th>Status</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <c:forEach var="enrollment" items="${schedule}">
+                                                                                        <tr>
+                                                                                            <td><span class="tc-badge purple">${enrollment.termName}</span></td>
+                                                                                            <td>
+                                                                                                <div class="fw-bold text-dark">${enrollment.courseCode}</div>
+                                                                                                <div class="small text-muted">${enrollment.courseTitle}</div>
+                                                                                            </td>
+                                                                                            <td>${enrollment.professorName}</td>
+                                                                                            <td>
+                                                                                                <div class="fw-bold">${enrollment.sessionShift}</div>
+                                                                                                <div class="small text-muted">${enrollment.daysOfWeek}</div>
+                                                                                            </td>
+                                                                                            <td><span class="tc-badge info"><i class="bi bi-geo-alt-fill me-1"></i>${enrollment.room}</span></td>
+                                                                                            <td><span class="tc-badge success">Enrolled</span></td>
+                                                                                        </tr>
+                                                                                    </c:forEach>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </c:if>
+                                                        </div>
+
+                                                                                        <%-- TAB: TRANSCRIPT --%>
                                                                                         <div id="dt-transcript"
                                                                                             class="tab-panel">
                                                                                             <div class="table-card">
@@ -2472,6 +2884,28 @@
                                                                                                                 in.
                                                                                                             </div>
                                                                                                         </div>
+                                                                                                        <form
+                                                                                                            action="${pageContext.request.contextPath}/auth/update-2fa"
+                                                                                                            method="POST"
+                                                                                                            class="m-0">
+                                                                                                            <input
+                                                                                                                type="hidden"
+                                                                                                                name="redirect"
+                                                                                                                value="/student/dashboard?tab=settings">
+                                                                                                            <input
+                                                                                                                type="hidden"
+                                                                                                                name="twoFactorEnabled"
+                                                                                                                value="${!user.twoFactorEnabled}">
+                                                                                                            <c:choose>
+                                                                                                                <c:when
+                                                                                                                    test="${user.twoFactorEnabled}">
+                                                                                                                    <button
+                                                                                                                        type="submit"
+                                                                                                                        class="btn btn-sm btn-danger rounded-pill px-4 fw-bold">Disable</button>
+                                                                                                                </c:when>
+                                                                                                                <c:otherwise>
+                                                                                                                    <button
+                                                                                                                        type="submit"
                                                                                                                         class="btn btn-sm btn-success rounded-pill px-4 fw-bold">Enable</button>
                                                                                                                 </c:otherwise>
                                                                                                             </c:choose>
@@ -2497,6 +2931,10 @@
 
                                                             const targetPanel = document.getElementById('dt-' + tabId);
                                                             if (targetPanel) targetPanel.classList.add('active');
+
+                                                            if (tabId === 'schedule' && typeof renderStudentWeeklyTimetable === 'function') {
+                                                                renderStudentWeeklyTimetable();
+                                                            }
 
                                                             try {
                                                                 const url = new URL(window.location);
@@ -3113,23 +3551,7 @@
                                                                                                         class="small ${section.enrolledCount >= section.roomCapacity ? 'text-danger fw-bold' : 'text-muted'}"
                                                                                                         style="font-size:0.72rem;"><i
                                                                                                             class="bi bi-people-fill me-1"></i>${section.enrolledCount}/${section.roomCapacity}</span>
-                                                                                                    <form
-                                                                                                        action="${pageContext.request.contextPath}/student/dashboard"
-                                                                                                        method="post"
-                                                                                                        class="m-0">
-                                                                                                        <input
-                                                                                                            type="hidden"
-                                                                                                            name="action"
-                                                                                                            value="enroll">
-                                                                                                        <input
-                                                                                                            type="hidden"
-                                                                                                            name="tab"
-                                                                                                            value="courses">
-                                                                                                        <input
-                                                                                                            type="hidden"
-                                                                                                            name="classSectionId"
-                                                                                                            value="${section.id}">
-                                                                                                        <c:set
+                                                                                                    <c:set
                                                                                                             var="isEnrolledM"
                                                                                                             value="false" />
                                                                                                         <c:forEach
@@ -3145,9 +3567,10 @@
                                                                                                         <c:choose>
                                                                                                             <c:when
                                                                                                                 test="${isEnrolledM}">
-                                                                                                                <button
-                                                                                                                    type="button"
-                                                                                                                    class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 disabled">Enrolled</button>
+                                                                                                                <div class="d-flex align-items-center gap-2">
+                                                                                                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 small fw-bold"><i class="bi bi-check2"></i> Enrolled</span>
+                                                                                                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1 fw-bold" style="font-size:0.75rem;" onclick="openDropConfirm('${section.id}', '${section.courseCode}', '${section.courseTitle}', 'courses')">Drop</button>
+                                                                                                                </div>
                                                                                                             </c:when>
                                                                                                             <c:when
                                                                                                                 test="${section.enrolledCount >= section.roomCapacity}">
@@ -3157,11 +3580,11 @@
                                                                                                             </c:when>
                                                                                                             <c:otherwise>
                                                                                                                 <button
-                                                                                                                    type="submit"
-                                                                                                                    class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-bold">Enroll</button>
+                                                                                                                    type="button"
+                                                                                                                    class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-bold"
+                                                                                                                    onclick="openEnrollConfirm('${section.id}', '${section.courseCode}', '${section.courseTitle}', '${section.professorName}', 'courses')">Enroll</button>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
-                                                                                                    </form>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </c:forEach>
@@ -3367,10 +3790,13 @@
                                                                                                                         class="bi bi-person me-2 text-primary"></i>${enrollment.professorName}
                                                                                                                 </div>
                                                                                                             </div>
-                                                                                                            <div class="mt-2 d-flex align-items-center gap-1"
-                                                                                                                style="font-size:0.68rem;color:#94a3b8;">
-                                                                                                                <i class="bi bi-chevron-right"></i>
-                                                                                                                Tap to view scores &amp; attendance
+                                                                                                            <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
+                                                                                                                <div class="d-flex align-items-center gap-1"
+                                                                                                                    style="font-size:0.68rem;color:#94a3b8;">
+                                                                                                                    <i class="bi bi-chevron-right"></i>
+                                                                                                                    Tap to view scores &amp; attendance
+                                                                                                                </div>
+                                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-bold" style="font-size:0.72rem;" onclick="event.stopPropagation(); openDropConfirm('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}', 'schedule')">Drop</button>
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </c:forEach>
@@ -3659,6 +4085,67 @@
                                                                     </div>
                                                                 </div>
 
+                                                                <!-- Enroll Confirmation Modal -->
+                                                                <div class="modal fade" id="enrollConfirmModal" tabindex="-1" aria-labelledby="enrollConfirmModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-sm">
+                                                                        <div class="modal-content rounded-4 border-0 shadow">
+                                                                            <div class="modal-header border-0 pb-0">
+                                                                                <h6 class="modal-title fw-bold" id="enrollConfirmModalLabel">
+                                                                                    <i class="bi bi-journal-plus me-2 text-primary"></i>Confirm Enrollment
+                                                                                </h6>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                            </div>
+                                                                            <form action="${pageContext.request.contextPath}/student/dashboard" method="post" id="enrollConfirmForm" class="m-0">
+                                                                                <input type="hidden" name="action" value="enroll">
+                                                                                <input type="hidden" name="tab" id="enrollConfirmTab" value="courses">
+                                                                                <input type="hidden" name="classSectionId" id="enrollConfirmSectionId" value="">
+                                                                                <div class="modal-body pt-2 pb-3">
+                                                                                    <p class="small text-muted mb-2">Are you sure you want to enroll in:</p>
+                                                                                    <div class="p-3 bg-light rounded-3 mb-3 border">
+                                                                                        <div class="fw-bold text-dark mb-1" id="enrollConfirmCourseCode"></div>
+                                                                                        <div class="small text-secondary mb-2" id="enrollConfirmCourseTitle"></div>
+                                                                                        <div class="small text-muted" id="enrollConfirmProfessor" style="font-size:0.75rem;"></div>
+                                                                                    </div>
+                                                                                    <div class="d-flex gap-2">
+                                                                                        <button type="button" class="btn btn-sm btn-light w-50 rounded-pill fw-semibold border" data-bs-dismiss="modal">Cancel</button>
+                                                                                        <button type="submit" class="btn btn-sm btn-primary w-50 rounded-pill fw-bold">Enroll Now</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Drop Course Confirmation Modal -->
+                                                                <div class="modal fade" id="dropConfirmModal" tabindex="-1" aria-labelledby="dropConfirmModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-sm">
+                                                                        <div class="modal-content rounded-4 border-0 shadow">
+                                                                            <div class="modal-header border-0 pb-0">
+                                                                                <h6 class="modal-title fw-bold text-danger" id="dropConfirmModalLabel">
+                                                                                    <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>Drop Course
+                                                                                </h6>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                            </div>
+                                                                            <form action="${pageContext.request.contextPath}/student/dashboard" method="post" id="dropConfirmForm" class="m-0">
+                                                                                <input type="hidden" name="action" value="drop">
+                                                                                <input type="hidden" name="tab" id="dropConfirmTab" value="courses">
+                                                                                <input type="hidden" name="classSectionId" id="dropConfirmSectionId" value="">
+                                                                                <div class="modal-body pt-2 pb-3">
+                                                                                    <p class="small text-muted mb-2">Are you sure you want to drop this course? Your seat will be released:</p>
+                                                                                    <div class="p-3 bg-danger bg-opacity-10 border border-danger-subtle rounded-3 mb-3">
+                                                                                        <div class="fw-bold text-danger mb-1" id="dropConfirmCourseCode"></div>
+                                                                                        <div class="small text-muted" id="dropConfirmCourseTitle"></div>
+                                                                                    </div>
+                                                                                    <div class="d-flex gap-2">
+                                                                                        <button type="button" class="btn btn-sm btn-light w-50 rounded-pill fw-semibold border" data-bs-dismiss="modal">Keep Course</button>
+                                                                                        <button type="submit" class="btn btn-sm btn-danger w-50 rounded-pill fw-bold">Drop Course</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
 
                                                                 <%-- Enrollment data for JS modal --%>
                                                                     <script>
@@ -3832,6 +4319,26 @@
                                                                             if (e.target === document.getElementById('courseModalOverlay')) closeCourseModal();
                                                                         }
 
+                                                                        function openEnrollConfirm(sectionId, courseCode, courseTitle, professorName, returnTab) {
+                                                                            document.getElementById('enrollConfirmSectionId').value = sectionId;
+                                                                            document.getElementById('enrollConfirmTab').value = returnTab || 'courses';
+                                                                            document.getElementById('enrollConfirmCourseCode').textContent = courseCode;
+                                                                            document.getElementById('enrollConfirmCourseTitle').textContent = courseTitle;
+                                                                            var profEl = document.getElementById('enrollConfirmProfessor');
+                                                                            if (profEl) {
+                                                                                profEl.innerHTML = professorName ? ('<i class="bi bi-person me-1"></i> ' + professorName) : '';
+                                                                            }
+                                                                            new bootstrap.Modal(document.getElementById('enrollConfirmModal')).show();
+                                                                        }
+
+                                                                        function openDropConfirm(sectionId, courseCode, courseTitle, returnTab) {
+                                                                            document.getElementById('dropConfirmSectionId').value = sectionId;
+                                                                            document.getElementById('dropConfirmTab').value = returnTab || 'courses';
+                                                                            document.getElementById('dropConfirmCourseCode').textContent = courseCode;
+                                                                            document.getElementById('dropConfirmCourseTitle').textContent = courseTitle;
+                                                                            new bootstrap.Modal(document.getElementById('dropConfirmModal')).show();
+                                                                        }
+
                                                                         function initMobileDateStrip() {
                                                                             var strip = document.getElementById('mobileDateStrip');
                                                                             if (!strip) return;
@@ -3845,26 +4352,283 @@
                                                                             var monday = new Date(today.setDate(diffToMonday));
 
                                                                             var html = '';
+                                                                            // Prepend 'All' option
+                                                                            html += '<div class="date-strip-item active" onclick="filterScheduleByDay(\'all\', this, \'All\')">' +
+                                                                                '<div class="ds-day">All</div>' +
+                                                                                '<div class="ds-date"><i class="bi bi-grid-fill" style="font-size:1.1rem;"></i></div>' +
+                                                                                '</div>';
+
                                                                             for (var i = 0; i < 7; i++) {
                                                                                 var d = new Date(monday);
                                                                                 d.setDate(monday.getDate() + i);
 
                                                                                 var isToday = (d.getDate() === new Date().getDate() && d.getMonth() === new Date().getMonth());
+                                                                                var dayShort = days[d.getDay()].toLowerCase();
+                                                                                var dayLabel = days[d.getDay()];
 
-                                                                                html += '<div class="date-strip-item ' + (isToday ? 'active' : '') + '">' +
-                                                                                    '<div class="ds-day">' + days[d.getDay()] + '</div>' +
+                                                                                html += '<div class="date-strip-item' + (isToday ? ' is-today' : '') + '" onclick="filterScheduleByDay(\'' + dayShort + '\', this, \'' + dayLabel + '\')">' +
+                                                                                    '<div class="ds-day">' + dayLabel + (isToday ? ' &bull;' : '') + '</div>' +
                                                                                     '<div class="ds-date">' + d.getDate() + '</div>' +
                                                                                     '</div>';
                                                                             }
                                                                             strip.innerHTML = html;
+                                                                        }
 
-                                                                            // Scroll slightly if active element is towards the right
-                                                                            setTimeout(function () {
-                                                                                var active = strip.querySelector('.active');
-                                                                                if (active) {
-                                                                                    strip.scrollLeft = active.offsetLeft - (strip.offsetWidth / 2) + (active.offsetWidth / 2);
+                                                                        function filterScheduleByDay(dayShort, element, dayLabel) {
+                                                                            var strip = document.getElementById('mobileDateStrip');
+                                                                            if (strip) {
+                                                                                var items = strip.querySelectorAll('.date-strip-item');
+                                                                                items.forEach(function (item) { item.classList.remove('active'); });
+                                                                            }
+                                                                            if (element) {
+                                                                                element.classList.add('active');
+                                                                            }
+
+                                                                            var cards = document.querySelectorAll('.home-schedule-card');
+                                                                            var emptyBox = document.getElementById('homeScheduleEmpty');
+                                                                            var emptyText = document.getElementById('homeScheduleEmptyText');
+                                                                            var titleEl = document.getElementById('homeScheduleTitle');
+                                                                            var countEl = document.getElementById('homeScheduleCount');
+
+                                                                            var visibleCount = 0;
+
+                                                                            cards.forEach(function (card) {
+                                                                                var days = (card.getAttribute('data-days') || '').toLowerCase();
+                                                                                var match = false;
+
+                                                                                if (dayShort === 'all') {
+                                                                                    match = true;
+                                                                                } else if (days.indexOf('mon-fri') !== -1) {
+                                                                                    match = ['mon', 'tue', 'wed', 'thu', 'fri'].indexOf(dayShort) !== -1;
+                                                                                } else if (days.indexOf('sat-sun') !== -1) {
+                                                                                    match = ['sat', 'sun'].indexOf(dayShort) !== -1;
+                                                                                } else {
+                                                                                    match = days.indexOf(dayShort) !== -1;
                                                                                 }
-                                                                            }, 100);
+
+                                                                                if (match) {
+                                                                                    card.style.display = '';
+                                                                                    visibleCount++;
+                                                                                } else {
+                                                                                    card.style.display = 'none';
+                                                                                }
+                                                                            });
+
+                                                                            if (emptyBox) {
+                                                                                if (visibleCount === 0 && cards.length > 0) {
+                                                                                    emptyBox.style.display = 'block';
+                                                                                    if (emptyText) emptyText.textContent = 'No classes scheduled for ' + (dayLabel || 'this day');
+                                                                                } else {
+                                                                                    emptyBox.style.display = 'none';
+                                                                                }
+                                                                            }
+
+                                                                            if (titleEl) {
+                                                                                if (dayShort === 'all') {
+                                                                                    titleEl.textContent = "This Term's Courses";
+                                                                                } else {
+                                                                                    titleEl.textContent = (dayLabel || 'Day') + "'s Schedule";
+                                                                                }
+                                                                            }
+
+                                                                            if (countEl) {
+                                                                                countEl.textContent = visibleCount + (visibleCount === 1 ? ' Class' : ' Classes');
+                                                                            }
+                                                                        }
+
+                                                                        var studentTimetableData = [
+                                                                            <c:forEach var="enr" items="${schedule}">
+                                                                            {
+                                                                                id: ${enr.id},
+                                                                                classSectionId: ${enr.classSectionId},
+                                                                                code: '${enr.courseCode}',
+                                                                                title: '${enr.courseTitle.replace("'", "\\'")}',
+                                                                                credits: ${enr.credits},
+                                                                                shift: '${enr.sessionShift != null ? enr.sessionShift : ""}',
+                                                                                daysOfWeek: '${enr.daysOfWeek != null ? enr.daysOfWeek : ""}',
+                                                                                room: '${enr.room != null ? enr.room : ""}',
+                                                                                professor: '${enr.professorName != null ? enr.professorName.replace("'", "\\'") : ""}',
+                                                                                term: '${enr.termName != null ? enr.termName.replace("'", "\\'") : ""}',
+                                                                                year: '${enr.academicYear != null ? enr.academicYear : ""}'
+                                                                            },
+                                                                            </c:forEach>
+                                                                        ];
+
+                                                                        function matchesDay(daysOfWeek, dayCode) {
+                                                                            if (!daysOfWeek) return false;
+                                                                            var d = daysOfWeek.toLowerCase();
+                                                                            var target = dayCode.toLowerCase();
+                                                                            if (d.indexOf('mon-fri') !== -1) {
+                                                                                return ['mon', 'tue', 'wed', 'thu', 'fri'].indexOf(target) !== -1;
+                                                                            }
+                                                                            if (d.indexOf('sat-sun') !== -1) {
+                                                                                return ['sat', 'sun'].indexOf(target) !== -1;
+                                                                            }
+                                                                            return d.indexOf(target) !== -1;
+                                                                        }
+
+                                                                        function setStudentScheduleView(view) {
+                                                                            var grid = document.getElementById('studentTimetableView');
+                                                                            var list = document.getElementById('studentScheduleListView');
+                                                                            var btnGrid = document.getElementById('btnStudentViewTimetable');
+                                                                            var btnList = document.getElementById('btnStudentViewTable');
+                                                                            if (!grid || !list) return;
+
+                                                                            if (view === 'table') {
+                                                                                grid.style.display = 'none';
+                                                                                list.style.display = 'block';
+                                                                                if (btnGrid) btnGrid.classList.remove('active');
+                                                                                if (btnList) btnList.classList.add('active');
+                                                                                try { localStorage.setItem('student_schedule_view', 'table'); } catch(e){}
+                                                                            } else {
+                                                                                grid.style.display = 'block';
+                                                                                list.style.display = 'none';
+                                                                                if (btnGrid) btnGrid.classList.add('active');
+                                                                                if (btnList) btnList.classList.remove('active');
+                                                                                try { localStorage.setItem('student_schedule_view', 'grid'); } catch(e){}
+                                                                            }
+                                                                        }
+
+                                                                        function renderStudentWeeklyTimetable() {
+                                                                            var container = document.getElementById('studentTimetableGridContainer');
+                                                                            if (!container) return;
+
+                                                                            var days = [
+                                                                                { key: 'mon', label: 'Monday', short: 'Mon' },
+                                                                                { key: 'tue', label: 'Tuesday', short: 'Tue' },
+                                                                                { key: 'wed', label: 'Wednesday', short: 'Wed' },
+                                                                                { key: 'thu', label: 'Thursday', short: 'Thu' },
+                                                                                { key: 'fri', label: 'Friday', short: 'Fri' },
+                                                                                { key: 'sat', label: 'Saturday', short: 'Sat' },
+                                                                                { key: 'sun', label: 'Sunday', short: 'Sun' }
+                                                                            ];
+
+                                                                            var shifts = [
+                                                                                { key: 'MORNING', label: 'Morning', time: '08:00 - 11:15', icon: 'bi-sun-fill text-warning' },
+                                                                                { key: 'AFTERNOON', label: 'Afternoon', time: '14:00 - 17:15', icon: 'bi-cloud-sun-fill text-primary' },
+                                                                                { key: 'EVENING', label: 'Evening', time: '17:45 - 20:45', icon: 'bi-moon-stars-fill text-indigo' }
+                                                                            ];
+
+                                                                            var hasWeekendShift = studentTimetableData.some(function(s) {
+                                                                                return s.shift && s.shift.toUpperCase() === 'WEEKEND';
+                                                                            });
+                                                                            if (hasWeekendShift) {
+                                                                                shifts.push({ key: 'WEEKEND', label: 'Weekend Shift', time: '08:00 - 16:30', icon: 'bi-calendar2-week-fill text-success' });
+                                                                            }
+
+                                                                            var todayIndex = new Date().getDay();
+                                                                            var dayMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+                                                                            var todayKey = dayMap[todayIndex];
+
+                                                                            var tableHtml = '<table class="timetable-table">';
+                                                                            tableHtml += '<thead><tr><th class="timetable-shift-cell text-center"><span class="small fw-bold text-muted text-uppercase">Time / Shift</span></th>';
+                                                                            days.forEach(function(d) {
+                                                                                var isToday = (d.key === todayKey);
+                                                                                tableHtml += '<th class="timetable-header-cell ' + (isToday ? 'is-today' : '') + '" data-day="' + d.key + '">';
+                                                                                tableHtml += '<div class="timetable-day-name">' + d.label + '</div>';
+                                                                                if (isToday) {
+                                                                                    tableHtml += '<span class="timetable-today-badge"><i class="bi bi-clock me-1"></i>Today</span>';
+                                                                                }
+                                                                                tableHtml += '</th>';
+                                                                            });
+                                                                            tableHtml += '</tr></thead>';
+
+                                                                            tableHtml += '<tbody>';
+                                                                            shifts.forEach(function(sh) {
+                                                                                tableHtml += '<tr>';
+                                                                                tableHtml += '<td class="timetable-shift-cell">';
+                                                                                tableHtml += '<div class="shift-badge-box">';
+                                                                                tableHtml += '<span class="shift-name-title"><i class="bi ' + sh.icon + '"></i> ' + sh.label + '</span>';
+                                                                                tableHtml += '<span class="shift-time-range">' + sh.time + '</span>';
+                                                                                tableHtml += '</div>';
+                                                                                tableHtml += '</td>';
+
+                                                                                days.forEach(function(d) {
+                                                                                    var isToday = (d.key === todayKey);
+                                                                                    tableHtml += '<td class="timetable-slot-cell ' + (isToday ? 'is-today' : '') + '" data-day="' + d.key + '" data-shift="' + sh.key + '">';
+
+                                                                                    var matched = studentTimetableData.filter(function(sec) {
+                                                                                        var shiftMatch = (sec.shift && sec.shift.toUpperCase() === sh.key);
+                                                                                        return shiftMatch && matchesDay(sec.daysOfWeek, d.key);
+                                                                                    });
+
+                                                                                    if (matched.length > 0) {
+                                                                                        matched.forEach(function(sec) {
+                                                                                            tableHtml += '<div class="timetable-course-card">';
+                                                                                            tableHtml += '<div class="d-flex justify-content-between align-items-center mb-1">';
+                                                                                            tableHtml += '<span class="tt-code-badge">' + sec.code + '</span>';
+                                                                                            tableHtml += '<span class="badge bg-light border text-secondary px-2 py-0 rounded-pill" style="font-size:0.68rem; font-weight:700;">' + sec.credits + ' Cr</span>';
+                                                                                            tableHtml += '</div>';
+                                                                                            tableHtml += '<div class="tt-course-title" title="' + sec.title + '">' + sec.title + '</div>';
+                                                                                            tableHtml += '<div class="tt-meta-row">';
+                                                                                            tableHtml += '<span class="tt-room-pill"><i class="bi bi-geo-alt-fill text-primary"></i> ' + (sec.room ? 'Room ' + sec.room : 'TBA') + '</span>';
+                                                                                            tableHtml += '</div>';
+                                                                                            if (sec.professor) {
+                                                                                                tableHtml += '<div class="tt-prof-row" title="Professor ' + sec.professor + '"><i class="bi bi-person-fill text-primary"></i> <span>' + sec.professor + '</span></div>';
+                                                                                            }
+                                                                                            tableHtml += '<div class="tt-actions-row">';
+                                                                                            tableHtml += '<button type="button" class="tt-action-btn drop-btn" onclick="openDropConfirm(\'' + sec.classSectionId + '\', \'' + sec.code + '\', \'' + sec.title.replace(/'/g, "\\'") + '\', \'schedule\')"><i class="bi bi-trash3-fill"></i> Drop</button>';
+                                                                                            tableHtml += '<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small fw-bold"><i class="bi bi-check2 me-1"></i>Enrolled</span>';
+                                                                                            tableHtml += '</div>';
+                                                                                            tableHtml += '</div>';
+                                                                                        });
+                                                                                    } else {
+                                                                                        tableHtml += '<div class="timetable-empty-slot"><span>&bull; Free Slot &bull;</span></div>';
+                                                                                    }
+
+                                                                                    tableHtml += '</td>';
+                                                                                });
+                                                                                tableHtml += '</tr>';
+                                                                            });
+                                                                            tableHtml += '</tbody></table>';
+
+                                                                            container.innerHTML = tableHtml;
+
+                                                                            var filterGroup = document.getElementById('studentTimetableDayFilterGroup');
+                                                                            if (filterGroup) {
+                                                                                var fHtml = '<button class="btn btn-sm btn-primary text-white border rounded-pill px-3 py-1 fw-bold small active student-day-pill-btn" onclick="highlightStudentTimetableDay(\'all\', this)">All Week</button>';
+                                                                                days.forEach(function(d) {
+                                                                                    var isToday = (d.key === todayKey);
+                                                                                    fHtml += '<button class="btn btn-sm btn-light border rounded-pill px-3 py-1 fw-bold small student-day-pill-btn" onclick="highlightStudentTimetableDay(\'' + d.key + '\', this)">' + d.short + (isToday ? ' &bull;' : '') + '</button>';
+                                                                                });
+                                                                                filterGroup.innerHTML = fHtml;
+                                                                            }
+
+                                                                            try {
+                                                                                var savedView = localStorage.getItem('student_schedule_view');
+                                                                                if (savedView === 'table') {
+                                                                                    setStudentScheduleView('table');
+                                                                                }
+                                                                            } catch(e) {}
+                                                                        }
+
+                                                                        function highlightStudentTimetableDay(dayKey, btn) {
+                                                                            var btns = document.querySelectorAll('.student-day-pill-btn');
+                                                                            btns.forEach(function(b) { b.classList.remove('active', 'btn-primary', 'text-white'); b.classList.add('btn-light'); });
+                                                                            if (btn) {
+                                                                                btn.classList.remove('btn-light');
+                                                                                btn.classList.add('active', 'btn-primary', 'text-white');
+                                                                            }
+
+                                                                            var cells = document.querySelectorAll('#studentTimetableGridContainer .timetable-table th, #studentTimetableGridContainer .timetable-table td');
+                                                                            if (dayKey === 'all') {
+                                                                                cells.forEach(function(c) {
+                                                                                    c.style.opacity = '1';
+                                                                                    c.style.filter = 'none';
+                                                                                });
+                                                                            } else {
+                                                                                cells.forEach(function(c) {
+                                                                                    var cDay = c.getAttribute('data-day');
+                                                                                    if (!cDay) return;
+                                                                                    if (cDay === dayKey) {
+                                                                                        c.style.opacity = '1';
+                                                                                        c.style.filter = 'none';
+                                                                                    } else {
+                                                                                        c.style.opacity = '0.32';
+                                                                                        c.style.filter = 'grayscale(70%)';
+                                                                                    }
+                                                                                });
+                                                                            }
                                                                         }
 
                                                                         function initSwiperDots() {
@@ -3888,6 +4652,7 @@
                                                                         document.addEventListener('DOMContentLoaded', function () {
                                                                             initMobileDateStrip();
                                                                             initSwiperDots();
+                                                                            renderStudentWeeklyTimetable();
                                                                             try {
                                                                                 var urlParams = new URLSearchParams(window.location.search);
                                                                                 var tab = urlParams.get('tab');

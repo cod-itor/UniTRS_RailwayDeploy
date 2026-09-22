@@ -67,10 +67,16 @@
             </div>
         </c:if>
 
-        <!-- Success message (e.g., after registration) -->
+        <!-- Success message (e.g., after registration or password reset) -->
         <c:if test="${not empty success}">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i>${success}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </c:if>
+        <c:if test="${empty success && param.resetSuccess == 'true'}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>Your password has been successfully reset! Please sign in with your new password.
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         </c:if>

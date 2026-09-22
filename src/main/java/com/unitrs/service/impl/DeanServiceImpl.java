@@ -10,6 +10,7 @@ import com.unitrs.model.entity.Term;
 import com.unitrs.model.entity.User;
 import com.unitrs.repository.*;
 import com.unitrs.service.DeanService;
+import com.unitrs.utils.ScheduleUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedHashMap;
@@ -168,6 +169,12 @@ public class DeanServiceImpl implements DeanService {
 
     @Override
     public void removeCourseFromTerm(int termId, int courseId) {
+        List<ClassSection> sections = classSectionRepository.findAllSections();
+        boolean hasActiveSection = sections.stream()
+                .anyMatch(s -> s.getTermId() == termId && s.getCourseId() == courseId);
+        if (hasActiveSection) {
+            throw new ValidationException("Cannot remove course from this term: An active class section is already scheduled for this course in this term. Please remove the scheduled class section first.");
+        }
         termRepository.removeCourseFromTerm(termId, courseId);
     }
 
@@ -271,24 +278,7 @@ public class DeanServiceImpl implements DeanService {
     }
 
     private boolean daysOverlap(String days1, String days2) {
-        String[] allDays = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-        for (String day : allDays) {
-            if (containsDay(days1, day) && containsDay(days2, day)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean containsDay(String daysString, String day) {
-        if (daysString == null) return false;
-        if (daysString.equalsIgnoreCase("Mon-Fri")) {
-            return day.equals("Mon") || day.equals("Tue") || day.equals("Wed") || day.equals("Thu") || day.equals("Fri");
-        }
-        if (daysString.equalsIgnoreCase("Sat-Sun")) {
-            return day.equals("Sat") || day.equals("Sun");
-        }
-        return daysString.contains(day);
+        return ScheduleUtils.daysOverlap(days1, days2);
     }
 
     private String calculateMonFriDays(int totalCourses, int slotIndex) {
@@ -314,6 +304,14 @@ public class DeanServiceImpl implements DeanService {
 
     @Override
     public void removeClassSection(int id) {
+        ClassSection section = classSectionRepository.findById(id);
+        if (section == null) {
+            throw new ValidationException("Class section not found.");
+        }
+        if (section.getEnrolledCount() > 0) {
+            throw new ValidationException("Cannot remove class section: " + section.getEnrolledCount()
+                    + " student(s) are actively enrolled. Please drop all student enrollments before deleting this section.");
+        }
         if (!classSectionRepository.delete(id)) {
             throw new RuntimeException("Failed to delete class section.");
         }

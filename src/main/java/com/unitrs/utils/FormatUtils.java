@@ -3,6 +3,8 @@ package com.unitrs.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public class FormatUtils {
 
     public static String formatIdentifier(String raw) {
@@ -37,5 +39,17 @@ public class FormatUtils {
             }
         }
         return trimmed;
+    }
+
+    public static boolean isMobile(HttpServletRequest request) {
+        if (request == null)
+            return false;
+        String ua = request.getHeader("User-Agent");
+        if (ua == null)
+            return false;
+        ua = ua.toLowerCase();
+        return ua.contains("mobile") || ua.contains("android") || ua.contains("iphone")
+                || ua.contains("ipod") || ua.contains("blackberry") || ua.contains("iemobile")
+                || ua.contains("opera mini") || ua.contains("webos");
     }
 }
