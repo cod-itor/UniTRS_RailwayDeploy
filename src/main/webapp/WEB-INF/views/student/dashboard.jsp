@@ -53,12 +53,21 @@
 
                 @media (max-width: 767.98px) {
                     body {
-                        background: #f6f8fb;
-                        padding-bottom: 90px;
+                        background: #f8fafc;
+                        padding-bottom: calc(96px + env(safe-area-inset-bottom, 16px));
+                        -webkit-tap-highlight-color: transparent;
                     }
 
                     .mobile-app-container {
-                        padding: 16px 16px 20px;
+                        padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 16px));
+                        max-width: 520px;
+                        margin: 0 auto;
+                    }
+
+                    /* Accessible Focus Rings */
+                    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+                        outline: 2px solid #3b82f6 !important;
+                        outline-offset: 2px !important;
                     }
 
                     /* Top Bar */
@@ -67,6 +76,7 @@
                         justify-content: space-between;
                         align-items: center;
                         margin-bottom: 20px;
+                        padding-top: 4px;
                     }
 
                     .mobile-user-info {
@@ -76,14 +86,15 @@
                     }
 
                     .mobile-avatar-frame {
-                        width: 46px;
-                        height: 46px;
-                        border-radius: 14px;
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 16px;
                         overflow: hidden;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                        border: 2px solid #fff;
+                        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+                        border: 2.5px solid #fff;
                         flex-shrink: 0;
-                        background: #e2e8f0;
+                        background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+                        position: relative;
                     }
 
                     .mobile-avatar-frame img {
@@ -93,36 +104,41 @@
                     }
 
                     .mobile-user-greeting {
-                        font-size: 1.05rem;
+                        font-size: 1.1rem;
                         font-weight: 800;
                         color: #0f172a;
                         margin-bottom: 2px;
-                        line-height: 1.2;
+                        line-height: 1.25;
+                        letter-spacing: -0.02em;
                     }
 
                     .mobile-badge-pill {
-                        display: inline-block;
-                        background: #e9edf2;
-                        color: #64748b;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 5px;
+                        background: #f1f5f9;
+                        color: #475569;
                         font-size: 0.72rem;
-                        font-weight: 600;
-                        padding: 2px 10px;
+                        font-weight: 700;
+                        padding: 3px 10px;
                         border-radius: 20px;
+                        border: 1px solid #e2e8f0;
                     }
 
                     .mobile-top-action-btn {
-                        width: 42px;
-                        height: 42px;
+                        width: 44px;
+                        height: 44px;
                         background: #fff;
                         border-radius: 14px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        border: 1px solid #edf2f7;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-                        color: #334155;
-                        font-size: 1.15rem;
+                        border: 1px solid #e2e8f0;
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+                        color: #1e293b;
+                        font-size: 1.2rem;
                         cursor: pointer;
+                        position: relative;
                         transition: transform 0.15s ease, background 0.15s ease;
                     }
 
@@ -131,13 +147,29 @@
                         background: #f1f5f9;
                     }
 
-                    /* Multi-day Date Strip */
+                    .mobile-top-action-btn .btn-badge-dot {
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        width: 8px;
+                        height: 8px;
+                        background: #3b82f6;
+                        border-radius: 50%;
+                        border: 1.5px solid #fff;
+                    }
+
+                    /* 7-Day Interactive Date Strip */
+                    .date-strip-section {
+                        margin-bottom: 22px;
+                    }
+
                     .mobile-date-strip {
                         display: flex;
                         gap: 8px;
                         overflow-x: auto;
-                        margin-bottom: 20px;
-                        padding-bottom: 5px;
+                        padding: 4px 2px 8px;
+                        scroll-snap-type: x proximity;
+                        -webkit-overflow-scrolling: touch;
                         scrollbar-width: none;
                     }
 
@@ -146,43 +178,47 @@
                     }
 
                     .date-strip-item {
-                        flex: 0 0 calc(100% / 5.5);
-                        background: #fff;
+                        flex: 0 0 58px;
+                        min-height: 68px;
+                        background: #ffffff;
                         border: 1px solid #e2e8f0;
-                        border-radius: 16px;
+                        border-radius: 18px;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
                         justify-content: center;
-                        padding: 12px 0;
+                        padding: 8px 4px;
                         color: #64748b;
-                        transition: all 0.2s;
+                        transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
                         cursor: pointer;
                         user-select: none;
+                        scroll-snap-align: start;
+                        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
                     }
 
                     .date-strip-item:active {
-                        transform: scale(0.95);
+                        transform: scale(0.93);
                     }
 
                     .date-strip-item.is-today:not(.active) {
-                        border-color: #3b82f6;
-                        color: #2563eb;
+                        border-color: #93c5fd;
+                        color: #1d4ed8;
                         background: #eff6ff;
                     }
 
                     .date-strip-item.active {
-                        background: #11141a;
-                        border-color: #11141a;
-                        color: #fff;
-                        box-shadow: 0 6px 12px rgba(17, 20, 26, 0.15);
+                        background: #0f172a;
+                        border-color: #0f172a;
+                        color: #ffffff;
+                        box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.35);
                         transform: translateY(-2px);
                     }
 
                     .ds-day {
-                        font-size: 0.7rem;
+                        font-size: 0.68rem;
                         font-weight: 700;
                         text-transform: uppercase;
+                        letter-spacing: 0.4px;
                         margin-bottom: 4px;
                     }
 
@@ -193,73 +229,65 @@
                     }
 
                     .date-strip-item.active .ds-day {
-                        color: rgba(255, 255, 255, 0.7);
+                        color: rgba(255, 255, 255, 0.75);
                     }
 
                     .date-strip-item.active .ds-date {
-                        color: #fff;
+                        color: #ffffff;
                     }
 
                     .date-strip-item.active::after {
                         content: '';
                         display: block;
-                        width: 6px;
-                        height: 6px;
+                        width: 5px;
+                        height: 5px;
                         background: #22c55e;
                         border-radius: 50%;
-                        margin-top: 6px;
-                        animation: pulse 1.8s infinite;
+                        margin-top: 5px;
+                        animation: pulseDot 1.8s infinite ease-in-out;
                     }
 
-                    @keyframes pulse {
-
-                        0%,
-                        100% {
-                            transform: scale(0.9);
-                            opacity: 0.8;
-                        }
-
-                        50% {
-                            transform: scale(1.4);
-                            opacity: 1;
-                        }
+                    @keyframes pulseDot {
+                        0%, 100% { transform: scale(0.9); opacity: 0.8; }
+                        50% { transform: scale(1.4); opacity: 1; }
                     }
 
-                    /* Hero Banner */
+                    /* Next Class Hero Card */
                     .mobile-hero-banner {
-                        background: linear-gradient(135deg, #ff7a18 0%, #af002d 30%, #5f11e8 70%, #3a7bd5 100%);
+                        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
                         border-radius: 24px;
-                        padding: 16px;
+                        padding: 18px 20px;
                         color: #fff;
-                        box-shadow: 0 12px 28px rgba(111, 17, 232, 0.28);
+                        box-shadow: 0 12px 30px -6px rgba(15, 23, 42, 0.25);
                         display: flex;
                         align-items: center;
-                        gap: 14px;
-                        margin-bottom: 20px;
+                        gap: 16px;
+                        margin-bottom: 22px;
                         position: relative;
                         overflow: hidden;
+                        border: 1px solid rgba(255, 255, 255, 0.1);
                     }
 
-                    .mobile-hero-banner::after {
+                    .mobile-hero-banner::before {
                         content: '';
                         position: absolute;
-                        top: -40%;
-                        right: -40%;
-                        width: 100%;
-                        height: 100%;
-                        background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, transparent 60%);
+                        top: -50%;
+                        right: -20%;
+                        width: 220px;
+                        height: 220px;
+                        background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
                         pointer-events: none;
                     }
 
                     .hero-avatar-box {
-                        width: 86px;
-                        height: 86px;
+                        width: 68px;
+                        height: 68px;
                         border-radius: 18px;
                         overflow: hidden;
                         flex-shrink: 0;
-                        background: rgba(255, 255, 255, 0.15);
-                        border: 2px solid rgba(255, 255, 255, 0.45);
-                        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+                        background: rgba(255, 255, 255, 0.1);
+                        border: 2px solid rgba(255, 255, 255, 0.2);
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
                     }
 
                     .hero-avatar-box img {
@@ -278,16 +306,28 @@
                         font-size: 0.65rem;
                         font-weight: 800;
                         letter-spacing: 0.8px;
-                        color: rgba(255, 255, 255, 0.85);
+                        color: #94a3b8;
                         text-transform: uppercase;
-                        margin-bottom: 3px;
+                        margin-bottom: 4px;
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                    }
+
+                    .hero-label .pulse-indicator {
+                        width: 6px;
+                        height: 6px;
+                        background: #22c55e;
+                        border-radius: 50%;
+                        box-shadow: 0 0 8px #22c55e;
+                        animation: pulseDot 1.8s infinite;
                     }
 
                     .hero-title {
-                        font-size: 0.95rem;
+                        font-size: 1.02rem;
                         font-weight: 800;
-                        color: #fff;
-                        margin-bottom: 4px;
+                        color: #ffffff;
+                        margin-bottom: 5px;
                         line-height: 1.25;
                         white-space: nowrap;
                         overflow: hidden;
@@ -295,47 +335,73 @@
                     }
 
                     .hero-meta-row {
-                        font-size: 0.72rem;
-                        color: rgba(255, 255, 255, 0.92);
+                        font-size: 0.76rem;
+                        color: #cbd5e1;
                         display: flex;
                         align-items: center;
-                        gap: 5px;
+                        gap: 8px;
                         margin-bottom: 3px;
                     }
 
-                    .hero-status-tag {
+                    .hero-pills {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 6px;
+                        margin-top: 8px;
+                    }
+
+                    .hero-pill-badge {
                         display: inline-flex;
                         align-items: center;
                         gap: 4px;
-                        background: rgba(255, 255, 255, 0.92);
-                        color: #15803d;
-                        font-size: 0.65rem;
+                        background: rgba(255, 255, 255, 0.12);
+                        color: #f1f5f9;
+                        font-size: 0.68rem;
                         font-weight: 700;
-                        padding: 3px 8px;
+                        padding: 3px 9px;
                         border-radius: 12px;
-                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+                        backdrop-filter: blur(6px);
                     }
 
                     /* Academic Progress Swipeable Cards */
-                    .progress-section-label {
-                        font-size: 1.0rem;
+                    .section-header-wrap {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 12px;
+                    }
+
+                    .mobile-section-heading {
+                        font-size: 1.05rem;
                         font-weight: 800;
                         color: #0f172a;
-                        margin-bottom: 10px;
+                        letter-spacing: -0.01em;
+                        margin-bottom: 0;
+                    }
+
+                    .mobile-section-badge {
+                        font-size: 0.72rem;
+                        font-weight: 700;
+                        padding: 3px 10px;
+                        border-radius: 20px;
+                        background: #eff6ff;
+                        color: #2563eb;
+                        border: 1px solid #dbeafe;
                     }
 
                     .progress-swiper-wrap {
                         position: relative;
-                        margin-bottom: 20px;
+                        margin-bottom: 22px;
                     }
 
                     .progress-swiper {
                         display: flex;
-                        gap: 12px;
+                        gap: 14px;
                         overflow-x: auto;
                         scroll-snap-type: x mandatory;
-                        padding-bottom: 10px;
+                        padding: 4px 2px 10px;
                         scrollbar-width: none;
+                        -webkit-overflow-scrolling: touch;
                     }
 
                     .progress-swiper::-webkit-scrollbar {
@@ -343,15 +409,16 @@
                     }
 
                     .progress-card-item {
-                        flex: 0 0 calc(85vw - 32px);
+                        flex: 0 0 calc(86vw - 32px);
                         max-width: 340px;
-                        min-width: 260px;
+                        min-width: 270px;
                         scroll-snap-align: start;
-                        background: #fff;
-                        border-radius: 22px;
-                        padding: 16px;
-                        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-                        border: 1px solid #edf2f7;
+                        background: #ffffff;
+                        border-radius: 24px;
+                        padding: 18px;
+                        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+                        border: 1px solid #e2e8f0;
+                        position: relative;
                     }
 
                     .pc-header {
@@ -362,52 +429,58 @@
                     }
 
                     .pc-course-code {
-                        font-size: 0.78rem;
+                        font-size: 0.8rem;
                         font-weight: 800;
-                        color: #5f11e8;
-                        background: #f3e8ff;
-                        padding: 3px 10px;
+                        color: #4f46e5;
+                        background: #eef2ff;
+                        padding: 4px 10px;
                         border-radius: 12px;
+                        letter-spacing: 0.3px;
                     }
 
                     .pc-gpa-badge {
-                        font-size: 1.1rem;
+                        font-size: 1.15rem;
                         font-weight: 800;
                         color: #0f172a;
                     }
 
                     .pc-gpa-label {
                         font-size: 0.65rem;
-                        font-weight: 600;
+                        font-weight: 700;
                         color: #64748b;
+                        text-transform: uppercase;
                     }
 
                     .pc-title {
-                        font-size: 0.82rem;
+                        font-size: 0.88rem;
                         font-weight: 700;
                         color: #0f172a;
-                        margin-bottom: 10px;
-                        line-height: 1.25;
+                        margin-bottom: 12px;
+                        line-height: 1.3;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
                     }
 
                     .pc-score-row {
                         display: flex;
                         flex-direction: column;
-                        gap: 6px;
-                        margin-bottom: 10px;
+                        gap: 7px;
+                        margin-bottom: 12px;
                     }
 
                     .pc-score-item {
                         display: flex;
                         align-items: center;
-                        gap: 8px;
+                        gap: 10px;
                     }
 
                     .pc-score-label {
                         font-size: 0.7rem;
-                        font-weight: 600;
+                        font-weight: 700;
                         color: #64748b;
-                        width: 90px;
+                        width: 88px;
                         flex-shrink: 0;
                     }
 
@@ -422,12 +495,12 @@
                     .pc-score-bar {
                         height: 7px;
                         border-radius: 99px;
-                        transition: width 0.6s ease;
+                        transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
                     }
 
                     .pc-score-val {
-                        font-size: 0.7rem;
-                        font-weight: 700;
+                        font-size: 0.72rem;
+                        font-weight: 800;
                         color: #0f172a;
                         min-width: 28px;
                         text-align: right;
@@ -437,34 +510,21 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        padding-top: 10px;
+                        padding-top: 12px;
                         border-top: 1px solid #f1f5f9;
                     }
 
                     .pc-letter {
-                        font-size: 1.5rem;
+                        font-size: 1.55rem;
                         font-weight: 900;
+                        line-height: 1;
                     }
 
-                    .grade-A {
-                        color: #16a34a;
-                    }
-
-                    .grade-B {
-                        color: #2563eb;
-                    }
-
-                    .grade-C {
-                        color: #d97706;
-                    }
-
-                    .grade-F {
-                        color: #dc2626;
-                    }
-
-                    .grade-na {
-                        color: #94a3b8;
-                    }
+                    .grade-A { color: #16a34a; }
+                    .grade-B { color: #2563eb; }
+                    .grade-C { color: #d97706; }
+                    .grade-F { color: #dc2626; }
+                    .grade-na { color: #94a3b8; }
 
                     .pc-credits {
                         font-size: 0.72rem;
@@ -475,16 +535,16 @@
                     .pc-credits strong {
                         color: #0f172a;
                         display: block;
-                        font-size: 0.85rem;
+                        font-size: 0.9rem;
                     }
 
-                    /* Swipe dots */
+                    /* Swipe Dots */
                     .swipe-dots {
                         display: flex;
                         justify-content: center;
-                        gap: 5px;
-                        margin-top: 2px;
-                        margin-bottom: 18px;
+                        gap: 6px;
+                        margin-top: 4px;
+                        margin-bottom: 20px;
                     }
 
                     .swipe-dot {
@@ -492,126 +552,383 @@
                         height: 6px;
                         background: #cbd5e1;
                         border-radius: 50%;
-                        transition: all 0.2s ease;
+                        transition: all 0.25s ease;
                     }
 
                     .swipe-dot.active {
-                        background: #11141a;
-                        width: 18px;
-                        border-radius: 3px;
+                        background: #0f172a;
+                        width: 20px;
+                        border-radius: 4px;
                     }
 
-                    /* Term Courses list */
-                    .section-header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-bottom: 12px;
-                    }
-
-                    .section-title {
-                        font-size: 1.0rem;
-                        font-weight: 800;
-                        color: #0f172a;
-                    }
-
+                    /* Cards System */
                     .mobile-course-card {
-                        background: #fff;
-                        border-radius: 18px;
-                        padding: 15px;
+                        background: #ffffff;
+                        border-radius: 20px;
+                        padding: 16px;
                         margin-bottom: 12px;
-                        border: 1px solid #edf2f7;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+                        border: 1px solid #e2e8f0;
+                        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
                         cursor: pointer;
-                        transition: transform 0.15s ease, box-shadow 0.15s ease;
+                        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
                     }
 
                     .mobile-course-card:active {
-                        transform: scale(0.98);
-                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+                        transform: scale(0.985);
+                        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+                        border-color: #cbd5e1;
                     }
 
-                    /* Bottom dock */
-                    .mobile-bottom-dock {
-                        position: fixed;
-                        bottom: 0;
+                    .mobile-card-code-badge {
+                        font-size: 0.76rem;
+                        font-weight: 800;
+                        padding: 3px 9px;
+                        border-radius: 10px;
+                        background: #eef2ff;
+                        color: #4f46e5;
+                    }
+
+                    .mobile-card-title {
+                        font-size: 0.95rem;
+                        font-weight: 800;
+                        color: #0f172a;
+                        margin-bottom: 6px;
+                        line-height: 1.3;
+                    }
+
+                    .mobile-card-meta {
+                        font-size: 0.75rem;
+                        color: #64748b;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 4px;
+                    }
+
+                    .mobile-card-meta-row {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                    }
+
+                    .mobile-card-footer {
+                        margin-top: 10px;
+                        padding-top: 10px;
+                        border-top: 1px solid #f1f5f9;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+
+                    /* Schedule Sub-View Day Pill Strip */
+                    .schedule-day-filter-strip {
+                        display: flex;
+                        gap: 6px;
+                        overflow-x: auto;
+                        padding-bottom: 6px;
+                        margin-bottom: 16px;
+                        scrollbar-width: none;
+                    }
+
+                    .schedule-day-filter-strip::-webkit-scrollbar {
+                        display: none;
+                    }
+
+                    .schedule-filter-pill {
+                        flex: 0 0 auto;
+                        min-height: 38px;
+                        padding: 0 14px;
+                        border-radius: 99px;
+                        border: 1px solid #e2e8f0;
+                        background: #fff;
+                        color: #64748b;
+                        font-size: 0.75rem;
+                        font-weight: 700;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        transition: all 0.18s ease;
+                    }
+
+                    .schedule-filter-pill:active {
+                        transform: scale(0.95);
+                    }
+
+                    .schedule-filter-pill.active {
+                        background: #0f172a;
+                        color: #fff;
+                        border-color: #0f172a;
+                        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+                    }
+
+                    /* Capacity Bar for Course Registration */
+                    .capacity-bar-wrap {
+                        background: #f1f5f9;
+                        border-radius: 99px;
+                        height: 6px;
+                        overflow: hidden;
+                        margin-top: 6px;
+                    }
+
+                    .capacity-bar {
+                        height: 6px;
+                        border-radius: 99px;
+                        transition: width 0.4s ease;
+                    }
+
+                    /* Grades Hero & Metric Cards */
+                    .grades-hero-card {
+                        background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
+                        border-radius: 24px;
+                        padding: 20px;
+                        color: #fff;
+                        box-shadow: 0 12px 28px -6px rgba(5, 150, 105, 0.35);
+                        margin-bottom: 20px;
+                        border: 1px solid rgba(255, 255, 255, 0.15);
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .grades-hero-card::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -30%;
+                        right: -20%;
+                        width: 180px;
+                        height: 180px;
+                        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+                        pointer-events: none;
+                    }
+
+                    .grades-stat-chip {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 5px;
+                        background: rgba(255, 255, 255, 0.2);
+                        padding: 4px 10px;
+                        border-radius: 12px;
+                        font-size: 0.72rem;
+                        font-weight: 700;
+                        backdrop-filter: blur(4px);
+                    }
+
+                    /* Digital Student ID Card */
+                    .student-id-card {
+                        background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%);
+                        border-radius: 24px;
+                        padding: 22px;
+                        color: #fff;
+                        box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.45);
+                        border: 1px solid rgba(255, 255, 255, 0.15);
+                        margin-bottom: 20px;
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .student-id-card::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
                         left: 0;
                         right: 0;
-                        background: rgba(255, 255, 255, 0.96);
-                        backdrop-filter: blur(18px);
-                        -webkit-backdrop-filter: blur(18px);
-                        border-top: 1px solid #eef2f6;
+                        height: 4px;
+                        background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+                    }
+
+                    .id-card-top {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 16px;
+                    }
+
+                    .id-card-univ-title {
+                        font-size: 0.68rem;
+                        font-weight: 800;
+                        letter-spacing: 1px;
+                        text-transform: uppercase;
+                        color: #94a3b8;
+                    }
+
+                    .id-card-body {
+                        display: flex;
+                        gap: 16px;
+                        align-items: center;
+                        margin-bottom: 16px;
+                    }
+
+                    .id-photo-box {
+                        width: 72px;
+                        height: 84px;
+                        border-radius: 16px;
+                        overflow: hidden;
+                        border: 2px solid rgba(255, 255, 255, 0.3);
+                        background: #1e293b;
+                        flex-shrink: 0;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                    }
+
+                    .id-photo-box img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                    .id-info-col {
+                        flex: 1;
+                        min-width: 0;
+                    }
+
+                    .id-student-name {
+                        font-size: 1.12rem;
+                        font-weight: 800;
+                        color: #ffffff;
+                        line-height: 1.25;
+                        margin-bottom: 4px;
+                    }
+
+                    .id-number-pill {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        background: rgba(255, 255, 255, 0.12);
+                        padding: 3px 10px;
+                        border-radius: 12px;
+                        font-size: 0.75rem;
+                        font-family: 'SF Mono', Monaco, Inconsolata, monospace;
+                        font-weight: 700;
+                        color: #93c5fd;
+                        cursor: pointer;
+                        transition: background 0.15s;
+                    }
+
+                    .id-number-pill:active {
+                        background: rgba(255, 255, 255, 0.22);
+                    }
+
+                    .id-card-barcode-row {
+                        background: rgba(255, 255, 255, 0.08);
+                        border-radius: 14px;
+                        padding: 10px 14px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        border: 1px solid rgba(255, 255, 255, 0.08);
+                    }
+
+                    .barcode-mock {
+                        display: flex;
+                        gap: 2px;
+                        align-items: center;
+                        height: 24px;
+                    }
+
+                    .barcode-mock span {
+                        display: block;
+                        background: #cbd5e1;
+                        height: 100%;
+                    }
+
+                    /* Floating Island Bottom Navigation Dock */
+                    .mobile-bottom-dock {
+                        position: fixed;
+                        bottom: calc(12px + env(safe-area-inset-bottom, 8px));
+                        left: 16px;
+                        right: 16px;
+                        max-width: 480px;
+                        margin: 0 auto;
+                        background: rgba(255, 255, 255, 0.88);
+                        backdrop-filter: blur(24px);
+                        -webkit-backdrop-filter: blur(24px);
+                        border: 1px solid rgba(255, 255, 255, 0.6);
+                        border-radius: 32px;
                         display: flex;
                         justify-content: space-around;
                         align-items: center;
-                        padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 8px));
+                        padding: 8px 6px;
                         z-index: 1040;
-                        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03);
+                        box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
                     }
 
                     .dock-tab-btn {
                         display: flex;
                         flex-direction: column;
                         align-items: center;
+                        justify-content: center;
                         background: transparent;
                         border: none;
-                        color: #94a3b8;
+                        color: #64748b;
                         font-size: 0.68rem;
-                        font-weight: 600;
-                        padding: 4px 6px;
+                        font-weight: 700;
+                        min-width: 58px;
+                        min-height: 48px;
+                        padding: 4px 8px;
+                        border-radius: 20px;
                         cursor: pointer;
-                        transition: all 0.18s ease;
+                        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                         text-decoration: none;
+                        position: relative;
+                        user-select: none;
                     }
 
                     .dock-tab-btn i {
-                        font-size: 1.25rem;
+                        font-size: 1.3rem;
                         margin-bottom: 2px;
-                        transition: transform 0.18s ease;
+                        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+                    }
+
+                    .dock-tab-btn:active {
+                        transform: scale(0.92);
                     }
 
                     .dock-tab-btn.active {
                         color: #0f172a;
-                        font-weight: 700;
+                        background: #f1f5f9;
                     }
 
                     .dock-tab-btn.active i {
                         transform: translateY(-2px);
+                        color: #2563eb;
                     }
 
-                    /* Sub-views */
+                    /* Sub-views Animation */
                     .mobile-sub-view {
                         display: none;
-                        animation: fadeUp 0.22s ease;
+                        animation: mobileFadeSlide 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                     }
 
                     .mobile-sub-view.active {
                         display: block;
                     }
 
-                    @keyframes fadeUp {
+                    @keyframes mobileFadeSlide {
                         from {
                             opacity: 0;
-                            transform: translateY(8px);
+                            transform: translateY(10px);
                         }
-
                         to {
                             opacity: 1;
                             transform: translateY(0);
                         }
                     }
 
-                    /* Course detail modal overlay */
+                    /* Course Detail Bottom Sheet Modal */
                     .course-modal-overlay {
                         position: fixed;
                         inset: 0;
-                        background: rgba(15, 23, 42, 0.55);
+                        background: rgba(15, 23, 42, 0.6);
                         z-index: 1050;
                         display: none;
                         align-items: flex-end;
                         justify-content: center;
-                        backdrop-filter: blur(4px);
-                        -webkit-backdrop-filter: blur(4px);
+                        backdrop-filter: blur(6px);
+                        -webkit-backdrop-filter: blur(6px);
+                        animation: modalFadeIn 0.2s ease;
+                    }
+
+                    @keyframes modalFadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
                     }
 
                     .course-modal-overlay.open {
@@ -619,44 +936,40 @@
                     }
 
                     .course-modal-sheet {
-                        background: #fff;
-                        border-radius: 26px 26px 0 0;
+                        background: #ffffff;
+                        border-radius: 28px 28px 0 0;
                         width: 100%;
-                        max-width: 480px;
-                        max-height: 85vh;
+                        max-width: 500px;
+                        max-height: 88vh;
                         overflow-y: auto;
-                        padding: 0 0 32px;
-                        animation: slideUp 0.28s cubic-bezier(0.34, 1.12, 0.64, 1);
+                        padding: 0 0 calc(28px + env(safe-area-inset-bottom, 16px));
+                        animation: springSlideUp 0.32s cubic-bezier(0.34, 1.2, 0.64, 1);
+                        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
                     }
 
-                    @keyframes slideUp {
-                        from {
-                            transform: translateY(100%);
-                        }
-
-                        to {
-                            transform: translateY(0);
-                        }
+                    @keyframes springSlideUp {
+                        from { transform: translateY(100%); }
+                        to { transform: translateY(0); }
                     }
 
                     .sheet-drag-handle {
-                        width: 40px;
+                        width: 44px;
                         height: 5px;
-                        background: #e2e8f0;
+                        background: #cbd5e1;
                         border-radius: 99px;
-                        margin: 12px auto 0;
+                        margin: 12px auto 6px;
                     }
 
                     .sheet-header {
-                        padding: 16px 20px 10px;
+                        padding: 14px 20px 14px;
                         border-bottom: 1px solid #f1f5f9;
                     }
 
                     .sheet-header-code {
-                        font-size: 0.75rem;
+                        font-size: 0.78rem;
                         font-weight: 800;
-                        color: #5f11e8;
-                        background: #f3e8ff;
+                        color: #4f46e5;
+                        background: #eef2ff;
                         padding: 3px 10px;
                         border-radius: 10px;
                         display: inline-block;
@@ -664,7 +977,7 @@
                     }
 
                     .sheet-header-title {
-                        font-size: 1rem;
+                        font-size: 1.05rem;
                         font-weight: 800;
                         color: #0f172a;
                         line-height: 1.3;
@@ -672,25 +985,25 @@
                     }
 
                     .sheet-header-meta {
-                        font-size: 0.72rem;
+                        font-size: 0.75rem;
                         color: #64748b;
                         display: flex;
                         flex-wrap: wrap;
-                        gap: 10px;
+                        gap: 12px;
                     }
 
                     .sheet-body {
-                        padding: 16px 20px;
+                        padding: 18px 20px;
                     }
 
                     .sheet-section-label {
-                        font-size: 0.75rem;
+                        font-size: 0.72rem;
                         font-weight: 800;
                         text-transform: uppercase;
                         letter-spacing: 0.6px;
-                        color: #94a3b8;
+                        color: #64748b;
                         margin-bottom: 10px;
-                        margin-top: 16px;
+                        margin-top: 14px;
                     }
 
                     .score-grid {
@@ -702,112 +1015,125 @@
 
                     .score-tile {
                         background: #f8fafc;
-                        border-radius: 14px;
-                        padding: 12px;
-                        border: 1px solid #f1f5f9;
+                        border-radius: 16px;
+                        padding: 14px;
+                        border: 1px solid #e2e8f0;
                     }
 
                     .score-tile-label {
-                        font-size: 0.65rem;
+                        font-size: 0.68rem;
                         font-weight: 700;
                         color: #64748b;
                         text-transform: uppercase;
-                        letter-spacing: 0.5px;
+                        letter-spacing: 0.4px;
                         margin-bottom: 4px;
                     }
 
                     .score-tile-val {
-                        font-size: 1.35rem;
+                        font-size: 1.4rem;
                         font-weight: 900;
                         color: #0f172a;
                         line-height: 1;
                     }
 
                     .score-tile-val.pending {
-                        font-size: 0.8rem;
+                        font-size: 0.85rem;
                         color: #94a3b8;
                         font-weight: 600;
                     }
 
                     .score-tile.highlight {
-                        background: linear-gradient(135deg, #f3e8ff, #e0f2fe);
-                        border-color: transparent;
+                        background: linear-gradient(135deg, #eef2ff, #f0fdf4);
+                        border-color: #c7d2fe;
                     }
 
                     .score-tile.highlight .score-tile-val {
-                        color: #5f11e8;
+                        color: #4338ca;
                     }
 
                     .attendance-list {
                         display: flex;
                         flex-direction: column;
-                        gap: 7px;
+                        gap: 8px;
                     }
 
                     .att-row {
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        padding: 8px 12px;
+                        padding: 10px 14px;
                         background: #f8fafc;
-                        border-radius: 12px;
+                        border-radius: 14px;
+                        border: 1px solid #f1f5f9;
                     }
 
                     .att-date {
-                        font-size: 0.72rem;
+                        font-size: 0.75rem;
                         font-weight: 600;
                         color: #334155;
                     }
 
                     .att-badge {
-                        font-size: 0.65rem;
-                        font-weight: 700;
+                        font-size: 0.68rem;
+                        font-weight: 800;
                         padding: 3px 10px;
                         border-radius: 99px;
                     }
 
-                    .att-PRESENT {
-                        background: #dcfce7;
-                        color: #16a34a;
-                    }
-
-                    .att-ABSENT {
-                        background: #fee2e2;
-                        color: #dc2626;
-                    }
-
-                    .att-LATE {
-                        background: #fef3c7;
-                        color: #d97706;
-                    }
-
-                    .att-EXCUSED {
-                        background: #e0f2fe;
-                        color: #0284c7;
-                    }
+                    .att-PRESENT { background: #dcfce7; color: #15803d; }
+                    .att-ABSENT { background: #fee2e2; color: #b91c1c; }
+                    .att-LATE { background: #fef3c7; color: #b45309; }
+                    .att-EXCUSED { background: #e0f2fe; color: #0369a1; }
 
                     .att-empty {
-                        font-size: 0.8rem;
+                        font-size: 0.82rem;
                         color: #94a3b8;
                         text-align: center;
-                        padding: 16px 0;
+                        padding: 20px 0;
                     }
 
                     .att-summary {
                         display: flex;
                         gap: 8px;
                         flex-wrap: wrap;
-                        margin-bottom: 10px;
+                        margin-bottom: 12px;
                     }
 
                     .att-sum-chip {
                         display: inline-flex;
                         align-items: center;
                         gap: 5px;
-                        font-size: 0.7rem;
+                        font-size: 0.72rem;
                         font-weight: 700;
-                        padding: 4px 10px;
+                        padding: 4px 11px;
                         border-radius: 99px;
+                    }
+
+                    /* Toast Notification for ID copy */
+                    .mobile-toast {
+                        position: fixed;
+                        bottom: 80px;
+                        left: 50%;
+                        transform: translateX(-50%) translateY(20px);
+                        background: #0f172a;
+                        color: #fff;
+                        padding: 8px 18px;
+                        border-radius: 99px;
+                        font-size: 0.78rem;
+                        font-weight: 700;
+                        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+                        z-index: 1060;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                    }
+
+                    .mobile-toast.show {
+                        opacity: 1;
+                        transform: translateX(-50%) translateY(0);
                     }
                 }
             </style>
@@ -2524,10 +2850,7 @@
                                                                                                                     <c:choose>
                                                                                                                         <c:when
                                                                                                                             test="${isEnrolled}">
-                                                                                                                            <div class="d-flex align-items-center gap-1">
-                                                                                                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small fw-bold"><i class="bi bi-check2"></i> Enrolled</span>
-                                                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-bold" style="font-size: 0.75rem;" onclick="openDropConfirm('${section.id}', '${section.courseCode}', '${section.courseTitle}', 'registration')">Drop</button>
-                                                                                                                            </div>
+                                                                                                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 small fw-bold"><i class="bi bi-check2 me-1"></i> Enrolled</span>
                                                                                                                         </c:when>
                                                                                                                         <c:when
                                                                                                                             test="${section.enrolledCount >= section.roomCapacity}">
@@ -2952,68 +3275,48 @@
                                                     <div class="d-block d-md-none mobile-app-container">
 
                                                         <c:if test="${param.twoFactorUpdated == 'true'}">
-                                                            <div
-                                                                class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small">
-                                                                <i class="bi bi-shield-check me-1"></i>2FA
-                                                                <strong>enabled</strong>.<button type="button"
-                                                                    class="btn-close py-2"
-                                                                    data-bs-dismiss="alert"></button></div>
+                                                            <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
+                                                                <i class="bi bi-shield-check me-1"></i>2FA <strong>enabled</strong>.
+                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            </div>
                                                         </c:if>
                                                         <c:if test="${param.twoFactorUpdated == 'false'}">
-                                                            <div
-                                                                class="alert alert-info alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small">
-                                                                <i class="bi bi-shield-slash me-1"></i>2FA
-                                                                <strong>disabled</strong>.<button type="button"
-                                                                    class="btn-close py-2"
-                                                                    data-bs-dismiss="alert"></button></div>
+                                                            <div class="alert alert-info alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
+                                                                <i class="bi bi-shield-slash me-1"></i>2FA <strong>disabled</strong>.
+                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            </div>
                                                         </c:if>
                                                         <c:if test="${not empty successMessage}">
-                                                            <div
-                                                                class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small">
-                                                                <i
-                                                                    class="bi bi-check-circle-fill me-1"></i>${successMessage}<button
-                                                                    type="button" class="btn-close py-2"
-                                                                    data-bs-dismiss="alert"></button></div>
+                                                            <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
+                                                                <i class="bi bi-check-circle-fill me-1"></i>${successMessage}
+                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            </div>
                                                         </c:if>
                                                         <c:if test="${not empty errorMessage}">
-                                                            <div
-                                                                class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small">
-                                                                <i
-                                                                    class="bi bi-exclamation-triangle-fill me-1"></i>${errorMessage}<button
-                                                                    type="button" class="btn-close py-2"
-                                                                    data-bs-dismiss="alert"></button></div>
+                                                            <div class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
+                                                                <i class="bi bi-exclamation-triangle-fill me-1"></i>${errorMessage}
+                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            </div>
                                                         </c:if>
 
                                                         <c:choose>
                                                             <c:when test="${empty user.studentSchoolId}">
-                                                                <div
-                                                                    class="card border-0 shadow-sm rounded-4 p-4 text-center my-4 bg-white">
-                                                                    <i class="bi bi-building text-success mb-3"
-                                                                        style="font-size:3rem;"></i>
+                                                                <div class="card border-0 shadow-sm rounded-4 p-4 text-center my-4 bg-white">
+                                                                    <i class="bi bi-building text-primary mb-3" style="font-size:3rem;"></i>
                                                                     <h4 class="fw-bold mb-2">Welcome to UniTRS</h4>
-                                                                    <p class="text-muted small mb-4">Please select your
-                                                                        academic school to get started.</p>
-                                                                    <form
-                                                                        action="${pageContext.request.contextPath}/student/dashboard"
-                                                                        method="post">
-                                                                        <input type="hidden" name="action"
-                                                                            value="selectSchool">
-                                                                        <div class="mb-3 text-start"><label
-                                                                                class="form-label small fw-bold">Select
-                                                                                School</label>
-                                                                            <select class="form-select rounded-3"
-                                                                                name="schoolId" required>
-                                                                                <option value="" selected disabled>--
-                                                                                    Choose a School --</option>
-                                                                                <c:forEach var="school"
-                                                                                    items="${schools}">
-                                                                                    <option value="${school.id}">
-                                                                                        ${school.schoolName}</option>
+                                                                    <p class="text-muted small mb-4">Please select your academic school to get started.</p>
+                                                                    <form action="${pageContext.request.contextPath}/student/dashboard" method="post">
+                                                                        <input type="hidden" name="action" value="selectSchool">
+                                                                        <div class="mb-3 text-start">
+                                                                            <label class="form-label small fw-bold" for="mobileSelectSchool">Select School</label>
+                                                                            <select class="form-select rounded-3" id="mobileSelectSchool" name="schoolId" required>
+                                                                                <option value="" selected disabled>-- Choose a School --</option>
+                                                                                <c:forEach var="school" items="${schools}">
+                                                                                    <option value="${school.id}">${school.schoolName}</option>
                                                                                 </c:forEach>
                                                                             </select>
                                                                         </div>
-                                                                        <button type="submit"
-                                                                            class="btn btn-success w-100 rounded-3 py-2 fw-semibold">Continue</button>
+                                                                        <button type="submit" class="btn btn-primary w-100 rounded-3 py-2 fw-semibold">Continue</button>
                                                                     </form>
                                                                 </div>
                                                             </c:when>
@@ -3021,984 +3324,618 @@
                                                             <c:otherwise>
 
                                                                 <%-- Top Bar --%>
-                                                                    <div class="mobile-top-bar">
-                                                                        <div class="mobile-user-info">
-                                                                            <div class="mobile-avatar-frame">
-                                                                                <c:choose>
-                                                                                    <c:when
-                                                                                        test="${user.gender == 'FEMALE'}">
-                                                                                        <img src="${pageContext.request.contextPath}/static/images/default_female.svg"
-                                                                                            alt="Avatar">
-                                                                                    </c:when>
-                                                                                    <c:otherwise>
-                                                                                        <img src="${pageContext.request.contextPath}/static/images/default_male.svg"
-                                                                                            alt="Avatar">
-                                                                                    </c:otherwise>
-                                                                                </c:choose>
-                                                                            </div>
-                                                                            <div>
-                                                                                <div class="mobile-user-greeting">Hello,
-                                                                                    ${user.fullName}</div>
-                                                                                <span class="mobile-badge-pill">${not
-                                                                                    empty studentSchool ?
-                                                                                    studentSchool.schoolName :
-                                                                                    'UniTRS'}</span>
-                                                                            </div>
+                                                                <header class="mobile-top-bar" role="banner">
+                                                                    <div class="mobile-user-info">
+                                                                        <div class="mobile-avatar-frame" aria-hidden="true">
+                                                                            <c:choose>
+                                                                                <c:when test="${user.gender == 'FEMALE'}">
+                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Student Avatar">
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Student Avatar">
+                                                                                </c:otherwise>
+                                                                            </c:choose>
                                                                         </div>
-                                                                        <button class="mobile-top-action-btn"
-                                                                            type="button" data-bs-toggle="modal"
-                                                                            data-bs-target="#mobileSecurityModal">
-                                                                            <i class="bi bi-bell"></i>
+                                                                        <div>
+                                                                            <div class="mobile-user-greeting">Hello, ${user.fullName}</div>
+                                                                            <span class="mobile-badge-pill">
+                                                                                <i class="bi bi-mortarboard-fill text-primary" style="font-size:0.68rem;"></i>
+                                                                                ${not empty studentSchool ? studentSchool.schoolName : 'UniTRS Student'}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button class="mobile-top-action-btn" type="button" data-bs-toggle="modal" data-bs-target="#mobileSecurityModal" aria-label="Notifications and Security Settings">
+                                                                        <i class="bi bi-bell"></i>
+                                                                        <span class="btn-badge-dot"></span>
+                                                                    </button>
+                                                                </header>
+
+                                                                <%--===== HOME SUB-VIEW =====--%>
+                                                                <section id="mobile-view-home" class="mobile-sub-view active" role="tabpanel" aria-labelledby="dock-tab-home">
+
+                                                                    <%-- 7-Day Interactive Date Strip --%>
+                                                                    <div class="date-strip-section">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                                                                            <span class="small fw-bold text-muted text-uppercase" style="letter-spacing:0.6px;font-size:0.7rem;">
+                                                                                <i class="bi bi-calendar2-week me-1 text-primary"></i>Weekly Schedule
+                                                                            </span>
+                                                                            <span class="small text-muted" style="font-size:0.7rem;">Select day</span>
+                                                                        </div>
+                                                                        <div class="mobile-date-strip" id="mobileDateStrip" role="tablist" aria-label="Select day of week">
+                                                                            <!-- Populated by JS -->
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <%-- Next Class Today Hero Card --%>
+                                                                    <div class="mobile-hero-banner" role="region" aria-label="Next Upcoming Class">
+                                                                        <div class="hero-avatar-box" aria-hidden="true">
+                                                                            <c:choose>
+                                                                                <c:when test="${user.gender == 'FEMALE'}">
+                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Student">
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Student">
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                        </div>
+                                                                        <div class="hero-content">
+                                                                            <div class="hero-label">
+                                                                                <span class="pulse-indicator"></span> NEXT CLASS TODAY
+                                                                            </div>
+                                                                            <c:set var="todayHeroSet" value="false" />
+                                                                            <c:forEach var="enrollment" items="${schedule}">
+                                                                                <c:if test="${todayHeroSet == 'false'}">
+                                                                                    <div class="hero-title" title="${enrollment.courseCode}: ${enrollment.courseTitle}">
+                                                                                        ${enrollment.courseCode}: ${enrollment.courseTitle}
+                                                                                    </div>
+                                                                                    <div class="hero-meta-row">
+                                                                                        <i class="bi bi-geo-alt-fill text-warning"></i> Room ${enrollment.room}
+                                                                                        &bull; ${enrollment.sessionShift}
+                                                                                    </div>
+                                                                                    <div class="hero-pills">
+                                                                                        <span class="hero-pill-badge"><i class="bi bi-calendar3"></i> ${enrollment.daysOfWeek}</span>
+                                                                                        <span class="hero-pill-badge"><i class="bi bi-person"></i> ${enrollment.professorName}</span>
+                                                                                        <span class="hero-pill-badge" style="background:rgba(34,197,94,0.2);color:#4ade80;"><i class="bi bi-check2"></i> Enrolled</span>
+                                                                                    </div>
+                                                                                    <c:set var="todayHeroSet" value="true" />
+                                                                                </c:if>
+                                                                            </c:forEach>
+                                                                            <c:if test="${empty schedule}">
+                                                                                <div class="hero-title">No Classes Enrolled</div>
+                                                                                <div class="hero-meta-row">
+                                                                                    <i class="bi bi-info-circle-fill"></i> Term registration is currently open
+                                                                                </div>
+                                                                                <div class="mt-2">
+                                                                                    <button type="button" class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-primary" onclick="switchMobileTab('courses')">Explore Courses</button>
+                                                                                </div>
+                                                                            </c:if>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <%-- Academic Progress Swipeable Cards --%>
+                                                                    <div class="section-header-wrap">
+                                                                        <h2 class="mobile-section-heading">Academic Progress</h2>
+                                                                        <span class="mobile-section-badge">${schedule.size()} Courses</span>
+                                                                    </div>
+                                                                    <div class="progress-swiper-wrap">
+                                                                        <div class="progress-swiper" id="progressSwiper" role="region" aria-label="Course score progress carousel">
+                                                                            <c:forEach var="enrollment" items="${schedule}">
+                                                                                <c:set var="enrollGrade" value="${gradeMap[enrollment.id]}" />
+                                                                                <div class="progress-card-item">
+                                                                                    <div class="pc-header">
+                                                                                        <span class="pc-course-code">${enrollment.courseCode}</span>
+                                                                                        <div class="text-end">
+                                                                                            <div class="pc-gpa-label">GPA Points</div>
+                                                                                            <div class="pc-gpa-badge">
+                                                                                                <c:choose>
+                                                                                                    <c:when test="${enrollGrade != null && enrollGrade.gpaPoint > 0}">
+                                                                                                        ${enrollGrade.gpaPoint}
+                                                                                                    </c:when>
+                                                                                                    <c:otherwise>&mdash;</c:otherwise>
+                                                                                                </c:choose>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="pc-title">${enrollment.courseTitle}</div>
+
+                                                                                    <div class="pc-score-row">
+                                                                                        <%-- Attendance --%>
+                                                                                        <div class="pc-score-item">
+                                                                                            <span class="pc-score-label">Attendance</span>
+                                                                                            <div class="pc-score-bar-wrap">
+                                                                                                <c:set var="attVal" value="${enrollGrade != null ? enrollGrade.attendanceScore : 0}" />
+                                                                                                <div class="pc-score-bar" style="width:${attVal}%;background:linear-gradient(90deg, #10b981, #059669);"></div>
+                                                                                            </div>
+                                                                                            <span class="pc-score-val">${enrollGrade != null && enrollGrade.attendanceScore > 0 ? enrollGrade.attendanceScore : '&mdash;'}</span>
+                                                                                        </div>
+                                                                                        <%-- Assignment --%>
+                                                                                        <div class="pc-score-item">
+                                                                                            <span class="pc-score-label">Assignment</span>
+                                                                                            <div class="pc-score-bar-wrap">
+                                                                                                <c:set var="asgVal" value="${enrollGrade != null ? enrollGrade.assignmentScore : 0}" />
+                                                                                                <div class="pc-score-bar" style="width:${asgVal}%;background:linear-gradient(90deg, #3b82f6, #2563eb);"></div>
+                                                                                            </div>
+                                                                                            <span class="pc-score-val">${enrollGrade != null && enrollGrade.assignmentScore > 0 ? enrollGrade.assignmentScore : '&mdash;'}</span>
+                                                                                        </div>
+                                                                                        <%-- Midterm --%>
+                                                                                        <div class="pc-score-item">
+                                                                                            <span class="pc-score-label">Midterm</span>
+                                                                                            <div class="pc-score-bar-wrap">
+                                                                                                <c:set var="midVal" value="${enrollGrade != null ? enrollGrade.midtermScore : 0}" />
+                                                                                                <div class="pc-score-bar" style="width:${midVal}%;background:linear-gradient(90deg, #f59e0b, #d97706);"></div>
+                                                                                            </div>
+                                                                                            <span class="pc-score-val">${enrollGrade != null && enrollGrade.midtermScore > 0 ? enrollGrade.midtermScore : '&mdash;'}</span>
+                                                                                        </div>
+                                                                                        <%-- Final Exam --%>
+                                                                                        <div class="pc-score-item">
+                                                                                            <span class="pc-score-label">Final Exam</span>
+                                                                                            <div class="pc-score-bar-wrap">
+                                                                                                <c:set var="finVal" value="${enrollGrade != null ? enrollGrade.finalScore : 0}" />
+                                                                                                <div class="pc-score-bar" style="width:${finVal}%;background:linear-gradient(90deg, #8b5cf6, #7c3aed);"></div>
+                                                                                            </div>
+                                                                                            <span class="pc-score-val">${enrollGrade != null && enrollGrade.finalScore > 0 ? enrollGrade.finalScore : '&mdash;'}</span>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="pc-footer">
+                                                                                        <div>
+                                                                                            <div class="pc-gpa-label">Letter Grade</div>
+                                                                                            <c:choose>
+                                                                                                <c:when test="${enrollGrade != null && enrollGrade.letterGrade == 'A'}">
+                                                                                                    <div class="pc-letter grade-A">A</div>
+                                                                                                </c:when>
+                                                                                                <c:when test="${enrollGrade != null && (enrollGrade.letterGrade == 'B' || enrollGrade.letterGrade == 'B+' || enrollGrade.letterGrade == 'B-')}">
+                                                                                                    <div class="pc-letter grade-B">${enrollGrade.letterGrade}</div>
+                                                                                                </c:when>
+                                                                                                <c:when test="${enrollGrade != null && (enrollGrade.letterGrade == 'C' || enrollGrade.letterGrade == 'C+' || enrollGrade.letterGrade == 'C-')}">
+                                                                                                    <div class="pc-letter grade-C">${enrollGrade.letterGrade}</div>
+                                                                                                </c:when>
+                                                                                                <c:when test="${enrollGrade != null && enrollGrade.letterGrade == 'F'}">
+                                                                                                    <div class="pc-letter grade-F">F</div>
+                                                                                                </c:when>
+                                                                                                <c:otherwise>
+                                                                                                    <div class="pc-letter grade-na">&mdash;</div>
+                                                                                                </c:otherwise>
+                                                                                            </c:choose>
+                                                                                        </div>
+                                                                                        <div class="pc-credits">
+                                                                                            <strong>${enrollment.credits}</strong> Credits
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </c:forEach>
+
+                                                                            <c:if test="${empty schedule}">
+                                                                                <div class="progress-card-item text-center py-4">
+                                                                                    <i class="bi bi-bar-chart-line fs-2 text-secondary mb-2 d-block"></i>
+                                                                                    <div class="fw-bold small text-dark">No Enrolled Courses</div>
+                                                                                    <p class="small text-muted mb-0">Enroll in courses to see your academic progress.</p>
+                                                                                </div>
+                                                                            </c:if>
+                                                                        </div>
+                                                                        <div class="swipe-dots" id="swiperDots" aria-hidden="true"></div>
+                                                                    </div>
+
+                                                                    <%-- Day Filtered Schedule Feed --%>
+                                                                    <div class="section-header-wrap">
+                                                                        <h2 class="mobile-section-heading" id="homeScheduleTitle">This Term's Courses</h2>
+                                                                        <span class="mobile-section-badge" id="homeScheduleCount">${schedule.size()} Enrolled</span>
+                                                                    </div>
+
+                                                                    <c:choose>
+                                                                        <c:when test="${not empty schedule}">
+                                                                            <div id="homeScheduleContainer">
+                                                                                <c:forEach var="enrollment" items="${schedule}">
+                                                                                    <c:set var="enrollGrade" value="${gradeMap[enrollment.id]}" />
+                                                                                    <div class="mobile-course-card home-schedule-card" data-days="${enrollment.daysOfWeek}" onclick="openCourseModal('${enrollment.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseModal('${enrollment.id}')" aria-label="View details for ${enrollment.courseCode}: ${enrollment.courseTitle}">
+                                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                            <span class="mobile-card-code-badge">${enrollment.courseCode}</span>
+                                                                                            <c:choose>
+                                                                                                <c:when test="${enrollGrade != null && enrollGrade.letterGrade != 'N/A' && not empty enrollGrade.letterGrade}">
+                                                                                                    <span class="badge ${enrollGrade.letterGrade == 'A' ? 'bg-success' : (enrollGrade.letterGrade == 'F' ? 'bg-danger' : 'bg-primary')} bg-opacity-15 text-${enrollGrade.letterGrade == 'A' ? 'success' : (enrollGrade.letterGrade == 'F' ? 'danger' : 'primary')} fw-bold px-2 py-1 rounded-pill">${enrollGrade.letterGrade}</span>
+                                                                                                </c:when>
+                                                                                                <c:otherwise>
+                                                                                                    <span class="badge bg-light border text-muted fw-normal px-2 py-1 rounded-pill">In Progress</span>
+                                                                                                </c:otherwise>
+                                                                                            </c:choose>
+                                                                                        </div>
+                                                                                        <div class="mobile-card-title">${enrollment.courseTitle}</div>
+                                                                                        <div class="mobile-card-meta">
+                                                                                            <div class="mobile-card-meta-row">
+                                                                                                <i class="bi bi-clock text-primary"></i> ${enrollment.sessionShift} &bull; ${enrollment.daysOfWeek}
+                                                                                            </div>
+                                                                                            <div class="mobile-card-meta-row">
+                                                                                                <i class="bi bi-geo-alt text-primary"></i> Room ${enrollment.room} &bull; <i class="bi bi-person text-secondary ms-1"></i> ${enrollment.professorName}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="mobile-card-footer">
+                                                                                            <span class="small text-muted" style="font-size:0.72rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for scores &amp; attendance</span>
+                                                                                            <span class="badge bg-light border text-secondary rounded-pill" style="font-size:0.7rem;">${enrollment.credits} Credits</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </c:forEach>
+                                                                                <div id="homeScheduleEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+                                                                                    <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
+                                                                                    <div class="fw-bold small text-dark mb-1" id="homeScheduleEmptyText">No classes scheduled</div>
+                                                                                    <div class="small text-muted">Enjoy your free time!</div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <div class="mobile-course-card text-center py-4">
+                                                                                <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
+                                                                                <div class="fw-bold small text-dark mb-1">No Courses Enrolled</div>
+                                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-4 mt-2" onclick="switchMobileTab('courses')">Browse Courses</button>
+                                                                            </div>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </section>
+
+                                                                <%--===== SCHEDULE SUB-VIEW =====--%>
+                                                                <section id="mobile-view-schedule" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-schedule">
+                                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                        <div>
+                                                                            <h2 class="mobile-section-heading mb-0">Class Schedule</h2>
+                                                                            <span class="text-muted" style="font-size:0.75rem;">7-Day Weekly Timetable</span>
+                                                                        </div>
+                                                                        <span class="mobile-section-badge" id="scheduleTabCount">${schedule.size()} Enrolled</span>
+                                                                    </div>
+
+                                                                    <%-- Day Filter Pills for Schedule --%>
+                                                                    <div class="schedule-day-filter-strip" id="scheduleTabFilterStrip" role="tablist" aria-label="Schedule Day Filter">
+                                                                        <button type="button" class="schedule-filter-pill active" onclick="filterScheduleTabView('all', this)">All Week</button>
+                                                                        <button type="button" class="schedule-filter-pill" onclick="filterScheduleTabView('mon', this)">Mon</button>
+                                                                        <button type="button" class="schedule-filter-pill" onclick="filterScheduleTabView('tue', this)">Tue</button>
+                                                                        <button type="button" class="schedule-filter-pill" onclick="filterScheduleTabView('wed', this)">Wed</button>
+                                                                        <button type="button" class="schedule-filter-pill" onclick="filterScheduleTabView('thu', this)">Thu</button>
+                                                                        <button type="button" class="schedule-filter-pill" onclick="filterScheduleTabView('fri', this)">Fri</button>
+                                                                        <button type="button" class="schedule-filter-pill" onclick="filterScheduleTabView('sat', this)">Sat</button>
+                                                                        <button type="button" class="schedule-filter-pill" onclick="filterScheduleTabView('sun', this)">Sun</button>
+                                                                    </div>
+
+                                                                    <c:choose>
+                                                                        <c:when test="${not empty schedule}">
+                                                                            <div id="scheduleTabListContainer">
+                                                                                <c:forEach var="enrollment" items="${schedule}">
+                                                                                    <div class="mobile-course-card schedule-tab-card" data-days="${enrollment.daysOfWeek}" onclick="openCourseModal('${enrollment.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseModal('${enrollment.id}')" aria-label="View details for ${enrollment.courseCode}: ${enrollment.courseTitle}">
+                                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                            <div>
+                                                                                                <span class="mobile-card-code-badge me-1">${enrollment.courseCode}</span>
+                                                                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">${enrollment.termName}</span>
+                                                                                            </div>
+                                                                                            <span class="badge bg-light border text-dark fw-bold">${enrollment.sessionShift}</span>
+                                                                                        </div>
+                                                                                        <div class="mobile-card-title">${enrollment.courseTitle}</div>
+                                                                                        <div class="mobile-card-meta">
+                                                                                            <div class="mobile-card-meta-row">
+                                                                                                <i class="bi bi-calendar3 text-primary"></i> ${enrollment.daysOfWeek}
+                                                                                            </div>
+                                                                                            <div class="mobile-card-meta-row">
+                                                                                                <i class="bi bi-door-open text-primary"></i> Room ${enrollment.room} &bull; <i class="bi bi-person text-secondary ms-1"></i> ${enrollment.professorName}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="mobile-card-footer">
+                                                                                            <span class="small text-muted" style="font-size:0.72rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for scores &amp; attendance</span>
+                                                                                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.7rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </c:forEach>
+                                                                                <div id="scheduleTabEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+                                                                                    <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
+                                                                                    <div class="fw-bold small text-dark mb-1" id="scheduleTabEmptyText">No classes on this day</div>
+                                                                                    <div class="small text-muted">Enjoy your time off!</div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <div class="text-center py-5 text-muted">
+                                                                                <i class="bi bi-calendar-x fs-1 text-secondary mb-2 d-block"></i>
+                                                                                <div class="fw-bold">No Classes Enrolled</div>
+                                                                                <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 mt-2" onclick="switchMobileTab('courses')">Go to Registration</button>
+                                                                            </div>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </section>
+
+                                                                <%--===== COURSES CATALOG SUB-VIEW =====--%>
+                                                                <section id="mobile-view-courses" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-courses">
+                                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                        <div>
+                                                                            <h2 class="mobile-section-heading mb-0">Course Registration</h2>
+                                                                            <span class="text-muted" style="font-size:0.75rem;">Available for ${studentSchool.schoolName}</span>
+                                                                        </div>
+                                                                        <span class="mobile-section-badge" id="mobileCourseCountBadge">${availableClasses.size()} Classes</span>
+                                                                    </div>
+
+                                                                    <div class="input-group mb-3 shadow-sm rounded-4 overflow-hidden border bg-white">
+                                                                        <span class="input-group-text bg-white border-0 text-muted ps-3"><i class="bi bi-search"></i></span>
+                                                                        <input type="text" id="mobileCourseSearchInput" class="form-control border-0 py-2" placeholder="Search code, title, professor..." oninput="filterMobileCourses(this.value)" aria-label="Search course catalog">
+                                                                        <button type="button" class="btn bg-white border-0 text-muted pe-3" id="clearMobileCourseSearchBtn" style="display:none;" onclick="clearMobileCourseSearch()" aria-label="Clear search">
+                                                                            <i class="bi bi-x-circle-fill"></i>
                                                                         </button>
                                                                     </div>
 
-
-                                                                    <%--=====HOME SUB-VIEW=====--%>
-                                                                        <div id="mobile-view-home"
-                                                                            class="mobile-sub-view active">
-
-                                                                            <%-- Fixed multi-day strip --%>
-                                                                                <div class="mobile-date-strip"
-                                                                                    id="mobileDateStrip">
-                                                                                    <!-- Populated by JS -->
+                                                                    <div id="mobileCourseList">
+                                                                        <c:forEach var="section" items="${availableClasses}">
+                                                                            <div class="mobile-course-card mobile-course-item" style="cursor:default;">
+                                                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                    <div>
+                                                                                        <span class="mobile-card-code-badge me-1">${section.courseCode}</span>
+                                                                                        <span class="badge bg-secondary bg-opacity-10 text-secondary">${section.credits} Credits</span>
+                                                                                    </div>
+                                                                                    <span class="badge bg-light text-dark border">${section.termName}</span>
+                                                                                </div>
+                                                                                <h3 class="mobile-card-title mb-2" style="font-size:0.95rem;">${section.courseTitle}</h3>
+                                                                                <div class="mobile-card-meta mb-3">
+                                                                                    <div class="mobile-card-meta-row">
+                                                                                        <i class="bi bi-person text-primary"></i> ${section.professorName}
+                                                                                    </div>
+                                                                                    <div class="mobile-card-meta-row">
+                                                                                        <i class="bi bi-clock text-primary"></i> ${section.sessionShift} (${section.daysOfWeek})
+                                                                                    </div>
+                                                                                    <div class="mobile-card-meta-row">
+                                                                                        <i class="bi bi-door-open text-primary"></i> Room ${section.roomName}
+                                                                                    </div>
                                                                                 </div>
 
-                                                                                <%-- Hero: NEXT CLASS today --%>
-                                                                                    <div class="mobile-hero-banner">
-                                                                                        <div class="hero-avatar-box">
-                                                                                            <c:choose>
-                                                                                                <c:when
-                                                                                                    test="${user.gender == 'FEMALE'}">
-                                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_female.svg"
-                                                                                                        alt="Student">
-                                                                                                </c:when>
-                                                                                                <c:otherwise>
-                                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_male.svg"
-                                                                                                        alt="Student">
-                                                                                                </c:otherwise>
-                                                                                            </c:choose>
-                                                                                        </div>
-                                                                                        <div class="hero-content">
-                                                                                            <div class="hero-label">NEXT
-                                                                                                CLASS TODAY</div>
-                                                                                            <c:set var="todayHeroSet"
-                                                                                                value="false" />
-                                                                                            <c:forEach var="enrollment"
-                                                                                                items="${schedule}">
-                                                                                                <c:if
-                                                                                                    test="${todayHeroSet == 'false'}">
-                                                                                                    <div
-                                                                                                        class="hero-title">
-                                                                                                        ${enrollment.courseCode}:
-                                                                                                        ${enrollment.courseTitle}
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class="hero-meta-row">
-                                                                                                        <i
-                                                                                                            class="bi bi-geo-alt-fill"></i>
-                                                                                                        Room
-                                                                                                        ${enrollment.room}
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class="hero-meta-row">
-                                                                                                        <i
-                                                                                                            class="bi bi-clock-fill"></i>
-                                                                                                        ${enrollment.sessionShift}
-                                                                                                        &bull;
-                                                                                                        ${enrollment.daysOfWeek}
-                                                                                                    </div>
-                                                                                                    <div class="mt-2">
-                                                                                                        <span
-                                                                                                            class="hero-status-tag"><span
-                                                                                                                style="width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.8s infinite;"></span>
-                                                                                                            Enrolled</span>
-                                                                                                    </div>
-                                                                                                    <c:set
-                                                                                                        var="todayHeroSet"
-                                                                                                        value="true" />
-                                                                                                </c:if>
-                                                                                            </c:forEach>
-                                                                                            <c:if
-                                                                                                test="${empty schedule}">
-                                                                                                <div class="hero-title">
-                                                                                                    No Classes Enrolled
-                                                                                                </div>
-                                                                                                <div
-                                                                                                    class="hero-meta-row">
-                                                                                                    <i
-                                                                                                        class="bi bi-info-circle-fill"></i>
-                                                                                                    Registration is open
-                                                                                                </div>
-                                                                                                <div class="mt-2">
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-primary"
-                                                                                                        onclick="switchMobileTab('courses')">Enroll
-                                                                                                        Now</button>
-                                                                                                </div>
-                                                                                            </c:if>
-                                                                                        </div>
+                                                                                <%-- Seat Capacity Meter --%>
+                                                                                <c:set var="capRatio" value="${section.roomCapacity > 0 ? (section.enrolledCount * 100 / section.roomCapacity) : 0}" />
+                                                                                <div class="mb-3">
+                                                                                    <div class="d-flex justify-content-between small text-muted" style="font-size:0.72rem;">
+                                                                                        <span><i class="bi bi-people-fill me-1"></i>Seat Capacity</span>
+                                                                                        <span class="fw-bold ${section.enrolledCount >= section.roomCapacity ? 'text-danger' : (capRatio >= 75 ? 'text-warning' : 'text-success')}">
+                                                                                            ${section.enrolledCount} / ${section.roomCapacity} seats (${Math.round(capRatio)}%)
+                                                                                        </span>
                                                                                     </div>
-
-                                                                                    <%-- Academic Progress swipeable
-                                                                                        cards --%>
-                                                                                        <div
-                                                                                            class="progress-section-label">
-                                                                                            Academic Progress</div>
-                                                                                        <div
-                                                                                            class="progress-swiper-wrap">
-                                                                                            <div class="progress-swiper"
-                                                                                                id="progressSwiper">
-                                                                                                <c:forEach
-                                                                                                    var="enrollment"
-                                                                                                    items="${schedule}"
-                                                                                                    varStatus="st">
-                                                                                                    <c:set
-                                                                                                        var="enrollGrade"
-                                                                                                        value="${gradeMap[enrollment.id]}" />
-                                                                                                    <div
-                                                                                                        class="progress-card-item">
-                                                                                                        <div
-                                                                                                            class="pc-header">
-                                                                                                            <span
-                                                                                                                class="pc-course-code">${enrollment.courseCode}</span>
-                                                                                                            <div
-                                                                                                                class="text-end">
-                                                                                                                <div
-                                                                                                                    class="pc-gpa-label">
-                                                                                                                    GPA
-                                                                                                                    Points
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="pc-gpa-badge">
-                                                                                                                    <c:choose>
-                                                                                                                        <c:when
-                                                                                                                            test="${enrollGrade != null && enrollGrade.gpaPoint > 0}">
-                                                                                                                            ${enrollGrade.gpaPoint}
-                                                                                                                        </c:when>
-                                                                                                                        <c:otherwise>
-                                                                                                                            —
-                                                                                                                        </c:otherwise>
-                                                                                                                    </c:choose>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                        <div
-                                                                                                            class="pc-title">
-                                                                                                            ${enrollment.courseTitle}
-                                                                                                        </div>
-
-                                                                                                        <div
-                                                                                                            class="pc-score-row">
-                                                                                                            <%-- Attendance
-                                                                                                                Score
-                                                                                                                --%>
-                                                                                                                <div
-                                                                                                                    class="pc-score-item">
-                                                                                                                    <span
-                                                                                                                        class="pc-score-label">Attendance</span>
-                                                                                                                    <div
-                                                                                                                        class="pc-score-bar-wrap">
-                                                                                                                        <c:set
-                                                                                                                            var="attVal"
-                                                                                                                            value="${enrollGrade != null ? enrollGrade.attendanceScore : 0}" />
-                                                                                                                        <div class="pc-score-bar"
-                                                                                                                            style="width:${attVal}%;background:#10b981;">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                    <span
-                                                                                                                        class="pc-score-val">
-                                                                                                                        <c:choose>
-                                                                                                                            <c:when
-                                                                                                                                test="${enrollGrade != null && enrollGrade.attendanceScore > 0}">
-                                                                                                                                ${enrollGrade.attendanceScore}
-                                                                                                                            </c:when>
-                                                                                                                            <c:otherwise>
-                                                                                                                                —
-                                                                                                                            </c:otherwise>
-                                                                                                                        </c:choose>
-                                                                                                                    </span>
-                                                                                                                </div>
-                                                                                                                <%-- Assignment
-                                                                                                                    Score
-                                                                                                                    --%>
-                                                                                                                    <div
-                                                                                                                        class="pc-score-item">
-                                                                                                                        <span
-                                                                                                                            class="pc-score-label">Assignment</span>
-                                                                                                                        <div
-                                                                                                                            class="pc-score-bar-wrap">
-                                                                                                                            <c:set
-                                                                                                                                var="asgVal"
-                                                                                                                                value="${enrollGrade != null ? enrollGrade.assignmentScore : 0}" />
-                                                                                                                            <div class="pc-score-bar"
-                                                                                                                                style="width:${asgVal}%;background:#3b82f6;">
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                        <span
-                                                                                                                            class="pc-score-val">
-                                                                                                                            <c:choose>
-                                                                                                                                <c:when
-                                                                                                                                    test="${enrollGrade != null && enrollGrade.assignmentScore > 0}">
-                                                                                                                                    ${enrollGrade.assignmentScore}
-                                                                                                                                </c:when>
-                                                                                                                                <c:otherwise>
-                                                                                                                                    —
-                                                                                                                                </c:otherwise>
-                                                                                                                            </c:choose>
-                                                                                                                        </span>
-                                                                                                                    </div>
-                                                                                                                    <%-- Midterm
-                                                                                                                        Score
-                                                                                                                        --%>
-                                                                                                                        <div
-                                                                                                                            class="pc-score-item">
-                                                                                                                            <span
-                                                                                                                                class="pc-score-label">Midterm</span>
-                                                                                                                            <div
-                                                                                                                                class="pc-score-bar-wrap">
-                                                                                                                                <c:set
-                                                                                                                                    var="midVal"
-                                                                                                                                    value="${enrollGrade != null ? enrollGrade.midtermScore : 0}" />
-                                                                                                                                <div class="pc-score-bar"
-                                                                                                                                    style="width:${midVal}%;background:#f59e0b;">
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                            <span
-                                                                                                                                class="pc-score-val">
-                                                                                                                                <c:choose>
-                                                                                                                                    <c:when
-                                                                                                                                        test="${enrollGrade != null && enrollGrade.midtermScore > 0}">
-                                                                                                                                        ${enrollGrade.midtermScore}
-                                                                                                                                    </c:when>
-                                                                                                                                    <c:otherwise>
-                                                                                                                                        —
-                                                                                                                                    </c:otherwise>
-                                                                                                                                </c:choose>
-                                                                                                                            </span>
-                                                                                                                        </div>
-                                                                                                                        <%-- Final
-                                                                                                                            Score
-                                                                                                                            --%>
-                                                                                                                            <div
-                                                                                                                                class="pc-score-item">
-                                                                                                                                <span
-                                                                                                                                    class="pc-score-label">Final
-                                                                                                                                    Exam</span>
-                                                                                                                                <div
-                                                                                                                                    class="pc-score-bar-wrap">
-                                                                                                                                    <c:set
-                                                                                                                                        var="finVal"
-                                                                                                                                        value="${enrollGrade != null ? enrollGrade.finalScore : 0}" />
-                                                                                                                                    <div class="pc-score-bar"
-                                                                                                                                        style="width:${finVal}%;background:#8b5cf6;">
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                                <span
-                                                                                                                                    class="pc-score-val">
-                                                                                                                                    <c:choose>
-                                                                                                                                        <c:when
-                                                                                                                                            test="${enrollGrade != null && enrollGrade.finalScore > 0}">
-                                                                                                                                            ${enrollGrade.finalScore}
-                                                                                                                                        </c:when>
-                                                                                                                                        <c:otherwise>
-                                                                                                                                            —
-                                                                                                                                        </c:otherwise>
-                                                                                                                                    </c:choose>
-                                                                                                                                </span>
-                                                                                                                            </div>
-                                                                                                        </div>
-
-                                                                                                        <div
-                                                                                                            class="pc-footer">
-                                                                                                            <div>
-                                                                                                                <div
-                                                                                                                    class="pc-gpa-label">
-                                                                                                                    Letter
-                                                                                                                    Grade
-                                                                                                                </div>
-                                                                                                                <c:choose>
-                                                                                                                    <c:when
-                                                                                                                        test="${enrollGrade != null && enrollGrade.letterGrade == 'A'}">
-                                                                                                                        <div
-                                                                                                                            class="pc-letter grade-A">
-                                                                                                                            A
-                                                                                                                        </div>
-                                                                                                                    </c:when>
-                                                                                                                    <c:when
-                                                                                                                        test="${enrollGrade != null && (enrollGrade.letterGrade == 'B' || enrollGrade.letterGrade == 'B+' || enrollGrade.letterGrade == 'B-')}">
-                                                                                                                        <div
-                                                                                                                            class="pc-letter grade-B">
-                                                                                                                            ${enrollGrade.letterGrade}
-                                                                                                                        </div>
-                                                                                                                    </c:when>
-                                                                                                                    <c:when
-                                                                                                                        test="${enrollGrade != null && (enrollGrade.letterGrade == 'C' || enrollGrade.letterGrade == 'C+' || enrollGrade.letterGrade == 'C-')}">
-                                                                                                                        <div
-                                                                                                                            class="pc-letter grade-C">
-                                                                                                                            ${enrollGrade.letterGrade}
-                                                                                                                        </div>
-                                                                                                                    </c:when>
-                                                                                                                    <c:when
-                                                                                                                        test="${enrollGrade != null && enrollGrade.letterGrade == 'F'}">
-                                                                                                                        <div
-                                                                                                                            class="pc-letter grade-F">
-                                                                                                                            F
-                                                                                                                        </div>
-                                                                                                                    </c:when>
-                                                                                                                    <c:otherwise>
-                                                                                                                        <div
-                                                                                                                            class="pc-letter grade-na">
-                                                                                                                            —
-                                                                                                                        </div>
-                                                                                                                    </c:otherwise>
-                                                                                                                </c:choose>
-                                                                                                            </div>
-                                                                                                            <div
-                                                                                                                class="pc-credits">
-                                                                                                                <strong>${enrollment.credits}</strong>
-                                                                                                                Credits
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </c:forEach>
-
-                                                                                                <c:if
-                                                                                                    test="${empty schedule}">
-                                                                                                    <div
-                                                                                                        class="progress-card-item text-center py-4">
-                                                                                                        <i
-                                                                                                            class="bi bi-bar-chart-line fs-2 text-secondary mb-2 d-block"></i>
-                                                                                                        <div
-                                                                                                            class="fw-bold small text-dark">
-                                                                                                            No Enrolled
-                                                                                                            Courses
-                                                                                                        </div>
-                                                                                                        <p
-                                                                                                            class="small text-muted">
-                                                                                                            Enroll in
-                                                                                                            courses to
-                                                                                                            see your
-                                                                                                            academic
-                                                                                                            progress.
-                                                                                                        </p>
-                                                                                                    </div>
-                                                                                                </c:if>
-                                                                                            </div>
-                                                                                            <div class="swipe-dots"
-                                                                                                id="swiperDots"></div>
-                                                                                        </div>
-
-                                                                                        <%-- All Term Courses list
-                                                                                            (click to open detail popup)
-                                                                                            --%>
-                                                                                            <div class="section-header">
-                                                                                                <span
-                                                                                                    class="section-title" id="homeScheduleTitle">This
-                                                                                                    Term's
-                                                                                                    Courses</span>
-                                                                                                <span
-                                                                                                    class="badge bg-primary bg-opacity-10 text-primary rounded-pill small" id="homeScheduleCount">${schedule.size()}
-                                                                                                    Enrolled</span>
-                                                                                            </div>
-
-                                                                                            <c:choose>
-                                                                                                <c:when
-                                                                                                    test="${not empty schedule}">
-                                                                                                    <div id="homeScheduleContainer">
-                                                                                                        <c:forEach
-                                                                                                            var="enrollment"
-                                                                                                            items="${schedule}">
-                                                                                                            <c:set
-                                                                                                                var="enrollGrade"
-                                                                                                                value="${gradeMap[enrollment.id]}" />
-                                                                                                            <div class="mobile-course-card home-schedule-card"
-                                                                                                                data-days="${enrollment.daysOfWeek}"
-                                                                                                                onclick="openCourseModal('${enrollment.id}')">
-                                                                                                                <div
-                                                                                                                    class="d-flex justify-content-between align-items-start mb-1">
-                                                                                                                    <span
-                                                                                                                        class="badge bg-primary bg-opacity-10 text-primary fw-bold">${enrollment.courseCode}</span>
-                                                                                                                    <c:choose>
-                                                                                                                        <c:when
-                                                                                                                            test="${enrollGrade != null && enrollGrade.letterGrade != 'N/A' && not empty enrollGrade.letterGrade}">
-                                                                                                                            <span
-                                                                                                                                class="badge ${enrollGrade.letterGrade == 'A' ? 'bg-success' : (enrollGrade.letterGrade == 'F' ? 'bg-danger' : 'bg-primary')} bg-opacity-15 text-${enrollGrade.letterGrade == 'A' ? 'success' : (enrollGrade.letterGrade == 'F' ? 'danger' : 'primary')} fw-bold">${enrollGrade.letterGrade}</span>
-                                                                                                                        </c:when>
-                                                                                                                        <c:otherwise>
-                                                                                                                            <span
-                                                                                                                                class="badge bg-light border text-muted fw-normal">Pending</span>
-                                                                                                                        </c:otherwise>
-                                                                                                                    </c:choose>
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="fw-bold text-dark small mb-1">
-                                                                                                                    ${enrollment.courseTitle}
-                                                                                                                </div>
-                                                                                                                <div class="text-muted"
-                                                                                                                    style="font-size:0.72rem;">
-                                                                                                                    <i
-                                                                                                                        class="bi bi-clock me-1"></i>${enrollment.sessionShift}
-                                                                                                                    &nbsp;|&nbsp;
-                                                                                                                    <i
-                                                                                                                        class="bi bi-geo-alt me-1"></i>Room
-                                                                                                                    ${enrollment.room}
-                                                                                                                    &nbsp;|&nbsp;
-                                                                                                                    <i
-                                                                                                                        class="bi bi-person me-1"></i>${enrollment.professorName}
-                                                                                                                </div>
-                                                                                                                <div class="mt-2 d-flex align-items-center gap-1"
-                                                                                                                    style="font-size:0.68rem;color:#94a3b8;">
-                                                                                                                    <i
-                                                                                                                        class="bi bi-chevron-right"></i>
-                                                                                                                    Tap to
-                                                                                                                    view
-                                                                                                                    scores
-                                                                                                                    &amp;
-                                                                                                                    attendance
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </c:forEach>
-                                                                                                        <div id="homeScheduleEmpty" class="mobile-course-card text-center py-4 border" style="display:none;">
-                                                                                                            <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
-                                                                                                            <div class="fw-bold small text-dark mb-1" id="homeScheduleEmptyText">No classes scheduled</div>
-                                                                                                            <div class="small text-muted">Enjoy your free time!</div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </c:when>
-                                                                                                <c:otherwise>
-                                                                                                    <div
-                                                                                                        class="mobile-course-card text-center py-4">
-                                                                                                        <i
-                                                                                                            class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
-                                                                                                        <div
-                                                                                                            class="fw-bold small text-dark mb-1">
-                                                                                                            No Courses
-                                                                                                            Enrolled
-                                                                                                        </div>
-                                                                                                        <button
-                                                                                                            type="button"
-                                                                                                            class="btn btn-sm btn-outline-success rounded-pill px-3 mt-1"
-                                                                                                            onclick="switchMobileTab('courses')">Browse
-                                                                                                            Courses</button>
-                                                                                                    </div>
-                                                                                                </c:otherwise>
-                                                                                            </c:choose>
-
-                                                                        </div><%-- end home --%>
-
-
-                                                                            <%--=====COURSES SUB-VIEW=====--%>
-                                                                                <div id="mobile-view-courses"
-                                                                                    class="mobile-sub-view">
-                                                                                    <div
-                                                                                        class="d-flex justify-content-between align-items-center mb-3">
-                                                                                        <div>
-                                                                                            <h5 class="fw-bold mb-0">
-                                                                                                Course Registration</h5>
-                                                                                            <span class="text-muted"
-                                                                                                style="font-size:0.75rem;">Available
-                                                                                                for
-                                                                                                ${studentSchool.schoolName}</span>
-                                                                                        </div>
+                                                                                    <div class="capacity-bar-wrap">
+                                                                                        <div class="capacity-bar" style="width:${capRatio > 100 ? 100 : capRatio}%;background:${section.enrolledCount >= section.roomCapacity ? '#ef4444' : (capRatio >= 75 ? '#f59e0b' : '#10b981')};"></div>
                                                                                     </div>
-                                                                                    <div
-                                                                                        class="input-group mb-3 shadow-sm rounded-4 overflow-hidden border">
-                                                                                        <span
-                                                                                            class="input-group-text bg-white border-0 text-muted ps-3"><i
-                                                                                                class="bi bi-search"></i></span>
-                                                                                        <input type="text"
-                                                                                            class="form-control border-0 py-2"
-                                                                                            placeholder="Search course code or title..."
-                                                                                            oninput="filterMobileCourses(this.value)">
-                                                                                    </div>
-                                                                                    <div id="mobileCourseList">
-                                                                                        <c:forEach var="section"
-                                                                                            items="${availableClasses}">
-                                                                                            <div class="mobile-course-card mobile-course-item"
-                                                                                                style="cursor:default;">
-                                                                                                <div
-                                                                                                    class="d-flex justify-content-between align-items-start mb-2">
-                                                                                                    <div><span
-                                                                                                            class="badge bg-primary bg-opacity-10 text-primary fw-bold me-1">${section.courseCode}</span><span
-                                                                                                            class="badge bg-secondary bg-opacity-10 text-secondary">${section.credits}
-                                                                                                            Credits</span>
-                                                                                                    </div>
-                                                                                                    <span
-                                                                                                        class="badge bg-light text-dark border">${section.termName}</span>
-                                                                                                </div>
-                                                                                                <h6
-                                                                                                    class="fw-bold text-dark mb-2">
-                                                                                                    ${section.courseTitle}
-                                                                                                </h6>
-                                                                                                <div class="small text-muted mb-3"
-                                                                                                    style="font-size:0.75rem;">
-                                                                                                    <div class="mb-1"><i
-                                                                                                            class="bi bi-person me-2 text-primary"></i>${section.professorName}
-                                                                                                    </div>
-                                                                                                    <div class="mb-1"><i
-                                                                                                            class="bi bi-clock me-2 text-primary"></i>${section.sessionShift}
-                                                                                                        (${section.daysOfWeek})
-                                                                                                    </div>
-                                                                                                    <div><i
-                                                                                                            class="bi bi-door-open me-2 text-primary"></i>Room
-                                                                                                        ${section.roomName}
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div
-                                                                                                    class="d-flex justify-content-between align-items-center pt-2 border-top">
-                                                                                                    <span
-                                                                                                        class="small ${section.enrolledCount >= section.roomCapacity ? 'text-danger fw-bold' : 'text-muted'}"
-                                                                                                        style="font-size:0.72rem;"><i
-                                                                                                            class="bi bi-people-fill me-1"></i>${section.enrolledCount}/${section.roomCapacity}</span>
-                                                                                                    <c:set
-                                                                                                            var="isEnrolledM"
-                                                                                                            value="false" />
-                                                                                                        <c:forEach
-                                                                                                            var="myClass"
-                                                                                                            items="${schedule}">
-                                                                                                            <c:if
-                                                                                                                test="${myClass.courseCode == section.courseCode}">
-                                                                                                                <c:set
-                                                                                                                    var="isEnrolledM"
-                                                                                                                    value="true" />
-                                                                                                            </c:if>
-                                                                                                        </c:forEach>
-                                                                                                        <c:choose>
-                                                                                                            <c:when
-                                                                                                                test="${isEnrolledM}">
-                                                                                                                <div class="d-flex align-items-center gap-2">
-                                                                                                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 small fw-bold"><i class="bi bi-check2"></i> Enrolled</span>
-                                                                                                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1 fw-bold" style="font-size:0.75rem;" onclick="openDropConfirm('${section.id}', '${section.courseCode}', '${section.courseTitle}', 'courses')">Drop</button>
-                                                                                                                </div>
-                                                                                                            </c:when>
-                                                                                                            <c:when
-                                                                                                                test="${section.enrolledCount >= section.roomCapacity}">
-                                                                                                                <button
-                                                                                                                    type="button"
-                                                                                                                    class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 disabled">Full</button>
-                                                                                                            </c:when>
-                                                                                                            <c:otherwise>
-                                                                                                                <button
-                                                                                                                    type="button"
-                                                                                                                    class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-bold"
-                                                                                                                    onclick="openEnrollConfirm('${section.id}', '${section.courseCode}', '${section.courseTitle}', '${section.professorName}', 'courses')">Enroll</button>
-                                                                                                            </c:otherwise>
-                                                                                                        </c:choose>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </c:forEach>
-                                                                                        <c:if
-                                                                                            test="${empty availableClasses}">
-                                                                                            <div
-                                                                                                class="text-center py-5 text-muted">
-                                                                                                <i
-                                                                                                    class="bi bi-journal-x fs-1 text-secondary mb-2 d-block"></i>
-                                                                                                <div class="fw-bold">No
-                                                                                                    Classes Available
-                                                                                                </div>
-                                                                                            </div>
+                                                                                </div>
+
+                                                                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                                                                    <c:set var="isEnrolledM" value="false" />
+                                                                                    <c:forEach var="myClass" items="${schedule}">
+                                                                                        <c:if test="${myClass.courseCode == section.courseCode}">
+                                                                                            <c:set var="isEnrolledM" value="true" />
                                                                                         </c:if>
-                                                                                    </div>
+                                                                                    </c:forEach>
+                                                                                    <span class="small text-muted" style="font-size:0.75rem;">Status</span>
+                                                                                    <c:choose>
+                                                                                        <c:when test="${isEnrolledM}">
+                                                                                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3 py-2 small fw-bold">
+                                                                                                <i class="bi bi-check2 me-1"></i> Enrolled
+                                                                                            </span>
+                                                                                        </c:when>
+                                                                                        <c:when test="${section.enrolledCount >= section.roomCapacity}">
+                                                                                            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-2 disabled" style="min-height:44px;">Class Full</button>
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 py-2 fw-bold" style="min-height:44px;" data-section-id="${section.id}" data-course-code="${section.courseCode}" data-course-title="${section.courseTitle}" data-professor-name="${section.professorName}" onclick="openEnrollConfirm(this.dataset.sectionId, this.dataset.courseCode, this.dataset.courseTitle, this.dataset.professorName, 'courses')">
+                                                                                                <i class="bi bi-plus-lg me-1"></i> Enroll Now
+                                                                                            </button>
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
                                                                                 </div>
+                                                                            </div>
+                                                                        </c:forEach>
+                                                                        <div id="mobileCourseEmpty" class="text-center py-5 text-muted" style="display:none;">
+                                                                            <i class="bi bi-search fs-1 text-secondary mb-2 d-block"></i>
+                                                                            <div class="fw-bold">No Matching Courses</div>
+                                                                            <p class="small">Try searching with a different course title or code.</p>
+                                                                        </div>
+                                                                        <c:if test="${empty availableClasses}">
+                                                                            <div class="text-center py-5 text-muted">
+                                                                                <i class="bi bi-journal-x fs-1 text-secondary mb-2 d-block"></i>
+                                                                                <div class="fw-bold">No Classes Available</div>
+                                                                                <p class="small">No classes currently open for registration in this term.</p>
+                                                                            </div>
+                                                                        </c:if>
+                                                                    </div>
+                                                                </section>
 
+                                                                <%--===== GRADES & TRANSCRIPT SUB-VIEW =====--%>
+                                                                <section id="mobile-view-grades" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-grades">
+                                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                        <h2 class="mobile-section-heading mb-0">Academic Transcript</h2>
+                                                                        <div class="bg-white border rounded-pill px-3 py-1 shadow-sm">
+                                                                            <span class="small text-muted me-1">Term GPA:</span>
+                                                                            <span class="fw-bold text-success">${termGpa}</span>
+                                                                        </div>
+                                                                    </div>
 
-                                                                                <%--=====GRADES SUB-VIEW=====--%>
-                                                                                    <div id="mobile-view-grades"
-                                                                                        class="mobile-sub-view">
-                                                                                        <div
-                                                                                            class="d-flex justify-content-between align-items-center mb-3">
-                                                                                            <h5 class="fw-bold mb-0">
-                                                                                                Academic Transcript</h5>
-                                                                                            <div
-                                                                                                class="bg-white border rounded-pill px-3 py-1 shadow-sm">
-                                                                                                <span
-                                                                                                    class="small text-muted me-1">GPA:</span><span
-                                                                                                    class="fw-bold text-success">${termGpa}</span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="mobile-course-card mb-3 p-3"
-                                                                                            style="background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:white;border:none;">
-                                                                                            <div
-                                                                                                class="d-flex justify-content-between align-items-center">
-                                                                                                <div>
-                                                                                                    <div
-                                                                                                        class="small text-white-50 text-uppercase fw-bold">
-                                                                                                        Cumulative GPA
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class="fs-2 fw-bolder">
-                                                                                                        ${termGpa}</div>
-                                                                                                </div>
-                                                                                                <div class="text-end">
-                                                                                                    <div
-                                                                                                        class="small text-white-50 text-uppercase fw-bold">
-                                                                                                        Earned Credits
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class="fs-4 fw-bolder">
-                                                                                                        ${earnedCredits}
-                                                                                                        <span
-                                                                                                            class="fs-6 fw-normal text-white-50">/
-                                                                                                            60</span>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
+                                                                    <%-- GPA Summary Hero Card --%>
+                                                                    <div class="grades-hero-card" role="region" aria-label="GPA and Degree Progress Summary">
+                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                                                            <div>
+                                                                                <div class="small text-white-50 text-uppercase fw-bold" style="letter-spacing:0.5px;">Cumulative GPA</div>
+                                                                                <div class="fs-1 fw-bolder">${termGpa}</div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <c:choose>
+                                                                                    <c:when test="${termGpa >= 3.5}">
+                                                                                        <span class="grades-stat-chip"><i class="bi bi-award-fill text-warning"></i> Dean's List</span>
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <span class="grades-stat-chip"><i class="bi bi-check-circle-fill text-white"></i> Good Standing</span>
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="d-flex justify-content-between small text-white-50 mb-1" style="font-size:0.75rem;">
+                                                                                <span>Earned Credits Progress</span>
+                                                                                <span class="text-white fw-bold">${earnedCredits} / 60 Credits</span>
+                                                                            </div>
+                                                                            <div class="progress" style="height:6px;background:rgba(255,255,255,0.2);border-radius:99px;">
+                                                                                <div class="progress-bar bg-white" style="width:${(earnedCredits / 60) * 100 > 100 ? 100 : (earnedCredits / 60) * 100}%;border-radius:99px;"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <c:choose>
+                                                                        <c:when test="${not empty grades}">
+                                                                            <c:forEach var="grade" items="${grades}">
+                                                                                <div class="mobile-course-card" onclick="openCourseModal('${grade.enrollmentId}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseModal('${grade.enrollmentId}')" aria-label="View grade breakdown for ${grade.courseCode}: ${grade.courseTitle}">
+                                                                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                        <span class="badge bg-secondary bg-opacity-10 text-secondary">${grade.termName}</span>
                                                                                         <c:choose>
-                                                                                            <c:when
-                                                                                                test="${not empty grades}">
-                                                                                                <c:forEach var="grade"
-                                                                                                    items="${grades}">
-                                                                                                    <div class="mobile-course-card"
-                                                                                                        onclick="openCourseModal('${grade.enrollmentId}')">
-                                                                                                        <div
-                                                                                                            class="d-flex justify-content-between align-items-start mb-1">
-                                                                                                            <span
-                                                                                                                class="badge bg-secondary bg-opacity-10 text-secondary">${grade.termName}</span>
-                                                                                                            <c:choose>
-                                                                                                                <c:when
-                                                                                                                    test="${grade.letterGrade == 'A' || grade.letterGrade == 'A-'}">
-                                                                                                                    <span
-                                                                                                                        class="badge bg-success bg-opacity-15 text-success fw-bold">${grade.letterGrade}</span>
-                                                                                                                </c:when>
-                                                                                                                <c:when
-                                                                                                                    test="${grade.letterGrade == 'B' || grade.letterGrade == 'B+' || grade.letterGrade == 'B-'}">
-                                                                                                                    <span
-                                                                                                                        class="badge bg-primary bg-opacity-15 text-primary fw-bold">${grade.letterGrade}</span>
-                                                                                                                </c:when>
-                                                                                                                <c:when
-                                                                                                                    test="${grade.letterGrade != 'N/A' && not empty grade.letterGrade}">
-                                                                                                                    <span
-                                                                                                                        class="badge bg-warning bg-opacity-25 text-dark fw-bold">${grade.letterGrade}</span>
-                                                                                                                </c:when>
-                                                                                                                <c:otherwise>
-                                                                                                                    <span
-                                                                                                                        class="badge bg-light border text-muted">Pending</span>
-                                                                                                                </c:otherwise>
-                                                                                                            </c:choose>
-                                                                                                        </div>
-                                                                                                        <div
-                                                                                                            class="fw-bold text-dark mb-1">
-                                                                                                            ${grade.courseCode}
-                                                                                                        </div>
-                                                                                                        <div
-                                                                                                            class="text-muted small mb-3">
-                                                                                                            ${grade.courseTitle}
-                                                                                                        </div>
-                                                                                                        <div class="d-flex justify-content-between align-items-center pt-2 border-top small text-muted"
-                                                                                                            style="font-size:0.75rem;">
-                                                                                                            <span>Credits:
-                                                                                                                <strong
-                                                                                                                    class="text-dark">${grade.credits}</strong></span>
-                                                                                                            <span>Score:
-                                                                                                                <strong
-                                                                                                                    class="text-dark">${grade.totalScore
-                                                                                                                    > 0
-                                                                                                                    ?
-                                                                                                                    grade.totalScore
-                                                                                                                    :
-                                                                                                                    '-'}</strong></span>
-                                                                                                            <span>GPA:
-                                                                                                                <strong
-                                                                                                                    class="text-success">${grade.letterGrade
-                                                                                                                    !=
-                                                                                                                    'N/A'
-                                                                                                                    ?
-                                                                                                                    grade.gpaPoint
-                                                                                                                    :
-                                                                                                                    '-'}</strong></span>
-                                                                                                        </div>
-                                                                                                        <div class="mt-2 d-flex align-items-center gap-1"
-                                                                                                            style="font-size:0.68rem;color:#94a3b8;">
-                                                                                                            <i class="bi bi-chevron-right"></i>
-                                                                                                            Tap to view scores &amp; attendance
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </c:forEach>
+                                                                                            <c:when test="${grade.letterGrade == 'A' || grade.letterGrade == 'A-'}">
+                                                                                                <span class="badge bg-success bg-opacity-15 text-success fw-bold px-2 py-1 rounded-pill">${grade.letterGrade}</span>
+                                                                                            </c:when>
+                                                                                            <c:when test="${grade.letterGrade == 'B' || grade.letterGrade == 'B+' || grade.letterGrade == 'B-'}">
+                                                                                                <span class="badge bg-primary bg-opacity-15 text-primary fw-bold px-2 py-1 rounded-pill">${grade.letterGrade}</span>
+                                                                                            </c:when>
+                                                                                            <c:when test="${grade.letterGrade != 'N/A' && not empty grade.letterGrade}">
+                                                                                                <span class="badge bg-warning bg-opacity-25 text-dark fw-bold px-2 py-1 rounded-pill">${grade.letterGrade}</span>
                                                                                             </c:when>
                                                                                             <c:otherwise>
-                                                                                                <div
-                                                                                                    class="text-center py-5 text-muted">
-                                                                                                    <i
-                                                                                                        class="bi bi-journal-x fs-1 text-secondary mb-2 d-block"></i>
-                                                                                                    <div
-                                                                                                        class="fw-bold">
-                                                                                                        No Grades
-                                                                                                        Available</div>
-                                                                                                    <p class="small">
-                                                                                                        Grades will
-                                                                                                        appear once
-                                                                                                        finalized by
-                                                                                                        your professors.
-                                                                                                    </p>
-                                                                                                </div>
+                                                                                                <span class="badge bg-light border text-muted px-2 py-1 rounded-pill">Pending</span>
                                                                                             </c:otherwise>
                                                                                         </c:choose>
                                                                                     </div>
+                                                                                    <div class="mobile-card-code-badge d-inline-block mb-1">${grade.courseCode}</div>
+                                                                                    <div class="mobile-card-title mb-2">${grade.courseTitle}</div>
+                                                                                    <div class="d-flex justify-content-between align-items-center pt-2 border-top small text-muted" style="font-size:0.75rem;">
+                                                                                        <span>Credits: <strong class="text-dark">${grade.credits}</strong></span>
+                                                                                        <span>Score: <strong class="text-dark">${grade.totalScore > 0 ? grade.totalScore : '&mdash;'}</strong></span>
+                                                                                        <span>GPA: <strong class="text-success">${grade.letterGrade != 'N/A' ? grade.gpaPoint : '&mdash;'}</strong></span>
+                                                                                    </div>
+                                                                                    <div class="mt-2 d-flex align-items-center gap-1" style="font-size:0.68rem;color:#94a3b8;">
+                                                                                        <i class="bi bi-chevron-right text-primary"></i> Tap to view scores &amp; attendance
+                                                                                    </div>
+                                                                                </div>
+                                                                            </c:forEach>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <div class="text-center py-5 text-muted">
+                                                                                <i class="bi bi-journal-x fs-1 text-secondary mb-2 d-block"></i>
+                                                                                <div class="fw-bold">No Grades Available</div>
+                                                                                <p class="small">Grades will appear once published by your course professors.</p>
+                                                                            </div>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </section>
 
+                                                                <%--===== PROFILE SUB-VIEW =====--%>
+                                                                <section id="mobile-view-profile" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-profile">
+                                                                    <h2 class="mobile-section-heading mb-3">Student Profile</h2>
 
-                                                                                    <%--=====SCHEDULE SUB-VIEW=====--%>
-                                                                                        <div id="mobile-view-schedule"
-                                                                                            class="mobile-sub-view">
-                                                                                            <div
-                                                                                                class="d-flex justify-content-between align-items-center mb-3">
-                                                                                                <h5
-                                                                                                    class="fw-bold mb-0">
-                                                                                                    Class Schedule</h5>
-                                                                                                <span
-                                                                                                    class="badge bg-primary bg-opacity-10 text-primary rounded-pill small">${schedule.size()}
-                                                                                                    Enrolled</span>
-                                                                                            </div>
-                                                                                            <c:choose>
-                                                                                                <c:when
-                                                                                                    test="${not empty schedule}">
-                                                                                                    <c:forEach
-                                                                                                        var="enrollment"
-                                                                                                        items="${schedule}">
-                                                                                                        <div class="mobile-course-card"
-                                                                                                            onclick="openCourseModal('${enrollment.id}')">
-                                                                                                            <div
-                                                                                                                class="d-flex justify-content-between align-items-start mb-2">
-                                                                                                                <span
-                                                                                                                    class="badge bg-success bg-opacity-10 text-success fw-bold">${enrollment.termName}</span>
-                                                                                                                <span
-                                                                                                                    class="badge bg-light border text-dark">${enrollment.sessionShift}</span>
-                                                                                                            </div>
-                                                                                                            <h6
-                                                                                                                class="fw-bold text-dark mb-1">
-                                                                                                                ${enrollment.courseCode}
-                                                                                                            </h6>
-                                                                                                            <div
-                                                                                                                class="text-muted small mb-3">
-                                                                                                                ${enrollment.courseTitle}
-                                                                                                            </div>
-                                                                                                            <div class="small text-muted"
-                                                                                                                style="font-size:0.75rem;">
-                                                                                                                <div
-                                                                                                                    class="mb-1">
-                                                                                                                    <i
-                                                                                                                        class="bi bi-clock me-2 text-primary"></i>${enrollment.daysOfWeek}
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="mb-1">
-                                                                                                                    <i
-                                                                                                                        class="bi bi-door-open me-2 text-primary"></i>Room
-                                                                                                                    ${enrollment.room}
-                                                                                                                </div>
-                                                                                                                <div><i
-                                                                                                                        class="bi bi-person me-2 text-primary"></i>${enrollment.professorName}
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                            <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
-                                                                                                                <div class="d-flex align-items-center gap-1"
-                                                                                                                    style="font-size:0.68rem;color:#94a3b8;">
-                                                                                                                    <i class="bi bi-chevron-right"></i>
-                                                                                                                    Tap to view scores &amp; attendance
-                                                                                                                </div>
-                                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-bold" style="font-size:0.72rem;" onclick="event.stopPropagation(); openDropConfirm('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}', 'schedule')">Drop</button>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </c:forEach>
-                                                                                                </c:when>
-                                                                                                <c:otherwise>
-                                                                                                    <div
-                                                                                                        class="text-center py-5 text-muted">
-                                                                                                        <i
-                                                                                                            class="bi bi-calendar-x fs-1 text-secondary mb-2 d-block"></i>
-                                                                                                        <div
-                                                                                                            class="fw-bold">
-                                                                                                            No Classes
-                                                                                                            Enrolled
-                                                                                                        </div><button
-                                                                                                            type="button"
-                                                                                                            class="btn btn-sm btn-success rounded-pill px-3 mt-2"
-                                                                                                            onclick="switchMobileTab('courses')">Go
-                                                                                                            to
-                                                                                                            Registration</button>
-                                                                                                    </div>
-                                                                                                </c:otherwise>
-                                                                                            </c:choose>
-                                                                                        </div>
+                                                                    <%-- Digital University Student ID Card --%>
+                                                                    <div class="student-id-card" role="region" aria-label="Digital Student ID Card">
+                                                                        <div class="id-card-top">
+                                                                            <div class="id-card-univ-title">
+                                                                                <i class="bi bi-shield-fill-check me-1 text-primary"></i> UniTRS ACADEMIC ID
+                                                                            </div>
+                                                                            <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2 py-1" style="font-size:0.68rem;">ACTIVE 2024-25</span>
+                                                                        </div>
+                                                                        <div class="id-card-body">
+                                                                            <div class="id-photo-box" aria-hidden="true">
+                                                                                <img src="${pageContext.request.contextPath}/static/images/student_headshot.jpg" alt="Student Photo" onerror="this.src='https://ui-avatars.com/api/?name=${user.fullName}&background=1e293b&color=ffffff&bold=true'">
+                                                                            </div>
+                                                                            <div class="id-info-col">
+                                                                                <div class="id-student-name">${user.fullName}</div>
+                                                                                <div class="text-white-50 small mb-2" style="font-size:0.75rem;">${not empty user.major ? user.major : 'Undergraduate Student'}</div>
+                                                                                <button type="button" class="id-number-pill border-0" onclick="copyStudentId('${user.formattedIdentifier}', this)" title="Click to copy ID" aria-label="Copy student ID ${user.formattedIdentifier}">
+                                                                                    <i class="bi bi-copy"></i>
+                                                                                    <span>${user.formattedIdentifier}</span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="id-card-barcode-row">
+                                                                            <div class="barcode-mock" aria-hidden="true">
+                                                                                <span style="width:3px;"></span><span style="width:1px;"></span><span style="width:4px;"></span><span style="width:2px;"></span><span style="width:1px;"></span><span style="width:3px;"></span><span style="width:5px;"></span><span style="width:2px;"></span><span style="width:1px;"></span><span style="width:4px;"></span><span style="width:2px;"></span><span style="width:3px;"></span><span style="width:1px;"></span><span style="width:4px;"></span>
+                                                                            </div>
+                                                                            <div class="text-white-50 small" style="font-size:0.7rem;font-family:monospace;">
+                                                                                <i class="bi bi-qr-code me-1"></i>UniTRS VERIFIED
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
 
+                                                                    <%-- Academic Details Card --%>
+                                                                    <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
+                                                                        <div class="fw-bold small text-dark mb-3">
+                                                                            <i class="bi bi-mortarboard me-2 text-primary"></i>Academic Details
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-between py-2 border-bottom small">
+                                                                            <span class="text-muted">School:</span>
+                                                                            <span class="fw-semibold text-dark">${not empty studentSchool ? studentSchool.schoolName : 'Not Set'}</span>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-between py-2 border-bottom small">
+                                                                            <span class="text-muted">Major / Program:</span>
+                                                                            <span class="fw-semibold text-dark">${not empty user.major ? user.major : 'Undeclared'}</span>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-between py-2 border-bottom small">
+                                                                            <span class="text-muted">Cumulative GPA:</span>
+                                                                            <span class="fw-bold text-success">${termGpa}</span>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-between py-2 small">
+                                                                            <span class="text-muted">Earned Credits:</span>
+                                                                            <span class="fw-bold text-primary">${earnedCredits} Cr</span>
+                                                                        </div>
+                                                                    </div>
 
-                                                                                        <%--=====PROFILE
-                                                                                            SUB-VIEW=====--%>
-                                                                                            <div id="mobile-view-profile"
-                                                                                                class="mobile-sub-view">
-                                                                                                <h5
-                                                                                                    class="fw-bold mb-3">
-                                                                                                    Student Profile</h5>
-                                                                                                <div class="mobile-course-card text-center p-4 mb-3"
-                                                                                                    style="cursor:default;">
-                                                                                                    <div class="mobile-avatar-frame mx-auto mb-3"
-                                                                                                        style="width:72px;height:72px;border-radius:20px;">
-                                                                                                        <img src="${pageContext.request.contextPath}/static/images/student_headshot.jpg"
-                                                                                                            alt="Headshot"
-                                                                                                            onerror="this.src='https://ui-avatars.com/api/?name=${user.fullName}&background=e2e8f0&color=0f172a&bold=true'">
-                                                                                                    </div>
-                                                                                                    <h5
-                                                                                                        class="fw-bold text-dark mb-1">
-                                                                                                        ${user.fullName}
-                                                                                                    </h5>
-                                                                                                    <div
-                                                                                                        class="badge bg-light border text-dark mb-2 px-3 py-1">
-                                                                                                        ID:
-                                                                                                        ${user.formattedIdentifier}
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class="text-muted small">
-                                                                                                        ${user.email}
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="mobile-course-card mb-3 p-3"
-                                                                                                    style="cursor:default;">
-                                                                                                    <div
-                                                                                                        class="fw-bold small text-dark mb-3">
-                                                                                                        <i
-                                                                                                            class="bi bi-mortarboard me-2 text-primary"></i>Academic
-                                                                                                        Details</div>
-                                                                                                    <div
-                                                                                                        class="d-flex justify-content-between py-2 border-bottom small">
-                                                                                                        <span
-                                                                                                            class="text-muted">School:</span><span
-                                                                                                            class="fw-semibold text-dark">${not
-                                                                                                            empty
-                                                                                                            studentSchool
-                                                                                                            ?
-                                                                                                            studentSchool.schoolName
-                                                                                                            : 'Not
-                                                                                                            Set'}</span>
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class="d-flex justify-content-between py-2 border-bottom small">
-                                                                                                        <span
-                                                                                                            class="text-muted">Major:</span><span
-                                                                                                            class="fw-semibold text-dark">${not
-                                                                                                            empty
-                                                                                                            user.major ?
-                                                                                                            user.major :
-                                                                                                            'Undeclared'}</span>
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class="d-flex justify-content-between py-2 small">
-                                                                                                        <span
-                                                                                                            class="text-muted">Cumulative
-                                                                                                            GPA:</span><span
-                                                                                                            class="fw-bold text-success">${termGpa}</span>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="mobile-course-card mb-3 p-3"
-                                                                                                    style="cursor:default;">
-                                                                                                    <div
-                                                                                                        class="d-flex justify-content-between align-items-center mb-2">
-                                                                                                        <div>
-                                                                                                            <div
-                                                                                                                class="fw-bold small text-dark">
-                                                                                                                <i
-                                                                                                                    class="bi bi-shield-lock me-2 text-primary"></i>Two-Factor
-                                                                                                                Authentication
-                                                                                                            </div>
-                                                                                                            <div class="text-muted"
-                                                                                                                style="font-size:0.72rem;">
-                                                                                                                Email
-                                                                                                                OTP on
-                                                                                                                login
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                        <span
-                                                                                                            class="badge ${user.twoFactorEnabled ? 'bg-success' : 'bg-secondary'} rounded-pill">${user.twoFactorEnabled
-                                                                                                            ? 'Enabled'
-                                                                                                            :
-                                                                                                            'Disabled'}</span>
-                                                                                                    </div>
-                                                                                                    <form
-                                                                                                        action="${pageContext.request.contextPath}/auth/update-2fa"
-                                                                                                        method="POST"
-                                                                                                        class="mt-3">
-                                                                                                        <input
-                                                                                                            type="hidden"
-                                                                                                            name="redirect"
-                                                                                                            value="/student/dashboard?tab=profile">
-                                                                                                        <div
-                                                                                                            class="input-group">
-                                                                                                            <label
-                                                                                                                class="input-group-text small bg-light"
-                                                                                                                for="mobileTwoFactorSelect">Status</label>
-                                                                                                            <select
-                                                                                                                id="mobileTwoFactorSelect"
-                                                                                                                name="twoFactorEnabled"
-                                                                                                                class="form-select form-select-sm"
-                                                                                                                onchange="this.form.submit()">
-                                                                                                                <option
-                                                                                                                    value="false"
-                                                                                                                    ${!user.twoFactorEnabled
-                                                                                                                    ? 'selected'
-                                                                                                                    : ''
-                                                                                                                    }>
-                                                                                                                    Disabled
-                                                                                                                </option>
-                                                                                                                <option
-                                                                                                                    value="true"
-                                                                                                                    ${user.twoFactorEnabled
-                                                                                                                    ? 'selected'
-                                                                                                                    : ''
-                                                                                                                    }>
-                                                                                                                    Enabled
-                                                                                                                </option>
-                                                                                                            </select>
-                                                                                                            <button
-                                                                                                                type="submit"
-                                                                                                                class="btn btn-sm btn-outline-primary">Save</button>
-                                                                                                        </div>
-                                                                                                    </form>
-                                                                                                </div>
-                                                                                                <a href="${pageContext.request.contextPath}/auth/logout"
-                                                                                                    class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold"><i
-                                                                                                        class="bi bi-box-arrow-right me-2"></i>Sign
-                                                                                                    Out</a>
-                                                                                            </div>
+                                                                    <%-- Two-Factor Security Card --%>
+                                                                    <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                            <div>
+                                                                                <div class="fw-bold small text-dark">
+                                                                                    <i class="bi bi-shield-lock me-2 text-primary"></i>Two-Factor Authentication
+                                                                                </div>
+                                                                                <div class="text-muted" style="font-size:0.72rem;">Email OTP security verification on login</div>
+                                                                            </div>
+                                                                            <span class="badge ${user.twoFactorEnabled ? 'bg-success' : 'bg-secondary'} rounded-pill">${user.twoFactorEnabled ? 'Enabled' : 'Disabled'}</span>
+                                                                        </div>
+                                                                        <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="mt-3">
+                                                                            <input type="hidden" name="redirect" value="/student/dashboard?tab=profile">
+                                                                            <div class="input-group">
+                                                                                <label class="input-group-text small bg-light" for="mobileTwoFactorSelect">Status</label>
+                                                                                <select id="mobileTwoFactorSelect" name="twoFactorEnabled" class="form-select form-select-sm" onchange="this.form.submit()">
+                                                                                    <option value="false" ${!user.twoFactorEnabled ? 'selected' : ''}>Disabled</option>
+                                                                                    <option value="true" ${user.twoFactorEnabled ? 'selected' : ''}>Enabled</option>
+                                                                                </select>
+                                                                                <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
 
+                                                                    <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
+                                                                        <i class="bi bi-box-arrow-right me-2"></i>Sign Out
+                                                                    </a>
+                                                                </section>
 
-                                                                                            <%-- Bottom Navigation Dock
-                                                                                                --%>
-                                                                                                <nav
-                                                                                                    class="mobile-bottom-dock">
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        class="dock-tab-btn active"
-                                                                                                        data-tab="home"
-                                                                                                        onclick="switchMobileTab('home')"><i
-                                                                                                            class="bi bi-house-door-fill"></i><span>Home</span></button>
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        class="dock-tab-btn"
-                                                                                                        data-tab="courses"
-                                                                                                        onclick="switchMobileTab('courses')"><i
-                                                                                                            class="bi bi-journal-bookmark"></i><span>Courses</span></button>
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        class="dock-tab-btn"
-                                                                                                        data-tab="grades"
-                                                                                                        onclick="switchMobileTab('grades')"><i
-                                                                                                            class="bi bi-mortarboard"></i><span>Grades</span></button>
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        class="dock-tab-btn"
-                                                                                                        data-tab="schedule"
-                                                                                                        onclick="switchMobileTab('schedule')"><i
-                                                                                                            class="bi bi-calendar3"></i><span>Schedule</span></button>
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        class="dock-tab-btn"
-                                                                                                        data-tab="profile"
-                                                                                                        onclick="switchMobileTab('profile')"><i
-                                                                                                            class="bi bi-person"></i><span>Profile</span></button>
-                                                                                                </nav>
+                                                                <%-- Floating Island Bottom Navigation Dock --%>
+                                                                <nav class="mobile-bottom-dock" role="navigation" aria-label="Mobile Navigation">
+                                                                    <button type="button" class="dock-tab-btn active" id="dock-tab-home" data-tab="home" onclick="switchMobileTab('home')" role="tab" aria-selected="true" aria-controls="mobile-view-home">
+                                                                        <i class="bi bi-house-door-fill"></i>
+                                                                        <span>Home</span>
+                                                                    </button>
+                                                                    <button type="button" class="dock-tab-btn" id="dock-tab-schedule" data-tab="schedule" onclick="switchMobileTab('schedule')" role="tab" aria-selected="false" aria-controls="mobile-view-schedule">
+                                                                        <i class="bi bi-calendar3"></i>
+                                                                        <span>Schedule</span>
+                                                                    </button>
+                                                                    <button type="button" class="dock-tab-btn" id="dock-tab-courses" data-tab="courses" onclick="switchMobileTab('courses')" role="tab" aria-selected="false" aria-controls="mobile-view-courses">
+                                                                        <i class="bi bi-journal-bookmark"></i>
+                                                                        <span>Courses</span>
+                                                                    </button>
+                                                                    <button type="button" class="dock-tab-btn" id="dock-tab-grades" data-tab="grades" onclick="switchMobileTab('grades')" role="tab" aria-selected="false" aria-controls="mobile-view-grades">
+                                                                        <i class="bi bi-mortarboard"></i>
+                                                                        <span>Grades</span>
+                                                                    </button>
+                                                                    <button type="button" class="dock-tab-btn" id="dock-tab-profile" data-tab="profile" onclick="switchMobileTab('profile')" role="tab" aria-selected="false" aria-controls="mobile-view-profile">
+                                                                        <i class="bi bi-person"></i>
+                                                                        <span>Profile</span>
+                                                                    </button>
+                                                                </nav>
+
+                                                                <%-- Toast Notification for Clipboard --%>
+                                                                <div id="mobileToast" class="mobile-toast" role="status" aria-live="polite">
+                                                                    <i class="bi bi-check2-circle text-success fs-6"></i>
+                                                                    <span id="mobileToastText">Copied to clipboard!</span>
+                                                                </div>
 
                                                             </c:otherwise>
                                                         </c:choose>
-                                                    </div>
+                                                    </div>            </div>
 
 
                                                     <%--==================================================================--%>
@@ -4116,35 +4053,6 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <!-- Drop Course Confirmation Modal -->
-                                                                <div class="modal fade" id="dropConfirmModal" tabindex="-1" aria-labelledby="dropConfirmModalLabel" aria-hidden="true">
-                                                                    <div class="modal-dialog modal-dialog-centered modal-sm">
-                                                                        <div class="modal-content rounded-4 border-0 shadow">
-                                                                            <div class="modal-header border-0 pb-0">
-                                                                                <h6 class="modal-title fw-bold text-danger" id="dropConfirmModalLabel">
-                                                                                    <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>Drop Course
-                                                                                </h6>
-                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                                            </div>
-                                                                            <form action="${pageContext.request.contextPath}/student/dashboard" method="post" id="dropConfirmForm" class="m-0">
-                                                                                <input type="hidden" name="action" value="drop">
-                                                                                <input type="hidden" name="tab" id="dropConfirmTab" value="courses">
-                                                                                <input type="hidden" name="classSectionId" id="dropConfirmSectionId" value="">
-                                                                                <div class="modal-body pt-2 pb-3">
-                                                                                    <p class="small text-muted mb-2">Are you sure you want to drop this course? Your seat will be released:</p>
-                                                                                    <div class="p-3 bg-danger bg-opacity-10 border border-danger-subtle rounded-3 mb-3">
-                                                                                        <div class="fw-bold text-danger mb-1" id="dropConfirmCourseCode"></div>
-                                                                                        <div class="small text-muted" id="dropConfirmCourseTitle"></div>
-                                                                                    </div>
-                                                                                    <div class="d-flex gap-2">
-                                                                                        <button type="button" class="btn btn-sm btn-light w-50 rounded-pill fw-semibold border" data-bs-dismiss="modal">Keep Course</button>
-                                                                                        <button type="submit" class="btn btn-sm btn-danger w-50 rounded-pill fw-bold">Drop Course</button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
 
 
                                                                 <%-- Enrollment data for JS modal --%>
@@ -4216,6 +4124,8 @@
                                                                     <script
                                                                         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
                                                                     <script>
+                                                                        var _lastActiveCourseModalElement = null;
+
                                                                         function switchMobileTab(tabName) {
                                                                             var views = document.querySelectorAll('.mobile-sub-view');
                                                                             for (var i = 0; i < views.length; i++) views[i].classList.remove('active');
@@ -4223,11 +4133,24 @@
                                                                             if (target) target.classList.add('active');
 
                                                                             var btns = document.querySelectorAll('.dock-tab-btn');
-                                                                            var iconMap = { home: ['bi-house-door-fill', 'bi-house-door'], courses: ['bi-journal-bookmark-fill', 'bi-journal-bookmark'], grades: ['bi-mortarboard-fill', 'bi-mortarboard'], schedule: ['bi-calendar3-fill', 'bi-calendar3'], profile: ['bi-person-fill', 'bi-person'] };
+                                                                            var iconMap = { 
+                                                                                home: ['bi-house-door-fill', 'bi-house-door'], 
+                                                                                courses: ['bi-journal-bookmark-fill', 'bi-journal-bookmark'], 
+                                                                                grades: ['bi-mortarboard-fill', 'bi-mortarboard'], 
+                                                                                schedule: ['bi-calendar3-fill', 'bi-calendar3'], 
+                                                                                profile: ['bi-person-fill', 'bi-person'] 
+                                                                            };
                                                                             for (var j = 0; j < btns.length; j++) {
                                                                                 var b = btns[j], bTab = b.getAttribute('data-tab'), ic = b.querySelector('i');
-                                                                                if (bTab === tabName) { b.classList.add('active'); if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][0]; }
-                                                                                else { b.classList.remove('active'); if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][1]; }
+                                                                                if (bTab === tabName) { 
+                                                                                    b.classList.add('active'); 
+                                                                                    b.setAttribute('aria-selected', 'true');
+                                                                                    if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][0]; 
+                                                                                } else { 
+                                                                                    b.classList.remove('active'); 
+                                                                                    b.setAttribute('aria-selected', 'false');
+                                                                                    if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][1]; 
+                                                                                }
                                                                             }
                                                                             try {
                                                                                 var url = new URL(window.location);
@@ -4237,15 +4160,130 @@
                                                                             window.scrollTo({ top: 0, behavior: 'smooth' });
                                                                         }
 
+                                                                        function filterScheduleTabView(dayShort, element) {
+                                                                            var pills = document.querySelectorAll('.schedule-filter-pill');
+                                                                            pills.forEach(function (pill) { pill.classList.remove('active'); });
+                                                                            if (element) {
+                                                                                element.classList.add('active');
+                                                                            }
+
+                                                                            var cards = document.querySelectorAll('.schedule-tab-card');
+                                                                            var emptyBox = document.getElementById('scheduleTabEmpty');
+                                                                            var emptyText = document.getElementById('scheduleTabEmptyText');
+                                                                            var countBadge = document.getElementById('scheduleTabCount');
+                                                                            var visibleCount = 0;
+
+                                                                            cards.forEach(function (card) {
+                                                                                var days = (card.getAttribute('data-days') || '').toLowerCase();
+                                                                                var match = false;
+
+                                                                                if (dayShort === 'all') {
+                                                                                    match = true;
+                                                                                } else if (days.indexOf('mon-fri') !== -1) {
+                                                                                    match = ['mon', 'tue', 'wed', 'thu', 'fri'].indexOf(dayShort) !== -1;
+                                                                                } else if (days.indexOf('sat-sun') !== -1) {
+                                                                                    match = ['sat', 'sun'].indexOf(dayShort) !== -1;
+                                                                                } else {
+                                                                                    match = days.indexOf(dayShort) !== -1;
+                                                                                }
+
+                                                                                if (match) {
+                                                                                    card.style.display = '';
+                                                                                    visibleCount++;
+                                                                                } else {
+                                                                                    card.style.display = 'none';
+                                                                                }
+                                                                            });
+
+                                                                            if (emptyBox) {
+                                                                                if (visibleCount === 0 && cards.length > 0) {
+                                                                                    emptyBox.style.display = 'block';
+                                                                                    var dayNames = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
+                                                                                    if (emptyText) emptyText.textContent = 'No classes scheduled for ' + (dayNames[dayShort] || 'this day');
+                                                                                } else {
+                                                                                    emptyBox.style.display = 'none';
+                                                                                }
+                                                                            }
+
+                                                                            if (countBadge) {
+                                                                                countBadge.textContent = visibleCount + (visibleCount === 1 ? ' Class' : ' Classes');
+                                                                            }
+                                                                        }
+
                                                                         function filterMobileCourses(q) {
                                                                             q = (q || '').toLowerCase().trim();
+                                                                            var clearBtn = document.getElementById('clearMobileCourseSearchBtn');
+                                                                            if (clearBtn) {
+                                                                                clearBtn.style.display = q.length > 0 ? 'inline-flex' : 'none';
+                                                                            }
+
                                                                             var items = document.querySelectorAll('.mobile-course-item');
+                                                                            var visibleCount = 0;
                                                                             for (var i = 0; i < items.length; i++) {
-                                                                                items[i].style.display = (items[i].textContent || '').toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+                                                                                var text = (items[i].textContent || '').toLowerCase();
+                                                                                if (text.indexOf(q) !== -1) {
+                                                                                    items[i].style.display = '';
+                                                                                    visibleCount++;
+                                                                                } else {
+                                                                                    items[i].style.display = 'none';
+                                                                                }
+                                                                            }
+
+                                                                            var badge = document.getElementById('mobileCourseCountBadge');
+                                                                            if (badge) {
+                                                                                badge.textContent = visibleCount + (visibleCount === 1 ? ' Class' : ' Classes');
+                                                                            }
+                                                                        }
+
+                                                                        function clearMobileCourseSearch() {
+                                                                            var inp = document.getElementById('mobileCourseSearchInput');
+                                                                            if (inp) {
+                                                                                inp.value = '';
+                                                                                filterMobileCourses('');
+                                                                                inp.focus();
+                                                                            }
+                                                                        }
+
+                                                                        function copyStudentId(idText, btnEl) {
+                                                                            if (!idText) return;
+                                                                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                                                                navigator.clipboard.writeText(idText).then(onCopySuccess).catch(fallbackCopy);
+                                                                            } else {
+                                                                                fallbackCopy();
+                                                                            }
+
+                                                                            function fallbackCopy() {
+                                                                                var ta = document.createElement('textarea');
+                                                                                ta.value = idText;
+                                                                                ta.style.position = 'fixed';
+                                                                                ta.style.left = '-9999px';
+                                                                                document.body.appendChild(ta);
+                                                                                ta.select();
+                                                                                try { document.execCommand('copy'); onCopySuccess(); } catch (e) {}
+                                                                                document.body.removeChild(ta);
+                                                                            }
+
+                                                                            function onCopySuccess() {
+                                                                                var toast = document.getElementById('mobileToast');
+                                                                                var toastText = document.getElementById('mobileToastText');
+                                                                                if (toast) {
+                                                                                    if (toastText) toastText.textContent = 'Student ID copied: ' + idText;
+                                                                                    toast.classList.add('show');
+                                                                                    clearTimeout(window._mobileToastTimer);
+                                                                                    window._mobileToastTimer = setTimeout(function () {
+                                                                                        toast.classList.remove('show');
+                                                                                    }, 2500);
+                                                                                }
+                                                                                if (btnEl) {
+                                                                                    var origHtml = btnEl.innerHTML;
+                                                                                    btnEl.innerHTML = '<i class="bi bi-check2 text-success"></i> <span>Copied!</span>';
+                                                                                    setTimeout(function () { btnEl.innerHTML = origHtml; }, 1800);
+                                                                                }
                                                                             }
                                                                         }
 
                                                                         function openCourseModal(enrollmentId) {
+                                                                            _lastActiveCourseModalElement = document.activeElement;
                                                                             var d = enrollmentData[parseInt(enrollmentId, 10)];
                                                                             if (!d) return;
 
@@ -4302,6 +4340,9 @@
                                                                             var overlay = document.getElementById('courseModalOverlay');
                                                                             overlay.classList.add('open');
                                                                             document.body.style.overflow = 'hidden';
+
+                                                                            var closeBtn = overlay.querySelector('.sheet-close-btn');
+                                                                            if (closeBtn) closeBtn.focus();
                                                                         }
 
                                                                         function makeTile(label, val, highlight) {
@@ -4311,13 +4352,26 @@
                                                                         }
 
                                                                         function closeCourseModal() {
-                                                                            document.getElementById('courseModalOverlay').classList.remove('open');
+                                                                            var overlay = document.getElementById('courseModalOverlay');
+                                                                            if (overlay) overlay.classList.remove('open');
                                                                             document.body.style.overflow = '';
+                                                                            if (_lastActiveCourseModalElement && typeof _lastActiveCourseModalElement.focus === 'function') {
+                                                                                _lastActiveCourseModalElement.focus();
+                                                                            }
                                                                         }
 
                                                                         function closeCourseModalOnOverlay(e) {
                                                                             if (e.target === document.getElementById('courseModalOverlay')) closeCourseModal();
                                                                         }
+
+                                                                        document.addEventListener('keydown', function (e) {
+                                                                            if (e.key === 'Escape') {
+                                                                                var overlay = document.getElementById('courseModalOverlay');
+                                                                                if (overlay && overlay.classList.contains('open')) {
+                                                                                    closeCourseModal();
+                                                                                }
+                                                                            }
+                                                                        });
 
                                                                         function openEnrollConfirm(sectionId, courseCode, courseTitle, professorName, returnTab) {
                                                                             document.getElementById('enrollConfirmSectionId').value = sectionId;
@@ -4331,13 +4385,6 @@
                                                                             new bootstrap.Modal(document.getElementById('enrollConfirmModal')).show();
                                                                         }
 
-                                                                        function openDropConfirm(sectionId, courseCode, courseTitle, returnTab) {
-                                                                            document.getElementById('dropConfirmSectionId').value = sectionId;
-                                                                            document.getElementById('dropConfirmTab').value = returnTab || 'courses';
-                                                                            document.getElementById('dropConfirmCourseCode').textContent = courseCode;
-                                                                            document.getElementById('dropConfirmCourseTitle').textContent = courseTitle;
-                                                                            new bootstrap.Modal(document.getElementById('dropConfirmModal')).show();
-                                                                        }
 
                                                                         function initMobileDateStrip() {
                                                                             var strip = document.getElementById('mobileDateStrip');
@@ -4566,8 +4613,7 @@
                                                                                             if (sec.professor) {
                                                                                                 tableHtml += '<div class="tt-prof-row" title="Professor ' + sec.professor + '"><i class="bi bi-person-fill text-primary"></i> <span>' + sec.professor + '</span></div>';
                                                                                             }
-                                                                                            tableHtml += '<div class="tt-actions-row">';
-                                                                                            tableHtml += '<button type="button" class="tt-action-btn drop-btn" onclick="openDropConfirm(\'' + sec.classSectionId + '\', \'' + sec.code + '\', \'' + sec.title.replace(/'/g, "\\'") + '\', \'schedule\')"><i class="bi bi-trash3-fill"></i> Drop</button>';
+                                                                                            tableHtml += '<div class="tt-actions-row justify-content-end">';
                                                                                             tableHtml += '<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small fw-bold"><i class="bi bi-check2 me-1"></i>Enrolled</span>';
                                                                                             tableHtml += '</div>';
                                                                                             tableHtml += '</div>';

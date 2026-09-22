@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
     <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
     <style>
         :root {
@@ -297,39 +298,8 @@
             margin: 0;
         }
 
-        .search-box {
-            position: relative;
-            margin-bottom: 1.25rem;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 1.1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        .search-box input {
-            padding-left: 3rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--surface-border);
-            color: #ffffff;
-            border-radius: 14px;
-            height: 52px;
-            font-size: 0.95rem;
-        }
-
-        .search-box input:focus {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--primary-cyan);
-            color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.18);
-        }
-
         .schools-list-container {
-            max-height: 380px;
+            max-height: 400px;
             overflow-y: auto;
             padding-right: 0.35rem;
             display: flex;
@@ -388,6 +358,14 @@
             transform: translateX(3px);
         }
 
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        .text-secondary {
+            color: #94a3b8 !important;
+        }
+
         .form-label {
             font-size: 0.85rem;
             font-weight: 600;
@@ -395,31 +373,57 @@
             margin-bottom: 0.4rem;
         }
 
-        .form-control, .form-select {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--surface-border);
-            color: #ffffff;
+        .form-control, .form-select, input.form-control, select.form-select {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--surface-border) !important;
+            color: #ffffff !important;
             border-radius: 12px;
             padding: 0.7rem 1rem;
             font-size: 0.95rem;
         }
 
-        .form-control:focus, .form-select:focus {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--primary-cyan);
-            color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.18);
+        .form-control:focus, .form-select:focus, input.form-control:focus, select.form-select:focus {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            border-color: var(--primary-cyan) !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.2) !important;
+        }
+
+        .form-control::placeholder, input::placeholder {
+            color: rgba(255, 255, 255, 0.45) !important;
+            opacity: 1 !important;
+        }
+
+        .form-control:-webkit-autofill,
+        .form-control:-webkit-autofill:hover, 
+        .form-control:-webkit-autofill:focus,
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: #ffffff !important;
+            -webkit-box-shadow: 0 0 0px 1000px #132238 inset !important;
+            box-shadow: 0 0 0px 1000px #132238 inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+            caret-color: #ffffff !important;
+        }
+
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2300f2fe' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
         }
 
         .form-select option {
-            background-color: #1b2838;
-            color: #ffffff;
+            background-color: #132238 !important;
+            color: #ffffff !important;
+        }
+
+        .form-select option:disabled {
+            color: rgba(255, 255, 255, 0.45) !important;
         }
 
         .input-group-text {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--surface-border);
-            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--surface-border) !important;
+            color: var(--primary-cyan) !important;
             border-radius: 12px 0 0 12px;
         }
 
@@ -428,14 +432,14 @@
         }
 
         .input-group .btn-outline-secondary {
-            border-color: var(--surface-border);
-            color: var(--text-muted);
+            border-color: var(--surface-border) !important;
+            color: #cbd5e1 !important;
         }
 
         .input-group .btn-outline-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border-color: var(--surface-border);
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            border-color: var(--primary-cyan) !important;
         }
 
         .strength-bar-container {
@@ -465,7 +469,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 0.25rem;
             font-size: 0.75rem;
-            color: var(--text-muted);
+            color: #94a3b8;
         }
 
         .rule-met {
@@ -474,30 +478,55 @@
 
         .validation-message {
             font-size: 0.78rem;
-            margin-top: 0.25rem;
+            margin-top: 0.35rem;
+        }
+
+        .validation-message.text-muted {
+            color: #94a3b8 !important;
+        }
+
+        .validation-message.text-warning {
+            color: #fbbf24 !important;
+        }
+
+        .validation-message.text-danger {
+            color: #f87171 !important;
+        }
+
+        .validation-message.text-success {
+            color: #34d399 !important;
         }
 
         .btn-gradient {
             background: var(--primary-gradient);
-            color: #0d1b2a;
+            color: #0d1b2a !important;
             font-weight: 700;
             border: none;
             border-radius: 12px;
             padding: 0.85rem 1.5rem;
             transition: all 0.2s ease;
             box-shadow: 0 4px 14px rgba(0, 242, 254, 0.3);
+            text-decoration: none;
         }
 
         .btn-gradient:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 242, 254, 0.45);
-            color: #0d1b2a;
+            color: #0d1b2a !important;
+        }
+
+        .btn-gradient:disabled {
+            opacity: 0.65 !important;
+            color: #0d1b2a !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         .btn-back {
             background: transparent;
             border: 1px solid var(--surface-border);
-            color: var(--text-muted);
+            color: #cbd5e1 !important;
             border-radius: 10px;
             padding: 0.4rem 0.9rem;
             font-size: 0.85rem;
@@ -510,9 +539,29 @@
         }
 
         .btn-back:hover {
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff !important;
+            border-color: var(--primary-cyan) !important;
+            background: rgba(0, 242, 254, 0.08) !important;
+        }
+
+        #step3RoleBadge {
+            background: rgba(0, 242, 254, 0.12) !important;
+            border: 1px solid rgba(0, 242, 254, 0.25) !important;
+            color: var(--primary-cyan) !important;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        #globalErrorAlert, .alert-danger {
+            background: rgba(239, 68, 68, 0.15) !important;
+            border: 1px solid rgba(239, 68, 68, 0.35) !important;
+            color: #fca5a5 !important;
+            border-radius: 14px !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-danger .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
         }
 
         .context-pill {
@@ -600,6 +649,7 @@
         </div>
 
         <c:if test="${not empty error}">
+            <div class="sonner-flash-trigger d-none" data-type="error" data-title="Registration Failed" data-message="<c:out value='${error}' />"></div>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>${error}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -661,16 +711,11 @@
                 <button type="button" class="btn-back" onclick="navigateToStep(1)">
                     <i class="bi bi-arrow-left"></i> Back to Role
                 </button>
-                <span class="badge bg-secondary-subtle text-light px-3 py-2" id="step3RoleBadge">Faculty Selection</span>
+                <span class="badge px-3 py-2" id="step3RoleBadge">Faculty Selection</span>
             </div>
 
             <h2 class="step-title">Select Your Academic School</h2>
             <p class="step-subtitle">Choose your college or academic department at UniTRS</p>
-
-            <div class="search-box">
-                <i class="bi bi-search"></i>
-                <input type="text" class="form-control" id="schoolSearchInput" placeholder="Search schools (e.g. Science and Technology, Business...)" autocomplete="off">
-            </div>
 
             <div class="schools-list-container" id="schoolsListContainer">
             </div>
@@ -856,6 +901,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
 <script>
     const contextPath = '${pageContext.request.contextPath}';
 
@@ -955,7 +1001,6 @@
     const professorCard = document.getElementById('professorCard');
     const studentSubmenu = document.getElementById('studentSubmenu');
 
-    const schoolSearchInput = document.getElementById('schoolSearchInput');
     const schoolsListContainer = document.getElementById('schoolsListContainer');
 
     const dynamicRegForm = document.getElementById('dynamicRegForm');
@@ -1045,8 +1090,6 @@
             stepIndicatorBadge.innerHTML = "<i class=\"bi bi-building\"></i> Step 2: Select School (" + roleLabel + ")";
             document.getElementById('step3RoleBadge').textContent = roleLabel + " Track";
             renderSchoolsList();
-            schoolSearchInput.value = '';
-            schoolSearchInput.focus();
         } else if (step === 4) {
             viewStep4.classList.add('active');
             progressFill.style.width = '85%';
@@ -1054,17 +1097,9 @@
         }
     }
 
-    function renderSchoolsList(filter = '') {
+    function renderSchoolsList() {
         schoolsListContainer.innerHTML = '';
-        const query = filter.trim().toLowerCase();
-        const filtered = SCHOOL_CATALOG.filter(s => s.name.toLowerCase().includes(query));
-
-        if (filtered.length === 0) {
-            schoolsListContainer.innerHTML = "<div class=\"text-center py-4 text-muted\"><i class=\"bi bi-search me-2\"></i>No schools matching \"" + filter + "\".</div>";
-            return;
-        }
-
-        filtered.forEach(school => {
+        SCHOOL_CATALOG.forEach(school => {
             const item = document.createElement('div');
             item.className = 'school-item';
             item.onclick = () => selectSchool(school);
@@ -1072,10 +1107,6 @@
             schoolsListContainer.appendChild(item);
         });
     }
-
-    schoolSearchInput.addEventListener('input', (e) => {
-        renderSchoolsList(e.target.value);
-    });
 
     function selectSchool(school) {
         flowState.selectedSchoolId = school.id;
@@ -1304,6 +1335,9 @@
     }
 
     function showGlobalError(msg) {
+        if (window.Sonner) {
+            Sonner.error(msg, 'Registration Error');
+        }
         globalErrorText.textContent = msg;
         globalErrorAlert.classList.remove('d-none');
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1328,7 +1362,15 @@
             showGlobalError('Please enter both First Name and Last Name.');
             return;
         }
-        const fullName = firstName + " " + lastName;
+        const fullName = (firstName + " " + lastName).trim().replace(/\s+/g, ' ');
+        if (fullName.length < 2 || fullName.length > 100) {
+            showGlobalError('Full name must be between 2 and 100 characters.');
+            return;
+        }
+        if (!/^[a-zA-Z\s'-]+$/.test(fullName)) {
+            showGlobalError('Full name can only contain letters, spaces, hyphens, and apostrophes.');
+            return;
+        }
         payloadFullName.value = fullName;
 
         let identifier = identifierInput.value.trim();
@@ -1361,26 +1403,54 @@
             return;
         }
 
-        if (password !== confirmPassword) {
-            showGlobalError('Passwords do not match. Please verify.');
-            return;
-        }
-        if (password.length < 8) {
-            showGlobalError('Password must contain at least 8 characters.');
+        const genderSelect = document.getElementById('genderSelect');
+        const finalGender = genderSelect ? genderSelect.value : '';
+        if (!finalGender) {
+            showGlobalError('Please select your gender.');
             return;
         }
 
         let finalMajor = '';
         if (flowState.role === 'student' && flowState.applicantType === 'current') {
+            if (!majorSelect.value) {
+                showGlobalError('Please select your major.');
+                return;
+            }
             if (majorSelect.value === 'Other') {
                 finalMajor = customMajorInput.value.trim();
+                if (!finalMajor) {
+                    showGlobalError('Please specify your custom major title.');
+                    return;
+                }
             } else {
                 finalMajor = majorSelect.value;
             }
         }
 
-        const genderSelect = document.getElementById('genderSelect');
-        const finalGender = genderSelect ? genderSelect.value : '';
+        if (password !== confirmPassword) {
+            showGlobalError('Passwords do not match. Please verify.');
+            return;
+        }
+        if (password.length < 8 || password.length > 64) {
+            showGlobalError('Password must be between 8 and 64 characters.');
+            return;
+        }
+        if (!/[A-Z]/.test(password)) {
+            showGlobalError('Password must contain at least one uppercase letter.');
+            return;
+        }
+        if (!/[a-z]/.test(password)) {
+            showGlobalError('Password must contain at least one lowercase letter.');
+            return;
+        }
+        if (!/[0-9]/.test(password)) {
+            showGlobalError('Password must contain at least one number.');
+            return;
+        }
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?~`]/.test(password)) {
+            showGlobalError('Password must contain at least one special symbol (!@#$%^&* etc.).');
+            return;
+        }
 
         const formData = new URLSearchParams();
         formData.append('role', flowState.role);

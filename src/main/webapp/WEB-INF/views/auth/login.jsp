@@ -1,135 +1,92 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniTRS - Login</title>
+    <title>UniTRS - Sign In</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/auth.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
     <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
-    <style>
-        body {
-            background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #0d6efd 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 1rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            max-width: 420px;
-            width: 100%;
-            padding: 2.5rem;
-        }
-        .login-card .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #0d6efd;
-            text-align: center;
-            margin-bottom: 0.25rem;
-        }
-        .login-card .subtitle {
-            text-align: center;
-            color: #6c757d;
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-        }
-        .form-control:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-        }
-        .btn-primary {
-            background-color: #0d6efd;
-            border: none;
-            padding: 0.65rem;
-            font-weight: 600;
-        }
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-        }
-    </style>
 </head>
-<body>
-    <div class="login-card">
-        <div class="logo"><i class="bi bi-mortarboard-fill"></i> UniTRS</div>
-        <div class="subtitle">University Management System</div>
+<body class="auth-page">
 
-        <!-- Error message -->
-        <c:if test="${not empty error}">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>${error}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
+    <!-- Sonner Flash Notification Triggers -->
+    <c:if test="${not empty error}">
+        <div class="sonner-flash-trigger d-none" data-type="error" data-title="Sign In Failed" data-message="<c:out value='${error}' />"></div>
+    </c:if>
+    <c:if test="${not empty success}">
+        <div class="sonner-flash-trigger d-none" data-type="success" data-title="Success" data-message="<c:out value='${success}' />"></div>
+    </c:if>
+    <c:if test="${empty success && param.resetSuccess == 'true'}">
+        <div class="sonner-flash-trigger d-none" data-type="success" data-title="Password Reset" data-message="Your password has been successfully reset! Please sign in with your new password."></div>
+    </c:if>
+    <c:if test="${param.logout == 'true'}">
+        <div class="sonner-flash-trigger d-none" data-type="info" data-title="Signed Out" data-message="You have been safely logged out."></div>
+    </c:if>
 
-        <!-- Success message (e.g., after registration or password reset) -->
-        <c:if test="${not empty success}">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>${success}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
-        <c:if test="${empty success && param.resetSuccess == 'true'}">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>Your password has been successfully reset! Please sign in with your new password.
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
-
-        <!-- Logout message -->
-        <c:if test="${param.logout == 'true'}">
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <i class="bi bi-box-arrow-right me-2"></i>You have been logged out successfully.
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
-
-        <form action="${pageContext.request.contextPath}/auth/login" method="POST">
-            <div class="mb-3">
-                <label for="identifier" class="form-label fw-semibold">Email or Student ID</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                    <input type="text" class="form-control" id="identifier" name="identifier"
-                           placeholder="e.g. 60240512 or admin@unitrs.edu" required value="${identifier}">
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label fw-semibold">Password</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                    <input type="password" class="form-control" id="password" name="password"
-                           placeholder="Enter your password" required>
-                    <button class="btn btn-outline-secondary" type="button" id="toggleLoginPassword" aria-label="Toggle password visibility">
-                        <i class="bi bi-eye" id="toggleLoginPasswordIcon"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end mb-3">
-                <a href="${pageContext.request.contextPath}/auth/forgot-password" class="text-decoration-none small">
-                    Forgot password?
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Brand & Header -->
+            <div class="text-center mb-4">
+                <a href="${pageContext.request.contextPath}/" class="auth-brand">
+                    <i class="bi bi-mortarboard-fill"></i>
+                    <span>UniTRS</span>
                 </a>
+                <div class="auth-subtitle">Sign in to your university portal</div>
             </div>
-            <button type="submit" class="btn btn-primary w-100 mb-3">
-                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
-            </button>
-            <div class="text-center">
-                <span class="text-muted">Don't have an account?</span>
-                <a href="${pageContext.request.contextPath}/auth/register" class="text-decoration-none fw-semibold ms-1">Register Now</a>
-            </div>
-        </form>
+
+            <!-- Login Form -->
+            <form action="${pageContext.request.contextPath}/auth/login" method="POST" id="loginForm">
+                <div class="mb-3">
+                    <label for="identifier" class="form-label-dark">Email or Student ID</label>
+                    <div class="input-group-dark">
+                        <span class="input-icon-dark"><i class="bi bi-person-badge"></i></span>
+                        <input type="text" class="form-control-dark" id="identifier" name="identifier"
+                               placeholder="e.g. 60240512 or user@unitrs.edu" required autofocus value="${identifier}">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label for="password" class="form-label-dark mb-0">Password</label>
+                        <a href="${pageContext.request.contextPath}/auth/forgot-password" class="auth-link small">
+                            Forgot password?
+                        </a>
+                    </div>
+                    <div class="input-group-dark">
+                        <span class="input-icon-dark"><i class="bi bi-lock-fill"></i></span>
+                        <input type="password" class="form-control-dark" id="password" name="password"
+                               placeholder="Enter your password" required>
+                        <button class="btn-toggle-eye" type="button" id="toggleLoginPassword" aria-label="Toggle password visibility">
+                            <i class="bi bi-eye" id="toggleLoginPasswordIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-auth-primary mt-4 mb-3">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In
+                </button>
+
+                <div class="auth-footer-text">
+                    Don't have an account? 
+                    <a href="${pageContext.request.contextPath}/auth/register" class="auth-link ms-1">Register Now</a>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            // Check if there's a success alert (meaning registration was successful)
-            const successAlert = document.querySelector('.alert-success');
-            if (successAlert) {
+            // Check if there was a success message (e.g. successful registration)
+            const successTrigger = document.querySelector('.sonner-flash-trigger[data-type="success"]');
+            if (successTrigger) {
                 // Clear the register form cache
                 localStorage.removeItem('reg_identifier');
                 localStorage.removeItem('reg_firstName');
@@ -142,14 +99,16 @@
 
             // Restore login identifier only if input is currently empty
             const identifierInput = document.getElementById('identifier');
-            if (!identifierInput.value && localStorage.getItem('login_identifier')) {
+            if (identifierInput && !identifierInput.value && localStorage.getItem('login_identifier')) {
                 identifierInput.value = localStorage.getItem('login_identifier');
             }
 
             // Save login identifier on change
-            identifierInput.addEventListener('input', () => {
-                localStorage.setItem('login_identifier', identifierInput.value);
-            });
+            if (identifierInput) {
+                identifierInput.addEventListener('input', () => {
+                    localStorage.setItem('login_identifier', identifierInput.value);
+                });
+            }
 
             // Toggle password visibility
             const toggleBtn = document.getElementById('toggleLoginPassword');

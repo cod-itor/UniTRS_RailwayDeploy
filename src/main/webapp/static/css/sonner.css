@@ -1,0 +1,203 @@
+/* ==========================================================================
+   Sonner Toast Notification System - UniTRS Design System
+   Sleek dark glassmorphism stackable toast alerts
+   ========================================================================== */
+
+:root {
+    --sonner-bg: rgba(15, 25, 42, 0.92);
+    --sonner-border: rgba(255, 255, 255, 0.12);
+    --sonner-text: #f8fafc;
+    --sonner-muted: #94a3b8;
+    --sonner-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.sonner-toaster {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 420px;
+    width: 100%;
+}
+
+@media (max-width: 576px) {
+    .sonner-toaster {
+        top: 1rem;
+        left: 1rem;
+        right: 1rem;
+        width: auto;
+        max-width: none;
+    }
+}
+
+.sonner-toast {
+    pointer-events: auto;
+    background: var(--sonner-bg);
+    border: 1px solid var(--sonner-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 0.95rem 1.15rem;
+    box-shadow: var(--sonner-shadow);
+    color: var(--sonner-text);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    position: relative;
+    overflow: hidden;
+    transform-origin: top right;
+    animation: sonnerSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sonner-toast.sonner-leaving {
+    animation: sonnerSlideOut 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes sonnerSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-16px) scale(0.94);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes sonnerSlideOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.92);
+    }
+}
+
+.sonner-icon-wrap {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    margin-top: 1px;
+}
+
+/* Variant Styling */
+.sonner-toast.sonner-error {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+.sonner-toast.sonner-error .sonner-icon-wrap {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.35);
+}
+
+.sonner-toast.sonner-success {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+.sonner-toast.sonner-success .sonner-icon-wrap {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+}
+
+.sonner-toast.sonner-info {
+    border-color: rgba(6, 182, 212, 0.3);
+}
+.sonner-toast.sonner-info .sonner-icon-wrap {
+    background: rgba(6, 182, 212, 0.15);
+    color: #06b6d4;
+    box-shadow: 0 0 16px rgba(6, 182, 212, 0.35);
+}
+
+.sonner-toast.sonner-warning {
+    border-color: rgba(245, 158, 11, 0.3);
+}
+.sonner-toast.sonner-warning .sonner-icon-wrap {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+}
+
+.sonner-content {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.sonner-title {
+    font-weight: 600;
+    font-size: 0.92rem;
+    line-height: 1.35;
+    margin-bottom: 0.2rem;
+    color: #ffffff;
+}
+
+.sonner-description {
+    font-size: 0.82rem;
+    color: var(--sonner-muted);
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.sonner-close-btn {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    color: var(--sonner-muted);
+    opacity: 0.7;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 2px 4px;
+    line-height: 1;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    margin-top: 2px;
+}
+
+.sonner-close-btn:hover {
+    color: #ffffff;
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sonner-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    width: 100%;
+    transform-origin: left;
+    animation: sonnerProgress linear forwards;
+}
+
+.sonner-toast.sonner-error .sonner-progress-bar {
+    background: #ef4444;
+}
+
+.sonner-toast.sonner-success .sonner-progress-bar {
+    background: #10b981;
+}
+
+.sonner-toast.sonner-warning .sonner-progress-bar {
+    background: #f59e0b;
+}
+
+@keyframes sonnerProgress {
+    0% {
+        transform: scaleX(1);
+    }
+    100% {
+        transform: scaleX(0);
+    }
+}
