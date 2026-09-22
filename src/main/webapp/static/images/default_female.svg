@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="50" fill="#e2e8f0"/>
+  <!-- Long hair -->
+  <path d="M30 40 c-5 20-5 45 0 50 l40 0 c5-5 5-30 0-50 c-5-25-35-25-40 0 z" fill="#a0aec0"/>
+  <!-- Face -->
+  <path d="M36 45 c0-10 6-15 14-15 s14 5 14 15 c0 12-6 15-14 15 s-14-3-14-15 z" fill="#e2e8f0"/>
+  <!-- Shoulders -->
+  <path d="M50 65 c-16 0-26 10-28 20 c10 8 18 10 28 10 s18-2 28-10 c-2-10-12-20-28-20 z" fill="#a0aec0"/>
+</svg>

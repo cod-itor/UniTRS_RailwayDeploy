@@ -115,13 +115,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerNewUser(String identifier, String fullName, String email, String password,
-            String confirmPassword, String major) {
-        registerNewUser(identifier, fullName, email, password, confirmPassword, major, "STUDENT");
+            String confirmPassword, String major, String gender) {
+        registerNewUser(identifier, fullName, email, password, confirmPassword, major, "STUDENT", gender);
     }
 
     @Override
     public void registerNewUser(String identifier, String fullName, String email, String password,
-            String confirmPassword, String major, String role) {
+            String confirmPassword, String major, String role, String gender) {
         if (identifier == null || identifier.trim().isEmpty() ||
                 fullName == null || fullName.trim().isEmpty() ||
                 email == null || email.trim().isEmpty() ||
@@ -212,6 +212,7 @@ public class UserServiceImpl implements UserService {
         newUser.setMajor(major != null && !major.isEmpty() ? major : null);
         Role userRole = (role != null && role.trim().equalsIgnoreCase("professor")) ? Role.PROFESSOR : Role.STUDENT;
         newUser.setRole(userRole);
+        newUser.setGender(gender != null && gender.trim().equalsIgnoreCase("female") ? "FEMALE" : "MALE");
         newUser.setVerified(false);
         newUser.setActive(true);
 

@@ -51,20 +51,28 @@
             }
             .mobile-top-action-btn:active { transform: scale(0.92); background: #f1f5f9; }
 
-            /* Today Date Strip - single day, no click */
-            .mobile-today-strip {
-                background: #11141a; border-radius: 18px; padding: 10px 18px;
-                display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
-                box-shadow: 0 6px 18px rgba(17,20,26,0.18);
+            /* Multi-day Date Strip */
+            .mobile-date-strip { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; scrollbar-width: none; }
+            .mobile-date-strip::-webkit-scrollbar { display: none; }
+            .date-strip-item {
+                flex: 0 0 calc(100% / 5.5);
+                background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                padding: 12px 0; color: #64748b; transition: all 0.2s;
             }
-            .today-day-label { font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; }
-            .today-date-number { font-size: 1.9rem; font-weight: 800; color: #fff; line-height: 1; }
-            .today-month-year { font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.75); margin-top: 1px; }
-            .today-dot-indicator { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 1.8s infinite; flex-shrink: 0; }
+            .date-strip-item.active {
+                background: #11141a; border-color: #11141a; color: #fff;
+                box-shadow: 0 6px 12px rgba(17,20,26,0.15); transform: translateY(-2px);
+            }
+            .ds-day { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+            .ds-date { font-size: 1.25rem; font-weight: 800; line-height: 1; }
+            .date-strip-item.active .ds-day { color: rgba(255,255,255,0.7); }
+            .date-strip-item.active .ds-date { color: #fff; }
+            .date-strip-item.active::after {
+                content: ''; display: block; width: 6px; height: 6px; background: #22c55e; border-radius: 50%; margin-top: 6px;
+                animation: pulse 1.8s infinite;
+            }
             @keyframes pulse { 0%,100% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.4); opacity: 1; } }
-            .today-strip-right { flex: 1; text-align: right; }
-            .today-today-label { font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.8px; }
-            .today-weekday { font-size: 0.95rem; font-weight: 700; color: #fff; }
 
             /* Hero Banner */
             .mobile-hero-banner {
@@ -414,7 +422,14 @@
             <div class="mobile-top-bar">
                 <div class="mobile-user-info">
                     <div class="mobile-avatar-frame">
-                        <img src="${pageContext.request.contextPath}/static/images/student_headshot.jpg" alt="Avatar" onerror="this.src='https://ui-avatars.com/api/?name=${user.fullName}&background=e2e8f0&color=0f172a&bold=true'">
+                        <c:choose>
+                            <c:when test="${user.gender == 'FEMALE'}">
+                                <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Avatar">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Avatar">
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     <div>
                         <div class="mobile-user-greeting">Hello, ${user.fullName}</div>
@@ -430,26 +445,22 @@
             <%-- ===== HOME SUB-VIEW ===== --%>
             <div id="mobile-view-home" class="mobile-sub-view active">
 
-                <%-- Fixed single-day strip --%>
-                <div class="mobile-today-strip">
-                    <div>
-                        <div class="today-day-label" id="todayDayLabel">Monday</div>
-                        <div class="today-date-number" id="todayDateNum">22</div>
-                    </div>
-                    <div style="flex:1;">
-                        <div class="today-month-year" id="todayMonthYear">September 2026</div>
-                    </div>
-                    <div class="today-dot-indicator"></div>
-                    <div class="today-strip-right">
-                        <div class="today-today-label">Today</div>
-                        <div class="today-weekday" id="todayWeekdayFull">Monday</div>
-                    </div>
+                <%-- Fixed multi-day strip --%>
+                <div class="mobile-date-strip" id="mobileDateStrip">
+                    <!-- Populated by JS -->
                 </div>
 
                 <%-- Hero: NEXT CLASS today --%>
                 <div class="mobile-hero-banner">
                     <div class="hero-avatar-box">
-                        <img src="${pageContext.request.contextPath}/static/images/student_avatar_3d.jpg" alt="Student">
+                        <c:choose>
+                            <c:when test="${user.gender == 'FEMALE'}">
+                                <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Student">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Student">
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     <div class="hero-content">
                         <div class="hero-label">NEXT CLASS TODAY</div>
@@ -959,18 +970,39 @@ var enrollmentData = {};
         if (e.target === document.getElementById('courseModalOverlay')) closeCourseModal();
     }
 
-    function initMobileTodayStrip() {
-        var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        var now = new Date();
-        var dayLbl = document.getElementById('todayDayLabel');
-        var dateNum = document.getElementById('todayDateNum');
-        var monthYr = document.getElementById('todayMonthYear');
-        var wkFull = document.getElementById('todayWeekdayFull');
-        if (dayLbl) dayLbl.textContent = days[now.getDay()].slice(0, 3).toUpperCase();
-        if (dateNum) dateNum.textContent = now.getDate();
-        if (monthYr) monthYr.textContent = months[now.getMonth()] + ' ' + now.getFullYear();
-        if (wkFull) wkFull.textContent = days[now.getDay()];
+    function initMobileDateStrip() {
+        var strip = document.getElementById('mobileDateStrip');
+        if (!strip) return;
+        
+        var today = new Date();
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        
+        // Get Monday of current week
+        var dayOfWeek = today.getDay();
+        var diffToMonday = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+        var monday = new Date(today.setDate(diffToMonday));
+        
+        var html = '';
+        for (var i = 0; i < 7; i++) {
+            var d = new Date(monday);
+            d.setDate(monday.getDate() + i);
+            
+            var isToday = (d.getDate() === new Date().getDate() && d.getMonth() === new Date().getMonth());
+            
+            html += '<div class="date-strip-item ' + (isToday ? 'active' : '') + '">' +
+                    '<div class="ds-day">' + days[d.getDay()] + '</div>' +
+                    '<div class="ds-date">' + d.getDate() + '</div>' +
+                    '</div>';
+        }
+        strip.innerHTML = html;
+        
+        // Scroll slightly if active element is towards the right
+        setTimeout(function() {
+            var active = strip.querySelector('.active');
+            if (active) {
+                strip.scrollLeft = active.offsetLeft - (strip.offsetWidth / 2) + (active.offsetWidth / 2);
+            }
+        }, 100);
     }
 
     function initSwiperDots() {
@@ -992,7 +1024,7 @@ var enrollmentData = {};
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        initMobileTodayStrip();
+        initMobileDateStrip();
         initSwiperDots();
     });
 </script>

@@ -15,13 +15,14 @@ public class UserRepository extends BaseRepository {
     }
 
     public boolean register(User user) {
-        String sql = "INSERT INTO users (user_identifier, password, full_name, email, role, major, is_verified, is_active, dean_school_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (user_identifier, password, full_name, email, role, gender, major, is_verified, is_active, dean_school_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int id = executeInsertAndReturnKey(sql,
                 user.getUserIdentifier(),
                 user.getPassword(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getRole() != null ? user.getRole().name() : Role.STUDENT.name(),
+                user.getGender() != null ? user.getGender().toUpperCase() : "MALE",
                 user.getMajor(),
                 user.isVerified(),
                 user.isActive(),
@@ -167,6 +168,13 @@ public class UserRepository extends BaseRepository {
         user.setFullName(rs.getString("full_name"));
         user.setEmail(rs.getString("email"));
         user.setRole(Role.fromString(rs.getString("role")));
+        
+        try {
+            user.setGender(rs.getString("gender"));
+        } catch (SQLException ignored) {
+            user.setGender("MALE"); // Default or fallback
+        }
+        
         user.setMajor(rs.getString("major"));
         user.setVerified(rs.getBoolean("is_verified"));
         user.setActive(rs.getBoolean("is_active"));

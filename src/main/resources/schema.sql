@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     role ENUM('STUDENT', 'PROFESSOR', 'DEAN', 'ADMIN') NOT NULL,
+    gender ENUM('MALE', 'FEMALE') NOT NULL,
     major VARCHAR(100),
     is_verified BOOLEAN DEFAULT FALSE,           -- Requires Admin verification for Students
     is_active BOOLEAN DEFAULT TRUE,

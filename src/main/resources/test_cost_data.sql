@@ -89,3 +89,5 @@ SELECT id, 15, 23, 28, 29, 95, 'A', 4.0
 FROM enrollments 
 WHERE student_id = (SELECT id FROM users WHERE user_identifier = 'S201' LIMIT 1) 
 AND class_section_id = @section1;
+
+ALTER TABLE users ADD COLUMN gender ENUM('MALE', 'FEMALE') NOT NULL DEFAULT 'MALE';
