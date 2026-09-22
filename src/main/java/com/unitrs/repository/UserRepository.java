@@ -168,13 +168,13 @@ public class UserRepository extends BaseRepository {
         user.setFullName(rs.getString("full_name"));
         user.setEmail(rs.getString("email"));
         user.setRole(Role.fromString(rs.getString("role")));
-        
+
         try {
             user.setGender(rs.getString("gender"));
         } catch (SQLException ignored) {
-            user.setGender("MALE"); // Default or fallback
+            user.setGender("MALE");
         }
-        
+
         user.setMajor(rs.getString("major"));
         user.setVerified(rs.getBoolean("is_verified"));
         user.setActive(rs.getBoolean("is_active"));

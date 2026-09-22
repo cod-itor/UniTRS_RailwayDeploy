@@ -2,6 +2,8 @@ package com.unitrs.model.entity;
 
 import java.sql.Timestamp;
 
+import com.unitrs.utils.FormatUtils;
+
 import lombok.*;
 
 @Getter
@@ -27,4 +29,7 @@ public class Enrollment {
     private String termName;
     private String academicYear;
 
+    public String getFormattedStudentIdentifier() {
+        return FormatUtils.formatIdentifier(this.studentIdentifier);
+    }
 }

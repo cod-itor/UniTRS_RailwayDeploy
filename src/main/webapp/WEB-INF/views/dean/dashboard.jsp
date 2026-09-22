@@ -202,7 +202,7 @@
                             <tbody>
                                 <c:forEach var="student" items="${students}">
                                     <tr>
-                                        <td><span class="badge bg-secondary">${student.userIdentifier}</span></td>
+                                        <td><span class="badge bg-secondary">${student.formattedIdentifier}</span></td>
                                         <td><strong>${student.fullName}</strong></td>
                                         <td>${student.email}</td>
                                         <td>${student.major}</td>

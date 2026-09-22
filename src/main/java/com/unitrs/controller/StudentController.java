@@ -92,7 +92,12 @@ public class StudentController extends HttpServlet {
                 request.setAttribute("gradeMap", gradeMap);
             }
 
-            if (request.getParameter("success") != null) {
+            String success = request.getParameter("success");
+            if ("enrolled".equals(success)) {
+                request.setAttribute("successMessage", "Enrolled in course successfully!");
+            } else if ("dropped".equals(success)) {
+                request.setAttribute("successMessage", "Course dropped successfully.");
+            } else if (success != null) {
                 request.setAttribute("successMessage", "Operation completed successfully!");
             }
             if (request.getParameter("error") != null) {
@@ -127,14 +132,25 @@ public class StudentController extends HttpServlet {
             } else if ("enroll".equals(action)) {
                 int classSectionId = Integer.parseInt(request.getParameter("classSectionId"));
                 enrollmentRepository.enrollStudent(user.getId(), classSectionId);
-                response.sendRedirect(request.getContextPath() + "/student/dashboard?success=1");
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), "UTF-8") : "&tab=courses";
+                response.sendRedirect(request.getContextPath() + "/student/dashboard?success=enrolled" + tabParam);
+            } else if ("unenroll".equals(action) || "drop".equals(action)) {
+                int classSectionId = Integer.parseInt(request.getParameter("classSectionId"));
+                enrollmentRepository.unenrollStudent(user.getId(), classSectionId);
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), "UTF-8") : "&tab=courses";
+                response.sendRedirect(request.getContextPath() + "/student/dashboard?success=dropped" + tabParam);
             } else {
                 response.sendRedirect(request.getContextPath() + "/student/dashboard");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            String tab = request.getParameter("tab");
+            String defaultTab = ("enroll".equals(action) || "unenroll".equals(action) || "drop".equals(action)) ? "&tab=courses" : "";
+            String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), "UTF-8") : defaultTab;
             response.sendRedirect(request.getContextPath() + "/student/dashboard?error="
-                    + java.net.URLEncoder.encode("Operation failed: " + e.getMessage(), "UTF-8"));
+                    + java.net.URLEncoder.encode("Operation failed: " + e.getMessage(), "UTF-8") + tabParam);
         }
     }
 }

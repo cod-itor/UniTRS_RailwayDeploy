@@ -2,6 +2,8 @@ package com.unitrs.model.entity;
 
 import java.sql.Timestamp;
 
+import com.unitrs.utils.FormatUtils;
+
 import lombok.*;
 
 @Getter
@@ -23,4 +25,8 @@ public class User {
     private Integer studentSchoolId;
     private boolean twoFactorEnabled;
     private Timestamp createdAt;
+
+    public String getFormattedIdentifier() {
+        return FormatUtils.formatIdentifier(this.userIdentifier);
+    }
 }

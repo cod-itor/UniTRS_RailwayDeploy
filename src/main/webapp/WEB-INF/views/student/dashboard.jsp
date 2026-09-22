@@ -157,6 +157,18 @@
                         padding: 12px 0;
                         color: #64748b;
                         transition: all 0.2s;
+                        cursor: pointer;
+                        user-select: none;
+                    }
+
+                    .date-strip-item:active {
+                        transform: scale(0.95);
+                    }
+
+                    .date-strip-item.is-today:not(.active) {
+                        border-color: #3b82f6;
+                        color: #2563eb;
+                        background: #eff6ff;
                     }
 
                     .date-strip-item.active {
@@ -1078,8 +1090,19 @@
                                                     color: inherit;
                                                 }
 
-                                                .user-profile:hover {
+                                                .user-profile:hover, .user-profile:focus {
                                                     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+                                                    transform: translateY(-1px);
+                                                }
+
+                                                .user-profile.dropdown-toggle::after {
+                                                    display: none !important;
+                                                }
+
+                                                .user-dropdown-menu {
+                                                    border: 1px solid #e2e8f0 !important;
+                                                    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08) !important;
+                                                    border-radius: 20px !important;
                                                 }
 
                                                 .user-avatar {
@@ -1592,20 +1615,20 @@
                                                     </div>
 
                                                     <nav class="sidebar-nav">
-                                                        <button class="active"
+                                                        <button class="active" id="tab-dashboard"
                                                             onclick="switchDesktopTab('dashboard', this)">
                                                             <i class="bi bi-grid-fill"></i> Dashboard
                                                         </button>
-                                                        <button onclick="switchDesktopTab('schedule', this)">
+                                                        <button id="tab-schedule" onclick="switchDesktopTab('schedule', this)">
                                                             <i class="bi bi-calendar-event"></i> My Schedule
                                                         </button>
-                                                        <button onclick="switchDesktopTab('registration', this)">
+                                                        <button id="tab-registration" onclick="switchDesktopTab('registration', this)">
                                                             <i class="bi bi-journal-plus"></i> Term Registration
                                                         </button>
-                                                        <button onclick="switchDesktopTab('transcript', this)">
+                                                        <button id="tab-transcript" onclick="switchDesktopTab('transcript', this)">
                                                             <i class="bi bi-file-earmark-bar-graph"></i> Transcript
                                                         </button>
-                                                        <button onclick="switchDesktopTab('settings', this)">
+                                                        <button id="tab-settings" onclick="switchDesktopTab('settings', this)">
                                                             <i class="bi bi-gear"></i> Settings
                                                         </button>
                                                     </nav>
@@ -1638,29 +1661,81 @@
                                                                     <button class="action-btn"><i
                                                                             class="bi bi-chat-dots"></i></button>
 
-                                                                    <a href="${pageContext.request.contextPath}/auth/logout"
-                                                                        class="user-profile">
-                                                                        <div class="user-avatar">
-                                                                            <c:choose>
-                                                                                <c:when
-                                                                                    test="${user.gender == 'FEMALE'}">
-                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_female.svg"
-                                                                                        alt="Avatar">
-                                                                                </c:when>
-                                                                                <c:otherwise>
-                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_male.svg"
-                                                                                        alt="Avatar">
-                                                                                </c:otherwise>
-                                                                            </c:choose>
+                                                                    <div class="dropdown">
+                                                                        <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="studentProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User profile menu for ${user.fullName}">
+                                                                            <div class="user-avatar">
+                                                                                <c:choose>
+                                                                                    <c:when test="${user.gender == 'FEMALE'}">
+                                                                                        <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Avatar">
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Avatar">
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                            </div>
+                                                                            <div class="user-info-text pe-2">
+                                                                                <span class="user-name">${user.fullName}</span>
+                                                                                <span class="user-role">${user.formattedIdentifier} <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-1 px-2 py-0" style="font-size: 0.65rem; font-weight: 700;">${user.role}</span> <i class="bi bi-chevron-down ms-1" style="font-size:0.65rem;"></i></span>
+                                                                            </div>
+                                                                        </button>
+
+                                                                        <div class="dropdown-menu dropdown-menu-end shadow-lg rounded-4 p-0 border-0 mt-2 overflow-hidden user-dropdown-menu" aria-labelledby="studentProfileDropdown" style="width: 300px; z-index: 1060;">
+                                                                            <!-- Header Banner -->
+                                                                            <div class="p-3 border-bottom" style="background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);">
+                                                                                <div class="d-flex align-items-center gap-3">
+                                                                                    <div class="user-avatar" style="width: 44px; height: 44px; border-radius: 14px; border: 2px solid #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
+                                                                                        <c:choose>
+                                                                                            <c:when test="${user.gender == 'FEMALE'}">
+                                                                                                <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Avatar">
+                                                                                            </c:when>
+                                                                                            <c:otherwise>
+                                                                                                <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Avatar">
+                                                                                            </c:otherwise>
+                                                                                        </c:choose>
+                                                                                    </div>
+                                                                                    <div class="overflow-hidden">
+                                                                                        <div class="text-muted small text-uppercase fw-semibold" style="font-size: 0.68rem; letter-spacing: 0.5px;">Account Email</div>
+                                                                                        <div class="fw-semibold text-dark text-truncate" style="font-size: 0.85rem;">${user.email}</div>
+                                                                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill mt-1" style="font-size: 0.68rem; font-weight: 700;">
+                                                                                            <i class="bi bi-mortarboard-fill me-1"></i>${user.role}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Details Rows -->
+                                                                            <div class="p-3">
+                                                                                <div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="font-size: 0.82rem;">
+                                                                                    <span class="text-muted d-flex align-items-center gap-2">
+                                                                                        <i class="bi bi-person-badge text-primary" style="font-size: 0.95rem;"></i> Student ID
+                                                                                    </span>
+                                                                                    <span class="fw-bold text-dark font-monospace text-end text-truncate ms-2" style="max-width: 170px;">
+                                                                                        ${user.formattedIdentifier}
+                                                                                    </span>
+                                                                                </div>
+
+                                                                                <div class="d-flex justify-content-between align-items-center py-2" style="font-size: 0.82rem;">
+                                                                                    <span class="text-muted d-flex align-items-center gap-2">
+                                                                                        <i class="bi bi-building text-primary" style="font-size: 0.95rem;"></i> School
+                                                                                    </span>
+                                                                                    <span class="fw-semibold text-dark text-end text-truncate ms-2" style="max-width: 170px;" title="${not empty studentSchool ? studentSchool.schoolName : (not empty user.major ? user.major : 'Not Assigned')}">
+                                                                                        <c:choose>
+                                                                                            <c:when test="${not empty studentSchool}">${studentSchool.schoolName}</c:when>
+                                                                                            <c:when test="${not empty user.major}">${user.major}</c:when>
+                                                                                            <c:otherwise>Not Assigned</c:otherwise>
+                                                                                        </c:choose>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Logout Button -->
+                                                                            <div class="p-3 bg-light border-top">
+                                                                                <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; transition: all 0.2s;">
+                                                                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                                                                </a>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="user-info-text pe-2">
-                                                                            <span
-                                                                                class="user-name">${user.fullName}</span>
-                                                                            <span
-                                                                                class="user-role">${user.userIdentifier}
-                                                                                &bull; Logout</span>
-                                                                        </div>
-                                                                    </a>
+                                                                    </div>
                                                                 </div>
                                                             </header>
 
@@ -2071,19 +2146,7 @@
                                                                                                                 ${section.roomCapacity}
                                                                                                             </td>
                                                                                                             <td>
-                                                                                                                <form
-                                                                                                                    action="${pageContext.request.contextPath}/student/dashboard"
-                                                                                                                    method="post"
-                                                                                                                    class="m-0">
-                                                                                                                    <input
-                                                                                                                        type="hidden"
-                                                                                                                        name="action"
-                                                                                                                        value="enroll">
-                                                                                                                    <input
-                                                                                                                        type="hidden"
-                                                                                                                        name="classSectionId"
-                                                                                                                        value="${section.id}">
-                                                                                                                    <c:set
+                                                                                                                <c:set
                                                                                                                         var="isEnrolled"
                                                                                                                         value="false" />
                                                                                                                     <c:forEach
@@ -2099,9 +2162,10 @@
                                                                                                                     <c:choose>
                                                                                                                         <c:when
                                                                                                                             test="${isEnrolled}">
-                                                                                                                            <button
-                                                                                                                                type="button"
-                                                                                                                                class="btn btn-sm btn-light rounded-pill fw-bold disabled">Enrolled</button>
+                                                                                                                            <div class="d-flex align-items-center gap-1">
+                                                                                                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small fw-bold"><i class="bi bi-check2"></i> Enrolled</span>
+                                                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-bold" style="font-size: 0.75rem;" onclick="openDropConfirm('${section.id}', '${section.courseCode}', '${section.courseTitle}', 'registration')">Drop</button>
+                                                                                                                            </div>
                                                                                                                         </c:when>
                                                                                                                         <c:when
                                                                                                                             test="${section.enrolledCount >= section.roomCapacity}">
@@ -2111,11 +2175,11 @@
                                                                                                                         </c:when>
                                                                                                                         <c:otherwise>
                                                                                                                             <button
-                                                                                                                                type="submit"
-                                                                                                                                class="btn btn-sm btn-dark rounded-pill px-3 fw-bold">Enroll</button>
+                                                                                                                                type="button"
+                                                                                                                                class="btn btn-sm btn-dark rounded-pill px-3 fw-bold"
+                                                                                                                                onclick="openEnrollConfirm('${section.id}', '${section.courseCode}', '${section.courseTitle}', '${section.professorName}', 'registration')">Enroll</button>
                                                                                                                         </c:otherwise>
                                                                                                                     </c:choose>
-                                                                                                                </form>
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                     </c:forEach>
@@ -2408,28 +2472,6 @@
                                                                                                                 in.
                                                                                                             </div>
                                                                                                         </div>
-                                                                                                        <form
-                                                                                                            action="${pageContext.request.contextPath}/auth/update-2fa"
-                                                                                                            method="POST"
-                                                                                                            class="m-0">
-                                                                                                            <input
-                                                                                                                type="hidden"
-                                                                                                                name="redirect"
-                                                                                                                value="/student/dashboard">
-                                                                                                            <input
-                                                                                                                type="hidden"
-                                                                                                                name="twoFactorEnabled"
-                                                                                                                value="${!user.twoFactorEnabled}">
-                                                                                                            <c:choose>
-                                                                                                                <c:when
-                                                                                                                    test="${user.twoFactorEnabled}">
-                                                                                                                    <button
-                                                                                                                        type="submit"
-                                                                                                                        class="btn btn-sm btn-danger rounded-pill px-4 fw-bold">Disable</button>
-                                                                                                                </c:when>
-                                                                                                                <c:otherwise>
-                                                                                                                    <button
-                                                                                                                        type="submit"
                                                                                                                         class="btn btn-sm btn-success rounded-pill px-4 fw-bold">Enable</button>
                                                                                                                 </c:otherwise>
                                                                                                             </c:choose>
@@ -2455,6 +2497,12 @@
 
                                                             const targetPanel = document.getElementById('dt-' + tabId);
                                                             if (targetPanel) targetPanel.classList.add('active');
+
+                                                            try {
+                                                                const url = new URL(window.location);
+                                                                url.searchParams.set('tab', tabId);
+                                                                window.history.replaceState({}, '', url);
+                                                            } catch (e) {}
                                                         }
                                                     </script>
                                         </div>
@@ -2908,69 +2956,77 @@
                                                                                             --%>
                                                                                             <div class="section-header">
                                                                                                 <span
-                                                                                                    class="section-title">This
+                                                                                                    class="section-title" id="homeScheduleTitle">This
                                                                                                     Term's
                                                                                                     Courses</span>
                                                                                                 <span
-                                                                                                    class="badge bg-primary bg-opacity-10 text-primary rounded-pill small">${schedule.size()}
+                                                                                                    class="badge bg-primary bg-opacity-10 text-primary rounded-pill small" id="homeScheduleCount">${schedule.size()}
                                                                                                     Enrolled</span>
                                                                                             </div>
 
                                                                                             <c:choose>
                                                                                                 <c:when
                                                                                                     test="${not empty schedule}">
-                                                                                                    <c:forEach
-                                                                                                        var="enrollment"
-                                                                                                        items="${schedule}">
-                                                                                                        <c:set
-                                                                                                            var="enrollGrade"
-                                                                                                            value="${gradeMap[enrollment.id]}" />
-                                                                                                        <div class="mobile-course-card"
-                                                                                                            onclick="openCourseModal('${enrollment.id}')">
-                                                                                                            <div
-                                                                                                                class="d-flex justify-content-between align-items-start mb-1">
-                                                                                                                <span
-                                                                                                                    class="badge bg-primary bg-opacity-10 text-primary fw-bold">${enrollment.courseCode}</span>
-                                                                                                                <c:choose>
-                                                                                                                    <c:when
-                                                                                                                        test="${enrollGrade != null && enrollGrade.letterGrade != 'N/A' && not empty enrollGrade.letterGrade}">
-                                                                                                                        <span
-                                                                                                                            class="badge ${enrollGrade.letterGrade == 'A' ? 'bg-success' : (enrollGrade.letterGrade == 'F' ? 'bg-danger' : 'bg-primary')} bg-opacity-15 text-${enrollGrade.letterGrade == 'A' ? 'success' : (enrollGrade.letterGrade == 'F' ? 'danger' : 'primary')} fw-bold">${enrollGrade.letterGrade}</span>
-                                                                                                                    </c:when>
-                                                                                                                    <c:otherwise>
-                                                                                                                        <span
-                                                                                                                            class="badge bg-light border text-muted fw-normal">Pending</span>
-                                                                                                                    </c:otherwise>
-                                                                                                                </c:choose>
+                                                                                                    <div id="homeScheduleContainer">
+                                                                                                        <c:forEach
+                                                                                                            var="enrollment"
+                                                                                                            items="${schedule}">
+                                                                                                            <c:set
+                                                                                                                var="enrollGrade"
+                                                                                                                value="${gradeMap[enrollment.id]}" />
+                                                                                                            <div class="mobile-course-card home-schedule-card"
+                                                                                                                data-days="${enrollment.daysOfWeek}"
+                                                                                                                onclick="openCourseModal('${enrollment.id}')">
+                                                                                                                <div
+                                                                                                                    class="d-flex justify-content-between align-items-start mb-1">
+                                                                                                                    <span
+                                                                                                                        class="badge bg-primary bg-opacity-10 text-primary fw-bold">${enrollment.courseCode}</span>
+                                                                                                                    <c:choose>
+                                                                                                                        <c:when
+                                                                                                                            test="${enrollGrade != null && enrollGrade.letterGrade != 'N/A' && not empty enrollGrade.letterGrade}">
+                                                                                                                            <span
+                                                                                                                                class="badge ${enrollGrade.letterGrade == 'A' ? 'bg-success' : (enrollGrade.letterGrade == 'F' ? 'bg-danger' : 'bg-primary')} bg-opacity-15 text-${enrollGrade.letterGrade == 'A' ? 'success' : (enrollGrade.letterGrade == 'F' ? 'danger' : 'primary')} fw-bold">${enrollGrade.letterGrade}</span>
+                                                                                                                        </c:when>
+                                                                                                                        <c:otherwise>
+                                                                                                                            <span
+                                                                                                                                class="badge bg-light border text-muted fw-normal">Pending</span>
+                                                                                                                        </c:otherwise>
+                                                                                                                    </c:choose>
+                                                                                                                </div>
+                                                                                                                <div
+                                                                                                                    class="fw-bold text-dark small mb-1">
+                                                                                                                    ${enrollment.courseTitle}
+                                                                                                                </div>
+                                                                                                                <div class="text-muted"
+                                                                                                                    style="font-size:0.72rem;">
+                                                                                                                    <i
+                                                                                                                        class="bi bi-clock me-1"></i>${enrollment.sessionShift}
+                                                                                                                    &nbsp;|&nbsp;
+                                                                                                                    <i
+                                                                                                                        class="bi bi-geo-alt me-1"></i>Room
+                                                                                                                    ${enrollment.room}
+                                                                                                                    &nbsp;|&nbsp;
+                                                                                                                    <i
+                                                                                                                        class="bi bi-person me-1"></i>${enrollment.professorName}
+                                                                                                                </div>
+                                                                                                                <div class="mt-2 d-flex align-items-center gap-1"
+                                                                                                                    style="font-size:0.68rem;color:#94a3b8;">
+                                                                                                                    <i
+                                                                                                                        class="bi bi-chevron-right"></i>
+                                                                                                                    Tap to
+                                                                                                                    view
+                                                                                                                    scores
+                                                                                                                    &amp;
+                                                                                                                    attendance
+                                                                                                                </div>
                                                                                                             </div>
-                                                                                                            <div
-                                                                                                                class="fw-bold text-dark small mb-1">
-                                                                                                                ${enrollment.courseTitle}
-                                                                                                            </div>
-                                                                                                            <div class="text-muted"
-                                                                                                                style="font-size:0.72rem;">
-                                                                                                                <i
-                                                                                                                    class="bi bi-clock me-1"></i>${enrollment.sessionShift}
-                                                                                                                &nbsp;|&nbsp;
-                                                                                                                <i
-                                                                                                                    class="bi bi-geo-alt me-1"></i>Room
-                                                                                                                ${enrollment.room}
-                                                                                                                &nbsp;|&nbsp;
-                                                                                                                <i
-                                                                                                                    class="bi bi-person me-1"></i>${enrollment.professorName}
-                                                                                                            </div>
-                                                                                                            <div class="mt-2 d-flex align-items-center gap-1"
-                                                                                                                style="font-size:0.68rem;color:#94a3b8;">
-                                                                                                                <i
-                                                                                                                    class="bi bi-chevron-right"></i>
-                                                                                                                Tap to
-                                                                                                                view
-                                                                                                                scores
-                                                                                                                &amp;
-                                                                                                                attendance
-                                                                                                            </div>
+                                                                                                        </c:forEach>
+                                                                                                        <div id="homeScheduleEmpty" class="mobile-course-card text-center py-4 border" style="display:none;">
+                                                                                                            <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
+                                                                                                            <div class="fw-bold small text-dark mb-1" id="homeScheduleEmptyText">No classes scheduled</div>
+                                                                                                            <div class="small text-muted">Enjoy your free time!</div>
                                                                                                         </div>
-                                                                                                    </c:forEach>
+                                                                                                    </div>
                                                                                                 </c:when>
                                                                                                 <c:otherwise>
                                                                                                     <div
@@ -3065,6 +3121,10 @@
                                                                                                             type="hidden"
                                                                                                             name="action"
                                                                                                             value="enroll">
+                                                                                                        <input
+                                                                                                            type="hidden"
+                                                                                                            name="tab"
+                                                                                                            value="courses">
                                                                                                         <input
                                                                                                             type="hidden"
                                                                                                             name="classSectionId"
@@ -3168,7 +3228,7 @@
                                                                                                 <c:forEach var="grade"
                                                                                                     items="${grades}">
                                                                                                     <div class="mobile-course-card"
-                                                                                                        style="cursor:default;">
+                                                                                                        onclick="openCourseModal('${grade.enrollmentId}')">
                                                                                                         <div
                                                                                                             class="d-flex justify-content-between align-items-start mb-1">
                                                                                                             <span
@@ -3226,6 +3286,11 @@
                                                                                                                     :
                                                                                                                     '-'}</strong></span>
                                                                                                         </div>
+                                                                                                        <div class="mt-2 d-flex align-items-center gap-1"
+                                                                                                            style="font-size:0.68rem;color:#94a3b8;">
+                                                                                                            <i class="bi bi-chevron-right"></i>
+                                                                                                            Tap to view scores &amp; attendance
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </c:forEach>
                                                                                             </c:when>
@@ -3269,7 +3334,7 @@
                                                                                                         var="enrollment"
                                                                                                         items="${schedule}">
                                                                                                         <div class="mobile-course-card"
-                                                                                                            style="cursor:default;">
+                                                                                                            onclick="openCourseModal('${enrollment.id}')">
                                                                                                             <div
                                                                                                                 class="d-flex justify-content-between align-items-start mb-2">
                                                                                                                 <span
@@ -3301,6 +3366,11 @@
                                                                                                                 <div><i
                                                                                                                         class="bi bi-person me-2 text-primary"></i>${enrollment.professorName}
                                                                                                                 </div>
+                                                                                                            </div>
+                                                                                                            <div class="mt-2 d-flex align-items-center gap-1"
+                                                                                                                style="font-size:0.68rem;color:#94a3b8;">
+                                                                                                                <i class="bi bi-chevron-right"></i>
+                                                                                                                Tap to view scores &amp; attendance
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </c:forEach>
@@ -3348,7 +3418,7 @@
                                                                                                     <div
                                                                                                         class="badge bg-light border text-dark mb-2 px-3 py-1">
                                                                                                         ID:
-                                                                                                        ${user.userIdentifier}
+                                                                                                        ${user.formattedIdentifier}
                                                                                                     </div>
                                                                                                     <div
                                                                                                         class="text-muted small">
@@ -3423,7 +3493,7 @@
                                                                                                         <input
                                                                                                             type="hidden"
                                                                                                             name="redirect"
-                                                                                                            value="/student/dashboard">
+                                                                                                            value="/student/dashboard?tab=profile">
                                                                                                         <div
                                                                                                             class="input-group">
                                                                                                             <label
@@ -3627,6 +3697,32 @@
                                                                             };
     }) ();
                                                                         </script>
+                                                                     </c:forEach>
+                                                                    <c:forEach var="g" items="${grades}">
+                                                                        <script>
+                                                                            (function() {
+                                                                                var gid = ${g.enrollmentId};
+                                                                                if (!enrollmentData[gid]) {
+                                                                                    enrollmentData[gid] = {
+                                                                                        code: '${g.courseCode}',
+                                                                                        title: '${g.courseTitle}',
+                                                                                        shift: '${not empty g.sessionShift ? g.sessionShift : "-"}',
+                                                                                        days: '-',
+                                                                                        room: '-',
+                                                                                        prof: '-',
+                                                                                        credits: ${g.credits},
+                                                                                        attScore: ${g.attendanceScore},
+                                                                                        asgScore: ${g.assignmentScore},
+                                                                                        midScore: ${g.midtermScore},
+                                                                                        finScore: ${g.finalScore},
+                                                                                        totalScore: ${g.totalScore},
+                                                                                        letter: '${g.letterGrade}',
+                                                                                        gpa: ${g.gpaPoint},
+                                                                                        attendance: []
+                                                                                    };
+                                                                                }
+                                                                            })();
+                                                                        </script>
                                                                     </c:forEach>
 
 
@@ -3646,6 +3742,11 @@
                                                                                 if (bTab === tabName) { b.classList.add('active'); if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][0]; }
                                                                                 else { b.classList.remove('active'); if (ic && iconMap[bTab]) ic.className = 'bi ' + iconMap[bTab][1]; }
                                                                             }
+                                                                            try {
+                                                                                var url = new URL(window.location);
+                                                                                url.searchParams.set('tab', tabName);
+                                                                                window.history.replaceState({}, '', url);
+                                                                            } catch (e) {}
                                                                             window.scrollTo({ top: 0, behavior: 'smooth' });
                                                                         }
 
@@ -3787,6 +3888,38 @@
                                                                         document.addEventListener('DOMContentLoaded', function () {
                                                                             initMobileDateStrip();
                                                                             initSwiperDots();
+                                                                            try {
+                                                                                var urlParams = new URLSearchParams(window.location.search);
+                                                                                var tab = urlParams.get('tab');
+                                                                                if (tab) {
+                                                                                    // Mobile tab restoration
+                                                                                    if (document.getElementById('mobile-view-' + tab)) {
+                                                                                        switchMobileTab(tab);
+                                                                                    } else if (tab === 'registration') {
+                                                                                        switchMobileTab('courses');
+                                                                                    } else if (tab === 'transcript') {
+                                                                                        switchMobileTab('grades');
+                                                                                    } else if (tab === 'settings') {
+                                                                                        switchMobileTab('profile');
+                                                                                    } else if (tab === 'dashboard') {
+                                                                                        switchMobileTab('home');
+                                                                                    }
+
+                                                                                    // Desktop tab restoration
+                                                                                    var dtBtn = document.getElementById('tab-' + tab);
+                                                                                    if (dtBtn) {
+                                                                                        switchDesktopTab(tab, dtBtn);
+                                                                                    } else if (tab === 'courses') {
+                                                                                        switchDesktopTab('registration', document.getElementById('tab-registration'));
+                                                                                    } else if (tab === 'grades') {
+                                                                                        switchDesktopTab('transcript', document.getElementById('tab-transcript'));
+                                                                                    } else if (tab === 'profile') {
+                                                                                        switchDesktopTab('settings', document.getElementById('tab-settings'));
+                                                                                    } else if (tab === 'home') {
+                                                                                        switchDesktopTab('dashboard', document.getElementById('tab-dashboard'));
+                                                                                    }
+                                                                                }
+                                                                            } catch (e) {}
                                                                         });
                                                                     </script>
         </body>

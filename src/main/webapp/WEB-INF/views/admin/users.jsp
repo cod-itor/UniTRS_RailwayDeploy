@@ -61,7 +61,7 @@
                             <c:forEach var="student" items="${unverifiedStudents}">
                                 <tr>
                                     <td>${student.id}</td>
-                                    <td><code>${student.userIdentifier}</code></td>
+                                    <td><code>${student.formattedIdentifier}</code></td>
                                     <td>${student.fullName}</td>
                                     <td>${student.email}</td>
                                     <td>
@@ -135,7 +135,7 @@
                         <c:forEach var="user" items="${users}">
                             <tr>
                                 <td>${user.id}</td>
-                                <td><code>${user.userIdentifier}</code></td>
+                                <td><code>${user.formattedIdentifier}</code></td>
                                 <td>${user.fullName}</td>
                                 <td>${user.email}</td>
                                 <td>
