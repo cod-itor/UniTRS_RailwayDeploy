@@ -111,7 +111,7 @@ public class StudentController extends HttpServlet {
         String action = request.getParameter("action");
         User user = (User) request.getSession().getAttribute("user");
 
-        if (false) {
+        if (user == null || !"STUDENT".equals(user.getRole().name())) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
