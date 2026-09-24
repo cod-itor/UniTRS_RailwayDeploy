@@ -48,8 +48,10 @@ public class AttendanceExcelExporter {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             StylePalette styles = new StylePalette(workbook);
 
-            String sheetName = sanitizeSheetName(section.getCourseCode() != null ? section.getCourseCode() + " - Sec " + section.getId() : "Attendance");
-            Sheet sheet = workbook.createSheet(sheetName);
+            String rawName = (section != null && section.getCourseCode() != null)
+                    ? section.getCourseCode() + " - Sec " + section.getId()
+                    : "Attendance";
+            Sheet sheet = createUniqueSheet(workbook, rawName);
 
             buildSectionSheet(sheet, styles, section, professor, school, students, records);
 
@@ -66,18 +68,21 @@ public class AttendanceExcelExporter {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             StylePalette styles = new StylePalette(workbook);
 
-            Sheet overviewSheet = workbook.createSheet("Teaching Overview");
-            buildOverviewSheet(overviewSheet, styles, professor, school, sectionStudentsMap, sectionAttendanceMap);
+            Map<ClassSection, List<User>> safeStudentsMap = sectionStudentsMap != null ? sectionStudentsMap : Collections.emptyMap();
+            Map<Integer, List<AttendanceRecord>> safeAttendanceMap = sectionAttendanceMap != null ? sectionAttendanceMap : Collections.emptyMap();
+
+            Sheet overviewSheet = createUniqueSheet(workbook, "Teaching Overview");
+            buildOverviewSheet(overviewSheet, styles, professor, school, safeStudentsMap, safeAttendanceMap);
 
             int sectionIndex = 1;
-            for (Map.Entry<ClassSection, List<User>> entry : sectionStudentsMap.entrySet()) {
+            for (Map.Entry<ClassSection, List<User>> entry : safeStudentsMap.entrySet()) {
                 ClassSection section = entry.getKey();
                 List<User> students = entry.getValue();
-                List<AttendanceRecord> records = sectionAttendanceMap.getOrDefault(section.getId(), Collections.emptyList());
+                List<AttendanceRecord> records = (section != null) ? safeAttendanceMap.getOrDefault(section.getId(), Collections.emptyList()) : Collections.emptyList();
 
-                String rawName = (section.getCourseCode() != null ? section.getCourseCode() : "Class " + sectionIndex) + " (Sec " + section.getId() + ")";
-                String sheetName = sanitizeSheetName(rawName);
-                Sheet sheet = workbook.createSheet(sheetName);
+                String rawName = (section != null && section.getCourseCode() != null ? section.getCourseCode() : "Class " + sectionIndex)
+                        + (section != null ? " (Sec " + section.getId() + ")" : "");
+                Sheet sheet = createUniqueSheet(workbook, rawName);
 
                 buildSectionSheet(sheet, styles, section, professor, school, students, records);
                 sectionIndex++;
@@ -153,10 +158,11 @@ public class AttendanceExcelExporter {
         String schoolName = school != null && school.getSchoolName() != null ? school.getSchoolName() : "Academic Department";
         String generatedAt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 
-        createMetaRow(sheet, rowIdx++, "Course:", courseCode + " — " + courseTitle, "Instructor:", profName + " (" + profId + ")", styles);
-        createMetaRow(sheet, rowIdx++, "Academic Term:", termName + (academicYear.isEmpty() ? "" : " (" + academicYear + ")"), "Department:", schoolName, styles);
-        createMetaRow(sheet, rowIdx++, "Class Schedule:", shift + " • " + days + " (Room " + room + ")", "Enrolled Students:", totalStudents + " Students", styles);
-        createMetaRow(sheet, rowIdx++, "Class Section ID:", "Section #" + section.getId(), "Report Generated:", generatedAt, styles);
+        int metaEndCol = Math.max(8, lastColIndex);
+        createMetaRow(sheet, rowIdx++, "Course:", courseCode + " — " + courseTitle, "Instructor:", profName + " (" + profId + ")", metaEndCol, styles);
+        createMetaRow(sheet, rowIdx++, "Academic Term:", termName + (academicYear.isEmpty() ? "" : " (" + academicYear + ")"), "Department:", schoolName, metaEndCol, styles);
+        createMetaRow(sheet, rowIdx++, "Class Schedule:", shift + " • " + days + " (Room " + room + ")", "Enrolled Students:", totalStudents + " Students", metaEndCol, styles);
+        createMetaRow(sheet, rowIdx++, "Class Section ID:", "Section #" + (section != null ? section.getId() : 0), "Report Generated:", generatedAt, metaEndCol, styles);
 
         sheet.createRow(rowIdx++).setHeightInPoints(8);
 
@@ -399,8 +405,8 @@ public class AttendanceExcelExporter {
         String schoolName = school != null && school.getSchoolName() != null ? school.getSchoolName() : "Academic Department";
         String generatedAt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 
-        createMetaRow(sheet, rowIdx++, "Faculty Member:", profName + " (" + profId + ")", "Department:", schoolName, styles);
-        createMetaRow(sheet, rowIdx++, "Assigned Sections:", sectionStudentsMap.size() + " Classes", "Report Generated:", generatedAt, styles);
+        createMetaRow(sheet, rowIdx++, "Faculty Member:", profName + " (" + profId + ")", "Department:", schoolName, 7, styles);
+        createMetaRow(sheet, rowIdx++, "Assigned Sections:", (sectionStudentsMap != null ? sectionStudentsMap.size() : 0) + " Classes", "Report Generated:", generatedAt, 7, styles);
 
         sheet.createRow(rowIdx++).setHeightInPoints(12);
 
@@ -482,7 +488,7 @@ public class AttendanceExcelExporter {
         sheet.setColumnWidth(7, 18 * 256);
     }
 
-    private static void createMetaRow(Sheet sheet, int rowIdx, String label1, String val1, String label2, String val2, StylePalette styles) {
+    private static void createMetaRow(Sheet sheet, int rowIdx, String label1, String val1, String label2, String val2, int endCol2, StylePalette styles) {
         Row row = sheet.createRow(rowIdx);
         row.setHeightInPoints(18);
 
@@ -502,7 +508,9 @@ public class AttendanceExcelExporter {
         Cell v2 = row.createCell(5);
         v2.setCellValue(val2);
         v2.setCellStyle(styles.metaValueStyle);
-        sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, 5, 8));
+        if (endCol2 >= 5) {
+            sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, 5, endCol2));
+        }
     }
 
     private static void createKpiCell(Row row, int startCol, int endCol, String text, CellStyle style, Sheet sheet) {
@@ -524,12 +532,33 @@ public class AttendanceExcelExporter {
         cell.setCellStyle(style);
     }
 
+    private static Sheet createUniqueSheet(XSSFWorkbook workbook, String desiredName) {
+        String clean = sanitizeSheetName(desiredName);
+        if (workbook.getSheet(clean) == null) {
+            return workbook.createSheet(clean);
+        }
+        int count = 2;
+        while (true) {
+            String suffix = " (" + count + ")";
+            int maxBase = 31 - suffix.length();
+            String candidate = (clean.length() > maxBase ? clean.substring(0, maxBase) : clean) + suffix;
+            if (workbook.getSheet(candidate) == null) {
+                return workbook.createSheet(candidate);
+            }
+            count++;
+        }
+    }
+
     private static String sanitizeSheetName(String name) {
         if (name == null || name.trim().isEmpty()) {
             return "Sheet";
         }
         String clean = name.replaceAll("[\\\\/*?:\\[\\]]", " ").trim();
-        return clean.length() > 30 ? clean.substring(0, 30) : clean;
+        clean = clean.replaceAll("[']+$", "").replaceAll("^[']+", "").trim();
+        if (clean.isEmpty()) {
+            return "Sheet";
+        }
+        return clean.length() > 31 ? clean.substring(0, 31) : clean;
     }
 
     private static class StylePalette {
