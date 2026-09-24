@@ -72,6 +72,12 @@ public class DeanController extends HttpServlet {
         List<ClassSection> sections = deanService.getAllClassSections();
         List<Room> rooms = deanService.getAllRooms();
 
+        Map<Integer, List<User>> sectionStudentsMap = new java.util.HashMap<>();
+        UserRepository userRepo = new UserRepository();
+        for (ClassSection s : sections) {
+            sectionStudentsMap.put(s.getId(), userRepo.findStudentsByClassSection(s.getId()));
+        }
+
         request.setAttribute("deanSchool", deanSchool);
         request.setAttribute("courses", courses);
         request.setAttribute("terms", terms);
@@ -80,6 +86,7 @@ public class DeanController extends HttpServlet {
         request.setAttribute("students", students);
         request.setAttribute("sections", sections);
         request.setAttribute("rooms", rooms);
+        request.setAttribute("sectionStudentsMap", sectionStudentsMap);
 
         String successParam = request.getParameter("success");
         if (successParam != null && !successParam.trim().isEmpty()) {
@@ -184,6 +191,13 @@ public class DeanController extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("sectionId"));
                 deanService.removeClassSection(id);
                 successMessage = "Class Section removed.";
+
+            } else if ("unenrollStudent".equals(action)) {
+                activeTab = "schedules";
+                int studentId = Integer.parseInt(request.getParameter("studentId"));
+                int sectionId = Integer.parseInt(request.getParameter("sectionId"));
+                deanService.unenrollStudentFromSection(studentId, sectionId);
+                successMessage = "Student unenrolled successfully.";
 
             } else if ("addRoom".equals(action)) {
                 activeTab = "facilities";

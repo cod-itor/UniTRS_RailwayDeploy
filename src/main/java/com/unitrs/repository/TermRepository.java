@@ -58,6 +58,21 @@ public class TermRepository extends BaseRepository {
         }, termId);
     }
 
+    public List<Course> findCoursesByTerm(int termId, int schoolId) {
+        String sql = "SELECT c.* FROM courses c " +
+                     "JOIN term_courses tc ON c.id = tc.course_id " +
+                     "WHERE tc.term_id = ? AND c.school_id = ? ORDER BY c.course_code";
+        return executeQuery(sql, rs -> {
+            Course course = new Course();
+            course.setId(rs.getInt("id"));
+            course.setCourseCode(rs.getString("course_code"));
+            course.setCourseTitle(rs.getString("course_title"));
+            course.setCredits(rs.getInt("credits"));
+            course.setSchoolId(rs.getInt("school_id"));
+            return course;
+        }, termId, schoolId);
+    }
+
     private Term mapResultSetToTerm(ResultSet rs) throws SQLException {
         Term term = new Term();
         term.setId(rs.getInt("id"));

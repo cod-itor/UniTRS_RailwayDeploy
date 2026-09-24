@@ -15,5 +15,6 @@ public class OtpVerification {
     private String otpType;
     private Timestamp expiresAt;
     private boolean isUsed;
+    private int attempts;
     private Timestamp createdAt;
 }

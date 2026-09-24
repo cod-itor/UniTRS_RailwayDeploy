@@ -15,4 +15,6 @@ public interface OtpService {
     boolean verifyLogin2faOtp(String email, String otpCode);
 
     boolean verifyPasswordResetOtp(String email, String otpCode);
+
+    int getSecondsUntilNextOtp(String email, String otpType);
 }

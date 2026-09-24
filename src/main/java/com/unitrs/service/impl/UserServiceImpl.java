@@ -25,9 +25,31 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UserNotFoundException("User not found or inactive.");
         }
+
+        if (user.getLockedUntil() != null) {
+            if (user.getLockedUntil().after(new java.sql.Timestamp(System.currentTimeMillis()))) {
+                long remainingMinutes = Math.max(1, (user.getLockedUntil().getTime() - System.currentTimeMillis()) / 60000);
+                throw new ValidationException("Account is temporarily locked due to multiple failed login attempts. Please try again in " + remainingMinutes + " minute(s).");
+            } else {
+                userRepository.resetFailedAttempts(user.getId());
+                user.setFailedAttempts(0);
+                user.setLockedUntil(null);
+            }
+        }
+
         if (!SecurityUtils.checkPassword(password, user.getPassword())) {
+            userRepository.incrementFailedAttempts(user.getId());
+            User refreshed = userRepository.findById(user.getId());
+            if (refreshed != null && refreshed.getFailedAttempts() >= 5) {
+                throw new ValidationException("Account has been temporarily locked for 15 minutes due to 5 consecutive failed login attempts.");
+            }
             throw new UnauthorizedException("Invalid password.");
         }
+
+        if (user.getFailedAttempts() > 0 || user.getLockedUntil() != null) {
+            userRepository.resetFailedAttempts(user.getId());
+        }
+
         return user;
     }
 

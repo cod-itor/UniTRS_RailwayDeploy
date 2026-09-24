@@ -49,6 +49,8 @@ public interface DeanService {
 
     void removeClassSection(int id);
 
+    void unenrollStudentFromSection(int studentId, int classSectionId);
+
     List<Room> getAllRooms();
 
     void addRoom(String roomNumber, int floorNumber, int capacity);

@@ -367,8 +367,8 @@
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 12px;
+            margin-bottom: 18px;
         }
 
         @media (max-width: 1200px) {
@@ -379,12 +379,12 @@
 
         .metric-card {
             background: #ffffff;
-            border-radius: 22px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            border-radius: 18px;
+            padding: 14px 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
             border: 1px solid var(--card-border);
             position: relative;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
 
         .metric-card:hover {
@@ -416,7 +416,7 @@
         .mc-icon.cyan { background: #cffafe; color: #0e7490; }
 
         .mc-title { font-size: 0.8rem; font-weight: 700; color: #64748b; }
-        .mc-value { font-size: 2rem; font-weight: 800; color: var(--brand-dark); line-height: 1; margin-bottom: 4px; }
+        .mc-value { font-size: 1.6rem; font-weight: 800; color: var(--brand-dark); line-height: 1; margin-bottom: 2px; }
         .mc-subtitle { font-size: 0.72rem; color: #94a3b8; }
 
         /* TABLE CARD */
@@ -1176,19 +1176,6 @@
 </head>
 <body>
 
-    <!-- Force Desktop Mobile Warning Banner -->
-    <c:if test="${param.force == 'desktop'}">
-        <div class="alert alert-dark d-flex align-items-center justify-content-between py-2 px-4 m-0 rounded-0 border-0" style="font-size: 0.85rem; background: #0f172a; color: #fff; z-index: 1050;">
-            <div>
-                <i class="bi bi-display me-2 text-info"></i>
-                You are currently viewing the <strong>Dean Administration Portal</strong> in desktop mode.
-            </div>
-            <a href="${pageContext.request.contextPath}/professor/dashboard" class="btn btn-sm btn-info rounded-pill px-3 py-1 fw-bold text-dark text-nowrap ms-2">
-                <i class="bi bi-phone me-1"></i> Switch to Mobile View
-            </a>
-        </div>
-    </c:if>
-
     <div class="desktop-layout">
 
         <%-- DESKTOP SIDEBAR --%>
@@ -1231,15 +1218,6 @@
                 </button>
             </nav>
 
-            <%-- Faculty / Professor Portal Switcher Widget --%>
-            <div class="sidebar-promo">
-                <div class="star-icon"><i class="bi bi-person-workspace"></i></div>
-                <h4>Professor Portal</h4>
-                <p>Switch view to check your teaching classes, record attendance, and submit student grades.</p>
-                <a href="${pageContext.request.contextPath}/professor/dashboard" class="btn">
-                    <i class="bi bi-arrow-left-right me-1"></i> Switch to Professor View
-                </a>
-            </div>
         </aside>
 
         <%-- DESKTOP MAIN CONTENT --%>
@@ -1341,12 +1319,6 @@
                                 </form>
                             </div>
 
-                            <!-- Switch to Professor Portal Button -->
-                            <div class="px-3 pb-2">
-                                <a href="${pageContext.request.contextPath}/professor/dashboard" class="btn btn-dark w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2 text-white text-decoration-none" style="font-size: 0.85rem;">
-                                    <i class="bi bi-person-workspace text-info"></i> Switch to Professor View
-                                </a>
-                            </div>
 
                             <!-- Logout Button -->
                             <div class="p-3 bg-light border-top">
@@ -1719,10 +1691,13 @@
                                             </div>
                                         </td>
                                         <td class="text-end">
+                                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1" data-bs-toggle="modal" data-bs-target="#sectionStudentsModal${section.id}" style="font-size:0.8rem;">
+                                                <i class="bi bi-people me-1"></i> Students (${section.enrolledCount})
+                                            </button>
                                             <form action="${pageContext.request.contextPath}/dean/dashboard" method="post" style="display:inline;">
                                                 <input type="hidden" name="action" value="removeClassSection">
                                                 <input type="hidden" name="sectionId" value="${section.id}">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Are you sure you want to delete this scheduled class section?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Are you sure you want to delete this scheduled class section?');" style="font-size:0.8rem;">
                                                     <i class="bi bi-trash me-1"></i> Delete
                                                 </button>
                                             </form>
@@ -1856,11 +1831,6 @@
                 </div>
                 <h2 class="fw-extrabold text-white mb-1" style="font-size:1.35rem; letter-spacing:-0.02em;">Dean Leadership Hub</h2>
                 <p class="text-white text-opacity-80 small mb-3">Academic Curriculum & Department Administration</p>
-                <div class="d-flex align-items-center gap-2">
-                    <a href="${pageContext.request.contextPath}/professor/dashboard" class="btn btn-sm btn-light rounded-pill px-3 py-1 fw-bold text-dark" style="font-size:0.78rem;">
-                        <i class="bi bi-person-workspace text-primary me-1"></i> Switch to Professor Portal
-                    </a>
-                </div>
             </div>
 
             <!-- KPI 2x2 Grid -->
@@ -1969,9 +1939,7 @@
             <!-- Terms Spotlight -->
             <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
                 <h3 class="fw-extrabold text-dark mb-0" style="font-size:1.05rem;">Academic Terms</h3>
-                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold" data-bs-toggle="modal" data-bs-target="#addTermModal" style="font-size:0.75rem;">
-                    + Add Term
-                </button>
+                <span class="badge bg-light border text-muted">${terms.size()} Terms</span>
             </div>
             <div class="mobile-course-card p-2 mb-3">
                 <div class="list-group list-group-flush">
@@ -1994,11 +1962,20 @@
         <section id="mobile-view-courses" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-courses">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h2 class="fw-extrabold text-dark mb-0" style="font-size:1.25rem;">Master Courses</h2>
-                    <span class="text-muted" style="font-size:0.75rem;">${courses.size()} courses in curriculum catalog</span>
+                    <h2 class="fw-extrabold text-dark mb-0" style="font-size:1.25rem;">Curriculum & Courses</h2>
+                    <span class="text-muted" style="font-size:0.75rem;">${courses.size()} courses &bull; ${curriculumMap.size()} term bundles</span>
                 </div>
-                <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#addCourseModal" style="font-size:0.8rem; min-height:42px;">
+                <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#addCourseModal" style="font-size:0.8rem; min-height:40px;">
                     <i class="bi bi-plus-lg me-1"></i> New Course
+                </button>
+            </div>
+
+            <div class="dean-seg-control mb-3">
+                <button type="button" id="deanSegCatalogBtn" class="dean-seg-btn active" onclick="toggleDeanCourseSegment('catalog')">
+                    <i class="bi bi-book me-1"></i> Courses Catalog (${courses.size()})
+                </button>
+                <button type="button" id="deanSegBundlesBtn" class="dean-seg-btn" onclick="toggleDeanCourseSegment('bundles')">
+                    <i class="bi bi-collection me-1"></i> Term Bundles (${curriculumMap.size()})
                 </button>
             </div>
 
@@ -2037,6 +2014,51 @@
                     <div class="small text-muted mb-2">Try adjusting your search keywords</div>
                     <button type="button" class="btn btn-sm btn-light border rounded-pill px-3" onclick="clearMobileDeanCourseSearch()">Clear Search</button>
                 </div>
+            </div>
+            <div id="mobileDeanBundlesContainer" style="display:none;">
+                <c:forEach var="entry" items="${curriculumMap}">
+                    <c:set var="term" value="${entry.key}" />
+                    <c:set var="termCourses" value="${entry.value}" />
+                    <div class="mobile-course-card p-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-2 py-1 fw-bold font-monospace">${term.termName}</span>
+                                <span class="text-muted small ms-2">${termCourses.size()} courses</span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-semibold" data-bs-toggle="modal" data-bs-target="#bundleModal${term.id}" style="font-size:0.75rem;">
+                                <i class="bi bi-plus-lg me-1"></i> Bundle Course
+                            </button>
+                        </div>
+                        <div class="list-group list-group-flush border-top border-light mt-2 pt-1">
+                            <c:forEach var="course" items="${termCourses}">
+                                <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom border-light">
+                                    <div>
+                                        <div class="fw-bold text-dark small">${course.courseCode}</div>
+                                        <div class="text-muted" style="font-size:0.75rem;">${course.courseTitle} &bull; ${course.credits} cr</div>
+                                    </div>
+                                    <form action="${pageContext.request.contextPath}/dean/dashboard" method="post" class="m-0 p-0">
+                                        <input type="hidden" name="action" value="unbundleCourse">
+                                        <input type="hidden" name="termId" value="${term.id}">
+                                        <input type="hidden" name="courseId" value="${course.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle p-1" title="Remove course from term" onclick="return confirm('Remove ${course.courseCode} from ${term.termName}?');">
+                                            <i class="bi bi-x-circle-fill"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </c:forEach>
+                            <c:if test="${empty termCourses}">
+                                <div class="text-center text-muted py-3 small">No courses bundled in this term yet.</div>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:forEach>
+                <c:if test="${empty curriculumMap}">
+                    <div class="mobile-course-card text-center py-4">
+                        <i class="bi bi-collection text-muted fs-2 mb-2 d-block"></i>
+                        <div class="fw-bold small text-dark mb-1">No term bundles</div>
+                        <div class="small text-muted">Create an academic term first to bundle courses.</div>
+                    </div>
+                </c:if>
             </div>
         </section>
 
@@ -2096,12 +2118,15 @@
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end align-items-center">
-                            <form action="${pageContext.request.contextPath}/dean/dashboard" method="post" class="d-inline">
+                        <div class="d-flex justify-content-end align-items-center gap-2">
+                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold" data-bs-toggle="modal" data-bs-target="#sectionStudentsModal${section.id}" style="min-height:38px; display:inline-flex; align-items:center; gap:4px; font-size:0.8rem;">
+                                <i class="bi bi-people"></i> Students (${section.enrolledCount})
+                            </button>
+                            <form action="${pageContext.request.contextPath}/dean/dashboard" method="post" class="d-inline m-0">
                                 <input type="hidden" name="action" value="removeClassSection">
                                 <input type="hidden" name="sectionId" value="${section.id}">
                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold" onclick="return confirm('Are you sure you want to delete this scheduled class section?');" style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
-                                    <i class="bi bi-trash"></i> Delete Section
+                                    <i class="bi bi-trash"></i> Delete
                                 </button>
                             </form>
                         </div>
@@ -2240,18 +2265,10 @@
                         </div>
                     </div>
 
-                    <!-- Simulated Barcode -->
-                    <div class="dean-barcode" aria-hidden="true">
-                        <span class="dean-bar" style="width:3px;"></span>
-                        <span class="dean-bar" style="width:1px; margin-left:1px;"></span>
-                        <span class="dean-bar" style="width:2px; margin-left:2px;"></span>
-                        <span class="dean-bar" style="width:4px; margin-left:1px;"></span>
-                        <span class="dean-bar" style="width:1px; margin-left:2px;"></span>
-                        <span class="dean-bar" style="width:3px; margin-left:1px;"></span>
-                        <span class="dean-bar" style="width:2px; margin-left:1px;"></span>
-                        <span class="dean-bar" style="width:4px; margin-left:2px;"></span>
-                        <span class="dean-bar" style="width:1px; margin-left:1px;"></span>
-                        <span class="dean-bar" style="width:3px; margin-left:2px;"></span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-25 rounded-pill px-3 py-1 font-monospace" style="font-size:0.75rem;">
+                            <i class="bi bi-shield-check me-1 text-warning"></i>VERIFIED DEAN
+                        </span>
                     </div>
                 </div>
             </div>
@@ -2262,22 +2279,38 @@
                     <div class="d-flex align-items-center gap-2">
                         <div class="kpi-icon-box emerald mb-0"><i class="bi bi-building-fill"></i></div>
                         <div>
-                            <div class="fw-bold text-dark small">Physical Facilities</div>
-                            <div class="text-muted" style="font-size:0.72rem;">${rooms.size()} campus rooms registered</div>
+                            <div class="fw-bold text-dark small">Campus Facilities & Rooms</div>
+                            <div class="text-muted" style="font-size:0.72rem;">${rooms.size()} classrooms registered</div>
                         </div>
                     </div>
+                    <div class="d-flex gap-1">
+                        <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-1 fw-bold" data-bs-toggle="modal" data-bs-target="#addRoomModal" style="font-size:0.75rem;">
+                            <i class="bi bi-plus-lg"></i> Room
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-1 fw-bold" data-bs-toggle="modal" data-bs-target="#batchRoomModal" style="font-size:0.75rem;" title="Batch generate rooms">
+                            <i class="bi bi-layers"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="row g-2 mt-1">
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-outline-primary w-100 rounded-pill py-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#addRoomModal" style="min-height:44px; display:flex; align-items:center; justify-content:center; gap:6px;">
-                            <i class="bi bi-plus-lg"></i> Add Room
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-outline-secondary w-100 rounded-pill py-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#batchRoomModal" style="min-height:44px; display:flex; align-items:center; justify-content:center; gap:6px;">
-                            <i class="bi bi-layers"></i> Batch Rooms
-                        </button>
-                    </div>
+                <div class="list-group list-group-flush border-top border-light mt-2 pt-1" style="max-height: 200px; overflow-y: auto;">
+                    <c:forEach var="room" items="${rooms}">
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom border-light">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-light border text-dark fw-bold font-monospace">Room ${room.roomNumber}</span>
+                                <span class="text-muted small">Floor ${room.floorNumber} &bull; Cap: <strong>${room.capacity}</strong></span>
+                            </div>
+                            <form action="${pageContext.request.contextPath}/dean/dashboard" method="post" class="m-0 p-0">
+                                <input type="hidden" name="action" value="deleteRoom">
+                                <input type="hidden" name="roomId" value="${room.id}">
+                                <button type="submit" class="btn btn-sm btn-link text-danger p-0" title="Delete room" onclick="return confirm('Delete Room ${room.roomNumber}?');">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </c:forEach>
+                    <c:if test="${empty rooms}">
+                        <div class="text-center text-muted py-3 small">No rooms registered yet.</div>
+                    </c:if>
                 </div>
             </div>
 
@@ -2305,20 +2338,6 @@
                 </form>
             </div>
 
-            <!-- Switch to Professor Portal Card -->
-            <div class="mobile-course-card p-3 mb-3">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <div class="kpi-icon-box purple mb-0"><i class="bi bi-person-workspace"></i></div>
-                    <div>
-                        <div class="fw-bold text-dark small">Professor Portal</div>
-                        <div class="text-muted" style="font-size:0.72rem;">Record attendance and submit grades</div>
-                    </div>
-                </div>
-                <p class="text-muted small mb-3" style="font-size:0.78rem;">Switch to faculty mode to manage your courses, view student rosters, and run roll call.</p>
-                <a href="${pageContext.request.contextPath}/professor/dashboard" class="btn btn-sm btn-outline-dark w-100 rounded-pill py-2 fw-bold text-decoration-none" style="min-height:44px; display:flex; align-items:center; justify-content:center; gap:6px;">
-                    <i class="bi bi-arrow-left-right text-primary"></i> Switch to Professor View
-                </a>
-            </div>
 
             <!-- Sign Out Button -->
             <div class="pt-2 mb-4">
@@ -2669,6 +2688,59 @@
         </div>
     </div>
 
+    <c:forEach var="section" items="${sections}">
+        <div class="modal fade" id="sectionStudentsModal${section.id}" tabindex="-1" aria-labelledby="sectionStudentsModalLabel${section.id}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 border-0 shadow">
+                    <div class="modal-header border-bottom pb-3">
+                        <div>
+                            <h5 class="modal-title fw-bold text-dark" id="sectionStudentsModalLabel${section.id}">
+                                <i class="bi bi-people text-primary me-2"></i>Enrolled Students
+                            </h5>
+                            <div class="text-muted small">${section.courseCode} - ${section.courseTitle} &bull; Room ${section.roomName}</div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-3">
+                        <c:set var="secStudents" value="${sectionStudentsMap[section.id]}" />
+                        <c:choose>
+                            <c:when test="${empty secStudents}">
+                                <div class="text-center text-muted py-4 small">
+                                    <i class="bi bi-people fs-2 d-block mb-2 text-muted"></i>
+                                    No students are currently enrolled in this section.
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="list-group list-group-flush">
+                                    <c:forEach var="st" items="${secStudents}">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom">
+                                            <div>
+                                                <div class="fw-bold text-dark small">${st.fullName}</div>
+                                                <div class="text-muted" style="font-size:0.75rem;">${st.formattedIdentifier} &bull; ${st.email}</div>
+                                            </div>
+                                            <form action="${pageContext.request.contextPath}/dean/dashboard" method="post" class="m-0">
+                                                <input type="hidden" name="action" value="unenrollStudent">
+                                                <input type="hidden" name="studentId" value="${st.id}">
+                                                <input type="hidden" name="sectionId" value="${section.id}">
+                                                <input type="hidden" name="tab" value="schedules">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold" style="font-size:0.75rem;" onclick="return confirm('Remove student ${st.fullName} from this section?');">
+                                                    <i class="bi bi-person-x me-1"></i>Unenroll
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                    <div class="modal-footer border-top py-2">
+                        <button type="button" class="btn btn-sm btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </c:forEach>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Tab switching function
@@ -2865,6 +2937,28 @@
             var empty = document.getElementById('mobileDeanSchedulesEmpty');
             if (empty) {
                 empty.style.display = (visible === 0 && items.length > 0) ? 'block' : 'none';
+            }
+        }
+
+        function toggleDeanCourseSegment(target) {
+            var btnCatalog = document.getElementById('deanSegCatalogBtn');
+            var btnBundles = document.getElementById('deanSegBundlesBtn');
+            var catalogContainer = document.getElementById('mobileDeanCoursesContainer');
+            var bundlesContainer = document.getElementById('mobileDeanBundlesContainer');
+            var searchBar = document.querySelector('#mobile-view-courses .mobile-search-bar');
+
+            if (target === 'catalog') {
+                if (btnCatalog) btnCatalog.classList.add('active');
+                if (btnBundles) btnBundles.classList.remove('active');
+                if (catalogContainer) catalogContainer.style.display = '';
+                if (bundlesContainer) bundlesContainer.style.display = 'none';
+                if (searchBar) searchBar.style.display = '';
+            } else {
+                if (btnBundles) btnBundles.classList.add('active');
+                if (btnCatalog) btnCatalog.classList.remove('active');
+                if (catalogContainer) catalogContainer.style.display = 'none';
+                if (bundlesContainer) bundlesContainer.style.display = '';
+                if (searchBar) searchBar.style.display = 'none';
             }
         }
 

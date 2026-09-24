@@ -191,7 +191,31 @@ public class UserRepository extends BaseRepository {
             user.setTwoFactorEnabled(false);
         }
 
+        try {
+            user.setFailedAttempts(rs.getInt("failed_attempts"));
+        } catch (SQLException ignored) {
+            user.setFailedAttempts(0);
+        }
+
+        try {
+            user.setLockedUntil(rs.getTimestamp("locked_until"));
+        } catch (SQLException ignored) {
+            user.setLockedUntil(null);
+        }
+
         user.setCreatedAt(rs.getTimestamp("created_at"));
         return user;
+    }
+
+    public void incrementFailedAttempts(int userId) {
+        String sql = "UPDATE users SET failed_attempts = COALESCE(failed_attempts, 0) + 1, "
+                   + "locked_until = CASE WHEN failed_attempts >= 5 THEN DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 15 MINUTE) ELSE locked_until END "
+                   + "WHERE id = ?";
+        executeUpdate(sql, userId);
+    }
+
+    public void resetFailedAttempts(int userId) {
+        String sql = "UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE id = ?";
+        executeUpdate(sql, userId);
     }
 }

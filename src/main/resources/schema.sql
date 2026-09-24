@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS users (
     dean_school_id INT UNIQUE DEFAULT NULL,      -- A user can be the Dean of at most one school
     student_school_id INT DEFAULT NULL,          -- The school a student officially belongs to
     two_factor_enabled BOOLEAN DEFAULT FALSE,
+    failed_attempts INT DEFAULT 0,
+    locked_until TIMESTAMP NULL DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (dean_school_id) REFERENCES schools(id) ON DELETE SET NULL,
     FOREIGN KEY (student_school_id) REFERENCES schools(id) ON DELETE SET NULL
@@ -141,6 +143,7 @@ CREATE TABLE IF NOT EXISTS otp_verifications (
     otp_type ENUM('REGISTRATION', 'LOGIN_2FA', 'PASSWORD_RESET') NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     is_used BOOLEAN DEFAULT FALSE,
+    attempts INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_email_type_used (email, otp_type, is_used)
 );

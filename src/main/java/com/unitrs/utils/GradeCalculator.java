@@ -114,4 +114,14 @@ public class GradeCalculator {
                isValidMidterm(midterm) &&
                isValidFinal(finalScore);
     }
+
+    public static double calculateAttendanceScore(int presentCount, int lateCount, int excusedCount, int totalSessions) {
+        if (totalSessions <= 0) {
+            return MAX_ATTENDANCE;
+        }
+        double effectivePresent = (double) presentCount + (0.5 * (double) lateCount) + (1.0 * (double) excusedCount);
+        double ratio = Math.min(1.0, Math.max(0.0, effectivePresent / (double) totalSessions));
+        double rawScore = ratio * MAX_ATTENDANCE;
+        return Math.round(rawScore * 100.0) / 100.0;
+    }
 }

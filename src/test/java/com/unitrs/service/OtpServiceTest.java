@@ -65,6 +65,32 @@ public class OtpServiceTest {
                     storedOtp.setUsed(true);
                 }
             }
+
+            @Override
+            public OtpVerification findLatestActiveOtp(String email, String otpType) {
+                if (storedOtp != null && storedOtp.getEmail().equalsIgnoreCase(email)
+                        && storedOtp.getOtpType().equals(otpType)
+                        && !storedOtp.isUsed()
+                        && storedOtp.getExpiresAt().after(new Timestamp(System.currentTimeMillis()))) {
+                    return storedOtp;
+                }
+                return null;
+            }
+
+            @Override
+            public void incrementAttempts(int id) {
+                if (storedOtp != null && storedOtp.getId() == id) {
+                    storedOtp.setAttempts(storedOtp.getAttempts() + 1);
+                    if (storedOtp.getAttempts() >= 5) {
+                        storedOtp.setUsed(true);
+                    }
+                }
+            }
+
+            @Override
+            public int getSecondsUntilNextOtp(String email, String otpType) {
+                return 0;
+            }
         };
 
         fakeUserRepository = new UserRepository() {
@@ -135,4 +161,26 @@ public class OtpServiceTest {
         boolean result = otpService.verifyRegistrationOtp(email, storedOtp.getOtpCode());
         assertFalse(result, "Expired OTP should not be valid");
     }
+
+    @Test
+    void testOtpBruteForceLockout() {
+        String email = "victim@unitrs.edu";
+        otpService.sendRegistrationOtp(email, "Victim");
+
+        for (int i = 0; i < 4; i++) {
+            boolean attempt = otpService.verifyRegistrationOtp(email, "999999");
+            assertFalse(attempt);
+            assertFalse(storedOtp.isUsed());
+            assertEquals(i + 1, storedOtp.getAttempts());
+        }
+
+        boolean fifthAttempt = otpService.verifyRegistrationOtp(email, "999999");
+        assertFalse(fifthAttempt);
+        assertTrue(storedOtp.isUsed());
+        assertEquals(5, storedOtp.getAttempts());
+
+        boolean correctAfterLocked = otpService.verifyRegistrationOtp(email, storedOtp.getOtpCode());
+        assertFalse(correctAfterLocked);
+    }
 }
+

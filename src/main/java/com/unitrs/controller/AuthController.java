@@ -148,15 +148,6 @@ public class AuthController extends HttpServlet {
         try {
             User user = userService.authenticate(identifierOrEmail.trim(), password);
 
-            if (user.getRole() == Role.ADMIN) {
-                HttpSession session = request.getSession(true);
-                session.setAttribute("user", user);
-                session.setAttribute("role", user.getRole());
-                session.setMaxInactiveInterval(30 * 60);
-                redirectToUserDashboard(user, request, response);
-                return;
-            }
-
             if (!user.isVerified()) {
                 request.setAttribute("error", "Your account is pending administrator verification. You will receive an email once your account has been approved.");
                 request.setAttribute("identifier", identifierOrEmail);
@@ -168,11 +159,13 @@ public class AuthController extends HttpServlet {
                 otpService.sendLogin2faOtp(user);
 
                 HttpSession session = request.getSession(true);
+                request.changeSessionId();
                 session.setAttribute("pending_2fa_user", user);
 
                 response.sendRedirect(request.getContextPath() + "/auth/verify-2fa");
             } else {
                 HttpSession session = request.getSession(true);
+                request.changeSessionId();
                 session.setAttribute("user", user);
                 session.setAttribute("role", user.getRole());
                 session.setMaxInactiveInterval(30 * 60);
@@ -180,12 +173,12 @@ public class AuthController extends HttpServlet {
                 redirectToUserDashboard(user, request, response);
             }
 
-        } catch (UserNotFoundException e) {
-            request.setAttribute("error", "User not found or account is inactive.");
+        } catch (UserNotFoundException | UnauthorizedException e) {
+            request.setAttribute("error", "Invalid Email/ID or password.");
             request.setAttribute("identifier", identifierOrEmail);
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
-        } catch (UnauthorizedException e) {
-            request.setAttribute("error", "Invalid password. Please try again.");
+        } catch (ValidationException e) {
+            request.setAttribute("error", e.getMessage());
             request.setAttribute("identifier", identifierOrEmail);
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         }
@@ -258,6 +251,7 @@ public class AuthController extends HttpServlet {
 
         if (otpService.verifyLogin2faOtp(user.getEmail(), otpCode)) {
             session.removeAttribute("pending_2fa_user");
+            request.changeSessionId();
             session.setAttribute("user", user);
             session.setAttribute("role", user.getRole());
             session.setMaxInactiveInterval(30 * 60);
@@ -279,6 +273,14 @@ public class AuthController extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("pending_2fa_user");
+        int cooldown = otpService.getSecondsUntilNextOtp(user.getEmail(), "LOGIN_2FA");
+        if (cooldown > 0) {
+            request.setAttribute("email", user.getEmail());
+            request.setAttribute("error", "Please wait " + cooldown + " seconds before requesting a new 2FA code.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/verify_2fa.jsp").forward(request, response);
+            return;
+        }
+
         otpService.sendLogin2faOtp(user);
 
         request.setAttribute("email", user.getEmail());
@@ -394,9 +396,25 @@ public class AuthController extends HttpServlet {
 
         String email = request.getParameter("email");
         if (email != null && !email.trim().isEmpty()) {
-            User user = userService.findByEmail(email.trim());
+            String trimmedEmail = email.trim();
+            int cooldown = otpService.getSecondsUntilNextOtp(trimmedEmail, "REGISTRATION");
+            if (cooldown > 0) {
+                if (isAjax) {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.setStatus(429);
+                    response.getWriter().write("{\"status\":\"error\",\"message\":\"Please wait " + cooldown + " seconds before requesting a new verification code.\"}");
+                    return;
+                }
+                request.setAttribute("email", trimmedEmail);
+                request.setAttribute("error", "Please wait " + cooldown + " seconds before requesting a new verification code.");
+                request.getRequestDispatcher("/WEB-INF/views/auth/verify_registration.jsp").forward(request, response);
+                return;
+            }
+
+            User user = userService.findByEmail(trimmedEmail);
             String fullName = user != null ? user.getFullName() : null;
-            otpService.sendRegistrationOtp(email.trim(), fullName);
+            otpService.sendRegistrationOtp(trimmedEmail, fullName);
         }
 
         if (isAjax) {
@@ -422,18 +440,22 @@ public class AuthController extends HttpServlet {
             return;
         }
 
-        User user = userService.findByEmail(email.trim());
-        if (user == null) {
-            request.setAttribute("error", "No account found with this email address.");
-            request.setAttribute("email", email);
+        String trimmedEmail = email.trim();
+        int cooldown = otpService.getSecondsUntilNextOtp(trimmedEmail, "PASSWORD_RESET");
+        if (cooldown > 0) {
+            request.setAttribute("email", trimmedEmail);
+            request.setAttribute("error", "Please wait " + cooldown + " seconds before requesting another code.");
             request.getRequestDispatcher("/WEB-INF/views/auth/forgot_password.jsp").forward(request, response);
             return;
         }
 
-        otpService.sendPasswordResetOtp(email.trim());
+        User user = userService.findByEmail(trimmedEmail);
+        if (user != null) {
+            otpService.sendPasswordResetOtp(trimmedEmail);
+        }
 
         response.sendRedirect(request.getContextPath() + "/auth/verify-reset-otp?email="
-                + URLEncoder.encode(email.trim(), StandardCharsets.UTF_8));
+                + URLEncoder.encode(trimmedEmail, StandardCharsets.UTF_8));
     }
 
     private void handleVerifyResetOtp(HttpServletRequest request, HttpServletResponse response)
@@ -460,7 +482,15 @@ public class AuthController extends HttpServlet {
 
         String email = request.getParameter("email");
         if (email != null && !email.trim().isEmpty()) {
-            otpService.sendPasswordResetOtp(email.trim());
+            String trimmedEmail = email.trim();
+            int cooldown = otpService.getSecondsUntilNextOtp(trimmedEmail, "PASSWORD_RESET");
+            if (cooldown > 0) {
+                request.setAttribute("email", trimmedEmail);
+                request.setAttribute("error", "Please wait " + cooldown + " seconds before requesting a new code.");
+                request.getRequestDispatcher("/WEB-INF/views/auth/verify_reset_otp.jsp").forward(request, response);
+                return;
+            }
+            otpService.sendPasswordResetOtp(trimmedEmail);
         }
 
         request.setAttribute("email", email);

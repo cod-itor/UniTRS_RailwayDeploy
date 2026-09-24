@@ -184,7 +184,18 @@ public class StudentController extends HttpServlet {
                 String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), "UTF-8") : "&tab=courses";
                 response.sendRedirect(request.getContextPath() + "/student/dashboard?success=enrolled" + tabParam);
             } else if ("unenroll".equals(action) || "drop".equals(action)) {
-                throw new ValidationException("Course dropping is not permitted. Enrolled courses cannot be dropped.");
+                String sectionIdStr = request.getParameter("classSectionId");
+                if (sectionIdStr == null || sectionIdStr.trim().isEmpty()) {
+                    throw new ValidationException("Class section ID is required to drop course.");
+                }
+                int classSectionId = Integer.parseInt(sectionIdStr.trim());
+                boolean dropped = enrollmentRepository.unenrollStudent(user.getId(), classSectionId);
+                if (!dropped) {
+                    throw new ValidationException("Failed to drop course. You might not be enrolled in this section.");
+                }
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), "UTF-8") : "&tab=schedule";
+                response.sendRedirect(request.getContextPath() + "/student/dashboard?success=dropped" + tabParam);
             } else {
                 response.sendRedirect(request.getContextPath() + "/student/dashboard");
             }

@@ -64,6 +64,7 @@ public class ProfessorController extends HttpServlet {
             Map<ClassSection, List<User>> sectionStudentsMap = new LinkedHashMap<>();
             Map<Integer, List<AttendanceRecord>> sectionAttendanceMap = new LinkedHashMap<>();
             Map<Integer, List<Grade>> sectionGradesMap = new LinkedHashMap<>();
+            Map<Integer, Map<Integer, Double>> sectionAutoAttendanceMap = new LinkedHashMap<>();
 
             for (ClassSection section : sections) {
                 List<User> students = userRepository.findStudentsByClassSection(section.getId());
@@ -77,11 +78,35 @@ public class ProfessorController extends HttpServlet {
 
                 List<Grade> grades = gradeRepository.findGradesByClassSectionId(section.getId());
                 sectionGradesMap.put(section.getId(), grades);
+
+                int totalSessions = records.size();
+                Map<Integer, Double> studentScores = new LinkedHashMap<>();
+                for (User student : students) {
+                    int present = 0;
+                    int late = 0;
+                    int excused = 0;
+                    for (AttendanceRecord rec : records) {
+                        if (rec.getEntries() != null) {
+                            for (var entry : rec.getEntries()) {
+                                if (entry.getStudentId() == student.getId()) {
+                                    String st = entry.getStatus() != null ? entry.getStatus().toUpperCase() : "";
+                                    if ("PRESENT".equals(st)) present++;
+                                    else if ("LATE".equals(st)) late++;
+                                    else if ("EXCUSED".equals(st)) excused++;
+                                }
+                            }
+                        }
+                    }
+                    double autoScore = GradeCalculator.calculateAttendanceScore(present, late, excused, totalSessions);
+                    studentScores.put(student.getId(), autoScore);
+                }
+                sectionAutoAttendanceMap.put(section.getId(), studentScores);
             }
 
             request.setAttribute("sectionStudentsMap", sectionStudentsMap);
             request.setAttribute("sectionAttendanceMap", sectionAttendanceMap);
             request.setAttribute("sectionGradesMap", sectionGradesMap);
+            request.setAttribute("sectionAutoAttendanceMap", sectionAutoAttendanceMap);
 
             School professorSchool = null;
             if (user.getDeanSchoolId() != null) {

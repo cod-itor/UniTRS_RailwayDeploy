@@ -67,42 +67,62 @@ public class OtpServiceImpl implements OtpService {
         LOGGER.info("Password reset OTP sent to " + email);
     }
 
+    private boolean verifyOtpWithCounter(String email, String otpCode, String otpType) {
+        if (email == null || otpCode == null) {
+            return false;
+        }
+        OtpVerification otp = otpRepository.findLatestActiveOtp(email.trim(), otpType);
+        if (otp == null) {
+            otp = otpRepository.findValidOtp(email.trim(), otpCode.trim(), otpType);
+        }
+        if (otp == null) {
+            return false;
+        }
+        if (otp.getAttempts() >= 5) {
+            otpRepository.markOtpUsed(otp.getId());
+            return false;
+        }
+        if (otp.getOtpCode().equals(otpCode.trim())) {
+            otpRepository.markOtpUsed(otp.getId());
+            return true;
+        } else {
+            otpRepository.incrementAttempts(otp.getId());
+            return false;
+        }
+    }
+
     @Override
     public boolean verifyRegistrationOtp(String email, String otpCode) {
-        if (email == null || otpCode == null)
-            return false;
-        OtpVerification otp = otpRepository.findValidOtp(email.trim(), otpCode.trim(), "REGISTRATION");
-        if (otp != null) {
-            otpRepository.markOtpUsed(otp.getId());
+        boolean valid = verifyOtpWithCounter(email, otpCode, "REGISTRATION");
+        if (valid) {
             LOGGER.info("Registration OTP verified for " + email);
-            return true;
         }
-        return false;
+        return valid;
     }
 
     @Override
     public boolean verifyLogin2faOtp(String email, String otpCode) {
-        if (email == null || otpCode == null)
-            return false;
-        OtpVerification otp = otpRepository.findValidOtp(email.trim(), otpCode.trim(), "LOGIN_2FA");
-        if (otp != null) {
-            otpRepository.markOtpUsed(otp.getId());
+        boolean valid = verifyOtpWithCounter(email, otpCode, "LOGIN_2FA");
+        if (valid) {
             LOGGER.info("2FA Login OTP verified for " + email);
-            return true;
         }
-        return false;
+        return valid;
     }
 
     @Override
     public boolean verifyPasswordResetOtp(String email, String otpCode) {
-        if (email == null || otpCode == null)
-            return false;
-        OtpVerification otp = otpRepository.findValidOtp(email.trim(), otpCode.trim(), "PASSWORD_RESET");
-        if (otp != null) {
-            otpRepository.markOtpUsed(otp.getId());
+        boolean valid = verifyOtpWithCounter(email, otpCode, "PASSWORD_RESET");
+        if (valid) {
             LOGGER.info("Password reset OTP verified for " + email);
-            return true;
         }
-        return false;
+        return valid;
+    }
+
+    @Override
+    public int getSecondsUntilNextOtp(String email, String otpType) {
+        if (email == null || otpType == null) {
+            return 0;
+        }
+        return otpRepository.getSecondsUntilNextOtp(email.trim(), otpType);
     }
 }

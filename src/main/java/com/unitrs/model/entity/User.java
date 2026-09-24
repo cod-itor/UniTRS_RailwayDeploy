@@ -24,6 +24,8 @@ public class User {
     private Integer deanSchoolId;
     private Integer studentSchoolId;
     private boolean twoFactorEnabled;
+    private int failedAttempts;
+    private Timestamp lockedUntil;
     private Timestamp createdAt;
 
     public String getFormattedIdentifier() {

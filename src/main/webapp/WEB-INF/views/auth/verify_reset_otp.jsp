@@ -42,7 +42,7 @@
             <div class="auth-info-box">
                 <i class="bi bi-envelope-check-fill"></i>
                 <div>
-                    A 6-digit verification code was sent to:<br>
+                    If an account is associated with this email, a verification code has been sent to:<br>
                     <strong class="text-white">${email}</strong>
                 </div>
             </div>

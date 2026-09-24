@@ -16,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-@RequiredArgsConstructor
-
 public class DeanServiceImpl implements DeanService {
 
     private final CourseRepository courseRepository;
@@ -26,6 +24,26 @@ public class DeanServiceImpl implements DeanService {
     private final ClassSectionRepository classSectionRepository;
     private final RoomRepository roomRepository;
     private final SchoolRepository schoolRepository;
+    private final EnrollmentRepository enrollmentRepository;
+
+    public DeanServiceImpl(CourseRepository courseRepository, TermRepository termRepository,
+                           UserRepository userRepository, ClassSectionRepository classSectionRepository,
+                           RoomRepository roomRepository, SchoolRepository schoolRepository) {
+        this(courseRepository, termRepository, userRepository, classSectionRepository, roomRepository, schoolRepository, new EnrollmentRepository());
+    }
+
+    public DeanServiceImpl(CourseRepository courseRepository, TermRepository termRepository,
+                           UserRepository userRepository, ClassSectionRepository classSectionRepository,
+                           RoomRepository roomRepository, SchoolRepository schoolRepository,
+                           EnrollmentRepository enrollmentRepository) {
+        this.courseRepository = courseRepository;
+        this.termRepository = termRepository;
+        this.userRepository = userRepository;
+        this.classSectionRepository = classSectionRepository;
+        this.roomRepository = roomRepository;
+        this.schoolRepository = schoolRepository;
+        this.enrollmentRepository = enrollmentRepository;
+    }
 
 
     @Override
@@ -159,9 +177,13 @@ public class DeanServiceImpl implements DeanService {
 
     @Override
     public void assignCourseToTerm(int termId, int courseId) {
-        List<Course> currentCourses = termRepository.findCoursesByTerm(termId);
+        Course course = courseRepository.findById(courseId);
+        if (course == null) {
+            throw new ValidationException("Course not found.");
+        }
+        List<Course> currentCourses = termRepository.findCoursesByTerm(termId, course.getSchoolId());
         if (currentCourses.size() >= 5) {
-            throw new ValidationException("A term can only have a maximum of 5 courses bundled.");
+            throw new ValidationException("A term can only have a maximum of 5 courses bundled for your school.");
         }
 
         termRepository.assignCourseToTerm(termId, courseId);
@@ -184,9 +206,7 @@ public class DeanServiceImpl implements DeanService {
         Map<Term, List<Course>> map = new LinkedHashMap<>();
 
         for (Term term : terms) {
-            List<Course> courses = termRepository.findCoursesByTerm(term.getId());
-
-            courses.removeIf(c -> c.getSchoolId() != schoolId);
+            List<Course> courses = termRepository.findCoursesByTerm(term.getId(), schoolId);
             map.put(term, courses);
         }
 
@@ -217,10 +237,15 @@ public class DeanServiceImpl implements DeanService {
             throw new ValidationException("Academic Year cannot be empty.");
         }
 
-        List<Course> coursesInTerm = termRepository.findCoursesByTerm(termId);
+        Course course = courseRepository.findById(courseId);
+        if (course == null) {
+            throw new ValidationException("Course not found.");
+        }
+
+        List<Course> coursesInTerm = termRepository.findCoursesByTerm(termId, course.getSchoolId());
         boolean courseAssigned = coursesInTerm.stream().anyMatch(c -> c.getId() == courseId);
         if (!courseAssigned) {
-            throw new ValidationException("Cannot schedule: This course is not bundled into the selected term.");
+            throw new ValidationException("Cannot schedule: This course is not bundled into the selected term for your school.");
         }
 
         String exactDays = daysOfWeek.trim();
@@ -308,12 +333,15 @@ public class DeanServiceImpl implements DeanService {
         if (section == null) {
             throw new ValidationException("Class section not found.");
         }
-        if (section.getEnrolledCount() > 0) {
-            throw new ValidationException("Cannot remove class section: " + section.getEnrolledCount()
-                    + " student(s) are actively enrolled. Please drop all student enrollments before deleting this section.");
-        }
         if (!classSectionRepository.delete(id)) {
             throw new RuntimeException("Failed to delete class section.");
+        }
+    }
+
+    @Override
+    public void unenrollStudentFromSection(int studentId, int classSectionId) {
+        if (!enrollmentRepository.unenrollStudent(studentId, classSectionId)) {
+            throw new ValidationException("Failed to unenroll student from section.");
         }
     }
 
