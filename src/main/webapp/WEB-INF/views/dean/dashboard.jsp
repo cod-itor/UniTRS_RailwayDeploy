@@ -608,18 +608,28 @@
            MOBILE UNIFIED DESIGN SYSTEM FOR DEAN
            ======================================================== */
         @media (max-width: 767.98px) {
+            body {
+                display: block !important;
+                font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+                background: #f8fafc;
+                padding-bottom: 0 !important;
+                -webkit-font-smoothing: antialiased;
+                -webkit-tap-highlight-color: transparent;
+            }
+
             .desktop-layout {
                 display: none !important;
             }
 
             .mobile-app-container {
                 display: block !important;
-                padding: 0 16px calc(84px + env(safe-area-inset-bottom, 16px));
-                max-width: 540px;
-                margin: 0 auto;
+                width: 100% !important;
+                max-width: 540px !important;
+                margin: 0 auto !important;
+                padding: 0 16px calc(84px + env(safe-area-inset-bottom, 16px)) !important;
                 background: #f8fafc;
                 min-height: 100vh;
-                box-sizing: border-box;
+                box-sizing: border-box !important;
             }
 
             /* Sticky Safe-Area Aware Top Bar */
@@ -676,6 +686,8 @@
             .mobile-sub-view {
                 display: none;
                 padding: 0 0 16px;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .mobile-sub-view.active {
@@ -704,6 +716,8 @@
                 overflow: hidden;
                 box-shadow: 0 14px 34px rgba(15, 23, 42, 0.14);
                 margin-bottom: 16px;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .dean-hero-banner::before {
@@ -724,6 +738,8 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
                 margin-bottom: 16px;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .dean-kpi-card {
@@ -783,6 +799,8 @@
                 margin-bottom: 16px;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .dean-action-strip::-webkit-scrollbar {
@@ -832,6 +850,8 @@
                 box-shadow: 0 4px 18px rgba(0, 0, 0, 0.025);
                 margin-bottom: 12px;
                 transition: transform 0.15s ease, box-shadow 0.15s ease;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .mobile-course-card:active {
@@ -896,6 +916,8 @@
             .mobile-search-bar {
                 position: relative;
                 margin-bottom: 14px;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .mobile-search-bar input {
@@ -934,6 +956,8 @@
                 border-radius: 16px;
                 margin-bottom: 16px;
                 gap: 4px;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .dean-seg-btn {
@@ -966,6 +990,8 @@
                 box-shadow: 0 16px 36px rgba(9, 30, 58, 0.3);
                 border: 1px solid rgba(255, 255, 255, 0.14);
                 margin-bottom: 16px;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .dean-cred-card::before {
@@ -1109,6 +1135,8 @@
                 margin-bottom: 12px;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .filter-chip-strip::-webkit-scrollbar {
