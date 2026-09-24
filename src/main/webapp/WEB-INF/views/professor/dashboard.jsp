@@ -1821,6 +1821,203 @@
         .day-pill-btn {
             transition: all 0.15s ease;
         }
+
+        .slide-qr-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            transition: opacity 0.25s ease;
+        }
+        .slide-qr-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(11, 15, 25, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .slide-qr-container {
+            position: relative;
+            z-index: 2;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 28px 48px;
+            box-sizing: border-box;
+            color: #ffffff;
+        }
+        .slide-qr-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .slide-qr-badge {
+            background: rgba(37, 99, 235, 0.25);
+            color: #60a5fa;
+            border: 1px solid rgba(37, 99, 235, 0.4);
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 6px 16px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .slide-qr-course {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #e2e8f0;
+        }
+        .slide-ctrl-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.15rem;
+            transition: all 0.2s ease;
+        }
+        .slide-ctrl-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        .slide-ctrl-btn.close-btn:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+        }
+        .slide-qr-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 16px 0;
+        }
+        .slide-qr-title {
+            font-size: clamp(2rem, 3.2vw, 3.25rem);
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        .slide-qr-subtitle {
+            font-size: clamp(1rem, 1.3vw, 1.25rem);
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+        .slide-qr-canvas-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 28px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: transform 0.25s ease;
+        }
+        .slide-qr-canvas-card canvas {
+            display: block;
+            width: clamp(260px, 30vw, 440px);
+            height: clamp(260px, 30vw, 440px);
+            border-radius: 14px;
+        }
+        .slide-link-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            padding: 10px 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            max-width: min(90vw, 680px);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 10px;
+        }
+        .slide-link-pill:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        .slide-copy-tag {
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+            flex-shrink: 0;
+        }
+        .slide-hint {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .slide-qr-overlay.light-theme .slide-qr-backdrop {
+            background: rgba(248, 250, 252, 0.97);
+        }
+        .slide-qr-overlay.light-theme .slide-qr-container {
+            color: #0f172a;
+        }
+        .slide-qr-overlay.light-theme .slide-qr-title {
+            color: #0f172a;
+        }
+        .slide-qr-overlay.light-theme .slide-qr-subtitle {
+            color: #475569;
+        }
+        .slide-qr-overlay.light-theme .slide-qr-course {
+            color: #334155;
+        }
+        .slide-qr-overlay.light-theme .slide-ctrl-btn {
+            background: #ffffff;
+            color: #334155;
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+        .slide-qr-overlay.light-theme .slide-ctrl-btn:hover {
+            background: #f1f5f9;
+        }
+        .slide-qr-overlay.light-theme .slide-ctrl-btn.close-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+        .slide-qr-overlay.light-theme .slide-link-pill {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            color: #0f172a;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .slide-qr-overlay.light-theme .slide-hint {
+            color: #475569;
+        }
+        .slide-qr-overlay.light-theme .slide-qr-canvas-card {
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15), 0 0 0 1px #e2e8f0;
+        }
+        .qr-preset-btn {
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            transition: all 0.15s ease;
+        }
+        .qr-preset-btn.active {
+            background-color: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+        }
     </style>
 
     <!-- Accessible Skip to Content Link -->
@@ -2196,6 +2393,9 @@
                                     <td><span class="badge bg-light text-dark border"><i class="bi bi-door-open me-1" aria-hidden="true"></i>${section.roomName}</span></td>
                                     <td><span class="tc-badge success"><i class="bi bi-people-fill me-1" aria-hidden="true"></i>${students.size()} Students</span></td>
                                     <td class="text-end pe-3">
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill me-1" onclick="openClassQrModal('${section.id}')" title="Class Link QR" aria-label="Class link QR for ${section.courseCode}">
+                                            <i class="bi bi-qr-code" aria-hidden="true"></i>
+                                        </button>
                                         <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-sm btn-outline-success rounded-pill me-1" title="Export Attendance (.xlsx)" aria-label="Export attendance to Excel for ${section.courseCode}">
                                             <i class="bi bi-file-earmark-excel-fill" aria-hidden="true"></i>
                                         </a>
@@ -2226,12 +2426,18 @@
                     <h2 class="h4 fw-bold text-dark mb-1">Assigned Classes & Student Rosters</h2>
                     <p class="text-muted small mb-0">Review student enrollment, record session attendance, and submit academic grades</p>
                 </div>
-                <c:if test="${not empty sectionStudentsMap}">
-                    <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-outline-success rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-2 shadow-sm" title="Download master attendance spreadsheet for all your assigned sections">
-                        <i class="bi bi-file-earmark-excel-fill text-success" aria-hidden="true"></i>
-                        <span>Export All Classes (.xlsx)</span>
-                    </a>
-                </c:if>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-outline-primary rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-2 shadow-sm" onclick="openClassQrModal()" title="Generate QR Code for Telegram, Google Classroom, or any custom class link">
+                        <i class="bi bi-qr-code-scan"></i>
+                        <span>Class Link QR Hub</span>
+                    </button>
+                    <c:if test="${not empty sectionStudentsMap}">
+                        <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-outline-success rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-2 shadow-sm" title="Download master attendance spreadsheet for all your assigned sections">
+                            <i class="bi bi-file-earmark-excel-fill text-success" aria-hidden="true"></i>
+                            <span>Export All Classes (.xlsx)</span>
+                        </a>
+                    </c:if>
+                </div>
             </div>
 
             <c:if test="${empty sectionStudentsMap}">
@@ -2262,6 +2468,9 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2">
+                            <button type="button" class="btn btn-outline-primary rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-1" onclick="openClassQrModal('${section.id}')" title="Generate QR Code for this class (Telegram, Google Classroom, etc.)">
+                                <i class="bi bi-qr-code"></i> Link QR
+                            </button>
                             <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-outline-success rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-1" title="Export this section's attendance to Excel">
                                 <i class="bi bi-file-earmark-excel-fill text-success" aria-hidden="true"></i> Export Excel
                             </a>
@@ -2779,8 +2988,636 @@
         </div>
     </c:forEach>
 
-    <%-- DESKTOP SCRIPT --%>
+    <div class="modal fade" id="classQrModal" tabindex="-1" aria-labelledby="classQrModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
+                <div class="modal-header bg-light py-3 border-0">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
+                            <i class="bi bi-qr-code-scan fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title h6 fw-bold mb-0 text-dark" id="classQrModalLabel">Class Link QR Generator</h5>
+                            <p class="text-muted small mb-0">Generate a scannable QR code for student groups, slides, or classroom materials</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-4">
+                        <div class="col-lg-7">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-dark mb-1">Target Class Section</label>
+                                <select id="qrCourseSelect" class="form-select rounded-3 shadow-none border" onchange="onQrCourseChanged()">
+                                    <option value="" data-code="Class Link" data-title="General Class Link">General / Custom Class Link</option>
+                                    <c:forEach var="entry" items="${sectionStudentsMap}">
+                                        <c:set var="sec" value="${entry.key}" />
+                                        <option value="${sec.id}" data-code="<c:out value="${sec.courseCode}"/>" data-title="<c:out value="${sec.courseTitle}"/>">
+                                            <c:out value="${sec.courseCode}"/> — <c:out value="${sec.courseTitle}"/> (<c:out value="${sec.sessionShift}"/>)
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-dark mb-1">Link Category</label>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn active" data-type="telegram" onclick="applyQrPreset('telegram')">
+                                        <i class="bi bi-telegram text-primary me-1"></i> Telegram
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="classroom" onclick="applyQrPreset('classroom')">
+                                        <i class="bi bi-google text-success me-1"></i> Classroom
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="drive" onclick="applyQrPreset('drive')">
+                                        <i class="bi bi-folder2-open text-warning me-1"></i> Drive / Slides
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="whatsapp" onclick="applyQrPreset('whatsapp')">
+                                        <i class="bi bi-whatsapp text-success me-1"></i> WhatsApp
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="custom" onclick="applyQrPreset('custom')">
+                                        <i class="bi bi-link-45deg me-1"></i> Custom
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-dark mb-1 d-flex justify-content-between align-items-center">
+                                    <span>Paste or Enter Link <span class="text-danger">*</span></span>
+                                    <button type="button" class="btn btn-link p-0 text-primary small text-decoration-none" onclick="pasteQrUrl()">
+                                        <i class="bi bi-clipboard me-1"></i>Paste from Clipboard
+                                    </button>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-link-45deg"></i></span>
+                                    <input type="url" id="qrUrlInput" class="form-control border-start-0 ps-0 shadow-none" placeholder="https://t.me/+AbCdEf... or https://classroom.google.com/..." oninput="updateQrCode()" autocomplete="off">
+                                </div>
+                                <div class="form-text small text-muted" id="qrUrlHelper">Students will be redirected to this link when they scan the QR code.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-dark mb-1">Slide Display Title</label>
+                                <input type="text" id="qrTitleInput" class="form-control rounded-3 shadow-none border" placeholder="e.g. Join Class Telegram Group" oninput="updateQrCode()" maxlength="60">
+                            </div>
+
+                            <div>
+                                <label class="form-label small fw-bold text-dark mb-1">Slide Note / Instruction (Optional)</label>
+                                <input type="text" id="qrNoteInput" class="form-control rounded-3 shadow-none border" placeholder="e.g. Scan with your phone camera to join" oninput="updateQrCode()" maxlength="80">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
+                            <div class="w-100 p-3 bg-light rounded-4 border text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 340px;">
+                                <div id="qrEmptyState" class="py-5 text-muted">
+                                    <i class="bi bi-qr-code fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                                    <div class="fw-semibold small">No Link Entered</div>
+                                    <div class="small text-muted" style="font-size:0.75rem;">Paste a link on the left to generate QR code</div>
+                                </div>
+                                <div id="qrPreviewWrap" style="display:none;" class="w-100 d-flex flex-column align-items-center">
+                                    <div class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-1 mb-2 fw-semibold" id="qrPreviewBadge" style="font-size:0.75rem;">
+                                        Class Link
+                                    </div>
+                                    <div class="p-2 bg-white rounded-3 border shadow-sm mb-2" style="cursor: pointer;" onclick="expandToSlideQr()" title="Click to view large presentation slide">
+                                        <canvas id="qrCanvasPreview" style="display:block; max-width: 220px; max-height: 220px; width: 100%; height: auto;"></canvas>
+                                    </div>
+                                    <div class="small fw-bold text-dark text-truncate w-100 px-2" id="qrPreviewTitle"></div>
+                                    <div class="small text-muted text-truncate w-100 px-2" id="qrPreviewUrl" style="font-size:0.72rem;"></div>
+                                    <div class="mt-2 text-primary small fw-semibold" style="cursor:pointer;" onclick="expandToSlideQr()">
+                                        <i class="bi bi-arrows-fullscreen me-1"></i>Click to expand for presentation
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light py-3 border-0 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2 fw-semibold" id="qrCopyLinkBtn" onclick="copyQrLink()" disabled>
+                            <i class="bi bi-link-45deg me-1"></i>Copy Link
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3 py-2 fw-semibold" id="qrDownloadBtn" onclick="downloadQrImage()" disabled>
+                            <i class="bi bi-download me-1"></i>Download PNG
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-light rounded-pill px-3 py-2" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm d-inline-flex align-items-center gap-2" id="qrPresentBtn" onclick="expandToSlideQr()" disabled>
+                            <i class="bi bi-easel-fill"></i>
+                            <span>Present on Slide (Big QR)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="slideQrOverlay" class="slide-qr-overlay d-none" role="dialog" aria-modal="true" aria-label="QR Code Slide Presentation">
+        <div class="slide-qr-backdrop" onclick="closeSlideQr()"></div>
+        <div class="slide-qr-container">
+            <div class="slide-qr-topbar">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="slide-qr-badge" id="slideQrBadge">UniTRS CLASS PRESENTATION</span>
+                    <span class="slide-qr-course" id="slideQrCourse"></span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="slide-ctrl-btn" onclick="toggleSlideTheme()" title="Toggle Dark/Light Presentation Theme">
+                        <i class="bi bi-moon-stars-fill" id="slideThemeIcon"></i>
+                    </button>
+                    <button type="button" class="slide-ctrl-btn" onclick="toggleSlideFullscreen()" title="Toggle Fullscreen Mode">
+                        <i class="bi bi-arrows-fullscreen"></i>
+                    </button>
+                    <button type="button" class="slide-ctrl-btn" onclick="downloadQrImage()" title="Download Slide Image (PNG)">
+                        <i class="bi bi-download"></i>
+                    </button>
+                    <button type="button" class="slide-ctrl-btn close-btn" onclick="closeSlideQr()" title="Exit Presentation (Esc)">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="slide-qr-content">
+                <div class="slide-qr-header">
+                    <h1 class="slide-qr-title" id="slideBigTitle">Join Class Telegram Group</h1>
+                    <p class="slide-qr-subtitle" id="slideBigSubtitle">Scan with your phone camera to open link directly</p>
+                </div>
+
+                <div class="slide-qr-canvas-card">
+                    <canvas id="slideBigCanvas" width="700" height="700"></canvas>
+                </div>
+
+                <div class="slide-qr-footer">
+                    <div class="slide-link-pill" onclick="copyQrLink()" title="Click to copy URL">
+                        <i class="bi bi-link-45deg fs-5"></i>
+                        <span id="slideBigUrl" class="text-truncate">https://...</span>
+                        <span class="slide-copy-tag"><i class="bi bi-copy me-1"></i>Copy</span>
+                    </div>
+                    <div class="slide-hint">
+                        <i class="bi bi-camera-fill me-1 text-success"></i> Open Camera app &bull; Point at screen &bull; Tap notification to join
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="${pageContext.request.contextPath}/static/js/qrcode.min.js"></script>
     <script>
+        var qrPresets = {
+            telegram: {
+                badge: 'Telegram Group',
+                placeholder: 'https://t.me/+AbCdEf... or https://t.me/joinchat/...',
+                title: 'Join Class Telegram Group',
+                note: 'Scan with your camera to join the group',
+                icon: 'bi-telegram'
+            },
+            classroom: {
+                badge: 'Google Classroom',
+                placeholder: 'https://classroom.google.com/c/...',
+                title: 'Join Google Classroom',
+                note: 'Scan to view assignments and class stream',
+                icon: 'bi-google'
+            },
+            drive: {
+                badge: 'Drive / Lecture Slides',
+                placeholder: 'https://drive.google.com/... or docs.google.com/presentation/...',
+                title: 'Class Slides & Materials',
+                note: 'Scan to open presentation slides and materials',
+                icon: 'bi-folder2-open'
+            },
+            whatsapp: {
+                badge: 'WhatsApp Group',
+                placeholder: 'https://chat.whatsapp.com/...',
+                title: 'Join Class WhatsApp Group',
+                note: 'Scan to join the WhatsApp class discussion',
+                icon: 'bi-whatsapp'
+            },
+            custom: {
+                badge: 'Class Link',
+                placeholder: 'https://...',
+                title: 'Class Resource Link',
+                note: 'Scan with your phone camera to open link',
+                icon: 'bi-link-45deg'
+            }
+        };
+        var currentQrPreset = 'telegram';
+
+        function renderQrToCanvas(canvas, text, size, margin, darkColor, lightColor) {
+            if (!canvas || !text || typeof qrcode === 'undefined') return false;
+            darkColor = darkColor || '#0f172a';
+            lightColor = lightColor || '#ffffff';
+            margin = (typeof margin === 'number') ? margin : 16;
+            try {
+                if (qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) {
+                    qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+                }
+                var qr = qrcode(0, 'M');
+                qr.addData(text);
+                qr.make();
+
+                var moduleCount = qr.getModuleCount();
+                canvas.width = size;
+                canvas.height = size;
+                var ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+
+                ctx.fillStyle = lightColor;
+                ctx.fillRect(0, 0, size, size);
+
+                var drawArea = size - (margin * 2);
+                var cellSize = drawArea / moduleCount;
+
+                ctx.fillStyle = darkColor;
+                for (var r = 0; r < moduleCount; r++) {
+                    for (var c = 0; c < moduleCount; c++) {
+                        if (qr.isDark(r, c)) {
+                            var x = Math.round(margin + c * cellSize);
+                            var y = Math.round(margin + r * cellSize);
+                            var w = Math.ceil(cellSize);
+                            var h = Math.ceil(cellSize);
+                            ctx.fillRect(x, y, w, h);
+                        }
+                    }
+                }
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function applyQrPreset(type) {
+            if (!qrPresets[type]) type = 'custom';
+            currentQrPreset = type;
+            document.querySelectorAll('.qr-preset-btn').forEach(function(btn) {
+                if (btn.getAttribute('data-type') === type) {
+                    btn.classList.add('active', 'btn-primary', 'text-white');
+                    btn.classList.remove('btn-outline-secondary');
+                } else {
+                    btn.classList.remove('active', 'btn-primary', 'text-white');
+                    btn.classList.add('btn-outline-secondary');
+                }
+            });
+
+            var preset = qrPresets[type];
+            var urlInput = document.getElementById('qrUrlInput');
+            var titleInput = document.getElementById('qrTitleInput');
+            var noteInput = document.getElementById('qrNoteInput');
+            var badge = document.getElementById('qrPreviewBadge');
+
+            if (urlInput) urlInput.placeholder = preset.placeholder;
+            if (titleInput && (!titleInput.value || Object.values(qrPresets).some(function(p) { return p.title === titleInput.value; }))) {
+                titleInput.value = preset.title;
+            }
+            if (noteInput && (!noteInput.value || Object.values(qrPresets).some(function(p) { return p.note === noteInput.value; }))) {
+                noteInput.value = preset.note;
+            }
+            if (badge) badge.textContent = preset.badge;
+
+            updateQrCode();
+        }
+
+        function openClassQrModal(sectionId) {
+            var select = document.getElementById('qrCourseSelect');
+            if (select) {
+                if (sectionId) {
+                    select.value = sectionId;
+                } else {
+                    select.value = '';
+                }
+            }
+            onQrCourseChanged();
+            var modalEl = document.getElementById('classQrModal');
+            if (modalEl && window.bootstrap) {
+                var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+            }
+        }
+
+        function onQrCourseChanged() {
+            var select = document.getElementById('qrCourseSelect');
+            var opt = (select && select.selectedIndex >= 0) ? select.options[select.selectedIndex] : null;
+            var code = opt ? opt.getAttribute('data-code') || '' : '';
+            var title = opt ? opt.getAttribute('data-title') || '' : '';
+            var courseSpan = document.getElementById('slideQrCourse');
+            if (courseSpan) {
+                if (code && code !== 'Class Link') {
+                    courseSpan.textContent = code + ' - ' + title;
+                    courseSpan.style.display = 'inline-block';
+                } else {
+                    courseSpan.textContent = '';
+                    courseSpan.style.display = 'none';
+                }
+            }
+            updateQrCode();
+        }
+
+        function updateQrCode() {
+            var urlInput = document.getElementById('qrUrlInput');
+            var rawUrl = urlInput ? urlInput.value.trim() : '';
+            var emptyState = document.getElementById('qrEmptyState');
+            var previewWrap = document.getElementById('qrPreviewWrap');
+            var copyBtn = document.getElementById('qrCopyLinkBtn');
+            var downloadBtn = document.getElementById('qrDownloadBtn');
+            var presentBtn = document.getElementById('qrPresentBtn');
+            var canvas = document.getElementById('qrCanvasPreview');
+            var titleInput = document.getElementById('qrTitleInput');
+            var previewTitle = document.getElementById('qrPreviewTitle');
+            var previewUrl = document.getElementById('qrPreviewUrl');
+
+            if (!rawUrl) {
+                if (emptyState) emptyState.style.display = '';
+                if (previewWrap) previewWrap.style.display = 'none';
+                if (copyBtn) copyBtn.disabled = true;
+                if (downloadBtn) downloadBtn.disabled = true;
+                if (presentBtn) presentBtn.disabled = true;
+                return;
+            }
+
+            var targetUrl = rawUrl;
+            if (!/^[a-zA-Z]+:\/\//.test(targetUrl) && !targetUrl.startsWith('mailto:') && !targetUrl.startsWith('tel:') && !targetUrl.startsWith('tg:')) {
+                targetUrl = 'https://' + targetUrl;
+            }
+
+            var title = (titleInput && titleInput.value.trim()) ? titleInput.value.trim() : (qrPresets[currentQrPreset] ? qrPresets[currentQrPreset].title : 'Class Link');
+            if (previewTitle) previewTitle.textContent = title;
+            if (previewUrl) previewUrl.textContent = targetUrl;
+
+            if (canvas) {
+                var ok = renderQrToCanvas(canvas, targetUrl, 320, 16, '#0f172a', '#ffffff');
+                if (ok) {
+                    if (emptyState) emptyState.style.display = 'none';
+                    if (previewWrap) previewWrap.style.display = 'flex';
+                    if (copyBtn) copyBtn.disabled = false;
+                    if (downloadBtn) downloadBtn.disabled = false;
+                    if (presentBtn) presentBtn.disabled = false;
+                }
+            }
+        }
+
+        function expandToSlideQr() {
+            var urlInput = document.getElementById('qrUrlInput');
+            var rawUrl = urlInput ? urlInput.value.trim() : '';
+            if (!rawUrl) return;
+
+            var targetUrl = rawUrl;
+            if (!/^[a-zA-Z]+:\/\//.test(targetUrl) && !targetUrl.startsWith('mailto:') && !targetUrl.startsWith('tel:') && !targetUrl.startsWith('tg:')) {
+                targetUrl = 'https://' + targetUrl;
+            }
+
+            var titleInput = document.getElementById('qrTitleInput');
+            var noteInput = document.getElementById('qrNoteInput');
+            var title = (titleInput && titleInput.value.trim()) ? titleInput.value.trim() : (qrPresets[currentQrPreset] ? qrPresets[currentQrPreset].title : 'Class Link');
+            var note = (noteInput && noteInput.value.trim()) ? noteInput.value.trim() : 'Scan with your phone camera to open link directly';
+
+            var slideTitle = document.getElementById('slideBigTitle');
+            var slideSubtitle = document.getElementById('slideBigSubtitle');
+            var slideUrl = document.getElementById('slideBigUrl');
+            var slideBadge = document.getElementById('slideQrBadge');
+
+            if (slideTitle) slideTitle.textContent = title;
+            if (slideSubtitle) slideSubtitle.textContent = note;
+            if (slideUrl) slideUrl.textContent = targetUrl;
+            if (slideBadge && qrPresets[currentQrPreset]) {
+                slideBadge.textContent = qrPresets[currentQrPreset].badge.toUpperCase();
+            }
+
+            var modalEl = document.getElementById('classQrModal');
+            if (modalEl && window.bootstrap) {
+                var modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+
+            var slideCanvas = document.getElementById('slideBigCanvas');
+            if (slideCanvas) {
+                renderQrToCanvas(slideCanvas, targetUrl, 720, 24, '#0f172a', '#ffffff');
+            }
+
+            var overlay = document.getElementById('slideQrOverlay');
+            if (overlay) {
+                overlay.classList.remove('d-none');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeSlideQr() {
+            var overlay = document.getElementById('slideQrOverlay');
+            if (overlay) {
+                overlay.classList.add('d-none');
+                document.body.style.overflow = '';
+            }
+            if (document.fullscreenElement) {
+                try {
+                    document.exitFullscreen().catch(function() {});
+                } catch (e) {}
+            }
+        }
+
+        function toggleSlideTheme() {
+            var overlay = document.getElementById('slideQrOverlay');
+            var icon = document.getElementById('slideThemeIcon');
+            if (!overlay) return;
+            var isLight = overlay.classList.toggle('light-theme');
+            if (icon) {
+                if (isLight) {
+                    icon.className = 'bi bi-sun-fill';
+                } else {
+                    icon.className = 'bi bi-moon-stars-fill';
+                }
+            }
+        }
+
+        function toggleSlideFullscreen() {
+            var overlay = document.getElementById('slideQrOverlay');
+            if (!overlay) return;
+            if (!document.fullscreenElement) {
+                if (overlay.requestFullscreen) {
+                    overlay.requestFullscreen().catch(function() {});
+                } else if (overlay.webkitRequestFullscreen) {
+                    overlay.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(function() {});
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        function copyQrLink() {
+            var urlInput = document.getElementById('qrUrlInput');
+            var rawUrl = urlInput ? urlInput.value.trim() : '';
+            if (!rawUrl) return;
+
+            var targetUrl = rawUrl;
+            if (!/^[a-zA-Z]+:\/\//.test(targetUrl) && !targetUrl.startsWith('mailto:') && !targetUrl.startsWith('tel:') && !targetUrl.startsWith('tg:')) {
+                targetUrl = 'https://' + targetUrl;
+            }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(targetUrl).then(showCopiedFeedback).catch(function() {
+                    fallbackCopy(targetUrl);
+                });
+            } else {
+                fallbackCopy(targetUrl);
+            }
+        }
+
+        function fallbackCopy(text) {
+            var temp = document.createElement('textarea');
+            temp.value = text;
+            temp.style.position = 'fixed';
+            temp.style.opacity = '0';
+            document.body.appendChild(temp);
+            temp.focus();
+            temp.select();
+            try {
+                document.execCommand('copy');
+                showCopiedFeedback();
+            } catch (e) {}
+            document.body.removeChild(temp);
+        }
+
+        function showCopiedFeedback() {
+            var btn = document.getElementById('qrCopyLinkBtn');
+            if (btn) {
+                var origHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check2 text-success me-1"></i>Copied!';
+                btn.classList.add('border-success', 'text-success');
+                setTimeout(function() {
+                    btn.innerHTML = origHtml;
+                    btn.classList.remove('border-success', 'text-success');
+                }, 1800);
+            }
+            var slidePill = document.querySelector('.slide-copy-tag');
+            if (slidePill) {
+                var origText = slidePill.innerHTML;
+                slidePill.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied!';
+                setTimeout(function() {
+                    slidePill.innerHTML = origText;
+                }, 1800);
+            }
+        }
+
+        function pasteQrUrl() {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                navigator.clipboard.readText().then(function(text) {
+                    if (text) {
+                        var input = document.getElementById('qrUrlInput');
+                        if (input) {
+                            input.value = text.trim();
+                            updateQrCode();
+                        }
+                    }
+                }).catch(function() {
+                    var input = document.getElementById('qrUrlInput');
+                    if (input) input.focus();
+                });
+            } else {
+                var input = document.getElementById('qrUrlInput');
+                if (input) input.focus();
+            }
+        }
+
+        function downloadQrImage() {
+            var urlInput = document.getElementById('qrUrlInput');
+            var rawUrl = urlInput ? urlInput.value.trim() : '';
+            if (!rawUrl) return;
+
+            var targetUrl = rawUrl;
+            if (!/^[a-zA-Z]+:\/\//.test(targetUrl) && !targetUrl.startsWith('mailto:') && !targetUrl.startsWith('tel:') && !targetUrl.startsWith('tg:')) {
+                targetUrl = 'https://' + targetUrl;
+            }
+
+            var titleInput = document.getElementById('qrTitleInput');
+            var title = (titleInput && titleInput.value.trim()) ? titleInput.value.trim() : 'Class Link';
+
+            var select = document.getElementById('qrCourseSelect');
+            var opt = (select && select.selectedIndex >= 0) ? select.options[select.selectedIndex] : null;
+            var code = opt ? opt.getAttribute('data-code') || '' : '';
+
+            var offscreen = document.createElement('canvas');
+            var w = 1200;
+            var h = 1350;
+            offscreen.width = w;
+            offscreen.height = h;
+            var ctx = offscreen.getContext('2d');
+
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.fillStyle = '#1e293b';
+            roundQrRect(ctx, 60, 60, w - 120, h - 120, 36);
+            ctx.fill();
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.lineWidth = 2;
+            roundQrRect(ctx, 60, 60, w - 120, h - 120, 36);
+            ctx.stroke();
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 26px sans-serif';
+            ctx.textAlign = 'center';
+            var headerText = (code && code !== 'Class Link') ? code.toUpperCase() : 'UniTRS CLASS LINK';
+            ctx.fillText(headerText, w / 2, 140);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 44px sans-serif';
+            ctx.fillText(title, w / 2, 205);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '24px sans-serif';
+            ctx.fillText('Scan with phone camera to join / access', w / 2, 250);
+
+            var qrCanvas = document.createElement('canvas');
+            renderQrToCanvas(qrCanvas, targetUrl, 760, 28, '#0f172a', '#ffffff');
+
+            var qrCardX = (w - 820) / 2;
+            var qrCardY = 290;
+            ctx.fillStyle = '#ffffff';
+            roundQrRect(ctx, qrCardX, qrCardY, 820, 820, 32);
+            ctx.fill();
+
+            ctx.drawImage(qrCanvas, (w - 760) / 2, qrCardY + 30, 760, 760);
+
+            ctx.fillStyle = '#334155';
+            roundQrRect(ctx, 160, 1150, w - 320, 70, 35);
+            ctx.fill();
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '22px sans-serif';
+            var displayUrl = targetUrl.length > 55 ? targetUrl.substring(0, 52) + '...' : targetUrl;
+            ctx.fillText(displayUrl, w / 2, 1194);
+
+            var link = document.createElement('a');
+            var safeName = (title.replace(/[^a-zA-Z0-9_-]/g, '_') || 'Class_QR') + '.png';
+            link.download = safeName;
+            link.href = offscreen.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function roundQrRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                var overlay = document.getElementById('slideQrOverlay');
+                if (overlay && !overlay.classList.contains('d-none')) {
+                    closeSlideQr();
+                }
+            }
+        });
+
         function switchDesktopTab(tabId, btnElement) {
             // Update active nav button
             const buttons = document.querySelectorAll('.sidebar-nav button');

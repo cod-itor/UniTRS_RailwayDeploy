@@ -8,9 +8,6 @@ import com.unitrs.model.entity.User;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayOutputStream;
@@ -21,39 +18,18 @@ import java.util.*;
 
 public class AttendanceExcelExporter {
 
-    private static final byte[] COLOR_NAVY = new byte[]{(byte) 15, (byte) 23, (byte) 42};
-    private static final byte[] COLOR_ROYAL = new byte[]{(byte) 37, (byte) 99, (byte) 235};
-    private static final byte[] COLOR_HEADER_BG = new byte[]{(byte) 30, (byte) 41, (byte) 59};
-    private static final byte[] COLOR_CARD_BG = new byte[]{(byte) 241, (byte) 245, (byte) 249};
-    private static final byte[] COLOR_ZEBRA = new byte[]{(byte) 248, (byte) 250, (byte) 252};
-    private static final byte[] COLOR_BORDER = new byte[]{(byte) 203, (byte) 213, (byte) 225};
-
-    private static final byte[] BG_PRESENT = new byte[]{(byte) 220, (byte) 252, (byte) 231};
-    private static final byte[] FG_PRESENT = new byte[]{(byte) 22, (byte) 101, (byte) 52};
-
-    private static final byte[] BG_ABSENT = new byte[]{(byte) 254, (byte) 226, (byte) 226};
-    private static final byte[] FG_ABSENT = new byte[]{(byte) 153, (byte) 27, (byte) 27};
-
-    private static final byte[] BG_LATE = new byte[]{(byte) 254, (byte) 243, (byte) 199};
-    private static final byte[] FG_LATE = new byte[]{(byte) 146, (byte) 64, (byte) 14};
-
-    private static final byte[] BG_EXCUSED = new byte[]{(byte) 224, (byte) 242, (byte) 254};
-    private static final byte[] FG_EXCUSED = new byte[]{(byte) 7, (byte) 89, (byte) 133};
-
-    private static final byte[] BG_UNMARKED = new byte[]{(byte) 241, (byte) 245, (byte) 249};
-    private static final byte[] FG_UNMARKED = new byte[]{(byte) 148, (byte) 163, (byte) 184};
+    private static final String FONT_KHMER = "Khmer OS Muol Light";
+    private static final String FONT_TIMES = "Times New Roman";
 
     public static byte[] exportSectionAttendance(ClassSection section, User professor, School school,
                                                  List<User> students, List<AttendanceRecord> records) throws IOException {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             StylePalette styles = new StylePalette(workbook);
 
-            String rawName = (section != null && section.getCourseCode() != null)
-                    ? section.getCourseCode() + " - Sec " + section.getId()
-                    : "Attendance";
-            Sheet sheet = createUniqueSheet(workbook, rawName);
+            String sheetName = buildSheetName(section, 1);
+            Sheet sheet = createUniqueSheet(workbook, sheetName);
 
-            buildSectionSheet(sheet, styles, section, professor, school, students, records);
+            buildOfficialSheet(sheet, styles, section, professor, school, students, records);
 
             try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
                 workbook.write(out);
@@ -71,21 +47,22 @@ public class AttendanceExcelExporter {
             Map<ClassSection, List<User>> safeStudentsMap = sectionStudentsMap != null ? sectionStudentsMap : Collections.emptyMap();
             Map<Integer, List<AttendanceRecord>> safeAttendanceMap = sectionAttendanceMap != null ? sectionAttendanceMap : Collections.emptyMap();
 
-            Sheet overviewSheet = createUniqueSheet(workbook, "Teaching Overview");
-            buildOverviewSheet(overviewSheet, styles, professor, school, safeStudentsMap, safeAttendanceMap);
+            if (safeStudentsMap.isEmpty()) {
+                Sheet sheet = createUniqueSheet(workbook, "Attendance");
+                buildOfficialSheet(sheet, styles, null, professor, school, Collections.emptyList(), Collections.emptyList());
+            } else {
+                int sectionIndex = 1;
+                for (Map.Entry<ClassSection, List<User>> entry : safeStudentsMap.entrySet()) {
+                    ClassSection section = entry.getKey();
+                    List<User> students = entry.getValue();
+                    List<AttendanceRecord> records = (section != null) ? safeAttendanceMap.getOrDefault(section.getId(), Collections.emptyList()) : Collections.emptyList();
 
-            int sectionIndex = 1;
-            for (Map.Entry<ClassSection, List<User>> entry : safeStudentsMap.entrySet()) {
-                ClassSection section = entry.getKey();
-                List<User> students = entry.getValue();
-                List<AttendanceRecord> records = (section != null) ? safeAttendanceMap.getOrDefault(section.getId(), Collections.emptyList()) : Collections.emptyList();
+                    String sheetName = buildSheetName(section, sectionIndex);
+                    Sheet sheet = createUniqueSheet(workbook, sheetName);
 
-                String rawName = (section != null && section.getCourseCode() != null ? section.getCourseCode() : "Class " + sectionIndex)
-                        + (section != null ? " (Sec " + section.getId() + ")" : "");
-                Sheet sheet = createUniqueSheet(workbook, rawName);
-
-                buildSectionSheet(sheet, styles, section, professor, school, students, records);
-                sectionIndex++;
+                    buildOfficialSheet(sheet, styles, section, professor, school, students, records);
+                    sectionIndex++;
+                }
             }
 
             try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -95,9 +72,40 @@ public class AttendanceExcelExporter {
         }
     }
 
-    private static void buildSectionSheet(Sheet sheet, StylePalette styles, ClassSection section,
-                                         User professor, School school, List<User> students,
-                                         List<AttendanceRecord> records) {
+    private static String buildSheetName(ClassSection section, int fallbackIndex) {
+        if (section == null) {
+            return "Class " + fallbackIndex;
+        }
+        String code = section.getCourseCode();
+        if (code == null || code.trim().isEmpty()) {
+            code = "Class " + fallbackIndex;
+        }
+        return code + " - Sec " + section.getId();
+    }
+
+    private static Sheet createUniqueSheet(Workbook workbook, String desiredName) {
+        String safeName = desiredName.replaceAll("[\\\\/*?\\[\\]:]", " ").trim();
+        if (safeName.length() > 31) {
+            safeName = safeName.substring(0, 31).trim();
+        }
+        if (safeName.isEmpty()) {
+            safeName = "Attendance";
+        }
+        String finalName = safeName;
+        int counter = 1;
+        while (workbook.getSheet(finalName) != null) {
+            String suffix = " (" + counter + ")";
+            int maxBaseLen = 31 - suffix.length();
+            String base = safeName.length() > maxBaseLen ? safeName.substring(0, maxBaseLen).trim() : safeName;
+            finalName = base + suffix;
+            counter++;
+        }
+        return workbook.createSheet(finalName);
+    }
+
+    private static void buildOfficialSheet(Sheet sheet, StylePalette styles, ClassSection section,
+                                           User professor, School school, List<User> students,
+                                           List<AttendanceRecord> records) {
 
         sheet.setDisplayGridlines(true);
         sheet.setPrintGridlines(true);
@@ -113,666 +121,503 @@ public class AttendanceExcelExporter {
 
         Map<Date, Map<Integer, String>> dateStudentStatusMap = new LinkedHashMap<>();
         for (AttendanceRecord rec : sortedRecords) {
-            Map<Integer, String> statusMap = new HashMap<>();
-            if (rec.getEntries() != null) {
-                for (AttendanceEntry e : rec.getEntries()) {
-                    statusMap.put(e.getStudentId(), e.getStatus());
+            if (rec.getSessionDate() != null) {
+                Map<Integer, String> statusMap = new HashMap<>();
+                if (rec.getEntries() != null) {
+                    for (AttendanceEntry e : rec.getEntries()) {
+                        statusMap.put(e.getStudentId(), e.getStatus());
+                    }
+                }
+                dateStudentStatusMap.put(rec.getSessionDate(), statusMap);
+            }
+        }
+
+        List<SessionColInfo> sessionCols = prepareSessionColumns(sortedRecords);
+        int numSessions = sessionCols.size();
+        int totalCols = 4 + numSessions + 4;
+
+        sheet.setColumnWidth(0, (int) (5.5 * 256));
+        sheet.setColumnWidth(1, (int) (26.5 * 256));
+        sheet.setColumnWidth(2, (int) (4.5 * 256));
+        sheet.setColumnWidth(3, (int) (13.0 * 256));
+
+        for (int i = 0; i < numSessions; i++) {
+            sheet.setColumnWidth(4 + i, (int) (5.2 * 256));
+        }
+
+        sheet.setColumnWidth(4 + numSessions, (int) (5.5 * 256));
+        sheet.setColumnWidth(4 + numSessions + 1, (int) (5.5 * 256));
+        sheet.setColumnWidth(4 + numSessions + 2, (int) (5.5 * 256));
+        sheet.setColumnWidth(4 + numSessions + 3, (int) (7.5 * 256));
+
+        Row r0 = sheet.createRow(0);
+        r0.setHeight((short) (29.45 * 20));
+        createMergedRow(sheet, r0, 0, totalCols - 1, "សាកលវិទ្យាល័យកម្ពុជា", styles.khmerHeader);
+
+        Row r1 = sheet.createRow(1);
+        r1.setHeight((short) (18.0 * 20));
+        createMergedRow(sheet, r1, 0, totalCols - 1, "The University of Cambodia", styles.engHeader);
+
+        Row r2 = sheet.createRow(2);
+        r2.setHeight((short) (15.6 * 20));
+        createMergedRow(sheet, r2, 0, totalCols - 1, "", styles.separatorRow);
+
+        String termText = (section != null && section.getTermName() != null && !section.getTermName().trim().isEmpty())
+                ? section.getTermName().trim() : "TERM 1";
+        String academicYear = (section != null && section.getAcademicYear() != null && !section.getAcademicYear().trim().isEmpty())
+                ? section.getAcademicYear().trim() : "2025-2026";
+        String termBanner = "Attendance List for " + termText.toUpperCase() + " :  " + academicYear;
+
+        Row r3 = sheet.createRow(3);
+        r3.setHeight((short) (18.75 * 20));
+        createMergedRow(sheet, r3, 0, totalCols - 1, termBanner, styles.termHeader);
+
+        int labelEndCol = 6;
+        int valueStartCol = 7;
+        int valueEndCol = totalCols - 1;
+
+        createMetadataRow(sheet, 4, 19.5, "Room:", getRoomDisplay(section), labelEndCol, valueStartCol, valueEndCol, styles);
+        createMetadataRow(sheet, 5, 18.0, "Instructor:", getInstructorDisplay(section, professor), labelEndCol, valueStartCol, valueEndCol, styles);
+        createMetadataRow(sheet, 6, 17.25, "Course Title:", (section != null && section.getCourseTitle() != null ? section.getCourseTitle() : ""), labelEndCol, valueStartCol, valueEndCol, styles);
+        createMetadataRow(sheet, 7, 17.25, "Course Code:", (section != null && section.getCourseCode() != null ? section.getCourseCode() : ""), labelEndCol, valueStartCol, valueEndCol, styles);
+        createMetadataRow(sheet, 8, 17.25, "Time:", getTimeDisplay(section), labelEndCol, valueStartCol, valueEndCol, styles);
+
+        buildTableHeaders(sheet, 9, sessionCols, numSessions, totalCols, styles);
+
+        int startDataRow = 12;
+        List<User> safeStudents = new ArrayList<>(students != null ? students : Collections.emptyList());
+        safeStudents.sort(Comparator.comparing(User::getFullName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
+
+        int maleCount = 0;
+        int femaleCount = 0;
+
+        for (int i = 0; i < safeStudents.size(); i++) {
+            User s = safeStudents.get(i);
+            String sex = getStudentSex(s);
+            if ("F".equals(sex)) femaleCount++;
+            else maleCount++;
+
+            Row row = sheet.createRow(startDataRow + i);
+            row.setHeight((short) (26.25 * 20));
+
+            createCell(row, 0, String.valueOf(i + 1), styles.tdCenter);
+            createCell(row, 1, " " + (s.getFullName() != null ? s.getFullName() : ""), styles.tdLeft);
+            createCell(row, 2, sex, styles.tdCenter);
+            createCell(row, 3, s.getFormattedIdentifier() != null ? s.getFormattedIdentifier() : "", styles.tdCenter);
+
+            int pCount = 0;
+            int aCount = 0;
+            int lCount = 0;
+            for (int colIdx = 0; colIdx < numSessions; colIdx++) {
+                SessionColInfo colInfo = sessionCols.get(colIdx);
+                String mark = "";
+                if (colInfo.date != null) {
+                    Map<Integer, String> sMap = dateStudentStatusMap.get(colInfo.date);
+                    if (sMap != null) {
+                        String st = sMap.get(s.getId());
+                        if ("PRESENT".equalsIgnoreCase(st)) {
+                            mark = "P";
+                            pCount++;
+                        } else if ("ABSENT".equalsIgnoreCase(st)) {
+                            mark = "A";
+                            aCount++;
+                        } else if ("LATE".equalsIgnoreCase(st)) {
+                            mark = "L";
+                            lCount++;
+                        } else if ("EXCUSED".equalsIgnoreCase(st)) {
+                            mark = "E";
+                            pCount++;
+                        }
+                    }
+                }
+                createCell(row, 4 + colIdx, mark, styles.tdCenter);
+            }
+
+            createCell(row, 4 + numSessions, String.valueOf(pCount), styles.tdSummary);
+            createCell(row, 4 + numSessions + 1, String.valueOf(aCount), styles.tdSummary);
+            createCell(row, 4 + numSessions + 2, String.valueOf(lCount), styles.tdSummary);
+
+            int totalMarked = pCount + aCount + lCount;
+            String pctStr = totalMarked > 0 ? String.format(Locale.ENGLISH, "%.0f%%", ((pCount + 0.5 * lCount) / totalMarked) * 100.0) : "100%";
+            createCell(row, 4 + numSessions + 3, pctStr, styles.tdSummary);
+        }
+
+        int currentTotalRows = safeStudents.size();
+        int minTotalRows = Math.max(currentTotalRows, 35);
+        for (int i = currentTotalRows; i < minTotalRows; i++) {
+            Row row = sheet.createRow(startDataRow + i);
+            row.setHeight((short) (26.25 * 20));
+
+            createCell(row, 0, String.valueOf(i + 1), styles.tdCenter);
+            createCell(row, 1, "", styles.tdLeft);
+            createCell(row, 2, "", styles.tdCenter);
+            createCell(row, 3, "", styles.tdCenter);
+
+            for (int colIdx = 0; colIdx < numSessions; colIdx++) {
+                createCell(row, 4 + colIdx, "", styles.tdCenter);
+            }
+
+            createCell(row, 4 + numSessions, "", styles.tdSummary);
+            createCell(row, 4 + numSessions + 1, "", styles.tdSummary);
+            createCell(row, 4 + numSessions + 2, "", styles.tdSummary);
+            createCell(row, 4 + numSessions + 3, "", styles.tdSummary);
+        }
+
+        int footerRowIdx = startDataRow + minTotalRows;
+        Row fRow = sheet.createRow(footerRowIdx);
+        fRow.setHeight((short) (22.0 * 20));
+
+        Cell cTotal = fRow.createCell(0);
+        cTotal.setCellValue("Total Enrolled: " + safeStudents.size() + " Students");
+        cTotal.setCellStyle(styles.footerLabel);
+        sheet.addMergedRegion(new CellRangeAddress(footerRowIdx, footerRowIdx, 0, 1));
+
+        Cell cSex = fRow.createCell(2);
+        cSex.setCellValue("Male: " + maleCount + "   Female: " + femaleCount);
+        cSex.setCellStyle(styles.footerSex);
+        sheet.addMergedRegion(new CellRangeAddress(footerRowIdx, footerRowIdx, 2, 3));
+    }
+
+    private static List<SessionColInfo> prepareSessionColumns(List<AttendanceRecord> sortedRecords) {
+        List<SessionColInfo> result = new ArrayList<>();
+        SimpleDateFormat monthFmt = new SimpleDateFormat("MMMM", Locale.ENGLISH);
+        SimpleDateFormat dayFmt = new SimpleDateFormat("d", Locale.ENGLISH);
+
+        List<Date> recordDates = new ArrayList<>();
+        for (AttendanceRecord r : sortedRecords) {
+            if (r.getSessionDate() != null && !recordDates.contains(r.getSessionDate())) {
+                recordDates.add(r.getSessionDate());
+            }
+        }
+
+        int totalSessions = Math.max(16, recordDates.size());
+
+        if (!recordDates.isEmpty()) {
+            for (int i = 0; i < recordDates.size(); i++) {
+                Date d = recordDates.get(i);
+                result.add(new SessionColInfo(i, String.valueOf(i + 1), monthFmt.format(d), dayFmt.format(d), d));
+            }
+            if (result.size() < totalSessions) {
+                Date lastDate = recordDates.get(recordDates.size() - 1);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(lastDate);
+                for (int i = result.size(); i < totalSessions; i++) {
+                    cal.add(Calendar.DAY_OF_MONTH, 7);
+                    Date nextDate = new Date(cal.getTimeInMillis());
+                    result.add(new SessionColInfo(i, String.valueOf(i + 1), monthFmt.format(nextDate), dayFmt.format(nextDate), null));
                 }
             }
-            dateStudentStatusMap.put(rec.getSessionDate(), statusMap);
-        }
-
-        int totalSessions = sortedRecords.size();
-        int totalStudents = (students != null) ? students.size() : 0;
-        int lastColIndex = Math.max(9, 3 + totalSessions + 6);
-
-        int rowIdx = 0;
-
-        sheet.createRow(rowIdx++).setHeightInPoints(8);
-
-        Row titleRow = sheet.createRow(rowIdx++);
-        titleRow.setHeightInPoints(32);
-        Cell titleCell = titleRow.createCell(0);
-        titleCell.setCellValue("UniTRS — UNIVERSITY MANAGEMENT SYSTEM");
-        titleCell.setCellStyle(styles.mainTitleStyle);
-        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, lastColIndex));
-
-        Row subTitleRow = sheet.createRow(rowIdx++);
-        subTitleRow.setHeightInPoints(22);
-        Cell subTitleCell = subTitleRow.createCell(0);
-        subTitleCell.setCellValue("OFFICIAL COURSE ATTENDANCE REGISTER & ROSTER REPORT");
-        subTitleCell.setCellStyle(styles.subTitleStyle);
-        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, lastColIndex));
-
-        sheet.createRow(rowIdx++).setHeightInPoints(8);
-
-        String courseCode = section.getCourseCode() != null ? section.getCourseCode() : "N/A";
-        String courseTitle = section.getCourseTitle() != null ? section.getCourseTitle() : "Untitled Course";
-        String termName = section.getTermName() != null ? section.getTermName() : "Current Term";
-        String academicYear = section.getAcademicYear() != null ? section.getAcademicYear() : "";
-        String shift = section.getSessionShift() != null ? section.getSessionShift().name() : "STANDARD";
-        String days = section.getDaysOfWeek() != null ? section.getDaysOfWeek() : "Scheduled Days";
-        String room = section.getRoomName() != null ? section.getRoomName() : "TBA";
-        String profName = professor != null && professor.getFullName() != null ? professor.getFullName() : (section.getProfessorName() != null ? section.getProfessorName() : "Faculty Instructor");
-        String profId = professor != null && professor.getUserIdentifier() != null ? professor.getFormattedIdentifier() : "N/A";
-        String schoolName = school != null && school.getSchoolName() != null ? school.getSchoolName() : "Academic Department";
-        String generatedAt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
-
-        int metaEndCol = Math.max(8, lastColIndex);
-        createMetaRow(sheet, rowIdx++, "Course:", courseCode + " — " + courseTitle, "Instructor:", profName + " (" + profId + ")", metaEndCol, styles);
-        createMetaRow(sheet, rowIdx++, "Academic Term:", termName + (academicYear.isEmpty() ? "" : " (" + academicYear + ")"), "Department:", schoolName, metaEndCol, styles);
-        createMetaRow(sheet, rowIdx++, "Class Schedule:", shift + " • " + days + " (Room " + room + ")", "Enrolled Students:", totalStudents + " Students", metaEndCol, styles);
-        createMetaRow(sheet, rowIdx++, "Class Section ID:", "Section #" + (section != null ? section.getId() : 0), "Report Generated:", generatedAt, metaEndCol, styles);
-
-        sheet.createRow(rowIdx++).setHeightInPoints(8);
-
-        int grandTotalPresent = 0;
-        int grandTotalAbsent = 0;
-        int grandTotalLate = 0;
-        int grandTotalExcused = 0;
-        for (AttendanceRecord rec : sortedRecords) {
-            grandTotalPresent += rec.getPresentCount();
-            grandTotalAbsent += rec.getAbsentCount();
-            grandTotalLate += rec.getLateCount();
-            grandTotalExcused += rec.getExcusedCount();
-        }
-        int totalMarks = grandTotalPresent + grandTotalAbsent + grandTotalLate + grandTotalExcused;
-        double overallAttRate = totalMarks > 0 ? ((grandTotalPresent + grandTotalLate) * 100.0 / totalMarks) : 100.0;
-
-        Row kpiRow = sheet.createRow(rowIdx++);
-        kpiRow.setHeightInPoints(24);
-        createKpiCell(kpiRow, 0, 2, "Sessions Recorded: " + totalSessions, styles.kpiCardStyle, sheet);
-        createKpiCell(kpiRow, 3, 5, "Attendance Marks: " + grandTotalPresent + " P / " + grandTotalLate + " L / " + grandTotalAbsent + " A", styles.kpiCardStyle, sheet);
-        createKpiCell(kpiRow, 6, 8, String.format("Overall Attendance: %.1f%%", overallAttRate), styles.kpiCardStyle, sheet);
-        createKpiCell(kpiRow, 9, lastColIndex, "Status: " + (totalSessions > 0 ? "Active Semester Log" : "Blank Register Ready for Class"), styles.kpiCardStyle, sheet);
-
-        sheet.createRow(rowIdx++).setHeightInPoints(10);
-
-        int headerRowIdx = rowIdx++;
-        Row tableHeader = sheet.createRow(headerRowIdx);
-        tableHeader.setHeightInPoints(26);
-
-        int col = 0;
-        createStyledCell(tableHeader, col++, "#", styles.thStyle);
-        createStyledCell(tableHeader, col++, "Student ID", styles.thStyle);
-        createStyledCell(tableHeader, col++, "Student Full Name", styles.thStyle);
-        createStyledCell(tableHeader, col++, "Academic Major", styles.thStyle);
-
-        SimpleDateFormat df = new SimpleDateFormat("MM/dd");
-        for (AttendanceRecord rec : sortedRecords) {
-            String dateLabel = rec.getSessionDate() != null ? df.format(rec.getSessionDate()) : "Date";
-            createStyledCell(tableHeader, col++, dateLabel, styles.thDateStyle);
-        }
-
-        int extraBlankCols = (totalSessions == 0) ? 10 : Math.max(0, 3 - totalSessions);
-        for (int b = 1; b <= extraBlankCols; b++) {
-            createStyledCell(tableHeader, col++, "S" + (totalSessions + b), styles.thDateStyle);
-        }
-
-        int colPresent = col++;
-        int colLate = col++;
-        int colAbsent = col++;
-        int colExcused = col++;
-        int colRate = col++;
-        int colStatus = col++;
-
-        createStyledCell(tableHeader, colPresent, "Present (P)", styles.thGreenStyle);
-        createStyledCell(tableHeader, colLate, "Late (L)", styles.thAmberStyle);
-        createStyledCell(tableHeader, colAbsent, "Absent (A)", styles.thRedStyle);
-        createStyledCell(tableHeader, colExcused, "Excused (E)", styles.thBlueStyle);
-        createStyledCell(tableHeader, colRate, "Attended %", styles.thAccentStyle);
-        createStyledCell(tableHeader, colStatus, "Exam Eligibility", styles.thStyle);
-
-        int studentNum = 1;
-        int dataStartRow = rowIdx;
-
-        List<User> sortedStudents = new ArrayList<>(students != null ? students : Collections.emptyList());
-        sortedStudents.sort(Comparator.comparing(u -> u.getFullName() != null ? u.getFullName() : ""));
-
-        for (User student : sortedStudents) {
-            Row row = sheet.createRow(rowIdx++);
-            row.setHeightInPoints(20);
-            boolean isZebra = (studentNum % 2 == 0);
-            CellStyle baseStyle = isZebra ? styles.zebraDataStyle : styles.dataStyle;
-            CellStyle baseCenterStyle = isZebra ? styles.zebraCenterStyle : styles.centerStyle;
-
-            int c = 0;
-            createStyledCell(row, c++, String.valueOf(studentNum++), baseCenterStyle);
-            createStyledCell(row, c++, student.getFormattedIdentifier() != null ? student.getFormattedIdentifier() : "N/A", baseCenterStyle);
-            createStyledCell(row, c++, student.getFullName() != null ? student.getFullName() : "Unknown", baseStyle);
-            createStyledCell(row, c++, student.getMajor() != null ? student.getMajor() : "General", baseStyle);
-
-            int stuPresent = 0;
-            int stuLate = 0;
-            int stuAbsent = 0;
-            int stuExcused = 0;
-
-            for (AttendanceRecord rec : sortedRecords) {
-                Map<Integer, String> statusMap = dateStudentStatusMap.get(rec.getSessionDate());
-                String status = (statusMap != null) ? statusMap.get(student.getId()) : null;
-
-                if ("PRESENT".equalsIgnoreCase(status)) {
-                    createStyledCell(row, c++, "P", styles.presentStyle);
-                    stuPresent++;
-                } else if ("LATE".equalsIgnoreCase(status)) {
-                    createStyledCell(row, c++, "L", styles.lateStyle);
-                    stuLate++;
-                } else if ("ABSENT".equalsIgnoreCase(status)) {
-                    createStyledCell(row, c++, "A", styles.absentStyle);
-                    stuAbsent++;
-                } else if ("EXCUSED".equalsIgnoreCase(status)) {
-                    createStyledCell(row, c++, "E", styles.excusedStyle);
-                    stuExcused++;
-                } else {
-                    createStyledCell(row, c++, "—", styles.unmarkedStyle);
-                }
+        } else {
+            Calendar cal = Calendar.getInstance();
+            for (int i = 0; i < totalSessions; i++) {
+                Date d = new Date(cal.getTimeInMillis());
+                result.add(new SessionColInfo(i, String.valueOf(i + 1), monthFmt.format(d), "", null));
+                cal.add(Calendar.DAY_OF_MONTH, 7);
             }
-
-            for (int b = 1; b <= extraBlankCols; b++) {
-                createStyledCell(row, c++, "", baseCenterStyle);
-            }
-
-            createStyledCell(row, colPresent, String.valueOf(stuPresent), baseCenterStyle);
-            createStyledCell(row, colLate, String.valueOf(stuLate), baseCenterStyle);
-            createStyledCell(row, colAbsent, String.valueOf(stuAbsent), baseCenterStyle);
-            createStyledCell(row, colExcused, String.valueOf(stuExcused), baseCenterStyle);
-
-            double stuRate = (totalSessions > 0) ? ((stuPresent + stuLate) * 100.0 / totalSessions) : 100.0;
-            String rateStr = (totalSessions > 0) ? String.format("%.1f%%", stuRate) : "100.0%";
-            createStyledCell(row, colRate, rateStr, baseCenterStyle);
-
-            String eligibilityText;
-            CellStyle elStyle;
-            if (totalSessions == 0 || stuRate >= 80.0) {
-                eligibilityText = "Eligible";
-                elStyle = styles.eligibleStyle;
-            } else if (stuRate >= 70.0) {
-                eligibilityText = "At Risk (<80%)";
-                elStyle = styles.atRiskStyle;
-            } else {
-                eligibilityText = "Barred (<70%)";
-                elStyle = styles.barredStyle;
-            }
-            createStyledCell(row, colStatus, eligibilityText, elStyle);
         }
 
-        if (sortedStudents.isEmpty()) {
-            Row row = sheet.createRow(rowIdx++);
-            row.setHeightInPoints(24);
-            Cell emptyCell = row.createCell(0);
-            emptyCell.setCellValue("No students are currently registered in this class section.");
-            emptyCell.setCellStyle(styles.centerStyle);
-            sheet.addMergedRegion(new CellRangeAddress(rowIdx - 1, rowIdx - 1, 0, lastColIndex));
-        }
-
-        Row totalRow = sheet.createRow(rowIdx++);
-        totalRow.setHeightInPoints(22);
-        createStyledCell(totalRow, 0, "", styles.totalRowStyle);
-        createStyledCell(totalRow, 1, "", styles.totalRowStyle);
-        createStyledCell(totalRow, 2, "SESSION ATTENDEES (PRESENT / TOTAL)", styles.totalRowBoldStyle);
-        createStyledCell(totalRow, 3, "", styles.totalRowStyle);
-
-        int c = 4;
-        for (AttendanceRecord rec : sortedRecords) {
-            int pCount = rec.getPresentCount() + rec.getLateCount();
-            int tCount = totalStudents;
-            String sessionStat = (tCount > 0) ? (pCount + "/" + tCount) : String.valueOf(pCount);
-            createStyledCell(totalRow, c++, sessionStat, styles.totalRowCenterStyle);
-        }
-        for (int b = 1; b <= extraBlankCols; b++) {
-            createStyledCell(totalRow, c++, "", styles.totalRowCenterStyle);
-        }
-        createStyledCell(totalRow, colPresent, String.valueOf(grandTotalPresent), styles.totalRowCenterStyle);
-        createStyledCell(totalRow, colLate, String.valueOf(grandTotalLate), styles.totalRowCenterStyle);
-        createStyledCell(totalRow, colAbsent, String.valueOf(grandTotalAbsent), styles.totalRowCenterStyle);
-        createStyledCell(totalRow, colExcused, String.valueOf(grandTotalExcused), styles.totalRowCenterStyle);
-        createStyledCell(totalRow, colRate, String.format("%.1f%%", overallAttRate), styles.totalRowCenterStyle);
-        createStyledCell(totalRow, colStatus, "", styles.totalRowStyle);
-
-        sheet.createRow(rowIdx++).setHeightInPoints(12);
-
-        Row legendRow = sheet.createRow(rowIdx++);
-        legendRow.setHeightInPoints(18);
-        Cell legendCell = legendRow.createCell(0);
-        legendCell.setCellValue("ATTENDANCE LEGEND:   [P] Present (Full Credit)     [L] Late (Partial Credit)     [E] Excused Absence     [A] Unexcused Absent (0 Credit)     [—] Unrecorded");
-        legendCell.setCellStyle(styles.legendStyle);
-        sheet.addMergedRegion(new CellRangeAddress(rowIdx - 1, rowIdx - 1, 0, lastColIndex));
-
-        Row ruleRow = sheet.createRow(rowIdx++);
-        ruleRow.setHeightInPoints(18);
-        Cell ruleCell = ruleRow.createCell(0);
-        ruleCell.setCellValue("ACADEMIC POLICY: Students with attendance below 80% are flagged as At Risk. Students below 70% attendance are barred from taking the final examination.");
-        ruleCell.setCellStyle(styles.legendStyle);
-        sheet.addMergedRegion(new CellRangeAddress(rowIdx - 1, rowIdx - 1, 0, lastColIndex));
-
-        sheet.createRow(rowIdx++).setHeightInPoints(14);
-
-        Row signRow1 = sheet.createRow(rowIdx++);
-        signRow1.setHeightInPoints(24);
-        createStyledCell(signRow1, 1, "Course Instructor Signature: ________________________________________", styles.signStyle);
-        createStyledCell(signRow1, 5, "Dean / Dept Chair Approval: ________________________________________", styles.signStyle);
-
-        Row signRow2 = sheet.createRow(rowIdx++);
-        signRow2.setHeightInPoints(20);
-        createStyledCell(signRow2, 1, "Date Verified: ________________________", styles.signSubStyle);
-        createStyledCell(signRow2, 5, "Date Approved: ________________________", styles.signSubStyle);
-
-        sheet.setColumnWidth(0, 6 * 256);
-        sheet.setColumnWidth(1, 16 * 256);
-        sheet.setColumnWidth(2, 28 * 256);
-        sheet.setColumnWidth(3, 22 * 256);
-
-        for (int i = 4; i < colPresent; i++) {
-            sheet.setColumnWidth(i, 11 * 256);
-        }
-        sheet.setColumnWidth(colPresent, 12 * 256);
-        sheet.setColumnWidth(colLate, 10 * 256);
-        sheet.setColumnWidth(colAbsent, 12 * 256);
-        sheet.setColumnWidth(colExcused, 12 * 256);
-        sheet.setColumnWidth(colRate, 14 * 256);
-        sheet.setColumnWidth(colStatus, 18 * 256);
-
-        sheet.createFreezePane(3, headerRowIdx + 1);
+        return result;
     }
 
-    private static void buildOverviewSheet(Sheet sheet, StylePalette styles, User professor, School school,
-                                          Map<ClassSection, List<User>> sectionStudentsMap,
-                                          Map<Integer, List<AttendanceRecord>> sectionAttendanceMap) {
-        sheet.setDisplayGridlines(true);
-        sheet.setPrintGridlines(true);
+    private static void buildTableHeaders(Sheet sheet, int startHeaderRow, List<SessionColInfo> sessionCols,
+                                         int numSessions, int totalCols, StylePalette styles) {
 
-        int rowIdx = 0;
-        sheet.createRow(rowIdx++).setHeightInPoints(8);
+        int monthRowIdx = startHeaderRow;
+        int dateRowIdx = startHeaderRow + 1;
+        int headerRowIdx = startHeaderRow + 2;
 
-        Row titleRow = sheet.createRow(rowIdx++);
-        titleRow.setHeightInPoints(32);
-        Cell titleCell = titleRow.createCell(0);
-        titleCell.setCellValue("UniTRS — FACULTY TEACHING LOAD & ATTENDANCE SUMMARY");
-        titleCell.setCellStyle(styles.mainTitleStyle);
-        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
+        Row rMonth = sheet.createRow(monthRowIdx);
+        rMonth.setHeight((short) (21.75 * 20));
+        for (int c = 0; c < 4; c++) {
+            createCell(rMonth, c, "", styles.thCenter);
+        }
 
-        Row subTitleRow = sheet.createRow(rowIdx++);
-        subTitleRow.setHeightInPoints(22);
-        Cell subTitleCell = subTitleRow.createCell(0);
-        subTitleCell.setCellValue("SEMESTER ATTENDANCE AUDIT & SECTION PORTFOLIO");
-        subTitleCell.setCellStyle(styles.subTitleStyle);
-        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 7));
-
-        sheet.createRow(rowIdx++).setHeightInPoints(8);
-
-        String profName = professor != null && professor.getFullName() != null ? professor.getFullName() : "Faculty Member";
-        String profId = professor != null && professor.getUserIdentifier() != null ? professor.getFormattedIdentifier() : "N/A";
-        String schoolName = school != null && school.getSchoolName() != null ? school.getSchoolName() : "Academic Department";
-        String generatedAt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
-
-        createMetaRow(sheet, rowIdx++, "Faculty Member:", profName + " (" + profId + ")", "Department:", schoolName, 7, styles);
-        createMetaRow(sheet, rowIdx++, "Assigned Sections:", (sectionStudentsMap != null ? sectionStudentsMap.size() : 0) + " Classes", "Report Generated:", generatedAt, 7, styles);
-
-        sheet.createRow(rowIdx++).setHeightInPoints(12);
-
-        Row tableHeader = sheet.createRow(rowIdx++);
-        tableHeader.setHeightInPoints(26);
-        createStyledCell(tableHeader, 0, "Sec #", styles.thStyle);
-        createStyledCell(tableHeader, 1, "Course Code", styles.thStyle);
-        createStyledCell(tableHeader, 2, "Course Title", styles.thStyle);
-        createStyledCell(tableHeader, 3, "Schedule & Room", styles.thStyle);
-        createStyledCell(tableHeader, 4, "Enrolled", styles.thStyle);
-        createStyledCell(tableHeader, 5, "Sessions Held", styles.thDateStyle);
-        createStyledCell(tableHeader, 6, "Total Marks (P/L/A/E)", styles.thStyle);
-        createStyledCell(tableHeader, 7, "Attendance Rate", styles.thAccentStyle);
-
-        int totalStudentsAll = 0;
-        int totalSessionsAll = 0;
-        int totalMarksAll = 0;
-        int totalPresentAll = 0;
-
-        int num = 1;
-        for (Map.Entry<ClassSection, List<User>> entry : sectionStudentsMap.entrySet()) {
-            ClassSection sec = entry.getKey();
-            List<User> students = entry.getValue();
-            List<AttendanceRecord> records = sectionAttendanceMap.getOrDefault(sec.getId(), Collections.emptyList());
-
-            int secStudents = students != null ? students.size() : 0;
-            int secSessions = records.size();
-
-            int secP = 0, secL = 0, secA = 0, secE = 0;
-            for (AttendanceRecord r : records) {
-                secP += r.getPresentCount();
-                secL += r.getLateCount();
-                secA += r.getAbsentCount();
-                secE += r.getExcusedCount();
+        int groupStart = 0;
+        while (groupStart < sessionCols.size()) {
+            String mName = sessionCols.get(groupStart).monthName;
+            int groupEnd = groupStart;
+            while (groupEnd + 1 < sessionCols.size() && mName.equalsIgnoreCase(sessionCols.get(groupEnd + 1).monthName)) {
+                groupEnd++;
             }
-            int secTotalMarks = secP + secL + secA + secE;
-            double secRate = secTotalMarks > 0 ? ((secP + secL) * 100.0 / secTotalMarks) : 100.0;
 
-            totalStudentsAll += secStudents;
-            totalSessionsAll += secSessions;
-            totalMarksAll += secTotalMarks;
-            totalPresentAll += (secP + secL);
+            int startCol = 4 + groupStart;
+            int endCol = 4 + groupEnd;
 
-            Row r = sheet.createRow(rowIdx++);
-            r.setHeightInPoints(22);
-            boolean isZebra = (num++ % 2 == 0);
-            CellStyle bStyle = isZebra ? styles.zebraDataStyle : styles.dataStyle;
-            CellStyle bCenter = isZebra ? styles.zebraCenterStyle : styles.centerStyle;
+            for (int c = startCol; c <= endCol; c++) {
+                createCell(rMonth, c, "", styles.thCenter);
+            }
 
-            createStyledCell(r, 0, "#" + sec.getId(), bCenter);
-            createStyledCell(r, 1, sec.getCourseCode() != null ? sec.getCourseCode() : "", bCenter);
-            createStyledCell(r, 2, sec.getCourseTitle() != null ? sec.getCourseTitle() : "", bStyle);
-            createStyledCell(r, 3, (sec.getSessionShift() != null ? sec.getSessionShift().name() : "") + " • " + (sec.getRoomName() != null ? sec.getRoomName() : ""), bStyle);
-            createStyledCell(r, 4, secStudents + " Students", bCenter);
-            createStyledCell(r, 5, secSessions + " Dates", bCenter);
-            createStyledCell(r, 6, secP + "P / " + secL + "L / " + secA + "A / " + secE + "E", bCenter);
-            createStyledCell(r, 7, secTotalMarks > 0 ? String.format("%.1f%%", secRate) : "100.0%", bCenter);
+            Cell headCell = rMonth.getCell(startCol);
+            headCell.setCellValue(mName);
+
+            if (endCol > startCol) {
+                sheet.addMergedRegion(new CellRangeAddress(monthRowIdx, monthRowIdx, startCol, endCol));
+            }
+
+            groupStart = groupEnd + 1;
         }
 
-        Row totRow = sheet.createRow(rowIdx++);
-        totRow.setHeightInPoints(24);
-        createStyledCell(totRow, 0, "TOTAL", styles.totalRowCenterStyle);
-        createStyledCell(totRow, 1, sectionStudentsMap.size() + " Classes", styles.totalRowCenterStyle);
-        createStyledCell(totRow, 2, "", styles.totalRowStyle);
-        createStyledCell(totRow, 3, "", styles.totalRowStyle);
-        createStyledCell(totRow, 4, totalStudentsAll + " Total Students", styles.totalRowCenterStyle);
-        createStyledCell(totRow, 5, totalSessionsAll + " Total Sessions", styles.totalRowCenterStyle);
-        createStyledCell(totRow, 6, totalMarksAll + " Total Records", styles.totalRowCenterStyle);
-        double overallAvg = totalMarksAll > 0 ? (totalPresentAll * 100.0 / totalMarksAll) : 100.0;
-        createStyledCell(totRow, 7, String.format("%.1f%% Avg", overallAvg), styles.totalRowCenterStyle);
-
-        sheet.setColumnWidth(0, 10 * 256);
-        sheet.setColumnWidth(1, 16 * 256);
-        sheet.setColumnWidth(2, 34 * 256);
-        sheet.setColumnWidth(3, 26 * 256);
-        sheet.setColumnWidth(4, 16 * 256);
-        sheet.setColumnWidth(5, 16 * 256);
-        sheet.setColumnWidth(6, 26 * 256);
-        sheet.setColumnWidth(7, 18 * 256);
-    }
-
-    private static void createMetaRow(Sheet sheet, int rowIdx, String label1, String val1, String label2, String val2, int endCol2, StylePalette styles) {
-        Row row = sheet.createRow(rowIdx);
-        row.setHeightInPoints(18);
-
-        Cell l1 = row.createCell(0);
-        l1.setCellValue(label1);
-        l1.setCellStyle(styles.metaLabelStyle);
-
-        Cell v1 = row.createCell(1);
-        v1.setCellValue(val1);
-        v1.setCellStyle(styles.metaValueStyle);
-        sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, 1, 3));
-
-        Cell l2 = row.createCell(4);
-        l2.setCellValue(label2);
-        l2.setCellStyle(styles.metaLabelStyle);
-
-        Cell v2 = row.createCell(5);
-        v2.setCellValue(val2);
-        v2.setCellStyle(styles.metaValueStyle);
-        if (endCol2 >= 5) {
-            sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, 5, endCol2));
+        int sumStart = 4 + numSessions;
+        int sumEnd = totalCols - 1;
+        for (int c = sumStart; c <= sumEnd; c++) {
+            createCell(rMonth, c, "", styles.thCenter);
         }
+        Cell sumHead = rMonth.getCell(sumStart);
+        sumHead.setCellValue("Summary");
+        sheet.addMergedRegion(new CellRangeAddress(monthRowIdx, monthRowIdx, sumStart, sumEnd));
+
+        Row rDate = sheet.createRow(dateRowIdx);
+        rDate.setHeight((short) (21.75 * 20));
+        for (int c = 0; c < 3; c++) {
+            createCell(rDate, c, "", styles.thCenter);
+        }
+        createCell(rDate, 3, "Date:", styles.thRight);
+
+        for (int i = 0; i < numSessions; i++) {
+            SessionColInfo colInfo = sessionCols.get(i);
+            createCell(rDate, 4 + i, colInfo.dayStr, styles.thCenter);
+        }
+
+        for (int c = sumStart; c <= sumEnd; c++) {
+            createCell(rDate, c, "", styles.thCenter);
+        }
+
+        Row rCol = sheet.createRow(headerRowIdx);
+        rCol.setHeight((short) (21.75 * 20));
+
+        createCell(rCol, 0, "Nº", styles.thCenter);
+        createCell(rCol, 1, "Name", styles.thCenter);
+        createCell(rCol, 2, "Sex", styles.thCenter);
+        createCell(rCol, 3, "ID", styles.thCenter);
+
+        for (int i = 0; i < numSessions; i++) {
+            createCell(rCol, 4 + i, sessionCols.get(i).sessionNumber, styles.thCenter);
+        }
+
+        createCell(rCol, 4 + numSessions, "P", styles.thCenter);
+        createCell(rCol, 4 + numSessions + 1, "A", styles.thCenter);
+        createCell(rCol, 4 + numSessions + 2, "L", styles.thCenter);
+        createCell(rCol, 4 + numSessions + 3, "%", styles.thCenter);
     }
 
-    private static void createKpiCell(Row row, int startCol, int endCol, String text, CellStyle style, Sheet sheet) {
+    private static String getStudentSex(User s) {
+        if (s == null) return "M";
+        String g = s.getGender();
+        if (g != null) {
+            String trimmed = g.trim();
+            if ("FEMALE".equalsIgnoreCase(trimmed) || "F".equalsIgnoreCase(trimmed)) {
+                return "F";
+            }
+        }
+        return "M";
+    }
+
+    private static String getRoomDisplay(ClassSection section) {
+        if (section == null || section.getRoomName() == null || section.getRoomName().trim().isEmpty()) {
+            return "501";
+        }
+        String r = section.getRoomName().trim();
+        if (r.toLowerCase().startsWith("room")) {
+            return r.substring(4).trim();
+        }
+        return r;
+    }
+
+    private static String getInstructorDisplay(ClassSection section, User professor) {
+        if (professor != null && professor.getFullName() != null && !professor.getFullName().trim().isEmpty()) {
+            return professor.getFullName().trim();
+        }
+        if (section != null && section.getProfessorName() != null && !section.getProfessorName().trim().isEmpty()) {
+            return section.getProfessorName().trim();
+        }
+        return "Faculty Member";
+    }
+
+    private static String getTimeDisplay(ClassSection section) {
+        if (section == null) return "Evening";
+        String shift = section.getSessionShift() != null ? section.getSessionShift().name() : "Evening";
+        String days = section.getDaysOfWeek() != null ? section.getDaysOfWeek().trim() : "";
+        if (days.isEmpty()) {
+            return shift;
+        }
+        return shift + " (" + days + ")";
+    }
+
+    private static void createMergedRow(Sheet sheet, Row row, int startCol, int endCol, String value, CellStyle style) {
         for (int c = startCol; c <= endCol; c++) {
             Cell cell = row.createCell(c);
             cell.setCellStyle(style);
-            if (c == startCol) {
-                cell.setCellValue(text);
-            }
         }
-        if (startCol < endCol) {
+        Cell first = row.getCell(startCol);
+        first.setCellValue(value);
+        if (endCol > startCol) {
             sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), startCol, endCol));
         }
     }
 
-    private static void createStyledCell(Row row, int col, String value, CellStyle style) {
-        Cell cell = row.createCell(col);
-        cell.setCellValue(value != null ? value : "");
+    private static void createMetadataRow(Sheet sheet, int rowIdx, double height, String label, String value,
+                                         int labelEndCol, int valStartCol, int valEndCol, StylePalette styles) {
+        Row row = sheet.createRow(rowIdx);
+        row.setHeight((short) (height * 20));
+
+        for (int c = 0; c <= labelEndCol; c++) {
+            Cell cell = row.createCell(c);
+            cell.setCellStyle(styles.metaLabel);
+        }
+        row.getCell(0).setCellValue(label);
+        if (labelEndCol > 0) {
+            sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, 0, labelEndCol));
+        }
+
+        for (int c = valStartCol; c <= valEndCol; c++) {
+            Cell cell = row.createCell(c);
+            cell.setCellStyle(styles.metaValue);
+        }
+        row.getCell(valStartCol).setCellValue(value);
+        if (valEndCol > valStartCol) {
+            sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, valStartCol, valEndCol));
+        }
+    }
+
+    private static void createCell(Row row, int colIdx, String value, CellStyle style) {
+        Cell cell = row.createCell(colIdx);
+        cell.setCellValue(value);
         cell.setCellStyle(style);
     }
 
-    private static Sheet createUniqueSheet(XSSFWorkbook workbook, String desiredName) {
-        String clean = sanitizeSheetName(desiredName);
-        if (workbook.getSheet(clean) == null) {
-            return workbook.createSheet(clean);
-        }
-        int count = 2;
-        while (true) {
-            String suffix = " (" + count + ")";
-            int maxBase = 31 - suffix.length();
-            String candidate = (clean.length() > maxBase ? clean.substring(0, maxBase) : clean) + suffix;
-            if (workbook.getSheet(candidate) == null) {
-                return workbook.createSheet(candidate);
-            }
-            count++;
-        }
-    }
+    static class SessionColInfo {
+        int colIndex;
+        String sessionNumber;
+        String monthName;
+        String dayStr;
+        Date date;
 
-    private static String sanitizeSheetName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return "Sheet";
+        SessionColInfo(int colIndex, String sessionNumber, String monthName, String dayStr, Date date) {
+            this.colIndex = colIndex;
+            this.sessionNumber = sessionNumber;
+            this.monthName = monthName;
+            this.dayStr = dayStr;
+            this.date = date;
         }
-        String clean = name.replaceAll("[\\\\/*?:\\[\\]]", " ").trim();
-        clean = clean.replaceAll("[']+$", "").replaceAll("^[']+", "").trim();
-        if (clean.isEmpty()) {
-            return "Sheet";
-        }
-        return clean.length() > 31 ? clean.substring(0, 31) : clean;
     }
 
     private static class StylePalette {
-        final CellStyle mainTitleStyle;
-        final CellStyle subTitleStyle;
-        final CellStyle metaLabelStyle;
-        final CellStyle metaValueStyle;
-        final CellStyle kpiCardStyle;
+        final CellStyle khmerHeader;
+        final CellStyle engHeader;
+        final CellStyle separatorRow;
+        final CellStyle termHeader;
+        final CellStyle metaLabel;
+        final CellStyle metaValue;
+        final CellStyle thCenter;
+        final CellStyle thRight;
+        final CellStyle tdCenter;
+        final CellStyle tdLeft;
+        final CellStyle tdSummary;
+        final CellStyle footerLabel;
+        final CellStyle footerSex;
 
-        final CellStyle thStyle;
-        final CellStyle thDateStyle;
-        final CellStyle thGreenStyle;
-        final CellStyle thAmberStyle;
-        final CellStyle thRedStyle;
-        final CellStyle thBlueStyle;
-        final CellStyle thAccentStyle;
+        StylePalette(Workbook wb) {
+            Font fontKhmer = wb.createFont();
+            fontKhmer.setFontName(FONT_KHMER);
+            fontKhmer.setFontHeightInPoints((short) 12);
+            fontKhmer.setBold(true);
 
-        final CellStyle dataStyle;
-        final CellStyle centerStyle;
-        final CellStyle zebraDataStyle;
-        final CellStyle zebraCenterStyle;
+            Font fontTimes11Bold = wb.createFont();
+            fontTimes11Bold.setFontName(FONT_TIMES);
+            fontTimes11Bold.setFontHeightInPoints((short) 11);
+            fontTimes11Bold.setBold(true);
 
-        final CellStyle presentStyle;
-        final CellStyle absentStyle;
-        final CellStyle lateStyle;
-        final CellStyle excusedStyle;
-        final CellStyle unmarkedStyle;
+            Font fontTimes12Bold = wb.createFont();
+            fontTimes12Bold.setFontName(FONT_TIMES);
+            fontTimes12Bold.setFontHeightInPoints((short) 12);
+            fontTimes12Bold.setBold(true);
 
-        final CellStyle eligibleStyle;
-        final CellStyle atRiskStyle;
-        final CellStyle barredStyle;
+            Font fontTimes11Norm = wb.createFont();
+            fontTimes11Norm.setFontName(FONT_TIMES);
+            fontTimes11Norm.setFontHeightInPoints((short) 11);
+            fontTimes11Norm.setBold(false);
 
-        final CellStyle totalRowStyle;
-        final CellStyle totalRowBoldStyle;
-        final CellStyle totalRowCenterStyle;
-        final CellStyle legendStyle;
-        final CellStyle signStyle;
-        final CellStyle signSubStyle;
+            Font fontTimes12Norm = wb.createFont();
+            fontTimes12Norm.setFontName(FONT_TIMES);
+            fontTimes12Norm.setFontHeightInPoints((short) 12);
+            fontTimes12Norm.setBold(false);
 
-        StylePalette(XSSFWorkbook wb) {
+            khmerHeader = wb.createCellStyle();
+            khmerHeader.setFont(fontKhmer);
+            khmerHeader.setAlignment(HorizontalAlignment.CENTER);
+            khmerHeader.setVerticalAlignment(VerticalAlignment.CENTER);
 
-            XSSFFont titleFont = wb.createFont();
-            titleFont.setFontName("Segoe UI");
-            titleFont.setFontHeightInPoints((short) 14);
-            titleFont.setBold(true);
-            titleFont.setColor(IndexedColors.WHITE.getIndex());
+            engHeader = wb.createCellStyle();
+            engHeader.setFont(fontTimes11Bold);
+            engHeader.setAlignment(HorizontalAlignment.CENTER);
+            engHeader.setVerticalAlignment(VerticalAlignment.CENTER);
 
-            XSSFFont subTitleFont = wb.createFont();
-            subTitleFont.setFontName("Segoe UI");
-            subTitleFont.setFontHeightInPoints((short) 11);
-            subTitleFont.setBold(true);
-            subTitleFont.setColor(IndexedColors.WHITE.getIndex());
+            separatorRow = wb.createCellStyle();
+            separatorRow.setFont(fontTimes11Norm);
+            separatorRow.setAlignment(HorizontalAlignment.CENTER);
+            separatorRow.setVerticalAlignment(VerticalAlignment.CENTER);
 
-            XSSFFont thFont = wb.createFont();
-            thFont.setFontName("Segoe UI");
-            thFont.setFontHeightInPoints((short) 10);
-            thFont.setBold(true);
-            thFont.setColor(IndexedColors.WHITE.getIndex());
+            termHeader = wb.createCellStyle();
+            termHeader.setFont(fontTimes12Bold);
+            termHeader.setAlignment(HorizontalAlignment.CENTER);
+            termHeader.setVerticalAlignment(VerticalAlignment.CENTER);
 
-            XSSFFont regularFont = wb.createFont();
-            regularFont.setFontName("Segoe UI");
-            regularFont.setFontHeightInPoints((short) 9);
+            metaLabel = wb.createCellStyle();
+            metaLabel.setFont(fontTimes11Bold);
+            metaLabel.setAlignment(HorizontalAlignment.RIGHT);
+            metaLabel.setVerticalAlignment(VerticalAlignment.CENTER);
 
-            XSSFFont boldFont = wb.createFont();
-            boldFont.setFontName("Segoe UI");
-            boldFont.setFontHeightInPoints((short) 9);
-            boldFont.setBold(true);
+            metaValue = wb.createCellStyle();
+            metaValue.setFont(fontTimes11Bold);
+            metaValue.setAlignment(HorizontalAlignment.LEFT);
+            metaValue.setVerticalAlignment(VerticalAlignment.CENTER);
 
-            XSSFFont italicFont = wb.createFont();
-            italicFont.setFontName("Segoe UI");
-            italicFont.setFontHeightInPoints((short) 8);
-            italicFont.setItalic(true);
-            italicFont.setColor(IndexedColors.GREY_50_PERCENT.getIndex());
+            thCenter = wb.createCellStyle();
+            thCenter.setFont(fontTimes11Bold);
+            thCenter.setAlignment(HorizontalAlignment.CENTER);
+            thCenter.setVerticalAlignment(VerticalAlignment.CENTER);
+            applyThinBorders(thCenter);
 
-            mainTitleStyle = wb.createCellStyle();
-            mainTitleStyle.setFont(titleFont);
-            mainTitleStyle.setAlignment(HorizontalAlignment.CENTER);
-            mainTitleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-            ((XSSFCellStyle) mainTitleStyle).setFillForegroundColor(new XSSFColor(COLOR_NAVY, null));
-            mainTitleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            thRight = wb.createCellStyle();
+            thRight.setFont(fontTimes11Bold);
+            thRight.setAlignment(HorizontalAlignment.RIGHT);
+            thRight.setVerticalAlignment(VerticalAlignment.CENTER);
+            applyThinBorders(thRight);
 
-            subTitleStyle = wb.createCellStyle();
-            subTitleStyle.setFont(subTitleFont);
-            subTitleStyle.setAlignment(HorizontalAlignment.CENTER);
-            subTitleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-            ((XSSFCellStyle) subTitleStyle).setFillForegroundColor(new XSSFColor(COLOR_ROYAL, null));
-            subTitleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            tdCenter = wb.createCellStyle();
+            tdCenter.setFont(fontTimes11Norm);
+            tdCenter.setAlignment(HorizontalAlignment.CENTER);
+            tdCenter.setVerticalAlignment(VerticalAlignment.CENTER);
+            applyThinBorders(tdCenter);
 
-            metaLabelStyle = wb.createCellStyle();
-            metaLabelStyle.setFont(boldFont);
-            metaLabelStyle.setAlignment(HorizontalAlignment.RIGHT);
-            metaLabelStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            tdLeft = wb.createCellStyle();
+            tdLeft.setFont(fontTimes12Norm);
+            tdLeft.setAlignment(HorizontalAlignment.LEFT);
+            tdLeft.setVerticalAlignment(VerticalAlignment.CENTER);
+            applyThinBorders(tdLeft);
 
-            metaValueStyle = wb.createCellStyle();
-            metaValueStyle.setFont(regularFont);
-            metaValueStyle.setAlignment(HorizontalAlignment.LEFT);
-            metaValueStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            tdSummary = wb.createCellStyle();
+            tdSummary.setFont(fontTimes11Bold);
+            tdSummary.setAlignment(HorizontalAlignment.CENTER);
+            tdSummary.setVerticalAlignment(VerticalAlignment.CENTER);
+            applyThinBorders(tdSummary);
 
-            kpiCardStyle = wb.createCellStyle();
-            kpiCardStyle.setFont(boldFont);
-            kpiCardStyle.setAlignment(HorizontalAlignment.CENTER);
-            kpiCardStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-            ((XSSFCellStyle) kpiCardStyle).setFillForegroundColor(new XSSFColor(COLOR_CARD_BG, null));
-            kpiCardStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            setBorders(kpiCardStyle, BorderStyle.THIN, new XSSFColor(COLOR_BORDER, null));
+            footerLabel = wb.createCellStyle();
+            footerLabel.setFont(fontTimes11Bold);
+            footerLabel.setAlignment(HorizontalAlignment.LEFT);
+            footerLabel.setVerticalAlignment(VerticalAlignment.CENTER);
 
-            thStyle = createHeaderStyle(wb, thFont, COLOR_HEADER_BG);
-            thDateStyle = createHeaderStyle(wb, thFont, COLOR_ROYAL);
-            thGreenStyle = createHeaderStyle(wb, thFont, new byte[]{(byte) 21, (byte) 128, (byte) 61});
-            thAmberStyle = createHeaderStyle(wb, thFont, new byte[]{(byte) 180, (byte) 83, (byte) 9});
-            thRedStyle = createHeaderStyle(wb, thFont, new byte[]{(byte) 185, (byte) 28, (byte) 28});
-            thBlueStyle = createHeaderStyle(wb, thFont, new byte[]{(byte) 3, (byte) 105, (byte) 161});
-            thAccentStyle = createHeaderStyle(wb, thFont, new byte[]{(byte) 79, (byte) 70, (byte) 229});
-
-            dataStyle = createDataStyle(wb, regularFont, HorizontalAlignment.LEFT, false);
-            centerStyle = createDataStyle(wb, regularFont, HorizontalAlignment.CENTER, false);
-            zebraDataStyle = createDataStyle(wb, regularFont, HorizontalAlignment.LEFT, true);
-            zebraCenterStyle = createDataStyle(wb, regularFont, HorizontalAlignment.CENTER, true);
-
-            presentStyle = createStatusStyle(wb, BG_PRESENT, FG_PRESENT);
-            absentStyle = createStatusStyle(wb, BG_ABSENT, FG_ABSENT);
-            lateStyle = createStatusStyle(wb, BG_LATE, FG_LATE);
-            excusedStyle = createStatusStyle(wb, BG_EXCUSED, FG_EXCUSED);
-            unmarkedStyle = createStatusStyle(wb, BG_UNMARKED, FG_UNMARKED);
-
-            eligibleStyle = createStatusStyle(wb, BG_PRESENT, FG_PRESENT);
-            atRiskStyle = createStatusStyle(wb, BG_LATE, FG_LATE);
-            barredStyle = createStatusStyle(wb, BG_ABSENT, FG_ABSENT);
-
-            totalRowStyle = wb.createCellStyle();
-            totalRowStyle.setFont(regularFont);
-            ((XSSFCellStyle) totalRowStyle).setFillForegroundColor(new XSSFColor(COLOR_CARD_BG, null));
-            totalRowStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            totalRowStyle.setBorderTop(BorderStyle.MEDIUM);
-            totalRowStyle.setBorderBottom(BorderStyle.DOUBLE);
-
-            totalRowBoldStyle = wb.createCellStyle();
-            totalRowBoldStyle.setFont(boldFont);
-            ((XSSFCellStyle) totalRowBoldStyle).setFillForegroundColor(new XSSFColor(COLOR_CARD_BG, null));
-            totalRowBoldStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            totalRowBoldStyle.setBorderTop(BorderStyle.MEDIUM);
-            totalRowBoldStyle.setBorderBottom(BorderStyle.DOUBLE);
-
-            totalRowCenterStyle = wb.createCellStyle();
-            totalRowCenterStyle.setFont(boldFont);
-            totalRowCenterStyle.setAlignment(HorizontalAlignment.CENTER);
-            ((XSSFCellStyle) totalRowCenterStyle).setFillForegroundColor(new XSSFColor(COLOR_CARD_BG, null));
-            totalRowCenterStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            totalRowCenterStyle.setBorderTop(BorderStyle.MEDIUM);
-            totalRowCenterStyle.setBorderBottom(BorderStyle.DOUBLE);
-
-            legendStyle = wb.createCellStyle();
-            legendStyle.setFont(italicFont);
-            legendStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-
-            signStyle = wb.createCellStyle();
-            signStyle.setFont(boldFont);
-            signStyle.setVerticalAlignment(VerticalAlignment.BOTTOM);
-
-            signSubStyle = wb.createCellStyle();
-            signSubStyle.setFont(regularFont);
-            signSubStyle.setVerticalAlignment(VerticalAlignment.TOP);
+            footerSex = wb.createCellStyle();
+            footerSex.setFont(fontTimes11Bold);
+            footerSex.setAlignment(HorizontalAlignment.CENTER);
+            footerSex.setVerticalAlignment(VerticalAlignment.CENTER);
         }
 
-        private CellStyle createHeaderStyle(XSSFWorkbook wb, XSSFFont font, byte[] bgRgb) {
-            CellStyle s = wb.createCellStyle();
-            s.setFont(font);
-            s.setAlignment(HorizontalAlignment.CENTER);
-            s.setVerticalAlignment(VerticalAlignment.CENTER);
-            ((XSSFCellStyle) s).setFillForegroundColor(new XSSFColor(bgRgb, null));
-            s.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            setBorders(s, BorderStyle.THIN, new XSSFColor(COLOR_BORDER, null));
-            return s;
-        }
-
-        private CellStyle createDataStyle(XSSFWorkbook wb, XSSFFont font, HorizontalAlignment align, boolean isZebra) {
-            CellStyle s = wb.createCellStyle();
-            s.setFont(font);
-            s.setAlignment(align);
-            s.setVerticalAlignment(VerticalAlignment.CENTER);
-            if (isZebra) {
-                ((XSSFCellStyle) s).setFillForegroundColor(new XSSFColor(COLOR_ZEBRA, null));
-                s.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            }
-            setBorders(s, BorderStyle.THIN, new XSSFColor(COLOR_BORDER, null));
-            return s;
-        }
-
-        private CellStyle createStatusStyle(XSSFWorkbook wb, byte[] bgRgb, byte[] fgRgb) {
-            XSSFFont f = wb.createFont();
-            f.setFontName("Segoe UI");
-            f.setFontHeightInPoints((short) 9);
-            f.setBold(true);
-            ((org.apache.poi.xssf.usermodel.XSSFFont) f).setColor(new XSSFColor(fgRgb, null));
-
-            CellStyle s = wb.createCellStyle();
-            s.setFont(f);
-            s.setAlignment(HorizontalAlignment.CENTER);
-            s.setVerticalAlignment(VerticalAlignment.CENTER);
-            ((XSSFCellStyle) s).setFillForegroundColor(new XSSFColor(bgRgb, null));
-            s.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            setBorders(s, BorderStyle.THIN, new XSSFColor(COLOR_BORDER, null));
-            return s;
-        }
-
-        private void setBorders(CellStyle s, BorderStyle border, XSSFColor borderColor) {
-            s.setBorderTop(border);
-            s.setBorderBottom(border);
-            s.setBorderLeft(border);
-            s.setBorderRight(border);
-            ((XSSFCellStyle) s).setTopBorderColor(borderColor);
-            ((XSSFCellStyle) s).setBottomBorderColor(borderColor);
-            ((XSSFCellStyle) s).setLeftBorderColor(borderColor);
-            ((XSSFCellStyle) s).setRightBorderColor(borderColor);
+        private static void applyThinBorders(CellStyle style) {
+            style.setBorderTop(BorderStyle.THIN);
+            style.setBorderBottom(BorderStyle.THIN);
+            style.setBorderLeft(BorderStyle.THIN);
+            style.setBorderRight(BorderStyle.THIN);
         }
     }
 }
