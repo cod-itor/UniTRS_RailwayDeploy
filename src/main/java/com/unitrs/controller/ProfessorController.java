@@ -25,6 +25,7 @@ import com.unitrs.repository.GradeRepository;
 import com.unitrs.model.entity.School;
 import com.unitrs.repository.SchoolRepository;
 import com.unitrs.utils.GradeCalculator;
+import com.unitrs.utils.AttendanceExcelExporter;
 import com.unitrs.exceptions.ValidationException;
 
 @WebServlet("/professor/*")
@@ -108,6 +109,8 @@ public class ProfessorController extends HttpServlet {
             }
 
             request.getRequestDispatcher("/WEB-INF/views/professor/dashboard.jsp").forward(request, response);
+        } else if (path.equals("/attendance/export")) {
+            handleAttendanceExport(request, response, user);
         } else {
             response.sendRedirect(request.getContextPath() + "/professor/dashboard");
         }
@@ -249,6 +252,89 @@ public class ProfessorController extends HttpServlet {
             return Double.parseDouble(value.trim());
         } catch (NumberFormatException e) {
             throw new ValidationException("Invalid number format for " + fieldName + " of " + studentName + ".");
+        }
+    }
+
+    private void handleAttendanceExport(HttpServletRequest request, HttpServletResponse response, User user) throws ServletException, IOException {
+        try {
+            School professorSchool = null;
+            if (user.getDeanSchoolId() != null) {
+                professorSchool = schoolRepository.findById(user.getDeanSchoolId());
+            } else if (user.getStudentSchoolId() != null) {
+                professorSchool = schoolRepository.findById(user.getStudentSchoolId());
+            } else {
+                professorSchool = schoolRepository.findById(7);
+            }
+
+            String sectionIdStr = request.getParameter("classSectionId");
+            if (sectionIdStr != null && !sectionIdStr.trim().isEmpty() && !sectionIdStr.trim().equalsIgnoreCase("all")) {
+                int classSectionId;
+                try {
+                    classSectionId = Integer.parseInt(sectionIdStr.trim());
+                } catch (NumberFormatException e) {
+                    throw new ValidationException("Invalid class section ID format.");
+                }
+
+                ClassSection section = classSectionRepository.findById(classSectionId);
+                if (section == null) {
+                    throw new ValidationException("Class section not found.");
+                }
+                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                    throw new ValidationException("You are not authorized to export attendance for this section.");
+                }
+
+                List<User> students = userRepository.findStudentsByClassSection(classSectionId);
+                List<AttendanceRecord> records = attendanceRepository.findRecordsByClassSectionId(classSectionId);
+                for (AttendanceRecord record : records) {
+                    record.setEntries(attendanceRepository.findEntriesByRecordId(record.getId()));
+                }
+
+                byte[] excelData = AttendanceExcelExporter.exportSectionAttendance(section, user, professorSchool, students, records);
+
+                String safeCode = section.getCourseCode() != null ? section.getCourseCode().replaceAll("[^a-zA-Z0-9_-]", "_") : "Section";
+                String filename = "Attendance_" + safeCode + "_Sec" + section.getId() + ".xlsx";
+
+                response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+                response.setContentLength(excelData.length);
+                response.getOutputStream().write(excelData);
+                response.getOutputStream().flush();
+            } else {
+                List<ClassSection> sections = classSectionRepository.findByProfessorId(user.getId());
+                Map<ClassSection, List<User>> sectionStudentsMap = new LinkedHashMap<>();
+                Map<Integer, List<AttendanceRecord>> sectionAttendanceMap = new LinkedHashMap<>();
+
+                for (ClassSection section : sections) {
+                    List<User> students = userRepository.findStudentsByClassSection(section.getId());
+                    sectionStudentsMap.put(section, students);
+
+                    List<AttendanceRecord> records = attendanceRepository.findRecordsByClassSectionId(section.getId());
+                    for (AttendanceRecord record : records) {
+                        record.setEntries(attendanceRepository.findEntriesByRecordId(record.getId()));
+                    }
+                    sectionAttendanceMap.put(section.getId(), records);
+                }
+
+                byte[] excelData = AttendanceExcelExporter.exportAllSectionsAttendance(user, professorSchool, sectionStudentsMap, sectionAttendanceMap);
+
+                String dateStr = new java.text.SimpleDateFormat("yyyyMMdd_HHmm").format(new java.util.Date());
+                String filename = "Attendance_All_Classes_" + dateStr + ".xlsx";
+
+                response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+                response.setContentLength(excelData.length);
+                response.getOutputStream().write(excelData);
+                response.getOutputStream().flush();
+            }
+        } catch (ValidationException ve) {
+            if (!response.isCommitted()) {
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode(ve.getMessage(), StandardCharsets.UTF_8));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (!response.isCommitted()) {
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode("Excel Export Failed: " + e.getMessage(), StandardCharsets.UTF_8));
+            }
         }
     }
 }

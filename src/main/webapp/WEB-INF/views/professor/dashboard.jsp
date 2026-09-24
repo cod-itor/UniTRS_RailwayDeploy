@@ -21,10 +21,12 @@
             }
 
             body {
+                display: block !important;
                 font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
                 background: #f8fafc;
                 padding-bottom: 0 !important;
                 -webkit-font-smoothing: antialiased;
+                -webkit-tap-highlight-color: transparent;
             }
 
             /* WCAG 2.1 AA Focus Rings */
@@ -34,10 +36,12 @@
             }
 
             .mobile-app-container {
-                padding: 0 16px calc(84px + env(safe-area-inset-bottom, 16px));
-                max-width: 540px;
-                margin: 0 auto;
-                box-sizing: border-box;
+                display: block !important;
+                width: 100% !important;
+                max-width: 540px !important;
+                margin: 0 auto !important;
+                padding: 0 16px calc(84px + env(safe-area-inset-bottom, 16px)) !important;
+                box-sizing: border-box !important;
             }
 
             /* Top Bar with Safe Area Inset */
@@ -145,6 +149,8 @@
                 margin-bottom: 20px;
                 position: relative;
                 overflow: hidden;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .mobile-hero-banner::after {
@@ -421,6 +427,8 @@
                 cursor: pointer;
                 transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
                 -webkit-tap-highlight-color: transparent;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .mobile-course-card:active,
@@ -515,6 +523,8 @@
                 overflow: hidden;
                 border: 1px solid rgba(255, 215, 0, 0.35);
                 margin-bottom: 20px;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .faculty-id-card::before {
@@ -695,6 +705,8 @@
             .mobile-sub-view {
                 display: none;
                 animation: fadeInUpView 0.26s cubic-bezier(0.34, 1.25, 0.64, 1);
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .mobile-sub-view.active {
@@ -2184,6 +2196,9 @@
                                     <td><span class="badge bg-light text-dark border"><i class="bi bi-door-open me-1" aria-hidden="true"></i>${section.roomName}</span></td>
                                     <td><span class="tc-badge success"><i class="bi bi-people-fill me-1" aria-hidden="true"></i>${students.size()} Students</span></td>
                                     <td class="text-end pe-3">
+                                        <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-sm btn-outline-success rounded-pill me-1" title="Export Attendance (.xlsx)" aria-label="Export attendance to Excel for ${section.courseCode}">
+                                            <i class="bi bi-file-earmark-excel-fill" aria-hidden="true"></i>
+                                        </a>
                                         <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#historyModal${section.id}" title="Attendance History" aria-label="Attendance history for ${section.courseCode}">
                                             <i class="bi bi-clock-history" aria-hidden="true"></i>
                                         </button>
@@ -2211,6 +2226,12 @@
                     <h2 class="h4 fw-bold text-dark mb-1">Assigned Classes & Student Rosters</h2>
                     <p class="text-muted small mb-0">Review student enrollment, record session attendance, and submit academic grades</p>
                 </div>
+                <c:if test="${not empty sectionStudentsMap}">
+                    <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-outline-success rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-2 shadow-sm" title="Download master attendance spreadsheet for all your assigned sections">
+                        <i class="bi bi-file-earmark-excel-fill text-success" aria-hidden="true"></i>
+                        <span>Export All Classes (.xlsx)</span>
+                    </a>
+                </c:if>
             </div>
 
             <c:if test="${empty sectionStudentsMap}">
@@ -2241,6 +2262,9 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2">
+                            <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-outline-success rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-1" title="Export this section's attendance to Excel">
+                                <i class="bi bi-file-earmark-excel-fill text-success" aria-hidden="true"></i> Export Excel
+                            </a>
                             <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-2 fw-semibold btn-sm" data-bs-toggle="modal" data-bs-target="#historyModal${section.id}">
                                 <i class="bi bi-clock-history me-1" aria-hidden="true"></i> Attendance History
                             </button>
@@ -2583,11 +2607,17 @@
         <div class="modal fade" id="historyModal${section.id}" tabindex="-1" aria-labelledby="histModalLabel${section.id}" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content rounded-4 border-0 shadow-lg">
-                    <div class="modal-header border-0 py-3">
+                    <div class="modal-header border-0 py-3 d-flex justify-content-between align-items-center">
                         <h5 class="modal-title h6 fw-bold mb-0 text-dark" id="histModalLabel${section.id}">
                             <i class="bi bi-clock-history me-2 text-primary" aria-hidden="true"></i>Attendance History - ${section.courseCode}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm" title="Export this section's attendance to Excel">
+                                <i class="bi bi-file-earmark-excel-fill text-success" aria-hidden="true"></i>
+                                <span>Export Excel</span>
+                            </a>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
                     </div>
                     <div class="modal-body p-0">
                         <c:set var="records" value="${sectionAttendanceMap[section.id]}" />
@@ -3136,7 +3166,14 @@
                 <h2 class="section-title mb-0">Roster & Attendance</h2>
                 <span class="text-muted" style="font-size:0.75rem;">Fast-track grading and roll call</span>
             </div>
-            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3 py-2 fw-bold">Active Term</span>
+            <div class="d-flex align-items-center gap-2">
+                <c:if test="${not empty sectionStudentsMap}">
+                    <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm" style="font-size:0.75rem;">
+                        <i class="bi bi-file-earmark-excel-fill text-success"></i> Export All
+                    </a>
+                </c:if>
+                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 fw-bold" style="font-size:0.7rem;">Active Term</span>
+            </div>
         </div>
 
         <c:forEach var="entry" items="${sectionStudentsMap}">
@@ -3172,6 +3209,11 @@
                         <button type="button" class="btn btn-sm btn-light border w-100 rounded-pill py-2 fw-semibold text-secondary" onclick="currentActiveSectionId='${section.id}'; openSubSheet('historySheet');" style="min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;">
                             <i class="bi bi-clock-history"></i> History
                         </button>
+                    </div>
+                    <div class="col-12 mt-1">
+                        <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-sm btn-outline-success w-100 rounded-pill py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-1" style="min-height:40px;font-size:0.82rem;">
+                            <i class="bi bi-file-earmark-excel-fill text-success"></i> Export Attendance (.xlsx)
+                        </a>
                     </div>
                 </div>
             </div>
@@ -3383,6 +3425,16 @@
                 </div>
                 <i class="bi bi-chevron-right sheet-menu-arrow"></i>
             </button>
+            <a class="sheet-menu-btn sheet-menu-btn-success text-decoration-none" id="casExportBtn" href="#">
+                <div class="sheet-btn-icon" style="background:#dcfce7;color:#166534;">
+                    <i class="bi bi-file-earmark-excel-fill"></i>
+                </div>
+                <div class="sheet-menu-text">
+                    <span class="sheet-menu-title">Export Attendance (.xlsx)</span>
+                    <span class="sheet-menu-desc">Download printable Excel register</span>
+                </div>
+                <i class="bi bi-download sheet-menu-arrow"></i>
+            </a>
         </div>
     </div>
 </div>
@@ -3533,9 +3585,17 @@
     <div class="action-sheet-overlay d-md-none" id="historySheet_${section.id}" onclick="closeSheetOnOverlay(event, 'historySheet_${section.id}')">
         <div class="action-sheet">
             <div class="sheet-drag"></div>
-            <div class="sheet-header">
-                <h5 class="sheet-title m-0">History</h5>
-                <button class="btn btn-sm btn-light" onclick="closeSubSheet('historySheet_${section.id}')">Back</button>
+            <div class="sheet-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="sheet-title m-0">History</h5>
+                    <div class="small text-muted fw-semibold mt-1">${section.courseCode}</div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1 fw-semibold d-inline-flex align-items-center gap-1" style="font-size:0.75rem;">
+                        <i class="bi bi-file-earmark-excel-fill text-success"></i> Export (.xlsx)
+                    </a>
+                    <button class="btn btn-sm btn-light rounded-pill px-3" onclick="closeSubSheet('historySheet_${section.id}')">Back</button>
+                </div>
             </div>
             <div class="sheet-body">
                 <c:if test="${empty records}"><div class="text-center text-muted p-3 border rounded-3 bg-light">No records found</div></c:if>
@@ -3735,6 +3795,10 @@
         currentActiveSectionId = id;
         document.getElementById('casCode').textContent = classData[id].code;
         document.getElementById('casTitle').textContent = classData[id].title;
+        var expBtn = document.getElementById('casExportBtn');
+        if (expBtn) {
+            expBtn.href = '${pageContext.request.contextPath}/professor/attendance/export?classSectionId=' + id;
+        }
         document.getElementById('courseActionSheet').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
