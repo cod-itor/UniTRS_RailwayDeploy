@@ -2058,14 +2058,7 @@
             <div class="star-icon"><i class="bi bi-person-workspace" aria-hidden="true"></i></div>
             <h4>Faculty Portal</h4>
             <p>Active Term 2026-2027. Record attendance and grade submissions on time.</p>
-            <c:choose>
-                <c:when test="${sessionScope.user.deanSchoolId != null}">
-                    <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn">Switch to Dean View</a>
-                </c:when>
-                <c:otherwise>
-                    <button type="button" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))">View My Schedule</button>
-                </c:otherwise>
-            </c:choose>
+            <button type="button" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))">View My Schedule</button>
         </div>
     </aside>
 
@@ -2087,12 +2080,6 @@
                         <i class="bi bi-mortarboard-fill text-primary" aria-hidden="true"></i> Switch to Dean View
                     </a>
                 </c:if>
-                <button type="button" class="action-btn has-dot" aria-label="Notifications (1 new)">
-                    <i class="bi bi-bell" aria-hidden="true"></i>
-                </button>
-                <button type="button" class="action-btn" aria-label="Messages">
-                    <i class="bi bi-chat-dots" aria-hidden="true"></i>
-                </button>
 
                 <div class="dropdown">
                     <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="professorProfileDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="User profile menu for ${sessionScope.user.fullName}">
@@ -2160,16 +2147,6 @@
                                 </span>
                             </div>
                         </div>
-
-                        <c:if test="${sessionScope.user.deanSchoolId != null}">
-                            <div class="px-3 pb-2">
-                                <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-dark w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2 text-white text-decoration-none" style="font-size: 0.85rem;">
-                                    <i class="bi bi-mortarboard-fill text-info"></i> Switch to Dean Dashboard
-                                </a>
-                            </div>
-                        </c:if>
-
-                        <!-- Logout Button -->
                         <div class="p-3 bg-light border-top">
                             <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; transition: all 0.2s;">
                                 <i class="bi bi-box-arrow-right"></i> Logout
@@ -2320,30 +2297,49 @@
 
                 <div class="seg-card">
                     <div class="seg-header">
-                        <h3><i class="bi bi-lightning-charge-fill text-warning me-2" aria-hidden="true"></i>Quick Class Actions</h3>
+                        <h3><i class="bi bi-tools text-primary me-2" aria-hidden="true"></i>Faculty Quick Tools</h3>
                     </div>
-                    <div class="seg-list">
-                        <c:if test="${empty sectionStudentsMap}">
-                            <div class="text-center py-4 text-muted small">No active classes.</div>
-                        </c:if>
-                        <c:forEach var="entry" items="${sectionStudentsMap}">
-                            <c:set var="section" value="${entry.key}" />
-                            <c:set var="students" value="${entry.value}" />
-                            <div class="seg-item pb-3 border-bottom">
-                                <div class="seg-info mb-2">
-                                    <span class="seg-name fw-bold text-dark">${section.courseCode}</span>
-                                    <span class="seg-val badge bg-success-subtle text-success border border-success-subtle">${students.size()} Enrolled</span>
+                    <div class="d-flex flex-column gap-3 p-1">
+                        <button type="button" class="btn btn-light border w-100 p-3 rounded-4 text-start d-flex align-items-center justify-content-between shadow-none" onclick="openClassQrModal()">
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="width: 42px; height: 42px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                                    <i class="bi bi-qr-code-scan"></i>
                                 </div>
-                                <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary w-50 rounded-3 py-1" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}">
-                                        <i class="bi bi-clipboard-check me-1" aria-hidden="true"></i>Attendance
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-success w-50 rounded-3 py-1" data-bs-toggle="modal" data-bs-target="#gradesModal${section.id}">
-                                        <i class="bi bi-journal-text me-1" aria-hidden="true"></i>Grades
-                                    </button>
+                                <div>
+                                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">Class Link QR Hub</div>
+                                    <div class="text-muted" style="font-size: 0.76rem;">Generate presentation QR for Telegram, Classroom & links</div>
                                 </div>
                             </div>
-                        </c:forEach>
+                            <i class="bi bi-chevron-right text-muted small"></i>
+                        </button>
+
+                        <c:if test="${not empty sectionStudentsMap}">
+                            <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-light border w-100 p-3 rounded-4 text-start d-flex align-items-center justify-content-between text-decoration-none shadow-none">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div style="width: 42px; height: 42px; border-radius: 12px; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                                        <i class="bi bi-file-earmark-excel-fill"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark" style="font-size: 0.9rem;">Export Attendance Register</div>
+                                        <div class="text-muted" style="font-size: 0.76rem;">Download master spreadsheet (.xlsx) across all sections</div>
+                                    </div>
+                                </div>
+                                <i class="bi bi-download text-muted small"></i>
+                            </a>
+                        </c:if>
+
+                        <button type="button" class="btn btn-light border w-100 p-3 rounded-4 text-start d-flex align-items-center justify-content-between shadow-none" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))">
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="width: 42px; height: 42px; border-radius: 12px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                                    <i class="bi bi-calendar-week-fill"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">Term Timetable</div>
+                                    <div class="text-muted" style="font-size: 0.76rem;">View weekly room schedules and timetable breakdown</div>
+                                </div>
+                            </div>
+                            <i class="bi bi-chevron-right text-muted small"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -2393,21 +2389,40 @@
                                     <td><span class="badge bg-light text-dark border"><i class="bi bi-door-open me-1" aria-hidden="true"></i>${section.roomName}</span></td>
                                     <td><span class="tc-badge success"><i class="bi bi-people-fill me-1" aria-hidden="true"></i>${students.size()} Students</span></td>
                                     <td class="text-end pe-3">
-                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill me-1" onclick="openClassQrModal('${section.id}')" title="Class Link QR" aria-label="Class link QR for ${section.courseCode}">
-                                            <i class="bi bi-qr-code" aria-hidden="true"></i>
-                                        </button>
-                                        <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-sm btn-outline-success rounded-pill me-1" title="Export Attendance (.xlsx)" aria-label="Export attendance to Excel for ${section.courseCode}">
-                                            <i class="bi bi-file-earmark-excel-fill" aria-hidden="true"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#historyModal${section.id}" title="Attendance History" aria-label="Attendance history for ${section.courseCode}">
-                                            <i class="bi bi-clock-history" aria-hidden="true"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-primary rounded-pill me-1" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}" title="Take Attendance" aria-label="Take attendance for ${section.courseCode}">
-                                            <i class="bi bi-clipboard-check" aria-hidden="true"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-success rounded-pill" data-bs-toggle="modal" data-bs-target="#gradesModal${section.id}" title="Manage Grades" aria-label="Manage grades for ${section.courseCode}">
-                                            <i class="bi bi-journal-text" aria-hidden="true"></i>
-                                        </button>
+                                        <div class="d-inline-flex align-items-center gap-1">
+                                            <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-none" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}" title="Take Attendance">
+                                                <i class="bi bi-clipboard-check"></i>
+                                                <span>Attendance</span>
+                                            </button>
+                                            <div class="dropdown d-inline-block">
+                                                <button type="button" class="btn btn-sm btn-light border rounded-pill px-2 py-1 text-secondary shadow-none" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="body" title="More Actions">
+                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border rounded-3 py-1" style="font-size: 0.85rem;">
+                                                    <li>
+                                                        <button type="button" class="dropdown-item py-2 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#gradesModal${section.id}">
+                                                            <i class="bi bi-journal-text text-success"></i> Manage Grades
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item py-2 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#historyModal${section.id}">
+                                                            <i class="bi bi-clock-history text-secondary"></i> Attendance History
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item py-2 d-flex align-items-center gap-2 text-dark" href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}">
+                                                            <i class="bi bi-file-earmark-excel-fill text-success"></i> Export Section (.xlsx)
+                                                        </a>
+                                                    </li>
+                                                    <li><hr class="dropdown-divider my-1"></li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item py-2 d-flex align-items-center gap-2" onclick="openClassQrModal('${section.id}')">
+                                                            <i class="bi bi-qr-code text-primary"></i> Class Link QR
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -2467,22 +2482,39 @@
                             </div>
                         </div>
 
-                        <div class="d-flex flex-wrap gap-2">
-                            <button type="button" class="btn btn-outline-primary rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-1" onclick="openClassQrModal('${section.id}')" title="Generate QR Code for this class (Telegram, Google Classroom, etc.)">
-                                <i class="bi bi-qr-code"></i> Link QR
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <button type="button" class="btn btn-primary rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-2 shadow-none" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}" title="Take Attendance">
+                                <i class="bi bi-clipboard-check"></i>
+                                <span>Take Attendance</span>
                             </button>
-                            <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-outline-success rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-1" title="Export this section's attendance to Excel">
-                                <i class="bi bi-file-earmark-excel-fill text-success" aria-hidden="true"></i> Export Excel
-                            </a>
-                            <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-2 fw-semibold btn-sm" data-bs-toggle="modal" data-bs-target="#historyModal${section.id}">
-                                <i class="bi bi-clock-history me-1" aria-hidden="true"></i> Attendance History
+                            <button type="button" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-semibold btn-sm d-inline-flex align-items-center gap-2 shadow-none" data-bs-toggle="modal" data-bs-target="#gradesModal${section.id}" title="Manage Grades">
+                                <i class="bi bi-journal-text"></i>
+                                <span>Manage Grades</span>
                             </button>
-                            <button type="button" class="btn btn-primary rounded-pill px-3 py-2 fw-semibold btn-sm" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}">
-                                <i class="bi bi-clipboard-check me-1" aria-hidden="true"></i> Take Attendance
-                            </button>
-                            <button type="button" class="btn btn-success rounded-pill px-3 py-2 fw-semibold btn-sm" data-bs-toggle="modal" data-bs-target="#gradesModal${section.id}">
-                                <i class="bi bi-journal-text me-1" aria-hidden="true"></i> Manage Grades
-                            </button>
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="btn btn-light border rounded-pill px-3 py-2 fw-semibold btn-sm text-secondary d-inline-flex align-items-center gap-1 shadow-none" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="body" title="More Tools">
+                                    <i class="bi bi-three-dots"></i>
+                                    <span>More</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border rounded-3 py-1" style="font-size: 0.85rem;">
+                                    <li>
+                                        <button type="button" class="dropdown-item py-2 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#historyModal${section.id}">
+                                            <i class="bi bi-clock-history text-secondary"></i> Attendance History
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item py-2 d-flex align-items-center gap-2 text-dark" href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}">
+                                            <i class="bi bi-file-earmark-excel-fill text-success"></i> Export Section (.xlsx)
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider my-1"></li>
+                                    <li>
+                                        <button type="button" class="dropdown-item py-2 d-flex align-items-center gap-2" onclick="openClassQrModal('${section.id}')">
+                                            <i class="bi bi-qr-code text-primary"></i> Class Link QR
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
@@ -2693,25 +2725,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Dean Switcher Card -->
-                    <c:if test="${sessionScope.user.deanSchoolId != null}">
-                        <div class="table-card border-info border-opacity-25" style="background: linear-gradient(145deg, #f0fdfa, #ccfbf1);">
-                            <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="mc-icon" style="background:#0d9488; color:white; width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
-                                    <i class="bi bi-mortarboard" aria-hidden="true"></i>
-                                </div>
-                                <div>
-                                    <h3 class="h6 fw-bold text-dark mb-0">Dean Privileges Active</h3>
-                                    <div class="text-muted small">You have faculty leadership access</div>
-                                </div>
-                            </div>
-                            <p class="small text-muted mb-3">Access curriculum approvals, faculty assignments, and school-wide performance reporting.</p>
-                            <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-dark w-100 rounded-pill py-2 fw-bold text-white text-decoration-none">
-                                <i class="bi bi-mortarboard me-2" aria-hidden="true"></i> Switch to Dean Dashboard
-                            </a>
-                        </div>
-                    </c:if>
                 </div>
 
                 <div class="col-lg-6">
@@ -2899,18 +2912,24 @@
             </div>
         </div>
 
-        <!-- Manage Grades Modal -->
         <div class="modal fade" id="gradesModal${section.id}" tabindex="-1" aria-labelledby="gradesModalLabel${section.id}" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content rounded-4 border-0 shadow-lg">
                     <form action="${pageContext.request.contextPath}/professor/grades/save" method="post">
                         <input type="hidden" name="classSectionId" value="${section.id}">
                         <input type="hidden" name="tab" value="classes">
-                        <div class="modal-header bg-success text-white border-0 py-3">
+                        <div class="modal-header bg-success text-white border-0 py-3 d-flex justify-content-between align-items-center">
                             <h5 class="modal-title h6 fw-bold mb-0" id="gradesModalLabel${section.id}">
                                 <i class="bi bi-journal-text me-2" aria-hidden="true"></i>Manage Grades - ${section.courseCode}
                             </h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="d-flex align-items-center gap-2">
+                                <c:if test="${not empty grades}">
+                                    <button type="button" class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-success shadow-sm" onclick="autoCalculateAttendance('${section.id}', this)" title="Calculate 15-point attendance score from session roll calls">
+                                        <i class="bi bi-magic me-1"></i> Auto-Calculate Attendance
+                                    </button>
+                                </c:if>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
                         </div>
                         <div class="modal-body p-0">
                             <c:set var="grades" value="${sectionGradesMap[section.id]}" />
@@ -2943,8 +2962,10 @@
                                                         <div class="text-muted small">${grade.formattedStudentIdentifier}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control form-control-sm text-center rounded-3" 
+                                                        <c:set var="autoScore" value="${sectionAutoAttendanceMap[section.id][grade.studentId]}" />
+                                                        <input type="number" class="form-control form-control-sm text-center rounded-3 att-input-${section.id}" 
                                                                name="attendance_${grade.enrollmentId}" value="${grade.attendanceScore}" 
+                                                               data-auto-attendance="${autoScore != null ? autoScore : 15.0}"
                                                                min="0" max="15" step="0.01" required
                                                                aria-label="Attendance score for ${grade.studentName} (max 15)">
                                                     </td>
@@ -3882,9 +3903,16 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <h2 class="section-title mb-0">Assigned Classes</h2>
-                <span class="text-muted" style="font-size:0.75rem;">Sections, rosters & grading</span>
+                <span class="text-muted" style="font-size:0.75rem;">Sections, rosters, roll call & grades</span>
             </div>
-            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-bold" id="mobileClassCountBadge">${sectionStudentsMap.size()} Classes</span>
+            <div class="d-flex align-items-center gap-2">
+                <c:if test="${not empty sectionStudentsMap}">
+                    <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm" style="font-size:0.75rem;" title="Export all attendance">
+                        <i class="bi bi-file-earmark-excel-fill text-success"></i> Export All
+                    </a>
+                </c:if>
+                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-bold" id="mobileClassCountBadge">${sectionStudentsMap.size()} Classes</span>
+            </div>
         </div>
 
         <div class="input-group mb-3 shadow-sm rounded-4 overflow-hidden border bg-white">
@@ -3934,9 +3962,13 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                        <span class="mc-students m-0"><i class="bi bi-people-fill"></i> ${students.size()} Enrolled</span>
-                        <span class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-semibold" style="font-size:0.75rem;">Manage <i class="bi bi-chevron-right ms-1"></i></span>
+                    <div class="d-flex align-items-center gap-2 pt-2 border-top">
+                        <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-semibold flex-fill d-inline-flex align-items-center justify-content-center gap-1 shadow-none" onclick="event.stopPropagation(); openClassRollCall('${section.id}')" style="min-height: 40px; font-size: 0.8rem;">
+                            <i class="bi bi-clipboard-check-fill"></i> Roll Call
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-semibold text-secondary d-inline-flex align-items-center justify-content-center gap-1 shadow-none" onclick="event.stopPropagation(); openCourseSheet('${section.id}')" style="min-height: 40px; font-size: 0.8rem;">
+                            <i class="bi bi-sliders"></i> Manage
+                        </button>
                     </div>
                 </div>
             </c:forEach>
@@ -3994,67 +4026,6 @@
                 <div class="small text-muted">Enjoy your time off!</div>
             </div>
         </div>
-    </section>
-
-    <!-- ===== ROSTER & QUICK ACTIONS VIEW ===== -->
-    <section id="mobile-view-roster" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-roster">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <h2 class="section-title mb-0">Roster & Attendance</h2>
-                <span class="text-muted" style="font-size:0.75rem;">Fast-track grading and roll call</span>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <c:if test="${not empty sectionStudentsMap}">
-                    <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm" style="font-size:0.75rem;">
-                        <i class="bi bi-file-earmark-excel-fill text-success"></i> Export All
-                    </a>
-                </c:if>
-                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 fw-bold" style="font-size:0.7rem;">Active Term</span>
-            </div>
-        </div>
-
-        <c:forEach var="entry" items="${sectionStudentsMap}">
-            <c:set var="section" value="${entry.key}" />
-            <c:set var="students" value="${entry.value}" />
-            <div class="mobile-course-card p-3 mb-3" style="cursor:default;">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <div>
-                        <span class="mc-code me-1">${section.courseCode}</span>
-                        <span class="badge bg-light border text-dark">${section.roomName}</span>
-                    </div>
-                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">${students.size()} Students</span>
-                </div>
-                <h3 class="mc-title mb-3" style="font-size:0.95rem;">${section.courseTitle}</h3>
-                
-                <div class="row g-2">
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-outline-primary w-100 rounded-pill py-2 fw-semibold" onclick="currentActiveSectionId='${section.id}'; openSubSheet('rosterSheet');" style="min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;">
-                            <i class="bi bi-people-fill"></i> View Roster
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-primary w-100 rounded-pill py-2 fw-semibold" onclick="currentActiveSectionId='${section.id}'; openSubSheet('attendanceSheet');" style="min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;">
-                            <i class="bi bi-clipboard-check-fill"></i> Roll Call
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-success w-100 rounded-pill py-2 fw-semibold" onclick="currentActiveSectionId='${section.id}'; openSubSheet('gradesSheet');" style="min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;">
-                            <i class="bi bi-journal-check"></i> Grades
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-light border w-100 rounded-pill py-2 fw-semibold text-secondary" onclick="currentActiveSectionId='${section.id}'; openSubSheet('historySheet');" style="min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;">
-                            <i class="bi bi-clock-history"></i> History
-                        </button>
-                    </div>
-                    <div class="col-12 mt-1">
-                        <a href="${pageContext.request.contextPath}/professor/attendance/export?classSectionId=${section.id}" class="btn btn-sm btn-outline-success w-100 rounded-pill py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-1" style="min-height:40px;font-size:0.82rem;">
-                            <i class="bi bi-file-earmark-excel-fill text-success"></i> Export Attendance (.xlsx)
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </c:forEach>
     </section>
 
     <!-- ===== PROFILE VIEW ===== -->
@@ -4151,7 +4122,6 @@
         </a>
     </section>
 
-    <!-- Floating Island Bottom Navigation Dock (5 Tabs) -->
     <nav class="mobile-bottom-dock" role="navigation" aria-label="Professor Mobile Navigation">
         <button type="button" class="dock-tab-btn active" id="dock-tab-home" data-tab="home" onclick="switchMobileTab('home')" role="tab" aria-selected="true" aria-controls="mobile-view-home">
             <i class="bi bi-house-door-fill"></i>
@@ -4164,10 +4134,6 @@
         <button type="button" class="dock-tab-btn" id="dock-tab-schedule" data-tab="schedule" onclick="switchMobileTab('schedule')" role="tab" aria-selected="false" aria-controls="mobile-view-schedule">
             <i class="bi bi-calendar3"></i>
             <span>Schedule</span>
-        </button>
-        <button type="button" class="dock-tab-btn" id="dock-tab-roster" data-tab="roster" onclick="switchMobileTab('roster')" role="tab" aria-selected="false" aria-controls="mobile-view-roster">
-            <i class="bi bi-people"></i>
-            <span>Roster</span>
         </button>
         <button type="button" class="dock-tab-btn" id="dock-tab-profile" data-tab="profile" onclick="switchMobileTab('profile')" role="tab" aria-selected="false" aria-controls="mobile-view-profile">
             <i class="bi bi-person"></i>
@@ -4371,13 +4337,19 @@
         </div>
     </div>
 
-    <!-- Grades Form Sheet -->
     <div class="action-sheet-overlay d-md-none" id="gradesSheet_${section.id}" onclick="closeSheetOnOverlay(event, 'gradesSheet_${section.id}')">
         <div class="action-sheet">
             <div class="sheet-drag"></div>
-            <div class="sheet-header">
+            <div class="sheet-header d-flex justify-content-between align-items-center">
                 <h5 class="sheet-title m-0">Manage Grades</h5>
-                <button class="btn btn-sm btn-light" onclick="closeSubSheet('gradesSheet_${section.id}')">Back</button>
+                <div class="d-flex align-items-center gap-2">
+                    <c:if test="${not empty grades}">
+                        <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1 fw-bold" style="font-size:0.75rem;" onclick="autoCalculateAttendance('${section.id}', this)">
+                            <i class="bi bi-magic me-1"></i> Auto Calc
+                        </button>
+                    </c:if>
+                    <button type="button" class="btn btn-sm btn-light" onclick="closeSubSheet('gradesSheet_${section.id}')">Back</button>
+                </div>
             </div>
             <form action="${pageContext.request.contextPath}/professor/grades/save" method="post" class="d-flex flex-column" style="flex:1; overflow:hidden;">
                 <input type="hidden" name="classSectionId" value="${section.id}">
@@ -4393,7 +4365,8 @@
                             <div class="grade-input-grid">
                                 <div class="grade-input-box">
                                     <span class="grade-input-label">Attendance (15)</span>
-                                    <input type="number" name="attendance_${grade.enrollmentId}" value="${grade.attendanceScore}" min="0" max="15" step="0.01" required>
+                                    <c:set var="mobileAutoScore" value="${sectionAutoAttendanceMap[section.id][grade.studentId]}" />
+                                    <input type="number" class="att-input-${section.id}" name="attendance_${grade.enrollmentId}" value="${grade.attendanceScore}" data-auto-attendance="${mobileAutoScore != null ? mobileAutoScore : 15.0}" min="0" max="15" step="0.01" required>
                                 </div>
                                 <div class="grade-input-box">
                                     <span class="grade-input-label">Assignment (25)</span>
@@ -4481,6 +4454,7 @@
     var currentActiveSectionId = null;
 
     function switchMobileTab(tabName) {
+        if (tabName === 'roster') tabName = 'classes';
         var views = document.querySelectorAll('.mobile-sub-view');
         for (var i = 0; i < views.length; i++) views[i].classList.remove('active');
         var target = document.getElementById('mobile-view-' + tabName);
@@ -4491,7 +4465,6 @@
             home: ['bi-house-door-fill', 'bi-house-door'],
             classes: ['bi-journal-bookmark-fill', 'bi-journal-bookmark'],
             schedule: ['bi-calendar2-week-fill', 'bi-calendar2-week'],
-            roster: ['bi-people-fill', 'bi-people'],
             profile: ['bi-person-fill', 'bi-person']
         };
         for (var j = 0; j < btns.length; j++) {
@@ -4512,6 +4485,11 @@
             window.history.replaceState({}, '', url);
         } catch (e) {}
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openClassRollCall(id) {
+        currentActiveSectionId = id;
+        openSubSheet('attendanceSheet');
     }
 
     function filterMobileClasses(q) {
@@ -4953,6 +4931,26 @@
             });
         }
     }
+
+    function autoCalculateAttendance(sectionId, btn) {
+        var inputs = document.querySelectorAll('.att-input-' + sectionId);
+        var updated = 0;
+        inputs.forEach(function(inp) {
+            if (inp.dataset.autoAttendance !== undefined && inp.dataset.autoAttendance !== '') {
+                inp.value = inp.dataset.autoAttendance;
+                updated++;
+            }
+        });
+        if (btn) {
+            var origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check2 text-success me-1"></i> Calculated!';
+            btn.disabled = true;
+            setTimeout(function() {
+                btn.innerHTML = origHtml;
+                btn.disabled = false;
+            }, 1500);
+        }
+    }
     
     document.addEventListener('DOMContentLoaded', function() {
         initMobileDateStrip();
@@ -4961,7 +4959,6 @@
             var urlParams = new URLSearchParams(window.location.search);
             var tab = urlParams.get('tab');
             if (tab) {
-                // Mobile tab restoration
                 if (document.getElementById('mobile-view-' + tab)) {
                     switchMobileTab(tab);
                 } else if (tab === 'settings') {
@@ -4970,7 +4967,6 @@
                     switchMobileTab('home');
                 }
 
-                // Desktop tab restoration
                 var dtBtn = document.getElementById('tab-' + tab);
                 if (dtBtn) {
                     switchDesktopTab(tab, dtBtn);

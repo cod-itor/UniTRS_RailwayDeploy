@@ -59,7 +59,6 @@ public class GradeCalculatorTest {
         g2.setLetterGrade("B");
         grades.add(g2);
 
-        // (4.0 * 3 + 3.0 * 3) / 6 = 21 / 6 = 3.50
         assertEquals(3.50, GradeCalculator.calculateTermGpa(grades));
     }
 
@@ -67,14 +66,12 @@ public class GradeCalculatorTest {
     void testCalculateTermGpaIgnoresUngradedCourses() {
         List<Grade> grades = new ArrayList<>();
 
-        // Student has one graded course with 'A' (4.0)
         Grade gradedCourse = new Grade();
         gradedCourse.setCredits(3);
         gradedCourse.setGpaPoint(4.0);
         gradedCourse.setLetterGrade("A");
         grades.add(gradedCourse);
 
-        // Student has 3 courses in-progress / un-graded with 'N/A'
         Grade unGraded1 = new Grade();
         unGraded1.setCredits(3);
         unGraded1.setGpaPoint(0.0);
@@ -93,8 +90,6 @@ public class GradeCalculatorTest {
         inProgress.setLetterGrade("IN PROGRESS");
         grades.add(inProgress);
 
-        // Should NOT dilute GPA to (12 + 0 + 0 + 0) / 12 = 1.0!
-        // Should calculate only graded courses: 12 / 3 = 4.00!
         assertEquals(4.00, GradeCalculator.calculateTermGpa(grades));
     }
 
@@ -109,5 +104,15 @@ public class GradeCalculatorTest {
         grades.add(unGraded);
 
         assertEquals(0.00, GradeCalculator.calculateTermGpa(grades));
+    }
+
+    @Test
+    void testCalculateAttendanceScore() {
+        assertEquals(15.0, GradeCalculator.calculateAttendanceScore(10, 0, 0, 10));
+        assertEquals(15.0, GradeCalculator.calculateAttendanceScore(0, 0, 0, 0));
+        assertEquals(7.5, GradeCalculator.calculateAttendanceScore(5, 0, 0, 10));
+        assertEquals(8.25, GradeCalculator.calculateAttendanceScore(5, 1, 0, 10));
+        assertEquals(9.75, GradeCalculator.calculateAttendanceScore(5, 1, 1, 10));
+        assertEquals(0.0, GradeCalculator.calculateAttendanceScore(0, 0, 0, 10));
     }
 }

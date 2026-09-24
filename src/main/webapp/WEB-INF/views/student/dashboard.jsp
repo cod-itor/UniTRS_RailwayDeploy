@@ -23,33 +23,15 @@
                     background-color: #f6f8fb;
                 }
 
-                .dashboard-header {
-                    background-color: #198754;
-                    color: white;
-                    padding: 2rem 0;
-                    margin-bottom: 2rem;
-                }
+                
 
-                .nav-tabs .nav-link {
-                    color: #495057;
-                    font-weight: 500;
-                }
+                
 
-                .nav-tabs .nav-link.active {
-                    font-weight: 700;
-                    color: #198754;
-                }
+                
 
-                .card-custom {
-                    border: none;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-                    border-radius: 14px;
-                }
+                
 
-                .table th {
-                    background-color: #f1f3f5;
-                    font-weight: 600;
-                }
+                
 
                 @media (max-width: 767.98px) {
                     body {
@@ -1151,29 +1133,9 @@
                         transform: translateX(-50%) translateY(0);
                     }
                 }
-            </style>
-        </head>
+            
 
-        <body>
-
-            <%-- Compute earned credits --%>
-                <c:set var="earnedCredits" value="0" />
-                <c:forEach var="gradeItem" items="${grades}">
-                    <c:if
-                        test="${gradeItem.letterGrade != 'F' && gradeItem.letterGrade != 'N/A' && not empty gradeItem.letterGrade}">
-                        <c:set var="earnedCredits" value="${earnedCredits + gradeItem.credits}" />
-                    </c:if>
-                </c:forEach>
-
-                <%--==================================================================--%>
-                    <%-- DESKTOP VIEW (>= 768px) --%>
-                        <%--==================================================================--%>
-                            <%--==================================================================--%>
-                                <%-- DESKTOP VIEW (>= 768px) --%>
-                                    <%--==================================================================--%>
-                                        <div class="d-none d-md-flex desktop-app-container">
-                                            <style>
-                                                body.modal-open {
+        body.modal-open {
                                                     padding-right: 0 !important;
                                                     overflow-y: hidden !important;
                                                 }
@@ -2303,7 +2265,21 @@
                                                  .day-pill-btn {
                                                      transition: all 0.15s ease;
                                                  }
-                                             </style>
+    </style>
+        </head>
+
+        <body>
+
+                <c:set var="earnedCredits" value="0" />
+                <c:forEach var="gradeItem" items="${grades}">
+                    <c:if
+                        test="${gradeItem.letterGrade != 'F' && gradeItem.letterGrade != 'N/A' && not empty gradeItem.letterGrade}">
+                        <c:set var="earnedCredits" value="${earnedCredits + gradeItem.credits}" />
+                    </c:if>
+                </c:forEach>
+
+                <div class="d-none d-md-flex desktop-app-container">
+                                            
 
                                             <%-- SIDEBAR --%>
                                                 <aside class="desktop-sidebar">
@@ -2312,10 +2288,7 @@
                                                         <span>UniTRS</span>
                                                     </div>
 
-                                                    <div class="sidebar-search">
-                                                        <i class="bi bi-search"></i>
-                                                        <input type="text" placeholder="Search courses...">
-                                                    </div>
+                                                    
 
                                                     <nav class="sidebar-nav">
                                                         <button class="active" id="tab-dashboard"
@@ -2338,10 +2311,13 @@
 
                                                     <div class="sidebar-promo">
                                                         <div class="star-icon"><i class="bi bi-star-fill"></i></div>
-                                                        <h4>Dean's List</h4>
-                                                        <p>Maintain a GPA of 3.8+ to achieve Dean's List honors this
-                                                            term.</p>
-                                                        <button>View Requirements</button>
+                                                        <h4>Dean's List Honors</h4>
+                                                        <p>Maintain a term GPA of 3.8+ to achieve Dean's List honors this term.</p>
+                                                        <div class="mt-2">
+                                                            <span class="badge bg-white text-dark rounded-pill px-3 py-1.5 small fw-bold shadow-sm">
+                                                                <i class="bi bi-award-fill text-warning me-1"></i>Min GPA 3.80
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </aside>
 
@@ -2359,10 +2335,7 @@
                                                                 </div>
 
                                                                 <div class="header-actions">
-                                                                    <button class="action-btn has-dot"><i
-                                                                            class="bi bi-bell"></i></button>
-                                                                    <button class="action-btn"><i
-                                                                            class="bi bi-chat-dots"></i></button>
+                                                                    
 
                                                                     <div class="dropdown">
                                                                         <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="studentProfileDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="User profile menu for ${user.fullName}">
@@ -2530,8 +2503,7 @@
                                                                                                         class="mc-title">Cumulative
                                                                                                         GPA</span>
                                                                                                 </div>
-                                                                                                <i
-                                                                                                    class="bi bi-three-dots-vertical text-muted"></i>
+                                                                                                
                                                                                             </div>
                                                                                             <div class="mc-value">
                                                                                                 ${termGpa}</div>
@@ -2562,8 +2534,7 @@
                                                                                                         class="mc-title">Credits
                                                                                                         Earned</span>
                                                                                                 </div>
-                                                                                                <i
-                                                                                                    class="bi bi-three-dots-vertical text-muted"></i>
+                                                                                                
                                                                                             </div>
                                                                                             <div class="mc-value">
                                                                                                 ${earnedCredits}</div>
@@ -2594,8 +2565,7 @@
                                                                                                         class="mc-title">Enrolled
                                                                                                         Courses</span>
                                                                                                 </div>
-                                                                                                <i
-                                                                                                    class="bi bi-three-dots-vertical text-muted"></i>
+                                                                                                
                                                                                             </div>
                                                                                             <div class="mc-value">
                                                                                                 ${schedule.size()}</div>
@@ -2608,10 +2578,9 @@
                                                                                                     <i
                                                                                                         class="bi bi-check-circle-fill"></i>
                                                                                                     Active</div>
-                                                                                                <div class="mc-extra">
-                                                                                                    View Schedule <i
-                                                                                                        class="bi bi-arrow-right"></i>
-                                                                                                </div>
+                                                                                                <div class="mc-extra" role="button" tabindex="0" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))" style="cursor: pointer;" title="Open Weekly Schedule">
+                                                                      View Schedule <i class="bi bi-arrow-right"></i>
+                                                                  </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -2653,8 +2622,7 @@
                                                                                                                     Assignment
                                                                                                                 </div>
                                                                                                             </div>
-                                                                                                            <button
-                                                                                                                class="chart-btn">Export</button>
+                                                                                                            
                                                                                                         </div>
                                                                                                     </div>
 
@@ -2769,10 +2737,9 @@
                                                                                         <div class="tc-header">
                                                                                             <h3>Available Courses for
                                                                                                 Registration</h3>
-                                                                                            <button
-                                                                                                class="chart-btn d-flex align-items-center gap-2">Term
-                                                                                                1 <i
-                                                                                                    class="bi bi-chevron-down"></i></button>
+                                                                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2 fw-semibold">
+                                                                  <i class="bi bi-journal-check me-1"></i>${availableClasses.size()} Available Sections
+                                                              </span>
                                                                                         </div>
                                                                                         <div class="tc-table-wrap">
                                                                                             <table class="tc-table">
@@ -3011,6 +2978,7 @@
                                                                                         <th>Schedule</th>
                                                                                         <th>Room</th>
                                                                                         <th>Status</th>
+                                                                                        <th class="text-end">Action</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
@@ -3028,6 +2996,11 @@
                                                                                             </td>
                                                                                             <td><span class="tc-badge info"><i class="bi bi-geo-alt-fill me-1"></i>${enrollment.room}</span></td>
                                                                                             <td><span class="tc-badge success">Enrolled</span></td>
+                                                                                            <td class="text-end">
+                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-semibold" onclick="confirmDropCourse('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}')" style="font-size:0.75rem;">
+                                                                                                    <i class="bi bi-x-circle me-1"></i>Drop
+                                                                                                </button>
+                                                                                            </td>
                                                                                         </tr>
                                                                                     </c:forEach>
                                                                                 </tbody>
@@ -3359,14 +3332,15 @@
                                                                             </span>
                                                                         </div>
                                                                     </div>
-                                                                    <button class="mobile-top-action-btn" type="button" data-bs-toggle="modal" data-bs-target="#mobileSecurityModal" aria-label="Notifications and Security Settings">
-                                                                        <i class="bi bi-bell"></i>
-                                                                        <span class="btn-badge-dot"></span>
+                                                                    <button class="mobile-top-action-btn" type="button" onclick="switchMobileTab('profile')" aria-label="Go to Student Profile and Settings">
+                                                                        <i class="bi bi-person-gear"></i>
                                                                     </button>
                                                                 </header>
 
                                                                 <%--===== HOME SUB-VIEW =====--%>
                                                                 <section id="mobile-view-home" class="mobile-sub-view active" role="tabpanel" aria-labelledby="dock-tab-home">
+
+                                                                    
 
                                                                     <%-- 7-Day Interactive Date Strip --%>
                                                                     <div class="date-strip-section">
@@ -3427,7 +3401,59 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <%-- Academic Progress Swipeable Cards --%>
+                                                                    <div class="section-header-wrap">
+                                                                        <h2 class="mobile-section-heading" id="homeScheduleTitle">This Term's Courses</h2>
+                                                                        <span class="mobile-section-badge" id="homeScheduleCount">${schedule.size()} Enrolled</span>
+                                                                    </div>
+
+                                                                    <c:choose>
+                                                                        <c:when test="${not empty schedule}">
+                                                                            <div id="homeScheduleContainer">
+                                                                                <c:forEach var="enrollment" items="${schedule}">
+                                                                                    <c:set var="enrollGrade" value="${gradeMap[enrollment.id]}" />
+                                                                                    <div class="mobile-course-card home-schedule-card" data-days="${enrollment.daysOfWeek}" onclick="openCourseModal('${enrollment.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseModal('${enrollment.id}')" aria-label="View details for ${enrollment.courseCode}: ${enrollment.courseTitle}">
+                                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                            <span class="mobile-card-code-badge">${enrollment.courseCode}</span>
+                                                                                            <c:choose>
+                                                                                                <c:when test="${enrollGrade != null && enrollGrade.letterGrade != 'N/A' && not empty enrollGrade.letterGrade}">
+                                                                                                    <span class="badge ${enrollGrade.letterGrade == 'A' ? 'bg-success' : (enrollGrade.letterGrade == 'F' ? 'bg-danger' : 'bg-primary')} bg-opacity-15 text-${enrollGrade.letterGrade == 'A' ? 'success' : (enrollGrade.letterGrade == 'F' ? 'danger' : 'primary')} fw-bold px-2 py-1 rounded-pill">${enrollGrade.letterGrade}</span>
+                                                                                                </c:when>
+                                                                                                <c:otherwise>
+                                                                                                    <span class="badge bg-light border text-muted fw-normal px-2 py-1 rounded-pill">In Progress</span>
+                                                                                                </c:otherwise>
+                                                                                            </c:choose>
+                                                                                        </div>
+                                                                                        <div class="mobile-card-title">${enrollment.courseTitle}</div>
+                                                                                        <div class="mobile-card-meta">
+                                                                                            <div class="mobile-card-meta-row">
+                                                                                                <i class="bi bi-clock text-primary"></i> ${enrollment.sessionShift} &bull; ${enrollment.daysOfWeek}
+                                                                                            </div>
+                                                                                            <div class="mobile-card-meta-row">
+                                                                                                <i class="bi bi-geo-alt text-primary"></i> Room ${enrollment.room} &bull; <i class="bi bi-person text-secondary ms-1"></i> ${enrollment.professorName}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="mobile-card-footer">
+                                                                                            <span class="small text-muted" style="font-size:0.72rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for scores &amp; attendance</span>
+                                                                                            <span class="badge bg-light border text-secondary rounded-pill" style="font-size:0.7rem;">${enrollment.credits} Credits</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </c:forEach>
+                                                                                <div id="homeScheduleEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+                                                                                    <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
+                                                                                    <div class="fw-bold small text-dark mb-1" id="homeScheduleEmptyText">No classes scheduled</div>
+                                                                                    <div class="small text-muted">Enjoy your free time!</div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <div class="mobile-course-card text-center py-4">
+                                                                                <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
+                                                                                <div class="fw-bold small text-dark mb-1">No Courses Enrolled</div>
+                                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-4 mt-2" onclick="switchMobileTab('courses')">Browse Courses</button>
+                                                                            </div>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+
                                                                     <div class="section-header-wrap">
                                                                         <h2 class="mobile-section-heading">Academic Progress</h2>
                                                                         <span class="mobile-section-badge">${schedule.size()} Courses</span>
@@ -3530,60 +3556,6 @@
                                                                         </div>
                                                                         <div class="swipe-dots" id="swiperDots" aria-hidden="true"></div>
                                                                     </div>
-
-                                                                    <%-- Day Filtered Schedule Feed --%>
-                                                                    <div class="section-header-wrap">
-                                                                        <h2 class="mobile-section-heading" id="homeScheduleTitle">This Term's Courses</h2>
-                                                                        <span class="mobile-section-badge" id="homeScheduleCount">${schedule.size()} Enrolled</span>
-                                                                    </div>
-
-                                                                    <c:choose>
-                                                                        <c:when test="${not empty schedule}">
-                                                                            <div id="homeScheduleContainer">
-                                                                                <c:forEach var="enrollment" items="${schedule}">
-                                                                                    <c:set var="enrollGrade" value="${gradeMap[enrollment.id]}" />
-                                                                                    <div class="mobile-course-card home-schedule-card" data-days="${enrollment.daysOfWeek}" onclick="openCourseModal('${enrollment.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseModal('${enrollment.id}')" aria-label="View details for ${enrollment.courseCode}: ${enrollment.courseTitle}">
-                                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                                            <span class="mobile-card-code-badge">${enrollment.courseCode}</span>
-                                                                                            <c:choose>
-                                                                                                <c:when test="${enrollGrade != null && enrollGrade.letterGrade != 'N/A' && not empty enrollGrade.letterGrade}">
-                                                                                                    <span class="badge ${enrollGrade.letterGrade == 'A' ? 'bg-success' : (enrollGrade.letterGrade == 'F' ? 'bg-danger' : 'bg-primary')} bg-opacity-15 text-${enrollGrade.letterGrade == 'A' ? 'success' : (enrollGrade.letterGrade == 'F' ? 'danger' : 'primary')} fw-bold px-2 py-1 rounded-pill">${enrollGrade.letterGrade}</span>
-                                                                                                </c:when>
-                                                                                                <c:otherwise>
-                                                                                                    <span class="badge bg-light border text-muted fw-normal px-2 py-1 rounded-pill">In Progress</span>
-                                                                                                </c:otherwise>
-                                                                                            </c:choose>
-                                                                                        </div>
-                                                                                        <div class="mobile-card-title">${enrollment.courseTitle}</div>
-                                                                                        <div class="mobile-card-meta">
-                                                                                            <div class="mobile-card-meta-row">
-                                                                                                <i class="bi bi-clock text-primary"></i> ${enrollment.sessionShift} &bull; ${enrollment.daysOfWeek}
-                                                                                            </div>
-                                                                                            <div class="mobile-card-meta-row">
-                                                                                                <i class="bi bi-geo-alt text-primary"></i> Room ${enrollment.room} &bull; <i class="bi bi-person text-secondary ms-1"></i> ${enrollment.professorName}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="mobile-card-footer">
-                                                                                            <span class="small text-muted" style="font-size:0.72rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for scores &amp; attendance</span>
-                                                                                            <span class="badge bg-light border text-secondary rounded-pill" style="font-size:0.7rem;">${enrollment.credits} Credits</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </c:forEach>
-                                                                                <div id="homeScheduleEmpty" class="mobile-course-card text-center py-4" style="display:none;">
-                                                                                    <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
-                                                                                    <div class="fw-bold small text-dark mb-1" id="homeScheduleEmptyText">No classes scheduled</div>
-                                                                                    <div class="small text-muted">Enjoy your free time!</div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <div class="mobile-course-card text-center py-4">
-                                                                                <i class="bi bi-calendar-x fs-2 text-secondary mb-2 d-block"></i>
-                                                                                <div class="fw-bold small text-dark mb-1">No Courses Enrolled</div>
-                                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-4 mt-2" onclick="switchMobileTab('courses')">Browse Courses</button>
-                                                                            </div>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
                                                                 </section>
 
                                                                 <%--===== SCHEDULE SUB-VIEW =====--%>
@@ -3629,9 +3601,14 @@
                                                                                                 <i class="bi bi-door-open text-primary"></i> Room ${enrollment.room} &bull; <i class="bi bi-person text-secondary ms-1"></i> ${enrollment.professorName}
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="mobile-card-footer">
-                                                                                            <span class="small text-muted" style="font-size:0.72rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for scores &amp; attendance</span>
-                                                                                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.7rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
+                                                                                        <div class="mobile-card-footer d-flex justify-content-between align-items-center">
+                                                                                            <span class="small text-muted" style="font-size:0.72rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for details</span>
+                                                                                            <div class="d-flex align-items-center gap-2">
+                                                                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.7rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
+                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:26px;" onclick="event.stopPropagation(); confirmDropCourse('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}')">
+                                                                                                    <i class="bi bi-x me-1"></i>Drop
+                                                                                                </button>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </c:forEach>
@@ -3857,11 +3834,13 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="id-card-barcode-row">
-                                                                            <div class="barcode-mock" aria-hidden="true">
-                                                                                <span style="width:3px;"></span><span style="width:1px;"></span><span style="width:4px;"></span><span style="width:2px;"></span><span style="width:1px;"></span><span style="width:3px;"></span><span style="width:5px;"></span><span style="width:2px;"></span><span style="width:1px;"></span><span style="width:4px;"></span><span style="width:2px;"></span><span style="width:3px;"></span><span style="width:1px;"></span><span style="width:4px;"></span>
+                                                                            <div class="d-flex align-items-center gap-2">
+                                                                                <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2.5 py-1" style="font-size:0.7rem;">
+                                                                                    <i class="bi bi-patch-check-fill text-success me-1"></i> OFFICIAL DIGITAL ID
+                                                                                </span>
                                                                             </div>
                                                                             <div class="text-white-50 small" style="font-size:0.7rem;font-family:monospace;">
-                                                                                <i class="bi bi-qr-code me-1"></i>UniTRS VERIFIED
+                                                                                <i class="bi bi-shield-check me-1"></i>UniTRS SECURE
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -3900,17 +3879,21 @@
                                                                             </div>
                                                                             <span class="badge ${user.twoFactorEnabled ? 'bg-success' : 'bg-secondary'} rounded-pill">${user.twoFactorEnabled ? 'Enabled' : 'Disabled'}</span>
                                                                         </div>
-                                                                        <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="mt-3">
-                                                                            <input type="hidden" name="redirect" value="/student/dashboard?tab=profile">
-                                                                            <div class="input-group">
-                                                                                <label class="input-group-text small bg-light" for="mobileTwoFactorSelect">Status</label>
-                                                                                <select id="mobileTwoFactorSelect" name="twoFactorEnabled" class="form-select form-select-sm" onchange="this.form.submit()">
-                                                                                    <option value="false" ${!user.twoFactorEnabled ? 'selected' : ''}>Disabled</option>
-                                                                                    <option value="true" ${user.twoFactorEnabled ? 'selected' : ''}>Enabled</option>
-                                                                                </select>
-                                                                                <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
-                                                                            </div>
-                                                                        </form>
+                                                                        <div class="mt-3 d-flex justify-content-between align-items-center pt-2 border-top">
+                                                                            <span class="small text-muted">Status: <strong class="${user.twoFactorEnabled ? 'text-success' : 'text-secondary'}">${user.twoFactorEnabled ? 'Active' : 'Inactive'}</strong></span>
+                                                                            <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="m-0">
+                                                                                <input type="hidden" name="redirect" value="/student/dashboard?tab=profile">
+                                                                                <input type="hidden" name="twoFactorEnabled" value="${!user.twoFactorEnabled}">
+                                                                                <c:choose>
+                                                                                    <c:when test="${user.twoFactorEnabled}">
+                                                                                        <button type="submit" class="btn btn-sm btn-danger rounded-pill px-4 fw-bold">Disable</button>
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <button type="submit" class="btn btn-sm btn-success rounded-pill px-4 fw-bold">Enable</button>
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                            </form>
+                                                                        </div>
                                                                     </div>
 
                                                                     <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
@@ -3995,47 +3978,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="modal fade" id="mobileSecurityModal"
-                                                                    tabindex="-1" aria-labelledby="securityModalLabel"
-                                                                    aria-hidden="true">
-                                                                    <div
-                                                                        class="modal-dialog modal-dialog-centered modal-sm">
-                                                                        <div
-                                                                            class="modal-content rounded-4 border-0 shadow">
-                                                                            <div class="modal-header border-0 pb-0">
-                                                                                <h6 class="modal-title fw-bold"
-                                                                                    id="securityModalLabel"><i
-                                                                                        class="bi bi-bell me-2 text-primary"></i>Notifications
-                                                                                </h6><button type="button"
-                                                                                    class="btn-close"
-                                                                                    data-bs-dismiss="modal"></button>
-                                                                            </div>
-                                                                            <div class="modal-body">
-                                                                                <div
-                                                                                    class="p-3 bg-light rounded-3 mb-3">
-                                                                                    <div
-                                                                                        class="d-flex align-items-center justify-content-between mb-1">
-                                                                                        <span class="small fw-bold">2FA
-                                                                                            Status</span><span
-                                                                                            class="badge ${user.twoFactorEnabled ? 'bg-success' : 'bg-secondary'} rounded-pill">${user.twoFactorEnabled
-                                                                                            ? 'Enabled' :
-                                                                                            'Disabled'}</span></div>
-                                                                                    <p class="small text-muted mb-0"
-                                                                                        style="font-size:0.72rem;">
-                                                                                        ${user.twoFactorEnabled ?
-                                                                                        'Account secured with email
-                                                                                        OTP.' : '2FA is currently off.'}
-                                                                                    </p>
-                                                                                </div>
-                                                                                <button type="button"
-                                                                                    class="btn btn-sm btn-primary w-100 rounded-3 py-2 fw-semibold"
-                                                                                    data-bs-dismiss="modal"
-                                                                                    onclick="switchMobileTab('profile')">Manage
-                                                                                    in Profile</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                
 
                                                                 <!-- Enroll Confirmation Modal -->
                                                                 <div class="modal fade" id="enrollConfirmModal" tabindex="-1" aria-labelledby="enrollConfirmModalLabel" aria-hidden="true">
@@ -4068,9 +4011,35 @@
                                                                     </div>
                                                                 </div>
 
+                                                                <div class="modal fade" id="dropConfirmModal" tabindex="-1" aria-labelledby="dropConfirmModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-sm">
+                                                                        <div class="modal-content border-0 shadow">
+                                                                            <div class="modal-header border-bottom py-2">
+                                                                                <h6 class="modal-title fw-bold text-danger" id="dropConfirmModalLabel">
+                                                                                    <i class="bi bi-trash3 me-2"></i>Drop Course
+                                                                                </h6>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                            </div>
+                                                                            <form action="${pageContext.request.contextPath}/student/dashboard" method="post" id="dropConfirmForm" class="m-0">
+                                                                                <input type="hidden" name="action" value="drop">
+                                                                                <input type="hidden" name="tab" value="schedule">
+                                                                                <input type="hidden" name="classSectionId" id="dropConfirmSectionId" value="">
+                                                                                <div class="modal-body pt-2 pb-3">
+                                                                                    <p class="small text-muted mb-2">Are you sure you want to drop this course?</p>
+                                                                                    <div class="p-3 bg-light rounded-3 mb-3 border">
+                                                                                        <div class="fw-bold text-dark mb-1" id="dropConfirmCourseCode"></div>
+                                                                                        <div class="small text-secondary" id="dropConfirmCourseTitle"></div>
+                                                                                    </div>
+                                                                                    <div class="d-flex gap-2">
+                                                                                        <button type="button" class="btn btn-sm btn-light w-50 rounded-pill fw-semibold border" data-bs-dismiss="modal">Cancel</button>
+                                                                                        <button type="submit" class="btn btn-sm btn-danger w-50 rounded-pill fw-bold">Drop Course</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
 
-
-                                                                <%-- Enrollment data for JS modal --%>
                                                                     <script>
                                                                         var enrollmentData = {};
                                                                     </script>
@@ -4400,103 +4369,22 @@
                                                                             new bootstrap.Modal(document.getElementById('enrollConfirmModal')).show();
                                                                         }
 
-
-                                                                        function initMobileDateStrip() {
-                                                                            var strip = document.getElementById('mobileDateStrip');
-                                                                            if (!strip) return;
-
-                                                                            var today = new Date();
-                                                                            var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-                                                                            // Get Monday of current week
-                                                                            var dayOfWeek = today.getDay();
-                                                                            var diffToMonday = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
-                                                                            var monday = new Date(today.setDate(diffToMonday));
-
-                                                                            var html = '';
-                                                                            // Prepend 'All' option
-                                                                            html += '<div class="date-strip-item active" onclick="filterScheduleByDay(\'all\', this, \'All\')">' +
-                                                                                '<div class="ds-day">All</div>' +
-                                                                                '<div class="ds-date"><i class="bi bi-grid-fill" style="font-size:1.1rem;"></i></div>' +
-                                                                                '</div>';
-
-                                                                            for (var i = 0; i < 7; i++) {
-                                                                                var d = new Date(monday);
-                                                                                d.setDate(monday.getDate() + i);
-
-                                                                                var isToday = (d.getDate() === new Date().getDate() && d.getMonth() === new Date().getMonth());
-                                                                                var dayShort = days[d.getDay()].toLowerCase();
-                                                                                var dayLabel = days[d.getDay()];
-
-                                                                                html += '<div class="date-strip-item' + (isToday ? ' is-today' : '') + '" onclick="filterScheduleByDay(\'' + dayShort + '\', this, \'' + dayLabel + '\')">' +
-                                                                                    '<div class="ds-day">' + dayLabel + (isToday ? ' &bull;' : '') + '</div>' +
-                                                                                    '<div class="ds-date">' + d.getDate() + '</div>' +
-                                                                                    '</div>';
-                                                                            }
-                                                                            strip.innerHTML = html;
-                                                                        }
-
-                                                                        function filterScheduleByDay(dayShort, element, dayLabel) {
-                                                                            var strip = document.getElementById('mobileDateStrip');
-                                                                            if (strip) {
-                                                                                var items = strip.querySelectorAll('.date-strip-item');
-                                                                                items.forEach(function (item) { item.classList.remove('active'); });
-                                                                            }
-                                                                            if (element) {
-                                                                                element.classList.add('active');
-                                                                            }
-
-                                                                            var cards = document.querySelectorAll('.home-schedule-card');
-                                                                            var emptyBox = document.getElementById('homeScheduleEmpty');
-                                                                            var emptyText = document.getElementById('homeScheduleEmptyText');
-                                                                            var titleEl = document.getElementById('homeScheduleTitle');
-                                                                            var countEl = document.getElementById('homeScheduleCount');
-
-                                                                            var visibleCount = 0;
-
-                                                                            cards.forEach(function (card) {
-                                                                                var days = (card.getAttribute('data-days') || '').toLowerCase();
-                                                                                var match = false;
-
-                                                                                if (dayShort === 'all') {
-                                                                                    match = true;
-                                                                                } else if (days.indexOf('mon-fri') !== -1) {
-                                                                                    match = ['mon', 'tue', 'wed', 'thu', 'fri'].indexOf(dayShort) !== -1;
-                                                                                } else if (days.indexOf('sat-sun') !== -1) {
-                                                                                    match = ['sat', 'sun'].indexOf(dayShort) !== -1;
-                                                                                } else {
-                                                                                    match = days.indexOf(dayShort) !== -1;
-                                                                                }
-
-                                                                                if (match) {
-                                                                                    card.style.display = '';
-                                                                                    visibleCount++;
-                                                                                } else {
-                                                                                    card.style.display = 'none';
-                                                                                }
-                                                                            });
-
-                                                                            if (emptyBox) {
-                                                                                if (visibleCount === 0 && cards.length > 0) {
-                                                                                    emptyBox.style.display = 'block';
-                                                                                    if (emptyText) emptyText.textContent = 'No classes scheduled for ' + (dayLabel || 'this day');
-                                                                                } else {
-                                                                                    emptyBox.style.display = 'none';
-                                                                                }
-                                                                            }
-
-                                                                            if (titleEl) {
-                                                                                if (dayShort === 'all') {
-                                                                                    titleEl.textContent = "This Term's Courses";
-                                                                                } else {
-                                                                                    titleEl.textContent = (dayLabel || 'Day') + "'s Schedule";
-                                                                                }
-                                                                            }
-
-                                                                            if (countEl) {
-                                                                                countEl.textContent = visibleCount + (visibleCount === 1 ? ' Class' : ' Classes');
+                                                                        function confirmDropCourse(sectionId, courseCode, courseTitle) {
+                                                                            var secIdInput = document.getElementById('dropConfirmSectionId');
+                                                                            var codeEl = document.getElementById('dropConfirmCourseCode');
+                                                                            var titleEl = document.getElementById('dropConfirmCourseTitle');
+                                                                            if (secIdInput) secIdInput.value = sectionId;
+                                                                            if (codeEl) codeEl.textContent = courseCode;
+                                                                            if (titleEl) titleEl.textContent = courseTitle;
+                                                                            var modalEl = document.getElementById('dropConfirmModal');
+                                                                            if (modalEl) {
+                                                                                var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                                                                                modal.show();
                                                                             }
                                                                         }
+
+
+                                                                        
 
                                                                         var studentTimetableData = [
                                                                             <c:forEach var="enr" items="${schedule}">
@@ -4628,8 +4516,9 @@
                                                                                             if (sec.professor) {
                                                                                                 tableHtml += '<div class="tt-prof-row" title="Professor ' + sec.professor + '"><i class="bi bi-person-fill text-primary"></i> <span>' + sec.professor + '</span></div>';
                                                                                             }
-                                                                                            tableHtml += '<div class="tt-actions-row justify-content-end">';
+                                                                                            tableHtml += '<div class="tt-actions-row justify-content-between align-items-center">';
                                                                                             tableHtml += '<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small fw-bold"><i class="bi bi-check2 me-1"></i>Enrolled</span>';
+                                                                                            tableHtml += '<button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" onclick="confirmDropCourse(' + sec.classSectionId + ', \'' + sec.code + '\', \'' + sec.title.replace(/'/g, "\\'") + '\')"><i class="bi bi-trash3 me-1"></i>Drop</button>';
                                                                                             tableHtml += '</div>';
                                                                                             tableHtml += '</div>';
                                                                                         });
@@ -4692,6 +4581,101 @@
                                                                             }
                                                                         }
 
+                                                                        function initMobileDateStrip() {
+                                                                            var strip = document.getElementById('mobileDateStrip');
+                                                                            if (!strip) return;
+
+                                                                            var today = new Date();
+                                                                            var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                                                                            var dayOfWeek = today.getDay();
+                                                                            var diffToMonday = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+                                                                            var monday = new Date(today.setDate(diffToMonday));
+
+                                                                            var html = '';
+                                                                            html += '<div class="date-strip-item active" onclick="filterScheduleByDay(\'all\', this, \'All\')">' +
+                                                                                '<div class="ds-day">All</div>' +
+                                                                                '<div class="ds-date"><i class="bi bi-grid-fill" style="font-size:1.1rem;"></i></div>' +
+                                                                                '</div>';
+
+                                                                            for (var i = 0; i < 7; i++) {
+                                                                                var d = new Date(monday);
+                                                                                d.setDate(monday.getDate() + i);
+
+                                                                                var isToday = (d.getDate() === new Date().getDate() && d.getMonth() === new Date().getMonth());
+                                                                                var dayShort = days[d.getDay()].toLowerCase();
+                                                                                var dayLabel = days[d.getDay()];
+
+                                                                                html += '<div class="date-strip-item' + (isToday ? ' is-today' : '') + '" onclick="filterScheduleByDay(\'' + dayShort + '\', this, \'' + dayLabel + '\')">' +
+                                                                                    '<div class="ds-day">' + dayLabel + (isToday ? ' &bull;' : '') + '</div>' +
+                                                                                    '<div class="ds-date">' + d.getDate() + '</div>' +
+                                                                                    '</div>';
+                                                                            }
+                                                                            strip.innerHTML = html;
+                                                                        }
+
+                                                                        function filterScheduleByDay(dayShort, element, dayLabel) {
+                                                                            var strip = document.getElementById('mobileDateStrip');
+                                                                            if (strip) {
+                                                                                var items = strip.querySelectorAll('.date-strip-item');
+                                                                                items.forEach(function (item) { item.classList.remove('active'); });
+                                                                            }
+                                                                            if (element) {
+                                                                                element.classList.add('active');
+                                                                            }
+
+                                                                            var cards = document.querySelectorAll('.home-schedule-card');
+                                                                            var emptyBox = document.getElementById('homeScheduleEmpty');
+                                                                            var emptyText = document.getElementById('homeScheduleEmptyText');
+                                                                            var titleEl = document.getElementById('homeScheduleTitle');
+                                                                            var countEl = document.getElementById('homeScheduleCount');
+
+                                                                            var visibleCount = 0;
+
+                                                                            cards.forEach(function (card) {
+                                                                                var days = (card.getAttribute('data-days') || '').toLowerCase();
+                                                                                var match = false;
+
+                                                                                if (dayShort === 'all') {
+                                                                                    match = true;
+                                                                                } else if (days.indexOf('mon-fri') !== -1) {
+                                                                                    match = ['mon', 'tue', 'wed', 'thu', 'fri'].indexOf(dayShort) !== -1;
+                                                                                } else if (days.indexOf('sat-sun') !== -1) {
+                                                                                    match = ['sat', 'sun'].indexOf(dayShort) !== -1;
+                                                                                } else {
+                                                                                    match = days.indexOf(dayShort) !== -1;
+                                                                                }
+
+                                                                                if (match) {
+                                                                                    card.style.display = '';
+                                                                                    visibleCount++;
+                                                                                } else {
+                                                                                    card.style.display = 'none';
+                                                                                }
+                                                                            });
+
+                                                                            if (emptyBox) {
+                                                                                if (visibleCount === 0 && cards.length > 0) {
+                                                                                    emptyBox.style.display = 'block';
+                                                                                    if (emptyText) emptyText.textContent = 'No classes scheduled for ' + (dayLabel || 'this day');
+                                                                                } else {
+                                                                                    emptyBox.style.display = 'none';
+                                                                                }
+                                                                            }
+
+                                                                            if (titleEl) {
+                                                                                if (dayShort === 'all') {
+                                                                                    titleEl.textContent = "This Term's Courses";
+                                                                                } else {
+                                                                                    titleEl.textContent = (dayLabel || 'Day') + "'s Schedule";
+                                                                                }
+                                                                            }
+
+                                                                            if (countEl) {
+                                                                                countEl.textContent = visibleCount + (visibleCount === 1 ? ' Class' : ' Classes');
+                                                                            }
+                                                                        }
+
                                                                         function initSwiperDots() {
                                                                             var swiper = document.getElementById('progressSwiper');
                                                                             var dots = document.getElementById('swiperDots');
@@ -4711,8 +4695,8 @@
                                                                         }
 
                                                                         document.addEventListener('DOMContentLoaded', function () {
-                                                                            initMobileDateStrip();
                                                                             initSwiperDots();
+                                                                            initMobileDateStrip();
                                                                             renderStudentWeeklyTimetable();
                                                                             try {
                                                                                 var urlParams = new URLSearchParams(window.location.search);
