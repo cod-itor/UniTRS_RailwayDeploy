@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniTRS - University Management System</title>
-    <meta name="description" content="Empowering education with UniTRS. The modern University Management System for students, professors, and administrators.">
+    <title>UniTRS | University of Cambodia</title>
+    <meta name="description" content="UniTRS: The dedicated University Management System for the University of Cambodia. Streamlining academics across our Colleges and Schools.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&display=swap" rel="stylesheet">
@@ -13,15 +13,15 @@
 
     <style>
         :root {
-            /* Brightened gradients for perfect contrast against dark backgrounds */
+            /* UC Colors - often incorporating rich blues and golds, but keeping our modern dark aesthetic */
             --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             --secondary-gradient: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
-            --dark-bg: #0b1423; /* Slightly deeper for better text contrast */
+            --dark-bg: #0b1423; 
             --section-bg: #111c30;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --text-main: #f8fafc; /* Brighter white */
-            --text-muted: #cbd5e1; /* Brighter gray for readability */
+            --text-main: #f8fafc; 
+            --text-muted: #cbd5e1; 
         }
 
         body {
@@ -50,13 +50,16 @@
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            display: inline-block; /* Prevents clipping bugs on wrapping */
+            display: inline-block;
         }
         .text-gradient-alt {
             background: var(--secondary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: inline-block;
+        }
+        .text-uc-gold {
+            color: #ffd700;
         }
 
         /* --- Custom Navbar --- */
@@ -127,7 +130,7 @@
         .btn-gradient {
             background: var(--primary-gradient);
             border: none;
-            color: #111c30 !important; /* Dark text for high contrast on bright gradient */
+            color: #111c30 !important;
             padding: 0.6rem 1.8rem;
             border-radius: 50px;
             font-weight: 700;
@@ -150,7 +153,7 @@
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 7vw, 4.5rem); /* Better mobile scaling */
+            font-size: clamp(2.5rem, 6.5vw, 4.5rem);
             font-weight: 800;
             line-height: 1.2;
             margin-bottom: 1.5rem;
@@ -160,7 +163,7 @@
         .hero p {
             font-size: clamp(1.1rem, 2vw, 1.25rem);
             color: var(--text-muted);
-            max-width: 600px;
+            max-width: 650px;
             margin-bottom: 2.5rem;
             line-height: 1.7;
         }
@@ -193,7 +196,7 @@
 
         @media (max-width: 991px) {
             .hero-dashboard-mock {
-                transform: none; /* Disable 3D on mobile for better visibility */
+                transform: none;
             }
             .hero {
                 padding-top: 120px;
@@ -213,13 +216,13 @@
             border-bottom: 1px solid var(--glass-border);
         }
         .vision-section h2 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-size: clamp(2rem, 4.5vw, 3.5rem);
             font-weight: 800;
             margin-bottom: 1.5rem;
             color: #ffffff;
         }
 
-        /* --- Roles Showcase --- */
+        /* --- Showcase Section (Roles) --- */
         .showcase-section {
             padding: 6rem 0;
             position: relative;
@@ -279,10 +282,9 @@
             width: 100%;
         }
         
-        /* Fixed icon visibility */
         .showcase-visual i {
             font-size: clamp(6rem, 15vw, 10rem);
-            color: rgba(255, 255, 255, 0.05); /* Solid transparent instead of gradient for reliable contrast */
+            color: rgba(255, 255, 255, 0.05); 
             text-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
         }
 
@@ -326,6 +328,7 @@
         .bento-span-8 { grid-column: span 8; }
         .bento-span-4 { grid-column: span 4; }
         .bento-span-6 { grid-column: span 6; }
+        .bento-span-12 { grid-column: span 12; }
         
         @media (max-width: 992px) {
             .bento-span-8, .bento-span-4, .bento-span-6 { grid-column: span 12; }
@@ -352,7 +355,7 @@
 
         /* --- Footer --- */
         .footer-custom {
-            background: #060b13; /* Very dark for distinct footer */
+            background: #060b13; 
             padding: 5rem 0 2rem;
             border-top: 1px solid var(--glass-border);
         }
@@ -365,7 +368,6 @@
             align-items: center;
             gap: 0.5rem;
         }
-        .footer-brand i { color: #00f2fe; }
         .footer-desc {
             color: var(--text-muted);
             line-height: 1.6;
@@ -427,23 +429,23 @@
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container">
             <a class="navbar-brand text-decoration-none" href="#">
-                <i class="bi bi-mortarboard-fill"></i> UniTRS
+                <i class="bi bi-mortarboard-fill"></i> UniTRS for UC
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: rgba(255,255,255,0.15);">
                 <span class="bi bi-list text-white" style="font-size: 1.7rem;"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#vision">Our Vision</a></li>
-                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#showcase">Roles</a></li>
-                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#vision">The UC Vision</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#showcase">Academics</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#features">Tech Specs</a></li>
                 </ul>
                 <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0 justify-content-center justify-content-lg-start">
                     <button id="pwaInstallBtn" class="btn btn-glass btn-sm rounded-pill px-3 py-2 text-decoration-none" style="display: none;" onclick="window.promptPwaInstall()">
-                        <i class="bi bi-download me-1"></i> App
+                        <i class="bi bi-download me-1"></i> UC App
                     </button>
                     <a href="${pageContext.request.contextPath}/auth/login" class="text-decoration-none text-white fw-bold mx-2">Sign In</a>
-                    <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-gradient text-decoration-none">Get Started</a>
+                    <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-gradient text-decoration-none">UC Portal</a>
                 </div>
             </div>
         </div>
@@ -454,11 +456,11 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-5 mb-lg-0">
-                    <h1>The Modern <br><span class="text-gradient">Academic Core</span></h1>
-                    <p>UniTRS bridges the gap between students, educators, and administrators with a secure, 4-tier Jakarta EE architecture. Experience the future of university management today.</p>
+                    <h1>Empowering the <br><span class="text-gradient">University of Cambodia</span></h1>
+                    <p>Designed exclusively for the UC academic model. UniTRS connects over 4,000 students and faculties across the Techo Sen School of Government, the College of Science and Technology, and beyond.</p>
                     <div class="d-flex gap-3 flex-wrap">
-                        <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-gradient">Join the Network</a>
-                        <a href="#showcase" class="btn btn-glass">Explore Roles</a>
+                        <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-gradient">Access Your Portal</a>
+                        <a href="#vision" class="btn btn-glass">Learn More</a>
                     </div>
                 </div>
                 <div class="col-lg-6 d-none d-md-block">
@@ -488,9 +490,9 @@
     <!-- Hero Section 2 (Vision) -->
     <section id="vision" class="vision-section text-center">
         <div class="container">
-            <h2 class="text-white">Transforming <br class="d-md-none"><span class="text-gradient-alt">Education</span></h2>
+            <h2 class="text-white">A Legacy of <br class="d-md-none"><span class="text-gradient-alt">Leadership & Excellence</span></h2>
             <p class="lead text-muted mx-auto mt-3" style="max-width: 800px;">
-                Legacy systems slow down academic progress. We built UniTRS from the ground up using robust Jakarta EE technologies to deliver real-time transcripts, seamless enrollment, and zero-friction communication between faculties.
+                Founded in 2003 by Dr. Kao Kim Hourn, the University of Cambodia has been a beacon for academic excellence, diplomacy, and technology skills. UniTRS digitizes this mission, bringing a seamless, real-time academic infrastructure to our Sen Sok District campus.
             </p>
         </div>
     </section>
@@ -499,8 +501,8 @@
     <section id="showcase" class="showcase-section">
         <div class="container">
             <div class="text-center mb-5 pb-4">
-                <h2 class="fw-bold text-white">Dedicated Workspaces</h2>
-                <p class="text-muted">Four distinct portals. One unified ecosystem.</p>
+                <h2 class="fw-bold text-white">Unified Academic Portals</h2>
+                <p class="text-muted">Connecting every college and school across UC.</p>
             </div>
 
             <!-- Student Block -->
@@ -510,12 +512,12 @@
                 </div>
                 <div class="showcase-content flex-grow-1">
                     <div class="showcase-icon-wrapper"><i class="bi bi-person-badge"></i></div>
-                    <h3>Student Portal</h3>
-                    <p>Designed for clarity and speed. Register via University ID, verify your identity, and access the Batch Term Enrollment system. View your real-time weekly schedule and track a live GPA transcript across all 4 assessment components.</p>
+                    <h3>UC Student Portal</h3>
+                    <p>Register via your official UC ID. Access our streamlined Batch Term Enrollment system, view your weekly schedule, and track a live GPA transcript across all assessments, whether you're in the College of Law or the School of Business.</p>
                     <ul class="list-unstyled text-muted mt-3">
-                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Instant Batch Term Registration</li>
-                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Real-time Grades & GPA</li>
-                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> PWA Support for Mobile Access</li>
+                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Cohort Term Registrations</li>
+                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Real-time Transcripts</li>
+                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Installable Mobile App</li>
                     </ul>
                 </div>
             </div>
@@ -527,12 +529,12 @@
                 </div>
                 <div class="showcase-content flex-grow-1">
                     <div class="showcase-icon-wrapper" style="color: #a6c1ee; border-color: rgba(166,193,238,0.3); background: rgba(166,193,238,0.1);"><i class="bi bi-person-workspace"></i></div>
-                    <h3>Professor Portal</h3>
-                    <p>Streamline your teaching workflow. View assigned morning, afternoon, evening, or weekend sections. Manage class rosters, track daily attendance, and input continuous assessments with automatic letter grade calculations.</p>
+                    <h3>Faculty & Professors</h3>
+                    <p>Built to support UC's rigorous teaching standards. Manage class rosters, track daily attendance, and utilize our automated 4-component continuous grading system directly linked to the registrar.</p>
                     <ul class="list-unstyled text-muted mt-3">
-                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> 4-Component Grade Management</li>
-                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Daily Attendance Tracking</li>
-                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Excel Roster Exports</li>
+                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> 4-Component Assessment System</li>
+                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Daily Roster Tracking</li>
+                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Excel Integrations</li>
                     </ul>
                 </div>
             </div>
@@ -544,12 +546,12 @@
                 </div>
                 <div class="showcase-content flex-grow-1">
                     <div class="showcase-icon-wrapper" style="color: #f6e05e; border-color: rgba(246,224,94,0.3); background: rgba(246,224,94,0.1);"><i class="bi bi-award"></i></div>
-                    <h3>Dean & Administration</h3>
-                    <p>Govern the academic structure. Bundle courses into specific terms, allocate physical rooms and professors, and review pending student enrollment requests for cohorts under your faculty.</p>
+                    <h3>Deans & Administration</h3>
+                    <p>Govern the academic structure of your specific College or School. Bundle courses into terms, allocate campus rooms on Northbridge Road, and review pending student enrollment requests efficiently.</p>
                     <ul class="list-unstyled text-muted mt-3">
                         <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Term-Course Bundling</li>
-                        <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Room & Capacity Scheduling</li>
-                        <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Faculty Governance</li>
+                        <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Campus Room Scheduling</li>
+                        <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Enrollment Approvals</li>
                     </ul>
                 </div>
             </div>
@@ -560,37 +562,45 @@
     <section id="features" class="features">
         <div class="container">
             <div class="text-center mb-5 pb-3">
-                <h2 class="fw-bold text-white">Under The Hood</h2>
-                <p class="text-muted">Built with security and scale in mind.</p>
+                <h2 class="fw-bold text-white">System Capabilities</h2>
+                <p class="text-muted">Built for the unique structure of the University of Cambodia.</p>
             </div>
             
             <div class="bento-grid">
-                <!-- Large Security Card -->
-                <div class="bento-card bento-span-8">
+                
+                <!-- Large Cross-College Integration Card -->
+                <div class="bento-card bento-span-12" style="background: rgba(0, 242, 254, 0.05); border-color: rgba(0, 242, 254, 0.2);">
+                    <i class="bi bi-diagram-3 feature-icon"></i>
+                    <h3 class="feature-title">Cross-College Integration</h3>
+                    <p class="feature-text">Seamlessly handles data across all UC bodies, including the College of Arts and Humanities, College of Education, College of Media and Communications, and the School of Graduate Studies. Inter-departmental enrollments have never been easier.</p>
+                </div>
+
+                <!-- Security Card -->
+                <div class="bento-card bento-span-6">
                     <i class="bi bi-shield-check feature-icon"></i>
                     <h3 class="feature-title">Bank-Grade Security</h3>
-                    <p class="feature-text">BCrypt password hashing combined with a custom Two-Factor Authentication (2FA) and OTP flow via Email ensures only authorized personnel access academic records. Role-based routing prevents privilege escalation.</p>
+                    <p class="feature-text">BCrypt hashing and custom Two-Factor Authentication (2FA) via Email ensures strict privacy for all UC academic records and personnel data.</p>
                 </div>
 
-                <!-- Small Analytics -->
-                <div class="bento-card bento-span-4">
-                    <i class="bi bi-graph-up-arrow feature-icon"></i>
-                    <h3 class="feature-title">Smart Grading</h3>
-                    <p class="feature-text">Automated calculations for Attendance (15%), Assignments (25%), Midterm (30%), and Final (30%) straight to a standardized GPA metric.</p>
-                </div>
-
-                <!-- Medium Workflow -->
+                <!-- Smart Grading -->
                 <div class="bento-card bento-span-6">
+                    <i class="bi bi-graph-up-arrow feature-icon"></i>
+                    <h3 class="feature-title">UC Grading Standard</h3>
+                    <p class="feature-text">Pre-configured for UC's exact grading rubric: Attendance (15%), Assignments (25%), Midterm (30%), and Final (30%) straight to a standardized GPA.</p>
+                </div>
+
+                <!-- Shift Scheduling -->
+                <div class="bento-card bento-span-8">
                     <i class="bi bi-calendar-range feature-icon"></i>
-                    <h3 class="feature-title">Shift-Based Scheduling</h3>
-                    <p class="feature-text">Comprehensive scheduling accommodating Morning, Afternoon, Evening, and Weekend shifts across multiple academic years and physical room constraints.</p>
+                    <h3 class="feature-title">Flexible Shift Scheduling</h3>
+                    <p class="feature-text">Perfectly accommodates UC's diverse student body with automated scheduling for Morning, Afternoon, Evening, and Weekend shifts across all terms.</p>
                 </div>
 
                 <!-- Medium PWA -->
-                <div class="bento-card bento-span-6">
+                <div class="bento-card bento-span-4">
                     <i class="bi bi-phone feature-icon"></i>
-                    <h3 class="feature-title">Installable PWA</h3>
-                    <p class="feature-text">Native-like mobile experience. Install the UniTRS portal directly to your device home screen for quick, reliable access anytime.</p>
+                    <h3 class="feature-title">Mobile Ready</h3>
+                    <p class="feature-text">Install the UniTRS portal directly to your phone for quick access anywhere on or off campus.</p>
                 </div>
             </div>
         </div>
@@ -602,49 +612,54 @@
             <div class="row g-5">
                 <div class="col-lg-4 text-center text-lg-start">
                     <div class="footer-brand justify-content-center justify-content-lg-start">
-                        <i class="bi bi-mortarboard-fill"></i> UniTRS
+                        <i class="bi bi-mortarboard-fill"></i> UniTRS for UC
                     </div>
-                    <p class="footer-desc mx-auto mx-lg-0">A modern, robust University Management System built with Jakarta EE 10 to streamline academic operations globally.</p>
+                    <p class="footer-desc mx-auto mx-lg-0">
+                        The official University Management System powering the academic infrastructure of the University of Cambodia.
+                    </p>
+                    <p class="footer-desc mx-auto mx-lg-0 text-white opacity-75 small">
+                        <i class="bi bi-geo-alt-fill me-1"></i> Northbridge Road, Sen Sok District<br>Phnom Penh, Cambodia
+                    </p>
                     <div class="social-icons justify-content-center justify-content-lg-start d-flex">
-                        <a href="#"><i class="bi bi-github"></i></a>
-                        <a href="#"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#"><i class="bi bi-globe"></i></a>
+                        <a href="#"><i class="bi bi-facebook"></i></a>
                         <a href="#"><i class="bi bi-linkedin"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 offset-lg-2 col-md-4 text-center text-md-start">
-                    <h4 class="footer-title">Platform</h4>
+                    <h4 class="footer-title">Academic Portals</h4>
                     <ul class="footer-links">
-                        <li><a href="${pageContext.request.contextPath}/auth/login">Student Portal</a></li>
-                        <li><a href="${pageContext.request.contextPath}/auth/login">Faculty Portal</a></li>
-                        <li><a href="#features">Features</a></li>
+                        <li><a href="${pageContext.request.contextPath}/auth/login">Student Login</a></li>
+                        <li><a href="${pageContext.request.contextPath}/auth/login">Faculty Login</a></li>
+                        <li><a href="${pageContext.request.contextPath}/auth/login">Admin Dashboard</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-4 text-center text-md-start">
-                    <h4 class="footer-title">Company</h4>
+                    <h4 class="footer-title">UC Schools</h4>
                     <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Contact Support</a></li>
+                        <li><a href="#">Techo Sen School</a></li>
+                        <li><a href="#">Science & Technology</a></li>
+                        <li><a href="#">Arts & Humanities</a></li>
+                        <li><a href="#">Business</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-4 text-center text-md-start">
                     <h4 class="footer-title">Legal</h4>
                     <ul class="footer-links">
                         <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Security</a></li>
+                        <li><a href="#">IT Guidelines</a></li>
+                        <li><a href="#">Support</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                &copy; 2026 UniTRS Project - ITE204 Java Enterprise Edition. All rights reserved.
+                &copy; 2026 University of Cambodia - UniTRS System (ITE204). All rights reserved.
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Simple glow effect for bento cards tracking mouse movement
         document.querySelectorAll('.bento-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
