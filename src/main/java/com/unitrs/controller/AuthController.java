@@ -313,8 +313,33 @@ public class AuthController extends HttpServlet {
             identifier = "9" + (int) (1000000 + (Math.random() * 9000000));
         }
 
+        String schoolIdStr = request.getParameter("schoolId");
+        Integer schoolId = null;
+        if (schoolIdStr != null && !schoolIdStr.trim().isEmpty()) {
+            try {
+                schoolId = Integer.parseInt(schoolIdStr.trim());
+            } catch (NumberFormatException ignored) {}
+        }
+
+        Integer currentTermId = null;
+        if ("student".equalsIgnoreCase(roleStr)) {
+            if ("new".equalsIgnoreCase(applicantType)) {
+                currentTermId = 1;
+            } else {
+                String termStr = request.getParameter("currentTermId");
+                if (termStr != null && !termStr.trim().isEmpty()) {
+                    try {
+                        currentTermId = Integer.parseInt(termStr.trim());
+                    } catch (NumberFormatException ignored) {}
+                }
+                if (currentTermId == null || currentTermId <= 0) {
+                    throw new ValidationException("Please select your current academic term.");
+                }
+            }
+        }
+
         try {
-            userService.registerNewUser(identifier, fullName, email, password, confirmPassword, major, roleStr, gender);
+            userService.registerNewUser(identifier, fullName, email, password, confirmPassword, major, roleStr, gender, schoolId, currentTermId);
 
             otpService.sendRegistrationOtp(email, fullName);
 

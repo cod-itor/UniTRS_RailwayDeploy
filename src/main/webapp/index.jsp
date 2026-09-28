@@ -126,7 +126,6 @@
                 background: linear-gradient(135deg, #ffffff 0%, #a0aec0 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
-                animation: fadeInUp 1s ease-out;
             }
 
             .hero p {
@@ -134,14 +133,12 @@
                 color: var(--text-muted);
                 max-width: 700px;
                 margin: 0 auto 2.5rem;
-                animation: fadeInUp 1s ease-out 0.2s both;
             }
 
             .hero-buttons {
                 display: flex;
                 gap: 1rem;
                 justify-content: center;
-                animation: fadeInUp 1s ease-out 0.4s both;
             }
 
             .hero-buttons .btn {
@@ -149,13 +146,11 @@
                 font-size: 1.1rem;
             }
 
-            /* --- Floating Shapes Animation --- */
             .shape {
                 position: absolute;
                 filter: blur(60px);
                 z-index: -1;
                 border-radius: 50%;
-                animation: float 10s infinite alternate ease-in-out;
             }
 
             .shape-1 {
@@ -172,52 +167,45 @@
                 background: rgba(0, 242, 254, 0.2);
                 bottom: 10%;
                 right: 5%;
-                animation-delay: -5s;
             }
 
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            @keyframes float {
-                0% {
-                    transform: translate(0, 0) scale(1);
-                }
-
-                100% {
-                    transform: translate(30px, -50px) scale(1.1);
-                }
-            }
-
-            /* --- Features Section --- */
             .features {
                 padding: 5rem 2rem;
                 background: rgba(0, 0, 0, 0.2);
                 border-top: 1px solid var(--glass-border);
             }
 
-            .feature-card {
+            .bento-grid {
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                gap: 1.5rem;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .bento-card {
                 background: var(--glass-bg);
                 border: 1px solid var(--glass-border);
-                border-radius: 20px;
+                border-radius: 24px;
                 padding: 2.5rem;
-                height: 100%;
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
 
-            .feature-card:hover {
-                transform: translateY(-10px);
+            .bento-card:hover {
+                transform: translateY(-5px);
                 box-shadow: 0 10px 30px rgba(0, 242, 254, 0.1);
+            }
+
+            .bento-span-8 { grid-column: span 8; }
+            .bento-span-4 { grid-column: span 4; }
+            
+            @media (max-width: 992px) {
+                .bento-span-8, .bento-span-4 { grid-column: span 12; }
             }
 
             .feature-icon {
@@ -238,6 +226,7 @@
             .feature-text {
                 color: var(--text-muted);
                 line-height: 1.6;
+                margin-bottom: 0;
             }
 
             /* --- Footer --- */
@@ -294,30 +283,27 @@
                 <div class="text-center mb-5">
                     <h2 class="fw-bold" style="font-size: 2.5rem;">Why Choose UniTRS?</h2>
                 </div>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="feature-card">
-                            <i class="bi bi-shield-lock feature-icon"></i>
-                            <h3 class="feature-title">Secure Platform</h3>
-                            <p class="feature-text">Enterprise-grade security with robust authentication, role-based
-                                access control, and encrypted data protection.</p>
-                        </div>
+                <div class="bento-grid">
+                    <div class="bento-card bento-span-8">
+                        <i class="bi bi-shield-lock feature-icon"></i>
+                        <h3 class="feature-title">Secure Platform</h3>
+                        <p class="feature-text">Enterprise-grade security with robust authentication, role-based
+                            access control, and encrypted data protection, ensuring your academic records are always safe.</p>
                     </div>
-                    <div class="col-md-4">
-                        <div class="feature-card">
-                            <i class="bi bi-speedometer2 feature-icon"></i>
-                            <h3 class="feature-title">Real-time Insights</h3>
-                            <p class="feature-text">Track academic progress, manage enrollments, and view performance
-                                analytics instantly through dynamic dashboards.</p>
-                        </div>
+                    <div class="bento-card bento-span-4">
+                        <i class="bi bi-speedometer2 feature-icon"></i>
+                        <h3 class="feature-title">Real-time Insights</h3>
+                        <p class="feature-text">Track academic progress and performance instantly.</p>
                     </div>
-                    <div class="col-md-4">
-                        <div class="feature-card">
-                            <i class="bi bi-people feature-icon"></i>
-                            <h3 class="feature-title">Unified Community</h3>
-                            <p class="feature-text">A centralized hub that bridges the gap between students and faculty,
-                                streamlining communication and course management.</p>
-                        </div>
+                    <div class="bento-card bento-span-4">
+                        <i class="bi bi-people feature-icon"></i>
+                        <h3 class="feature-title">Unified Community</h3>
+                        <p class="feature-text">A centralized hub bridging the gap between students and faculty.</p>
+                    </div>
+                    <div class="bento-card bento-span-8">
+                        <i class="bi bi-clipboard2-check feature-icon"></i>
+                        <h3 class="feature-title">Batch Term Registration</h3>
+                        <p class="feature-text">Register for assigned terms with a single click. Requests are routed instantly to the Dean's office for streamlined approval and enrollment.</p>
                     </div>
                 </div>
             </div>

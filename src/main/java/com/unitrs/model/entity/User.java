@@ -23,6 +23,7 @@ public class User {
     private boolean isActive;
     private Integer deanSchoolId;
     private Integer studentSchoolId;
+    private Integer currentTermId;
     private boolean twoFactorEnabled;
     private int failedAttempts;
     private Timestamp lockedUntil;

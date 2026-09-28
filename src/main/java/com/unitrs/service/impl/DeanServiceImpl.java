@@ -11,6 +11,7 @@ import com.unitrs.model.entity.User;
 import com.unitrs.repository.*;
 import com.unitrs.service.DeanService;
 import com.unitrs.utils.ScheduleUtils;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedHashMap;
@@ -44,8 +45,6 @@ public class DeanServiceImpl implements DeanService {
         this.schoolRepository = schoolRepository;
         this.enrollmentRepository = enrollmentRepository;
     }
-
-
     @Override
     public List<Course> getAllCourses(int schoolId) {
         return courseRepository.findBySchoolId(schoolId);

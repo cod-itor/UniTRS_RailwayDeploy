@@ -1216,14 +1216,21 @@
                     <i class="bi bi-building-fill"></i> Facilities
                     <span class="nav-badge">${rooms.size()}</span>
                 </button>
+                <button role="tab" id="tab-requests" aria-selected="${activeTab == 'requests' ? 'true' : 'false'}" class="${activeTab == 'requests' ? 'active' : ''}" onclick="switchDeanTab('requests', this)">
+                    <i class="bi bi-inbox-fill"></i> Student Requests
+                    <c:if test="${not empty pendingTermRequests}">
+                        <span class="nav-badge bg-danger text-white border-danger">${pendingTermRequests.size()}</span>
+                    </c:if>
+                </button>
+                <button role="tab" id="tab-holidays" aria-selected="${activeTab == 'holidays' ? 'true' : 'false'}" class="${activeTab == 'holidays' ? 'active' : ''}" onclick="switchDeanTab('holidays', this)">
+                    <i class="bi bi-calendar-heart"></i> School Holidays
+                </button>
             </nav>
 
         </aside>
 
-        <%-- DESKTOP MAIN CONTENT --%>
         <main class="desktop-main" role="main">
 
-            <%-- HEADER --%>
             <header class="desktop-header">
                 <div>
                     <h1 class="header-title mb-0">Dean Administration</h1>
@@ -1234,6 +1241,11 @@
                 </div>
 
                 <div class="header-actions">
+                    <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDeanTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
+                        <i class="bi bi-calendar-heart text-danger"></i>
+                        <span class="small">Holidays</span>
+                    </button>
+
                     <a href="${pageContext.request.contextPath}/professor/dashboard" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2" style="font-size: 0.85rem;">
                         <i class="bi bi-person-workspace text-primary"></i> Switch to Professor View
                     </a>
@@ -1515,17 +1527,26 @@
                             <h3>Registered Students &bull; ${deanSchool.schoolName}</h3>
                             <p class="text-muted small mb-0 mt-1">Official list of all students registered under your school.</p>
                         </div>
-                        <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
-                            Total Students: ${students.size()}
-                        </span>
+                        <div class="d-flex align-items-center gap-3">
+                            <select id="studentTermFilter" class="form-select border-2 rounded-pill" style="min-width: 150px;" onchange="filterStudentsByTerm(this.value)">
+                                <option value="all">All Terms</option>
+                                <c:forEach var="term" items="${terms}">
+                                    <option value="${term.id}">${term.termName}</option>
+                                </c:forEach>
+                            </select>
+                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold" id="totalStudentsBadge">
+                                Total Students: ${students.size()}
+                            </span>
+                        </div>
                     </div>
 
                     <div class="tc-table-wrap">
-                        <table class="tc-table">
+                        <table class="tc-table" id="studentsTable">
                             <thead>
                                 <tr>
                                     <th>Student ID</th>
                                     <th>Student Name</th>
+                                    <th>Term</th>
                                     <th>Email Address</th>
                                     <th>Major / Specialization</th>
                                     <th>Verification</th>
@@ -1534,9 +1555,14 @@
                             </thead>
                             <tbody>
                                 <c:forEach var="student" items="${students}">
-                                    <tr class="searchable-row">
+                                    <tr class="searchable-row student-row" data-term-id="${student.currentTermId}">
                                         <td><span class="badge bg-light text-dark border px-2 py-1 rounded-pill font-monospace">${student.formattedIdentifier}</span></td>
                                         <td class="fw-bold text-dark">${student.fullName}</td>
+                                        <td>
+                                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill">
+                                                Term ${student.currentTermId != null ? student.currentTermId : 'N/A'}
+                                            </span>
+                                        </td>
                                         <td><span class="text-muted">${student.email}</span></td>
                                         <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-pill">${student.major}</span></td>
                                         <td>
@@ -1631,9 +1657,6 @@
                 </div>
             </section>
 
-            <%-- ========================================================= --%>
-            <%-- TAB 5: CLASS SCHEDULES                                    --%>
-            <%-- ========================================================= --%>
             <section id="dt-schedules" class="tab-section ${activeTab == 'schedules' ? 'active' : ''}">
                 <div class="table-card">
                     <div class="tc-header">
@@ -1641,9 +1664,14 @@
                             <h3>Class Schedules & Faculty Assignment</h3>
                             <p class="text-muted small mb-0 mt-1">Schedule courses into physical rooms and assign academic faculty.</p>
                         </div>
-                        <button class="btn btn-primary rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#scheduleClassModal">
-                            <i class="bi bi-plus-lg"></i> Schedule Class
-                        </button>
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button" class="btn btn-outline-danger rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2 shadow-xs" onclick="switchDeanTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
+                                <i class="bi bi-calendar-heart text-danger"></i> School Holidays
+                            </button>
+                            <button class="btn btn-primary rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#scheduleClassModal">
+                                <i class="bi bi-plus-lg"></i> Schedule Class
+                            </button>
+                        </div>
                     </div>
 
                     <div class="tc-table-wrap">
@@ -1774,15 +1802,86 @@
                 </div>
             </section>
 
+            <section id="dt-requests" class="tab-section ${activeTab == 'requests' ? 'active' : ''}">
+                <div class="content-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2>Student Registration Requests</h2>
+                        <p class="text-muted">Review and approve batch term registration requests.</p>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-header bg-white border-bottom py-3 px-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold"><i class="bi bi-inbox me-2 text-primary"></i> Pending Requests</h5>
+                            <div class="input-group" style="max-width: 300px;">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0 bg-light" id="requestSearchInput" placeholder="Search student name..." onkeyup="filterTable('requestSearchInput', 'requestsTable')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" id="requestsTable">
+                            <thead class="table-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
+                                <tr>
+                                    <th class="px-4 py-3">Date</th>
+                                    <th class="py-3">Student Name</th>
+                                    <th class="py-3">Student ID</th>
+                                    <th class="py-3">Term Requested</th>
+                                    <th class="py-3 text-end px-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="req" items="${pendingTermRequests}">
+                                    <tr>
+                                        <td class="px-4 py-3"><fmt:formatDate value="${req.createdAt}" pattern="MMM dd, yyyy HH:mm"/></td>
+                                        <td class="py-3 fw-bold">${req.studentName}</td>
+                                        <td class="py-3">${req.studentIdentifier}</td>
+                                        <td class="py-3"><span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">${req.termName}</span></td>
+                                        <td class="py-3 text-end px-4">
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <form action="${pageContext.request.contextPath}/dean" method="POST" class="d-inline">
+                                                    <input type="hidden" name="action" value="approveTermRequest">
+                                                    <input type="hidden" name="requestId" value="${req.id}">
+                                                    <button type="submit" class="btn btn-sm btn-success rounded-pill fw-bold" onclick="return confirm('Approve request and enroll student in all classes for this term?');">
+                                                        <i class="bi bi-check-lg me-1"></i> Approve
+                                                    </button>
+                                                </form>
+                                                <form action="${pageContext.request.contextPath}/dean" method="POST" class="d-inline">
+                                                    <input type="hidden" name="action" value="rejectTermRequest">
+                                                    <input type="hidden" name="requestId" value="${req.id}">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill fw-bold" onclick="return confirm('Reject this registration request?');">
+                                                        <i class="bi bi-x-lg"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                <c:if test="${empty pendingTermRequests}">
+                                    <tr>
+                                        <td colspan="5" class="text-center py-5 text-muted">
+                                            <i class="bi bi-inbox fs-1 d-block mb-3 text-secondary opacity-50"></i>
+                                            <h5>No pending requests</h5>
+                                            <p class="mb-0">All student registration requests have been processed.</p>
+                                        </td>
+                                    </tr>
+                                </c:if>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="dt-holidays" class="tab-section ${activeTab == 'holidays' ? 'active' : ''}">
+                <jsp:include page="/WEB-INF/views/common/school_holidays_view.jsp" />
+            </section>
+
         </main>
     </div>
 
-    <!-- ============================================================= -->
-    <!-- DEAN NATIVE MOBILE EXPERIENCE (VIEWPORT < 768px)               -->
-    <!-- ============================================================= -->
     <div class="mobile-app-container d-block d-md-none">
 
-        <!-- Sticky Safe-Area Aware Top Bar -->
         <header class="dean-mobile-topbar" role="banner">
             <div class="d-flex align-items-center justify-content-between w-100">
                 <div class="d-flex align-items-center gap-3">
@@ -1806,6 +1905,9 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center shadow-xs" style="width: 38px; height: 38px; border: 1px solid rgba(226,232,240,0.8);" data-bs-toggle="modal" data-bs-target="#schoolHolidaysModal" aria-label="School Holidays">
+                        <i class="bi bi-calendar-heart text-danger" style="font-size: 1rem;"></i>
+                    </button>
                     <a href="${pageContext.request.contextPath}/professor/dashboard" class="dean-prof-switch-pill text-decoration-none" title="Switch to Professor View">
                         <i class="bi bi-person-workspace text-primary"></i>
                         <span>Prof View</span>
@@ -1817,9 +1919,7 @@
             </div>
         </header>
 
-        <!-- ===== TAB 1: OVERVIEW / HUB ===== -->
         <section id="mobile-view-home" class="mobile-sub-view active" role="tabpanel" aria-labelledby="dock-tab-home">
-            <!-- Hero Banner -->
             <div class="dean-hero-banner">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-1 font-monospace" style="font-size:0.75rem; font-weight:700;">
@@ -1833,7 +1933,19 @@
                 <p class="text-white text-opacity-80 small mb-3">Academic Curriculum & Department Administration</p>
             </div>
 
-            <!-- KPI 2x2 Grid -->
+            <c:if test="${not empty pendingTermRequests}">
+                <div class="alert alert-warning d-flex align-items-center justify-content-between p-3 mb-3 rounded-4 border-warning shadow-xs" onclick="switchDeanMobileTab('requests')" role="button" tabindex="0">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-inbox-fill text-warning fs-5"></i>
+                        <div>
+                            <div class="fw-bold small text-dark">${pendingTermRequests.size()} Student Request(s) Pending</div>
+                            <div class="text-muted" style="font-size:0.72rem;">Tap to review and approve registrations</div>
+                        </div>
+                    </div>
+                    <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1" style="font-size:0.7rem;">Review</span>
+                </div>
+            </c:if>
+
             <div class="dean-kpi-grid">
                 <div class="dean-kpi-card" onclick="switchDeanMobileTab('courses')" role="button" tabindex="0">
                     <div class="kpi-icon-box blue"><i class="bi bi-book-half"></i></div>
@@ -2062,7 +2174,6 @@
             </div>
         </section>
 
-        <!-- ===== TAB 3: CLASS SCHEDULES ===== -->
         <section id="mobile-view-schedules" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-schedules">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
@@ -2074,13 +2185,26 @@
                 </button>
             </div>
 
-            <!-- Search Input -->
+            <div class="mobile-course-card p-3 mb-2 border-danger-subtle bg-danger-subtle bg-opacity-10" onclick="new bootstrap.Modal(document.getElementById('schoolHolidaysModal')).show()" role="button" tabindex="0" style="cursor:pointer;">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="p-2 rounded-3 bg-danger bg-opacity-10 text-danger">
+                            <i class="bi bi-calendar-heart fs-6"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size:0.85rem;">School Holidays Calendar</div>
+                            <div class="small text-muted" style="font-size:0.72rem;">View upcoming breaks & observances</div>
+                        </div>
+                    </div>
+                    <span class="badge bg-danger text-white rounded-pill px-2.5 py-1" style="font-size:0.68rem;">View</span>
+                </div>
+            </div>
+
             <div class="mobile-search-bar">
                 <i class="bi bi-search"></i>
                 <input type="text" id="mobileDeanScheduleSearch" placeholder="Search by course, prof, room..." aria-label="Search schedules" oninput="filterMobileDeanSchedules(this.value)">
             </div>
 
-            <!-- Shift Filter Pills -->
             <div class="filter-chip-strip" id="deanScheduleFilterStrip">
                 <button type="button" class="filter-chip active" onclick="filterDeanScheduleShift('all', this)">All</button>
                 <button type="button" class="filter-chip" onclick="filterDeanScheduleShift('morning', this)">Morning</button>
@@ -2138,6 +2262,64 @@
                     <div class="small text-muted">Try clearing search or filters</div>
                 </div>
             </div>
+        </section>
+
+        <section id="mobile-view-requests" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-requests">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="fw-extrabold text-dark mb-0" style="font-size:1.25rem;">Student Requests</h2>
+                    <span class="text-muted" style="font-size:0.75rem;">Batch registration approval requests</span>
+                </div>
+                <c:if test="${not empty pendingTermRequests}">
+                    <span class="badge bg-danger rounded-pill px-3 py-1.5 fw-bold" style="font-size:0.75rem;">${pendingTermRequests.size()} Pending</span>
+                </c:if>
+            </div>
+
+            <c:forEach var="req" items="${pendingTermRequests}">
+                <div class="mobile-course-card mb-3 p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size:0.95rem;">${req.studentName}</div>
+                            <span class="text-muted small">ID: ${req.studentIdentifier}</span>
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
+                            ${req.termName}
+                        </span>
+                    </div>
+
+                    <div class="d-flex align-items-center text-muted small mb-3">
+                        <i class="bi bi-clock me-1 text-primary"></i>
+                        <fmt:formatDate value="${req.createdAt}" pattern="MMM dd, yyyy HH:mm"/>
+                    </div>
+
+                    <div class="d-flex gap-2 pt-2 border-top">
+                        <form action="${pageContext.request.contextPath}/dean" method="POST" class="flex-grow-1 m-0">
+                            <input type="hidden" name="action" value="approveTermRequest">
+                            <input type="hidden" name="requestId" value="${req.id}">
+                            <input type="hidden" name="tab" value="requests">
+                            <button type="submit" class="btn btn-success btn-sm w-100 rounded-pill fw-bold" onclick="return confirm('Approve request and enroll student in all classes for this term?');">
+                                <i class="bi bi-check-lg me-1"></i> Approve
+                            </button>
+                        </form>
+                        <form action="${pageContext.request.contextPath}/dean" method="POST" class="m-0">
+                            <input type="hidden" name="action" value="rejectTermRequest">
+                            <input type="hidden" name="requestId" value="${req.id}">
+                            <input type="hidden" name="tab" value="requests">
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill fw-bold px-3" onclick="return confirm('Reject this registration request?');">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </c:forEach>
+
+            <c:if test="${empty pendingTermRequests}">
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center my-3">
+                    <i class="bi bi-inbox text-muted opacity-50 display-4 mb-2"></i>
+                    <h5 class="fw-bold text-dark mb-1">No Pending Requests</h5>
+                    <p class="text-muted small mb-0">All student registration requests have been reviewed and processed.</p>
+                </div>
+            </c:if>
         </section>
 
         <!-- ===== TAB 4: PEOPLE DIRECTORY ===== -->
@@ -2360,6 +2542,15 @@
             <button type="button" class="dock-tab-btn" id="dock-tab-schedules" data-tab="schedules" onclick="switchDeanMobileTab('schedules')" role="tab" aria-selected="false" aria-controls="mobile-view-schedules" aria-label="Class Schedules">
                 <i class="bi bi-clock-history"></i>
                 <span>Schedules</span>
+            </button>
+            <button type="button" class="dock-tab-btn position-relative" id="dock-tab-requests" data-tab="requests" onclick="switchDeanMobileTab('requests')" role="tab" aria-selected="false" aria-controls="mobile-view-requests" aria-label="Student Requests">
+                <i class="bi bi-inbox"></i>
+                <span>Requests</span>
+                <c:if test="${not empty pendingTermRequests}">
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.58rem; transform: translate(-75%, 20%) !important;">
+                        ${pendingTermRequests.size()}
+                    </span>
+                </c:if>
             </button>
             <button type="button" class="dock-tab-btn" id="dock-tab-people" data-tab="people" onclick="switchDeanMobileTab('people')" role="tab" aria-selected="false" aria-controls="mobile-view-people" aria-label="People Directory">
                 <i class="bi bi-people"></i>
@@ -2854,6 +3045,7 @@
                 home: ['bi-house-door-fill', 'bi-house-door'],
                 courses: ['bi-book-fill', 'bi-book'],
                 schedules: ['bi-clock-history', 'bi-clock'],
+                requests: ['bi-inbox-fill', 'bi-inbox'],
                 people: ['bi-people-fill', 'bi-people'],
                 profile: ['bi-person-badge-fill', 'bi-person-badge']
             };
@@ -3051,10 +3243,33 @@
                 if (tab) {
                     if (document.getElementById('mobile-view-' + tab)) {
                         switchDeanMobileTab(tab);
+                    } else if (tab === 'holidays') {
+                        switchDeanTab('holidays', document.getElementById('tab-holidays'));
                     }
                 }
             } catch(e) {}
         });
+
+        function filterStudentsByTerm(termId) {
+            var rows = document.querySelectorAll('#studentsTable tbody tr.student-row');
+            var visibleCount = 0;
+            
+            rows.forEach(function(row) {
+                var rowTermId = row.getAttribute('data-term-id');
+                if (termId === 'all' || rowTermId === termId) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            var badge = document.getElementById('totalStudentsBadge');
+            if (badge) {
+                badge.innerText = 'Total Students: ' + visibleCount;
+            }
+        }
     </script>
+    <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
 </body>
 </html>

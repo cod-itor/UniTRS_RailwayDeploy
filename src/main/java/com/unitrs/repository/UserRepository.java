@@ -15,7 +15,7 @@ public class UserRepository extends BaseRepository {
     }
 
     public boolean register(User user) {
-        String sql = "INSERT INTO users (user_identifier, password, full_name, email, role, gender, major, is_verified, is_active, dean_school_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (user_identifier, password, full_name, email, role, gender, major, is_verified, is_active, dean_school_id, student_school_id, current_term_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int id = executeInsertAndReturnKey(sql,
                 user.getUserIdentifier(),
                 user.getPassword(),
@@ -26,7 +26,9 @@ public class UserRepository extends BaseRepository {
                 user.getMajor(),
                 user.isVerified(),
                 user.isActive(),
-                user.getDeanSchoolId());
+                user.getDeanSchoolId(),
+                user.getStudentSchoolId(),
+                user.getCurrentTermId());
 
         if (id > 0) {
             user.setId(id);
@@ -43,27 +45,7 @@ public class UserRepository extends BaseRepository {
     public User findByIdentifier(String identifier) {
         String sql = "SELECT * FROM users WHERE LOWER(user_identifier) = LOWER(?)";
 
-        return executeQueryForObject(sql, (ResultSet rs) -> {
-            User user = new User();
-            user.setId(rs.getInt("id"));
-            user.setUserIdentifier(rs.getString("user_identifier"));
-            user.setPassword(rs.getString("password"));
-            user.setFullName(rs.getString("full_name"));
-            user.setEmail(rs.getString("email"));
-            user.setRole(Role.fromString(rs.getString("role")));
-            user.setMajor(rs.getString("major"));
-            user.setVerified(rs.getBoolean("is_verified"));
-            user.setActive(rs.getBoolean("is_active"));
-
-            int deanSchoolId = rs.getInt("dean_school_id");
-            user.setDeanSchoolId(rs.wasNull() ? null : deanSchoolId);
-
-            int studentSchoolId = rs.getInt("student_school_id");
-            user.setStudentSchoolId(rs.wasNull() ? null : studentSchoolId);
-
-            user.setCreatedAt(rs.getTimestamp("created_at"));
-            return user;
-        }, identifier);
+        return executeQueryForObject(sql, this::mapResultSetToUser, identifier);
     }
 
     public User findByEmail(String email) {
@@ -94,6 +76,16 @@ public class UserRepository extends BaseRepository {
     public boolean updateRole(int id, String role) {
         String sql = "UPDATE users SET role = ? WHERE id = ?";
         return executeUpdate(sql, role, id) > 0;
+    }
+
+    public boolean updateStudentProfile(int id, String userIdentifier, int currentTermId) {
+        String sql = "UPDATE users SET user_identifier = ?, current_term_id = ? WHERE id = ?";
+        return executeUpdate(sql, userIdentifier, currentTermId, id) > 0;
+    }
+
+    public boolean updateCurrentTerm(int id, int currentTermId) {
+        String sql = "UPDATE users SET current_term_id = ? WHERE id = ?";
+        return executeUpdate(sql, currentTermId, id) > 0;
     }
 
     public List<User> findAllUsers() {
@@ -184,6 +176,13 @@ public class UserRepository extends BaseRepository {
 
         int studentSchoolId = rs.getInt("student_school_id");
         user.setStudentSchoolId(rs.wasNull() ? null : studentSchoolId);
+
+        try {
+            int currentTermId = rs.getInt("current_term_id");
+            user.setCurrentTermId(rs.wasNull() ? null : currentTermId);
+        } catch (SQLException ignored) {
+            user.setCurrentTermId(null);
+        }
 
         try {
             user.setTwoFactorEnabled(rs.getBoolean("two_factor_enabled"));
