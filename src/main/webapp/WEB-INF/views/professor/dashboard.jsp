@@ -1087,7 +1087,7 @@
         /* HEADER */
         .desktop-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             margin-bottom: 24px;
             padding: 10px 0;
@@ -2068,13 +2068,6 @@
 
     <main class="desktop-main" id="desktop-main-content" role="main" tabindex="-1">
         <header class="desktop-header">
-            <div>
-                <h1 class="header-title mb-0">Faculty Overview</h1>
-                <div class="text-muted small mt-1 fw-medium">
-                    <i class="bi bi-mortarboard-fill text-primary me-1" aria-hidden="true"></i>
-                    UniTRS Academic Faculty Portal &bull; Term 2026-2027
-                </div>
-            </div>
 
             <div class="header-actions">
                 <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
