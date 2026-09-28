@@ -2309,6 +2309,115 @@
                                                  .day-pill-btn {
                                                      transition: all 0.15s ease;
                                                  }
+        .premium-registration-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+            padding: 24px;
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+        }
+        .premium-registration-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.12);
+        }
+        .premium-registration-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 120px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .premium-registration-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        .reg-header {
+            text-align: center;
+        }
+        .reg-term-box {
+            background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+        .calendar-icon-wrapper {
+            position: relative;
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        .calendar-icon-wrapper .sparkles {
+            position: absolute;
+            top: -8px; right: -8px;
+            font-size: 16px;
+            animation: float-sparkle 3s ease-in-out infinite;
+        }
+        @keyframes float-sparkle {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { transform: translateY(-4px) scale(1.1); opacity: 1; }
+        }
+        .reg-meta-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 0 12px;
+        }
+        .reg-meta-list .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: #475569;
+            font-weight: 500;
+        }
+        .reg-meta-list .meta-item i {
+            font-size: 1.1rem;
+        }
+        .btn-premium-submit {
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 99px;
+            padding: 14px 24px;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            transition: all 0.2s ease;
+        }
+        .btn-premium-submit:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+            transform: translateY(-2px);
+            color: white;
+        }
+        .btn-premium-submit:disabled {
+            background: #cbd5e1;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
     </style>
         </head>
 
@@ -2955,19 +3064,43 @@
                                                                                                                 </div>
                                                                                                             </c:when>
                                                                                                             <c:otherwise>
-                                                                                                                <form action="${pageContext.request.contextPath}/student" method="POST" class="d-flex flex-column flex-md-row align-items-end gap-3 p-4 bg-light border shadow-sm rounded-4">
+                                                                                                                <form action="${pageContext.request.contextPath}/student" method="POST" class="premium-registration-card">
                                                                                                                     <input type="hidden" name="action" value="batch_term_register">
                                                                                                                     <input type="hidden" name="termId" value="${studentTerm.id}">
-                                                                                                                    <div class="flex-grow-1 w-100 text-start">
-                                                                                                                        <label class="form-label fw-bold text-dark small text-uppercase mb-2" style="letter-spacing:0.5px;">Your Current Term</label>
-                                                                                                                        <div class="input-group input-group-lg">
-                                                                                                                            <span class="input-group-text bg-white border-end-0 text-primary"><i class="bi bi-calendar3"></i></span>
-                                                                                                                            <input type="text" class="form-control border-start-0 bg-white fw-bold text-dark" value="${studentTerm.termName}" readonly style="cursor:not-allowed;">
+                                                                                                                    
+                                                                                                                    <div class="reg-header">
+                                                                                                                        <h5 class="fw-bold mb-1 text-dark">Term Registration</h5>
+                                                                                                                        <p class="text-muted small mb-0">Manage your courses & enrollment</p>
+                                                                                                                    </div>
+
+                                                                                                                    <div class="reg-term-box mt-2">
+                                                                                                                        <div class="calendar-icon-wrapper flex-shrink-0">
+                                                                                                                            <i class="bi bi-calendar3"></i>
+                                                                                                                            <div class="sparkles">✨</div>
+                                                                                                                        </div>
+                                                                                                                        <div class="term-details text-start">
+                                                                                                                            <div class="text-uppercase fw-bold text-primary mb-1" style="font-size:0.7rem; letter-spacing:1px;">Current Term</div>
+                                                                                                                            <h4 class="fw-bolder text-dark mb-2" style="font-size:1.3rem;">${studentTerm.termName}</h4>
+                                                                                                                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1 shadow-none border border-success-subtle"><i class="bi bi-check-circle-fill me-1"></i> Active Enrollment</span>
                                                                                                                         </div>
                                                                                                                     </div>
-                                                                                                                    <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold px-5 py-3 shadow w-100 w-md-auto d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
-                                                                                                                        <i class="bi bi-send-fill fs-5"></i> Submit Registration
-                                                                                                                    </button>
+
+                                                                                                                    <div class="reg-meta-list my-2">
+                                                                                                                        <div class="meta-item">
+                                                                                                                            <i class="bi bi-journal-check text-success"></i>
+                                                                                                                            <span>${empty termCourses ? '0' : termCourses.size()} Courses Registered</span>
+                                                                                                                        </div>
+                                                                                                                        <div class="meta-item">
+                                                                                                                            <i class="bi bi-bell text-primary"></i>
+                                                                                                                            <span>Registration Period Open</span>
+                                                                                                                        </div>
+                                                                                                                    </div>
+
+                                                                                                                    <div class="reg-actions mt-2">
+                                                                                                                        <button type="submit" class="btn btn-premium-submit w-100 d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
+                                                                                                                            <span>Submit Registration</span> <i class="bi bi-arrow-up-right"></i>
+                                                                                                                        </button>
+                                                                                                                    </div>
                                                                                                                 </form>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
@@ -3925,19 +4058,38 @@
                                                                                             </div>
                                                                                         </c:when>
                                                                                         <c:otherwise>
-                                                                                            <form action="${pageContext.request.contextPath}/student" method="POST" class="mt-2">
+                                                                                            <form action="${pageContext.request.contextPath}/student" method="POST" class="premium-registration-card mt-2">
                                                                                                 <input type="hidden" name="action" value="batch_term_register">
                                                                                                 <input type="hidden" name="termId" value="${studentTerm.id}">
-                                                                                                <div class="mb-3 text-start">
-                                                                                                    <label class="form-label fw-bold text-dark small text-uppercase mb-1" style="letter-spacing:0.5px; font-size: 0.75rem;">Your Current Term</label>
-                                                                                                    <div class="input-group">
-                                                                                                        <span class="input-group-text bg-light border-end-0 text-primary"><i class="bi bi-calendar3"></i></span>
-                                                                                                        <input type="text" class="form-control border-start-0 bg-light fw-bold text-dark" value="${studentTerm.termName}" readonly style="cursor:not-allowed;">
+                                                                                                
+                                                                                                <div class="reg-header">
+                                                                                                    <h5 class="fw-bold mb-1 text-dark">Term Registration</h5>
+                                                                                                    <p class="text-muted small mb-0">Manage your courses</p>
+                                                                                                </div>
+
+                                                                                                <div class="reg-term-box mt-1 px-3 py-3">
+                                                                                                    <div class="calendar-icon-wrapper flex-shrink-0" style="width: 50px; height: 50px; font-size: 22px;">
+                                                                                                        <i class="bi bi-calendar3"></i>
+                                                                                                        <div class="sparkles" style="font-size: 12px; top:-5px; right:-5px;">✨</div>
+                                                                                                    </div>
+                                                                                                    <div class="term-details text-start">
+                                                                                                        <div class="text-uppercase fw-bold text-primary mb-1" style="font-size:0.65rem; letter-spacing:1px;">Current Term</div>
+                                                                                                        <h4 class="fw-bolder text-dark mb-1" style="font-size:1.1rem;">${studentTerm.termName}</h4>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                                <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold w-100 py-3 shadow-sm d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
-                                                                                                    <i class="bi bi-send-fill fs-5"></i> Submit Registration
-                                                                                                </button>
+
+                                                                                                <div class="reg-meta-list my-1">
+                                                                                                    <div class="meta-item" style="font-size: 0.8rem;">
+                                                                                                        <i class="bi bi-journal-check text-success"></i>
+                                                                                                        <span>${empty termCourses ? '0' : termCourses.size()} Courses Ready</span>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                                <div class="reg-actions mt-1">
+                                                                                                    <button type="submit" class="btn btn-premium-submit w-100 d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
+                                                                                                        <span>Submit Registration</span> <i class="bi bi-arrow-up-right"></i>
+                                                                                                    </button>
+                                                                                                </div>
                                                                                             </form>
                                                                                         </c:otherwise>
                                                                                     </c:choose>
