@@ -161,6 +161,10 @@
     background: #fee2e2;
     color: #991b1b;
 }
+.session-card-item.status-holiday .session-num-badge {
+    background: #fef08a;
+    color: #854d0e;
+}
 </style>
 
 <script>
@@ -300,9 +304,48 @@ function calculateCourse15Sessions(course) {
             ses.studentStatus = null;
         }
 
+        var holidays = {
+            '01-01': "New Year's Day",
+            '01-07': "Victory Day",
+            '03-08': "Women's Day",
+            '04-14': "Khmer New Year",
+            '04-15': "Khmer New Year",
+            '04-16': "Khmer New Year",
+            '05-01': "Labor Day",
+            '05-14': "King's Birthday",
+            '09-24': "Constitution Day",
+            '10-23': "Paris Peace Agreement Day",
+            '11-09': "Independence Day"
+        };
+        var specificHolidays = {
+            '2026-09-10': "Pchum Ben",
+            '2026-09-11': "Pchum Ben",
+            '2026-09-12': "Pchum Ben",
+            '2026-11-22': "Water Festival",
+            '2026-11-23': "Water Festival",
+            '2026-11-24': "Water Festival"
+        };
+        
+        var mm_dd = ses.dateIso.substring(5);
+        var isHoliday = false;
+        var holidayName = '';
+        if (holidays[mm_dd]) {
+            isHoliday = true;
+            holidayName = holidays[mm_dd];
+        } else if (specificHolidays[ses.dateIso]) {
+            isHoliday = true;
+            holidayName = specificHolidays[ses.dateIso];
+        }
+
         if (rec) {
             ses.status = 'ATTENDED';
             ses.isPast = true;
+            ses.isUpcoming = false;
+            ses.isGrayedOut = false;
+        } else if (isHoliday) {
+            ses.status = 'HOLIDAY';
+            ses.holidayName = holidayName;
+            ses.isPast = (sDate < today);
             ses.isUpcoming = false;
             ses.isGrayedOut = false;
         } else if (sDate < today) {
@@ -380,6 +423,7 @@ function renderCourseSessionsModalUI(course, isProfessor) {
         if (s.status === 'ATTENDED') cardClass += ' status-attended';
         else if (s.status === 'CANCELLED') cardClass += ' status-cancelled';
         else if (s.status === 'UPCOMING') cardClass += ' status-upcoming';
+        else if (s.status === 'HOLIDAY') cardClass += ' status-holiday';
         else if (s.isGrayedOut) cardClass += ' status-grayed';
 
         var formattedDate = formatSessionDate(s.dateObj);
@@ -417,6 +461,15 @@ function renderCourseSessionsModalUI(course, isProfessor) {
                 html += '        <div class="text-muted" style="font-size:0.68rem;">No attendance held</div>';
                 html += '      </div>';
                 html += '      <button type="button" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-2.5 py-1 shadow-xs" style="font-size:0.72rem;" onclick="openAddExtraClassModal(' + course.id + ', \'' + s.dateIso + '\')"><i class="bi bi-calendar-plus me-1"></i>Add Extra</button>';
+            } else if (s.status === 'HOLIDAY') {
+                html += '      <div class="text-end me-2">';
+                html += '        <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1" style="font-size:0.72rem;"><i class="bi bi-brightness-high me-1"></i>Holiday</span>';
+                html += '        <div class="text-muted" style="font-size:0.68rem;">' + s.holidayName + '</div>';
+                html += '      </div>';
+                html += '      <div class="d-flex flex-column gap-1">';
+                html += '        <button type="button" class="btn btn-sm btn-primary rounded-pill px-2.5 py-1 fw-bold shadow-xs" style="font-size:0.72rem;" onclick="openTakeAttendanceForDate(' + course.id + ', \'' + s.dateIso + '\')"><i class="bi bi-clipboard-check me-1"></i>Take</button>';
+                html += '        <button type="button" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-2.5 py-1 shadow-xs" style="font-size:0.72rem;" onclick="openAddExtraClassModal(' + course.id + ', \'' + s.dateIso + '\')"><i class="bi bi-calendar-plus me-1"></i>Add Extra</button>';
+                html += '      </div>';
             } else if (s.status === 'UPCOMING') {
                 html += '      <span class="badge bg-primary text-white rounded-pill px-3 py-1.5 shadow-xs" style="font-size:0.75rem;"><i class="bi bi-star-fill me-1"></i>Upcoming Class</span>';
                 html += '      <button type="button" class="btn btn-sm btn-primary rounded-pill px-2.5 py-1 fw-bold shadow-xs" style="font-size:0.72rem;" onclick="openTakeAttendanceForDate(' + course.id + ', \'' + s.dateIso + '\')"><i class="bi bi-clipboard-check me-1"></i>Take</button>';
@@ -441,6 +494,11 @@ function renderCourseSessionsModalUI(course, isProfessor) {
                 html += '      <div>';
                 html += '        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1" style="font-size:0.75rem;"><i class="bi bi-slash-circle me-1"></i>Cancelled Class</span>';
                 html += '        <div class="text-muted text-end" style="font-size:0.68rem;">Professor did not hold attendance</div>';
+                html += '      </div>';
+            } else if (s.status === 'HOLIDAY') {
+                html += '      <div>';
+                html += '        <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1" style="font-size:0.75rem;"><i class="bi bi-brightness-high me-1"></i>Holiday</span>';
+                html += '        <div class="text-muted text-end" style="font-size:0.68rem;">' + s.holidayName + '</div>';
                 html += '      </div>';
             } else if (s.status === 'UPCOMING') {
                 html += '      <span class="badge bg-primary text-white rounded-pill px-3 py-1.5 shadow-xs" style="font-size:0.75rem;"><i class="bi bi-star-fill me-1"></i>Upcoming Class</span>';
