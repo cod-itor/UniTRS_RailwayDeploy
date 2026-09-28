@@ -14,9 +14,7 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold d-none d-sm-inline-flex align-items-center gap-1.5" onclick="window.print()">
-                        <i class="bi bi-printer"></i> Print
-                    </button>
+                    
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -26,15 +24,15 @@
                     <div class="holiday-next-hero">
                         <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
                             <div>
-                                <div class="d-flex align-items-center gap-2 mb-1.5">
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-1.5">
                                     <span class="badge bg-warning text-dark fw-bold rounded-pill px-2.5 py-1 text-uppercase" style="font-size:0.65rem; letter-spacing:0.04em;">Next Upcoming Holiday</span>
-                                    <span class="modal-holiday-countdown badge bg-white bg-opacity-20 text-white rounded-pill px-2.5 py-1 fw-semibold" style="font-size:0.7rem;">Calculating...</span>
+                                    <span class="modal-holiday-countdown badge bg-white text-dark rounded-pill px-2.5 py-1 fw-semibold" style="font-size:0.7rem;">Calculating...</span>
                                 </div>
                                 <h3 class="modal-holiday-title fw-bold mb-1 fs-4 text-white">Pchum Ben Festival</h3>
                                 <div class="modal-holiday-subtitle text-white-50" style="font-size:0.85rem;">October 10, 11, 12, 2026 &bull; 3 Days Off &bull; Campus Closed</div>
                             </div>
                             <div class="text-md-end">
-                                <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-3 py-2 small fw-semibold d-inline-flex align-items-center gap-1.5">
+                                <span class="badge bg-white text-dark border border-white border-opacity-25 rounded-pill px-3 py-2 small fw-semibold d-inline-flex align-items-center gap-1.5">
                                     <i class="bi bi-door-closed"></i> Classes Suspended
                                 </span>
                             </div>
@@ -76,8 +74,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#fef3c7; color:#92400e;">3 Days Off</span>
-                                            <span class="holiday-badge" style="background:#fee2e2; color:#b91c1c;">Ancestors' Day</span>
-                                            <span class="modal-status-pill holiday-badge"></span>
                                         </div>
                                         <h4 class="holiday-card-title">Pchum Ben Festival</h4>
                                         <p class="holiday-card-meta">Saturday – Monday &bull; Traditional Ancestral Rite</p>
@@ -94,8 +90,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#475569;">1 Day Off</span>
-                                            <span class="holiday-badge" style="background:#ede9fe; color:#6b21a8;">Memorial</span>
-                                            <span class="modal-status-pill holiday-badge"></span>
                                         </div>
                                         <h4 class="holiday-card-title">Commemoration Day of King-Father</h4>
                                         <p class="holiday-card-meta">Thursday &bull; Late King Norodom Sihanouk Memorial</p>
@@ -112,8 +106,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#475569;">1 Day Off</span>
-                                            <span class="holiday-badge" style="background:#ede9fe; color:#6b21a8;">Royal</span>
-                                            <span class="modal-status-pill holiday-badge"></span>
                                         </div>
                                         <h4 class="holiday-card-title">King Norodom Sihamoni's Coronation Day</h4>
                                         <p class="holiday-card-meta">Thursday &bull; 22nd Royal Enthronement Anniversary</p>
@@ -130,8 +122,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#475569;">1 Day Off</span>
-                                            <span class="holiday-badge" style="background:#e0f2fe; color:#0369a1;">National</span>
-                                            <span class="modal-status-pill holiday-badge"></span>
                                         </div>
                                         <h4 class="holiday-card-title">National Independence Day</h4>
                                         <p class="holiday-card-meta">Monday &bull; 73rd National Independence Celebration</p>
@@ -148,8 +138,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#fef3c7; color:#92400e;">3 Days Off</span>
-                                            <span class="holiday-badge" style="background:#fee2e2; color:#b91c1c;">Major Festival</span>
-                                            <span class="modal-status-pill holiday-badge"></span>
                                         </div>
                                         <h4 class="holiday-card-title">Water Festival (Bon Om Touk)</h4>
                                         <p class="holiday-card-meta">Monday – Wednesday &bull; Traditional Boat Races</p>
@@ -166,8 +154,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#475569;">1 Day Off</span>
-                                            <span class="holiday-badge" style="background:#dcfce7; color:#166534;">Peace</span>
-                                            <span class="modal-status-pill holiday-badge"></span>
                                         </div>
                                         <h4 class="holiday-card-title">Peace Day in Cambodia</h4>
                                         <p class="holiday-card-meta">Tuesday &bull; National Reconciliation & Peace Day</p>
@@ -196,7 +182,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">Past</span>
-                                            <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">1 Day</span>
                                         </div>
                                         <h4 class="holiday-card-title text-muted">International New Year's Day</h4>
                                         <p class="holiday-card-meta">Thursday &bull; Global Calendar Observance</p>
@@ -213,7 +198,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">Past</span>
-                                            <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">1 Day</span>
                                         </div>
                                         <h4 class="holiday-card-title text-muted">Victory over Genocide Day</h4>
                                         <p class="holiday-card-meta">Wednesday &bull; National Liberation Day</p>
@@ -230,7 +214,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">Past</span>
-                                            <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">1 Day</span>
                                         </div>
                                         <h4 class="holiday-card-title text-muted">International Women's Rights Day</h4>
                                         <p class="holiday-card-meta">Sunday &bull; Global Women's Rights Observance</p>
@@ -247,7 +230,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">Past</span>
-                                            <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">3 Days</span>
                                         </div>
                                         <h4 class="holiday-card-title text-muted">Khmer New Year (Chaul Chnam Thmey)</h4>
                                         <p class="holiday-card-meta">Tuesday – Thursday &bull; Traditional Solar New Year</p>
@@ -264,7 +246,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">Past</span>
-                                            <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">1 Day</span>
                                         </div>
                                         <h4 class="holiday-card-title text-muted">International Labor Day & Visak Bochea</h4>
                                         <p class="holiday-card-meta">Friday &bull; Workers' Rights & Buddhist Observance</p>
@@ -281,7 +262,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">Past</span>
-                                            <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">1 Day</span>
                                         </div>
                                         <h4 class="holiday-card-title text-muted">Royal Ploughing Ceremony</h4>
                                         <p class="holiday-card-meta">Tuesday &bull; Traditional Agricultural Rite</p>
@@ -298,7 +278,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">Past</span>
-                                            <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">1 Day</span>
                                         </div>
                                         <h4 class="holiday-card-title text-muted">King Norodom Sihamoni's Birthday</h4>
                                         <p class="holiday-card-meta">Thursday &bull; Official Royal Birthday Observance</p>
@@ -315,7 +294,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">Past</span>
-                                            <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">1 Day</span>
                                         </div>
                                         <h4 class="holiday-card-title text-muted">Queen Mother's Birthday</h4>
                                         <p class="holiday-card-meta">Thursday &bull; Queen Mother Norodom Monineath Sihanouk</p>
@@ -332,7 +310,6 @@
                                     <div class="flex-grow-1 min-w-0">
                                         <div class="d-flex align-items-center gap-1.5 mb-1 flex-wrap">
                                             <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">Past</span>
-                                            <span class="holiday-badge" style="background:#f1f5f9; color:#64748b;">1 Day</span>
                                         </div>
                                         <h4 class="holiday-card-title text-muted">Constitution Day</h4>
                                         <p class="holiday-card-meta">Thursday &bull; Promulgation of National Constitution (1993)</p>
@@ -363,7 +340,7 @@
             var startStr = card.getAttribute('data-start');
             var endStr = card.getAttribute('data-end');
             var name = card.getAttribute('data-name');
-            var pill = card.querySelector('.modal-status-pill');
+            var pill = null;
 
             if (!startStr) return;
 

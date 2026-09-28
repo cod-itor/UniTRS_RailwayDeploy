@@ -2153,9 +2153,9 @@
                             </div>
                         </div>
                         <div class="p-3 bg-light border-top">
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; transition: all 0.2s;">
+                            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; transition: all 0.2s;">
                                 <i class="bi bi-box-arrow-right"></i> Logout
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -2639,13 +2639,12 @@
                     </div>
                 </div>
 
-                <!-- VIEW 2: CARDS GRID (PRESERVED) -->
                 <div id="scheduleCardsView" class="row g-4" style="display: none;">
                     <c:forEach var="entry" items="${sectionStudentsMap}">
                         <c:set var="section" value="${entry.key}" />
                         <c:set var="students" value="${entry.value}" />
                         <div class="col-md-6 col-xl-4">
-                            <div class="table-card h-100 mb-0 d-flex flex-column justify-content-between">
+                            <div class="table-card h-100 mb-0 d-flex flex-column justify-content-between" onclick="openProfCourseSessions('${section.id}')" role="button" tabindex="0" style="cursor:pointer;" title="View 15-Week Sessions">
                                 <div>
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill fw-bold">${section.courseCode}</span>
@@ -2677,10 +2676,10 @@
                                     </div>
                                 </div>
                                 <div class="pt-2 border-top d-flex gap-2">
-                                    <button type="button" class="btn btn-sm btn-primary w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}">
-                                        <i class="bi bi-clipboard-check me-1" aria-hidden="true"></i> Attendance
+                                    <button type="button" class="btn btn-sm btn-primary w-100 rounded-pill" onclick="event.stopPropagation(); openProfCourseSessions('${section.id}')">
+                                        <i class="bi bi-calendar3-range me-1" aria-hidden="true"></i> Attendance
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-success w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#gradesModal${section.id}">
+                                    <button type="button" class="btn btn-sm btn-outline-success w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#gradesModal${section.id}" onclick="event.stopPropagation();">
                                         <i class="bi bi-journal-text me-1" aria-hidden="true"></i> Grades
                                     </button>
                                 </div>
@@ -2753,9 +2752,9 @@
                         <div class="border-top pt-3">
                             <h4 class="h6 fw-bold text-dark mb-2">Session Termination</h4>
                             <p class="small text-muted mb-3">Safely sign out of your faculty account on this browser.</p>
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger rounded-pill px-4 fw-bold">
+                            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger rounded-pill px-4 fw-bold">
                                 <i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i> Sign Out
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -4024,7 +4023,7 @@
             <c:forEach var="entry" items="${sectionStudentsMap}">
                 <c:set var="section" value="${entry.key}" />
                 <c:set var="students" value="${entry.value}" />
-                <div class="mobile-course-card prof-schedule-tab-card" data-days="${section.daysOfWeek}" onclick="openCourseSheet('${section.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseSheet('${section.id}')">
+                <div class="mobile-course-card prof-schedule-tab-card" data-days="${section.daysOfWeek}" onclick="openProfCourseSessions('${section.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openProfCourseSessions('${section.id}')">
                     <div class="mc-header">
                         <div>
                             <span class="mc-code me-1">${section.courseCode}</span>
@@ -4039,7 +4038,10 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center pt-2 border-top">
                         <span class="small text-muted"><i class="bi bi-people-fill me-1 text-primary"></i>${students.size()} Students Enrolled</span>
-                        <span class="small text-primary fw-bold">Open Sheet <i class="bi bi-chevron-right ms-1"></i></span>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="small text-primary fw-bold">15 Sessions <i class="bi bi-calendar3-range ms-1"></i></span>
+                            <button type="button" class="btn btn-xs btn-light rounded-pill border px-2 py-0" onclick="event.stopPropagation(); openCourseSheet('${section.id}')" style="font-size:0.7rem; min-height:24px;">Options</button>
+                        </div>
                     </div>
                 </div>
             </c:forEach>
@@ -4140,9 +4142,9 @@
             </a>
         </c:if>
 
-        <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
+        <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
             <i class="bi bi-box-arrow-right me-2"></i>Sign Out
-        </a>
+        </button>
     </section>
 
     <nav class="mobile-bottom-dock" role="navigation" aria-label="Professor Mobile Navigation">
@@ -4228,6 +4230,16 @@
                 <div class="sheet-menu-text">
                     <span class="sheet-menu-title">Take Attendance</span>
                     <span class="sheet-menu-desc">Record today's session</span>
+                </div>
+                <i class="bi bi-chevron-right sheet-menu-arrow"></i>
+            </button>
+            <button class="sheet-menu-btn sheet-menu-btn-primary" onclick="closeSheet('courseActionSheet'); openProfCourseSessions(currentActiveSectionId);">
+                <div class="sheet-btn-icon" style="background:#e0e7ff;color:#4338ca;">
+                    <i class="bi bi-calendar3-range"></i>
+                </div>
+                <div class="sheet-menu-text">
+                    <span class="sheet-menu-title">15-Week Class Sessions</span>
+                    <span class="sheet-menu-desc">View all 15 classes &amp; add extra session</span>
                 </div>
                 <i class="bi bi-chevron-right sheet-menu-arrow"></i>
             </button>
@@ -4465,16 +4477,49 @@
     </div>
 </c:forEach>
 
+<jsp:include page="/WEB-INF/views/common/course_sessions_modal.jsp" />
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     var classData = {
         <c:forEach var="entry" items="${sectionStudentsMap}">
         <c:set var="section" value="${entry.key}" />
-        '${section.id}': { code: '${section.courseCode}', title: '${section.courseTitle.replace("'", "\'")}' },
+        <c:set var="students" value="${entry.value}" />
+        <c:set var="secRecords" value="${sectionAttendanceMap[section.id]}" />
+        '${section.id}': {
+            id: ${section.id},
+            code: '${section.courseCode}',
+            title: '${section.courseTitle.replace("'", "\\'")}',
+            shift: '${section.sessionShift}',
+            days: '${section.daysOfWeek}',
+            room: '${section.roomName}',
+            academicYear: '${section.academicYear}',
+            termName: '${section.termName}',
+            studentCount: ${students.size()},
+            records: [
+                <c:if test="${not empty secRecords}">
+                    <c:forEach var="rec" items="${secRecords}" varStatus="rStat">
+                        {
+                            id: ${rec.id},
+                            sessionDate: '${rec.sessionDate}',
+                            date: '${rec.sessionDate}',
+                            presentCount: ${rec.presentCount},
+                            absentCount: ${rec.absentCount}
+                        }<c:if test="${!rStat.last}">,</c:if>
+                    </c:forEach>
+                </c:if>
+            ]
+        },
         </c:forEach>
     };
 
     var currentActiveSectionId = null;
+
+    function openProfCourseSessions(sectionId) {
+        var d = classData[sectionId];
+        if (!d) return;
+        renderCourseSessionsModalUI(d, true);
+    }
 
     function switchMobileTab(tabName) {
         if (tabName === 'roster') tabName = 'classes';
@@ -4881,7 +4926,7 @@
 
                 if (matched.length > 0) {
                     matched.forEach(function(sec) {
-                        tableHtml += '<div class="timetable-course-card">';
+                        tableHtml += '<div class="timetable-course-card" onclick="openProfCourseSessions(' + sec.id + ')" role="button" tabindex="0" style="cursor:pointer;" title="View 15-Week Sessions">';
                         tableHtml += '<div class="d-flex justify-content-between align-items-center">';
                         tableHtml += '<span class="tt-code-badge">' + sec.code + '</span>';
                         tableHtml += '<span class="tt-students-pill"><i class="bi bi-people-fill me-1"></i>' + sec.studentCount + '</span>';
@@ -4891,8 +4936,8 @@
                         tableHtml += '<span class="tt-room-pill"><i class="bi bi-geo-alt-fill text-primary"></i> ' + (sec.room ? 'Room ' + sec.room : 'TBA') + '</span>';
                         tableHtml += '</div>';
                         tableHtml += '<div class="tt-actions-row">';
-                        tableHtml += '<button type="button" class="tt-action-btn att-btn" data-bs-toggle="modal" data-bs-target="#attendanceModal' + sec.id + '"><i class="bi bi-clipboard-check"></i> Attendance</button>';
-                        tableHtml += '<button type="button" class="tt-action-btn grade-btn" data-bs-toggle="modal" data-bs-target="#gradesModal' + sec.id + '"><i class="bi bi-journal-text"></i> Grades</button>';
+                        tableHtml += '<button type="button" class="tt-action-btn att-btn" onclick="event.stopPropagation(); openProfCourseSessions(' + sec.id + ')"><i class="bi bi-calendar3-range"></i> Attendance</button>';
+                        tableHtml += '<button type="button" class="tt-action-btn grade-btn" data-bs-toggle="modal" data-bs-target="#gradesModal' + sec.id + '" onclick="event.stopPropagation();"><i class="bi bi-journal-text"></i> Grades</button>';
                         tableHtml += '</div>';
                         tableHtml += '</div>';
                     });
@@ -5006,5 +5051,32 @@
 </script>
 
 <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
+<div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
+    <div style="background:#fff; border-radius:20px; padding:2rem 2.5rem; max-width:420px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fee2e2,#fecaca);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+            <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
+        </div>
+        <h5 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.5rem;">Sign Out?</h5>
+        <p style="color:#64748b;font-size:0.95rem;margin-bottom:1.75rem;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
+        <div style="display:flex;gap:0.75rem;justify-content:center;">
+            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
+            <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:none;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-weight:700;font-size:0.95rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(220,38,38,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
+        </div>
+    </div>
+</div>
+<style>
+@keyframes slideUpModal {
+    from { opacity:0; transform:translateY(30px) scale(0.95); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+}
+</style>
+<script>
+document.getElementById('logoutConfirmModal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
+});
+</script>
 </body>
 </html>

@@ -33,6 +33,49 @@
 
                 
 
+                                    .grades-hero-card {
+                        background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
+                        border-radius: 24px;
+                        padding: 24px 28px;
+                        color: #fff;
+                        box-shadow: 0 12px 28px -6px rgba(5, 150, 105, 0.35);
+                        margin-bottom: 20px;
+                        border: 1px solid rgba(255, 255, 255, 0.15);
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .grades-hero-card::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -30%;
+                        right: -10%;
+                        width: 240px;
+                        height: 240px;
+                        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+                        pointer-events: none;
+                    }
+
+                    .grades-stat-chip {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        background: rgba(255, 255, 255, 0.2);
+                        padding: 6px 14px;
+                        border-radius: 14px;
+                        font-size: 0.85rem;
+                        font-weight: 700;
+                        backdrop-filter: blur(4px);
+                    }
+                    
+                    .desktop-course-row {
+                        cursor: pointer;
+                        transition: background-color 0.2s ease;
+                    }
+                    .desktop-course-row:hover {
+                        background-color: #f8fafc;
+                    }
+
                 @media (max-width: 767.98px) {
                     body {
                         background: #f8fafc;
@@ -2410,9 +2453,9 @@
 
                                                                             <!-- Logout Button -->
                                                                             <div class="p-3 bg-light border-top">
-                                                                                <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; transition: all 0.2s;">
+                                                                                <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; transition: all 0.2s;">
                                                                                     <i class="bi bi-box-arrow-right"></i> Logout
-                                                                                </a>
+                                                                                </button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -2734,90 +2777,209 @@
                                                                                         </div>
                                                                             </div>
 
-                                                                            <%-- TAB: REGISTRATION (Data Table) --%>
                                                                                 <div id="dt-registration"
                                                                                     class="tab-panel">
+                                                                                    <c:if test="${latestTermRequest != null and latestTermRequest.status == 'REJECTED'}">
+                                                                                        <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mx-3 mb-4 rounded-3 border-danger shadow-xs text-start">
+                                                                                            <i class="bi bi-x-circle-fill text-danger fs-3"></i>
+                                                                                            <div>
+                                                                                                <div class="fw-bold text-danger">Term Registration Request Rejected</div>
+                                                                                                <div class="small text-muted">Your previous registration request for ${latestTermRequest.termName} was not approved. Please visit the Dean's Office for assistance or resubmit your registration below.</div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </c:if>
+
                                                                                     <c:choose>
-                                                                                        <c:when test="${hasPendingTermRequest}">
-                                                                                            <div class="alert alert-warning text-center fw-bold py-5 my-4 mx-3 rounded-4" style="background-color: #fffbeb; border: 2px dashed #fcd34d; color: #b45309;">
-                                                                                                <i class="bi bi-hourglass-split display-4 d-block mb-3 text-warning"></i>
-                                                                                                <h4 class="fw-bolder">Registration Pending</h4>
-                                                                                                <p class="mb-0 fs-5">Please visit the Dean's Office to sign and complete payment for the term.</p>
+                                                                                        <c:when test="${not empty studentTerm}">
+                                                                                            <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+                                                                                                <div class="bg-primary text-white text-center py-5 px-4 position-relative" style="background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #2563eb 100%);">
+                                                                                                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: radial-gradient(circle at top right, rgba(255,255,255,0.18) 0%, transparent 60%); pointer-events: none;"></div>
+                                                                                                    <div class="position-relative">
+                                                                                                        <span class="badge bg-white text-primary rounded-pill px-3 py-1 mb-3 text-uppercase fw-bold" style="letter-spacing: 0.08em; font-size: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.18);">
+                                                                                                            <i class="bi bi-buildings me-1"></i>${studentSchool.schoolName}
+                                                                                                        </span>
+                                                                                                        <h3 class="fw-bolder mb-2 text-white">Course Batch Registration</h3>
+                                                                                                        <p class="text-white-50 fs-5 mb-3 mx-auto" style="max-width: 620px;">
+                                                                                                            Review curriculum courses and manage enrollment for ${studentTerm.termName}.
+                                                                                                        </p>
+                                                                                                        <div class="d-inline-flex flex-wrap align-items-center justify-content-center gap-2">
+                                                                                                            <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-semibold" style="font-size:0.8rem; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+                                                                                                                <i class="bi bi-calendar3 me-1 text-primary"></i>${studentTerm.termName}
+                                                                                                            </span>
+                                                                                                            <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-semibold" style="font-size:0.8rem; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+                                                                                                                <i class="bi bi-journal-code me-1 text-primary"></i>${termCourseCount} Courses
+                                                                                                            </span>
+                                                                                                            <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-semibold" style="font-size:0.8rem; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+                                                                                                                <i class="bi bi-award me-1 text-warning"></i>${termTotalCredits} Credits
+                                                                                                            </span>
+                                                                                                            <c:choose>
+                                                                                                                <c:when test="${isTermEnrolled}">
+                                                                                                                    <span class="badge bg-success text-white rounded-pill px-3 py-1.5 fw-bold shadow-xs">
+                                                                                                                        <i class="bi bi-check-circle-fill me-1"></i>Enrolled & Active
+                                                                                                                    </span>
+                                                                                                                </c:when>
+                                                                                                                <c:when test="${hasPendingTermRequest}">
+                                                                                                                    <span class="badge bg-warning text-dark rounded-pill px-3 py-1.5 fw-bold shadow-xs">
+                                                                                                                        <i class="bi bi-hourglass-split me-1"></i>Pending Dean Verification
+                                                                                                                    </span>
+                                                                                                                </c:when>
+                                                                                                                <c:when test="${isTermRegistered}">
+                                                                                                                    <span class="badge bg-info text-white rounded-pill px-3 py-1.5 fw-bold shadow-xs">
+                                                                                                                        <i class="bi bi-patch-check-fill me-1"></i>Registration Approved
+                                                                                                                    </span>
+                                                                                                                </c:when>
+                                                                                                                <c:otherwise>
+                                                                                                                    <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-semibold" style="font-size:0.8rem; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+                                                                                                                        <i class="bi bi-door-open me-1 text-success"></i>Registration Open
+                                                                                                                    </span>
+                                                                                                                </c:otherwise>
+                                                                                                            </c:choose>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                                <div class="card-body p-4 p-md-5">
+                                                                                                    <div class="mx-auto" style="max-width: 860px;">
+                                                                                                        <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+                                                                                                            <div>
+                                                                                                                <h5 class="fw-bold text-dark mb-1"><i class="bi bi-stack me-2 text-primary"></i>Term Curriculum Courses</h5>
+                                                                                                                <div class="text-muted small">Standard course bundle for ${studentTerm.termName} (${termTotalCredits} credits total)</div>
+                                                                                                            </div>
+                                                                                                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-bold">
+                                                                                                                ${termCourseCount} Courses Assigned
+                                                                                                            </span>
+                                                                                                        </div>
+
+                                                                                                        <div class="row g-3 mb-4">
+                                                                                                            <c:forEach var="clazz" items="${termCourses}">
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="card border rounded-3 h-100 shadow-xs" style="background: #ffffff; border-left: 4px solid ${enrolledCourseCodes.contains(clazz.courseCode) ? '#10b981' : (hasPendingTermRequest ? '#f59e0b' : '#3b82f6')} !important;">
+                                                                                                                        <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                                                                                                            <div>
+                                                                                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                                                                                    <span class="badge bg-primary text-white rounded-pill px-2.5 py-1" style="font-size:0.75rem;">${clazz.courseCode}</span>
+                                                                                                                                    <div class="d-flex align-items-center gap-1">
+                                                                                                                                        <span class="badge bg-light text-dark border px-2 py-1 rounded-pill" style="font-size:0.75rem;">
+                                                                                                                                            <i class="bi bi-award me-1 text-warning"></i>${clazz.credits} Cr
+                                                                                                                                        </span>
+                                                                                                                                        <c:choose>
+                                                                                                                                            <c:when test="${enrolledCourseCodes.contains(clazz.courseCode)}">
+                                                                                                                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1" style="font-size:0.72rem;">
+                                                                                                                                                    <i class="bi bi-check2-circle me-1"></i>Enrolled
+                                                                                                                                                </span>
+                                                                                                                                            </c:when>
+                                                                                                                                            <c:when test="${hasPendingTermRequest}">
+                                                                                                                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1" style="font-size:0.72rem;">
+                                                                                                                                                    <i class="bi bi-hourglass-split me-1"></i>Pending
+                                                                                                                                                </span>
+                                                                                                                                            </c:when>
+                                                                                                                                            <c:when test="${isTermRegistered}">
+                                                                                                                                                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1" style="font-size:0.72rem;">
+                                                                                                                                                    <i class="bi bi-check2 me-1"></i>Approved
+                                                                                                                                                </span>
+                                                                                                                                            </c:when>
+                                                                                                                                            <c:otherwise>
+                                                                                                                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1" style="font-size:0.72rem;">
+                                                                                                                                                    <i class="bi bi-circle me-1"></i>Required
+                                                                                                                                                </span>
+                                                                                                                                            </c:otherwise>
+                                                                                                                                        </c:choose>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                                <div class="fw-bold text-dark mb-2 fs-6 lh-sm">${clazz.courseTitle}</div>
+                                                                                                                            </div>
+                                                                                                                            <div class="pt-2 border-top border-light-subtle d-flex align-items-center justify-content-between text-muted small" style="font-size:0.8rem;">
+                                                                                                                                <span class="d-inline-flex align-items-center"><i class="bi bi-person-badge text-primary me-1.5"></i>${clazz.professorName}</span>
+                                                                                                                                <c:if test="${not empty clazz.roomName}">
+                                                                                                                                    <span class="d-inline-flex align-items-center"><i class="bi bi-geo-alt text-secondary me-1"></i>${clazz.roomName}</span>
+                                                                                                                                </c:if>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </c:forEach>
+                                                                                                            <c:if test="${empty termCourses}">
+                                                                                                                <div class="col-12 text-center py-5 bg-light rounded-4" style="border: 2px dashed #cbd5e1;">
+                                                                                                                    <i class="bi bi-journal-x display-4 text-muted mb-3 d-block opacity-50"></i>
+                                                                                                                    <div class="fw-bold fs-5 text-muted">No curriculum courses configured for this term yet.</div>
+                                                                                                                    <div class="small text-muted mt-1">Please contact your Dean's Office if you need course assignment assistance.</div>
+                                                                                                                </div>
+                                                                                                            </c:if>
+                                                                                                        </div>
+
+                                                                                                        <c:choose>
+                                                                                                            <c:when test="${isTermEnrolled}">
+                                                                                                                <div class="p-4 rounded-4 border border-success-subtle shadow-xs text-start d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3" style="background-color: #f0fdf4;">
+                                                                                                                    <div class="d-flex align-items-center gap-3">
+                                                                                                                        <div class="rounded-circle p-3 d-flex align-items-center justify-content-center flex-shrink-0" style="background-color: #dcfce7; width: 56px; height: 56px;">
+                                                                                                                            <i class="bi bi-shield-fill-check text-success fs-3"></i>
+                                                                                                                        </div>
+                                                                                                                        <div>
+                                                                                                                            <h6 class="fw-bold text-success mb-1">Registration Complete & Officially Enrolled</h6>
+                                                                                                                            <div class="text-muted small">You are enrolled in all ${termCourseCount} courses for ${studentTerm.termName}. Your weekly schedule and attendance records are active.</div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <button type="button" class="btn btn-success fw-bold px-4 py-2.5 rounded-3 flex-shrink-0 d-inline-flex align-items-center justify-content-center gap-2 shadow-xs" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))">
+                                                                                                                        <i class="bi bi-calendar-week"></i> View Weekly Timetable
+                                                                                                                    </button>
+                                                                                                                </div>
+                                                                                                            </c:when>
+                                                                                                            <c:when test="${hasPendingTermRequest}">
+                                                                                                                <div class="p-4 rounded-4 border shadow-xs text-start" style="background-color: #fffdf5; border-color: #fde68a !important;">
+                                                                                                                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                                                                                                                        <div class="d-flex align-items-center gap-3">
+                                                                                                                            <div class="rounded-circle p-3 d-flex align-items-center justify-content-center flex-shrink-0" style="background-color: #fef3c7; width: 56px; height: 56px;">
+                                                                                                                                <i class="bi bi-hourglass-split text-warning fs-3"></i>
+                                                                                                                            </div>
+                                                                                                                            <div>
+                                                                                                                                <div class="d-flex align-items-center gap-2 mb-1">
+                                                                                                                                    <h6 class="fw-bold text-dark mb-0">Registration Request Submitted & Pending Verification</h6>
+                                                                                                                                    <span class="badge bg-warning text-dark rounded-pill px-2.5 py-0.5 small fw-bold">Awaiting Dean</span>
+                                                                                                                                </div>
+                                                                                                                                <div class="text-muted small">Please visit the Dean's Office to sign and complete payment for ${studentTerm.termName}. The courses above will be officially added to your schedule upon approval.</div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </c:when>
+                                                                                                            <c:when test="${isTermRegistered}">
+                                                                                                                <div class="p-4 rounded-4 border border-info-subtle shadow-xs text-start d-flex align-items-center gap-3" style="background-color: #f0f9ff;">
+                                                                                                                    <div class="rounded-circle p-3 d-flex align-items-center justify-content-center flex-shrink-0" style="background-color: #e0f2fe; width: 56px; height: 56px;">
+                                                                                                                        <i class="bi bi-patch-check-fill text-info fs-3"></i>
+                                                                                                                    </div>
+                                                                                                                    <div>
+                                                                                                                        <h6 class="fw-bold text-dark mb-1">Registration Approved by Dean's Office</h6>
+                                                                                                                        <div class="text-muted small">Your term registration request has been approved. Your course enrollments and timetable will sync shortly.</div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </c:when>
+                                                                                                            <c:otherwise>
+                                                                                                                <form action="${pageContext.request.contextPath}/student" method="POST" class="d-flex flex-column flex-md-row align-items-end gap-3 p-4 bg-light border shadow-sm rounded-4">
+                                                                                                                    <input type="hidden" name="action" value="batch_term_register">
+                                                                                                                    <input type="hidden" name="termId" value="${studentTerm.id}">
+                                                                                                                    <div class="flex-grow-1 w-100 text-start">
+                                                                                                                        <label class="form-label fw-bold text-dark small text-uppercase mb-2" style="letter-spacing:0.5px;">Your Current Term</label>
+                                                                                                                        <div class="input-group input-group-lg">
+                                                                                                                            <span class="input-group-text bg-white border-end-0 text-primary"><i class="bi bi-calendar3"></i></span>
+                                                                                                                            <input type="text" class="form-control border-start-0 bg-white fw-bold text-dark" value="${studentTerm.termName}" readonly style="cursor:not-allowed;">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold px-5 py-3 shadow w-100 w-md-auto d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
+                                                                                                                        <i class="bi bi-send-fill fs-5"></i> Submit Registration
+                                                                                                                    </button>
+                                                                                                                </form>
+                                                                                                            </c:otherwise>
+                                                                                                        </c:choose>
+                                                                                                    </div>
+                                                                                                </div>
                                                                                             </div>
                                                                                         </c:when>
                                                                                         <c:otherwise>
-                                                                                            <c:if test="${latestTermRequest != null and latestTermRequest.status == 'REJECTED'}">
-                                                                                                <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mx-3 mb-4 rounded-3 border-danger shadow-xs text-start">
-                                                                                                    <i class="bi bi-x-circle-fill text-danger fs-3"></i>
-                                                                                                    <div>
-                                                                                                        <div class="fw-bold text-danger">Term Registration Request Rejected</div>
-                                                                                                        <div class="small text-muted">Your previous registration request for ${latestTermRequest.termName} was not approved. Please visit the Dean's Office for assistance or resubmit your registration below.</div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </c:if>
-                                                                                            <div class="table-card p-4">
-    <div class="text-center py-4">
-        <i class="bi bi-clipboard2-check text-primary display-3 mb-3"></i>
-        <h3 class="mb-3 fw-bold">Batch Term Registration</h3>
-        <p class="text-muted mb-4 mx-auto" style="max-width:600px;">
-            Register for your assigned term with a single click. Your request will be sent to the Dean's office for approval.
-        </p>
-        
-        <c:choose>
-            <c:when test="${not empty studentTerm}">
-                <h4 class="fw-bold mb-3">Courses for ${studentTerm.termName}</h4>
-                <div class="table-responsive mb-4 text-start">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Course Code</th>
-                                <th>Course Title</th>
-                                <th>Credits</th>
-                                <th>Professor</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:set var="termHasCourses" value="false" />
-                            <c:forEach var="clazz" items="${availableClasses}">
-                                <c:if test="${clazz.termId == studentTerm.id}">
-                                    <c:set var="termHasCourses" value="true" />
-                                    <tr>
-                                        <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle">${clazz.courseCode}</span></td>
-                                        <td class="fw-bold">${clazz.courseTitle}</td>
-                                        <td>${clazz.credits} Credits</td>
-                                        <td>${clazz.professorName}</td>
-                                    </tr>
-                                </c:if>
-                            </c:forEach>
-                            <c:if test="${not termHasCourses}">
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted py-3">No courses available for your current term yet.</td>
-                                </tr>
-                            </c:if>
-                        </tbody>
-                    </table>
-                </div>
-
-                <form action="${pageContext.request.contextPath}/student" method="POST" class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-3 max-w-md mx-auto" style="max-width: 500px;">
-                    <input type="hidden" name="action" value="batch_term_register">
-                    <input type="hidden" name="termId" value="${studentTerm.id}">
-                    <div class="flex-grow-1 w-100 text-start">
-                        <label class="form-label fw-bold small text-muted">Your Current Term</label>
-                        <input type="text" class="form-control form-control-lg rounded-3 border-2" value="${studentTerm.termName}" readonly>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold px-4 mt-md-4 w-100 w-md-auto" ${not termHasCourses ? 'disabled' : ''}>
-                        <i class="bi bi-send me-2"></i>Register All
-                    </button>
-                </form>
-            </c:when>
-            <c:otherwise>
-                <div class="alert alert-warning text-center">
-                    Please complete your profile to set your current term before registering.
-                </div>
-            </c:otherwise>
-        </c:choose>
-    </div>
-</div>
+                                                                                            <div class="alert alert-warning text-center py-5 rounded-4 shadow-sm">
+                                                                                                <i class="bi bi-exclamation-triangle-fill display-5 d-block mb-3 text-warning"></i>
+                                                                                                <h5 class="fw-bold">Current Term Not Specified</h5>
+                                                                                                <p class="text-muted mb-0">Please complete your profile to set your current term before registering for courses.</p>
+                                                                                            </div>
                                                                                         </c:otherwise>
                                                                                     </c:choose>
                                                                                 </div>
@@ -2939,7 +3101,7 @@
                                                                                         <tr>
                                                                                             <td><span class="tc-badge purple">${enrollment.termName}</span></td>
                                                                                             <td>
-                                                                                                <div class="fw-bold text-dark">${enrollment.courseCode}</div>
+                                                                                                <a href="javascript:void(0)" class="text-decoration-none fw-bold text-dark d-block" onclick="openStudentCourseSessions('${enrollment.id}')">${enrollment.courseCode}</a>
                                                                                                 <div class="small text-muted">${enrollment.courseTitle}</div>
                                                                                             </td>
                                                                                             <td>${enrollment.professorName}</td>
@@ -2950,6 +3112,9 @@
                                                                                             <td><span class="tc-badge info"><i class="bi bi-geo-alt-fill me-1"></i>${enrollment.room}</span></td>
                                                                                             <td><span class="tc-badge success">Enrolled</span></td>
                                                                                             <td class="text-end">
+                                                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 py-1 fw-semibold me-1" style="font-size:0.75rem;" onclick="openStudentCourseSessions('${enrollment.id}')">
+                                                                                                    <i class="bi bi-calendar3-range me-1"></i>15 Sessions
+                                                                                                </button>
                                                                                                 <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-semibold" onclick="confirmDropCourse('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}')" style="font-size:0.75rem;">
                                                                                                     <i class="bi bi-x-circle me-1"></i>Drop
                                                                                                 </button>
@@ -2965,124 +3130,137 @@
                                                         </div>
 
                                                                                         <%-- TAB: TRANSCRIPT --%>
-                                                                                        <div id="dt-transcript"
-                                                                                            class="tab-panel">
-                                                                                            <div class="table-card">
-                                                                                                <div class="tc-header">
-                                                                                                    <h3>Academic
-                                                                                                        Transcript</h3>
-                                                                                                </div>
-                                                                                                <div
-                                                                                                    class="tc-table-wrap">
-                                                                                                    <table
-                                                                                                        class="tc-table">
-                                                                                                        <thead>
-                                                                                                            <tr>
-                                                                                                                <th>Term
-                                                                                                                </th>
-                                                                                                                <th>Course
-                                                                                                                </th>
-                                                                                                                <th>Credits
-                                                                                                                </th>
-                                                                                                                <th>Total
-                                                                                                                    Score
-                                                                                                                </th>
-                                                                                                                <th>Letter
-                                                                                                                    Grade
-                                                                                                                </th>
-                                                                                                                <th>GPA
-                                                                                                                    Points
-                                                                                                                </th>
-                                                                                                            </tr>
-                                                                                                        </thead>
-                                                                                                        <tbody>
-                                                                                                            <c:forEach
-                                                                                                                var="grade"
-                                                                                                                items="${grades}">
-                                                                                                                <tr>
-                                                                                                                    <td><span
-                                                                                                                            class="tc-badge purple">${grade.termName}</span>
-                                                                                                                    </td>
-                                                                                                                    <td>
-                                                                                                                        <div
-                                                                                                                            class="fw-bold text-dark">
-                                                                                                                            ${grade.courseCode}
-                                                                                                                        </div>
-                                                                                                                        <div
-                                                                                                                            class="small text-muted">
-                                                                                                                            ${grade.courseTitle}
-                                                                                                                        </div>
-                                                                                                                    </td>
-                                                                                                                    <td
-                                                                                                                        class="fw-bold">
-                                                                                                                        ${grade.credits}
-                                                                                                                    </td>
-                                                                                                                    <td>
-                                                                                                                        <c:choose>
-                                                                                                                            <c:when
-                                                                                                                                test="${grade.totalScore > 0}">
-                                                                                                                                ${grade.totalScore}%
-                                                                                                                            </c:when>
-                                                                                                                            <c:otherwise>
-                                                                                                                                <span
-                                                                                                                                    class="text-muted small">Pending</span>
-                                                                                                                            </c:otherwise>
-                                                                                                                        </c:choose>
-                                                                                                                    </td>
-                                                                                                                    <td>
-                                                                                                                        <c:choose>
-                                                                                                                            <c:when
-                                                                                                                                test="${grade.letterGrade == 'A'}">
-                                                                                                                                <span
-                                                                                                                                    class="tc-badge success">A</span>
-                                                                                                                            </c:when>
-                                                                                                                            <c:when
-                                                                                                                                test="${grade.letterGrade == 'F'}">
-                                                                                                                                <span
-                                                                                                                                    class="tc-badge warning">F</span>
-                                                                                                                            </c:when>
-                                                                                                                            <c:when
-                                                                                                                                test="${grade.letterGrade != 'N/A'}">
-                                                                                                                                <span
-                                                                                                                                    class="tc-badge info">${grade.letterGrade}</span>
-                                                                                                                            </c:when>
-                                                                                                                            <c:otherwise>
-                                                                                                                                <span
-                                                                                                                                    class="text-muted small">-</span>
-                                                                                                                            </c:otherwise>
-                                                                                                                        </c:choose>
-                                                                                                                    </td>
-                                                                                                                    <td
-                                                                                                                        class="fw-bold text-dark">
-                                                                                                                        <c:choose>
-                                                                                                                            <c:when
-                                                                                                                                test="${grade.letterGrade != 'N/A'}">
-                                                                                                                                ${grade.gpaPoint}
-                                                                                                                            </c:when>
-                                                                                                                            <c:otherwise>
-                                                                                                                                -
-                                                                                                                            </c:otherwise>
-                                                                                                                        </c:choose>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </c:forEach>
-                                                                                                            <c:if
-                                                                                                                test="${empty grades}">
-                                                                                                                <tr>
-                                                                                                                    <td colspan="6"
-                                                                                                                        class="text-center py-4 text-muted">
-                                                                                                                        No
-                                                                                                                        grades
-                                                                                                                        recorded
-                                                                                                                        yet.
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </c:if>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
+                                                                                        <div id="dt-transcript" class="tab-panel">
+    <div class="mb-4">
+        <h2 class="h4 fw-bold text-dark mb-1">Academic Transcript</h2>
+        <p class="text-muted small mb-0">View your cumulative grades and degree progress</p>
+    </div>
+
+    <div class="grades-hero-card mb-4" role="region" aria-label="GPA and Degree Progress Summary">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+                <div class="small text-white-50 text-uppercase fw-bold" style="letter-spacing:0.5px;">Cumulative GPA</div>
+                <div class="display-5 fw-bolder text-white mb-0">${termGpa}</div>
+            </div>
+            <div>
+                <c:choose>
+                    <c:when test="${termGpa >= 3.5}">
+                        <span class="grades-stat-chip"><i class="bi bi-award-fill text-warning"></i> Dean's List</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="grades-stat-chip"><i class="bi bi-check-circle-fill text-white"></i> Good Standing</span>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+        <div>
+            <div class="d-flex justify-content-between small text-white-50 mb-2">
+                <span>Earned Credits Progress</span>
+                <span class="text-white fw-bold">${earnedCredits} / 60 Credits</span>
+            </div>
+            <div class="progress" style="height:8px;background:rgba(255,255,255,0.2);border-radius:99px;">
+                <div class="progress-bar bg-white" style="width:${(earnedCredits / 60) * 100 > 100 ? 100 : (earnedCredits / 60) * 100}%;border-radius:99px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="tc-header d-flex align-items-center justify-content-between">
+            <h3 class="h5 fw-bold mb-0">Course History</h3>
+        </div>
+        <div class="tc-table-wrap">
+            <table class="tc-table align-middle">
+                <thead>
+                    <tr>
+                        <th style="min-width:120px;">Term</th>
+                        <th>Course</th>
+                        <th class="text-center">Credits</th>
+                        <th class="text-center">Score</th>
+                        <th class="text-center">Grade</th>
+                        <th class="text-end">GPA Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:choose>
+                        <c:when test="${not empty grades}">
+                            <c:forEach var="grade" items="${grades}">
+                                <tr onclick="openCourseModal('${grade.enrollmentId}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseModal('${grade.enrollmentId}')" aria-label="View grade breakdown for ${grade.courseCode}: ${grade.courseTitle}" class="desktop-course-row">
+                                    <td>
+                                        <span class="tc-badge purple text-uppercase" style="font-size:0.75rem; letter-spacing: 0.5px;">${grade.termName}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-light rounded-3 p-2 text-center" style="width:48px; height:48px; display:flex; align-items:center; justify-content:center;">
+                                                <i class="bi bi-journal-text fs-4 text-primary opacity-75"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark mb-1">${grade.courseCode}</div>
+                                                <div class="small text-muted">${grade.courseTitle}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center fw-bold text-dark">
+                                        ${grade.credits}
+                                    </td>
+                                    <td class="text-center">
+                                        <c:choose>
+                                            <c:when test="${grade.totalScore > 0}">
+                                                <span class="fw-bold text-dark">${grade.totalScore}</span><span class="text-muted small">%</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="badge bg-light text-muted border">Pending</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td class="text-center">
+                                        <c:choose>
+                                            <c:when test="${grade.letterGrade == 'A' || grade.letterGrade == 'A-'}">
+                                                <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill fs-6">${grade.letterGrade}</span>
+                                            </c:when>
+                                            <c:when test="${grade.letterGrade == 'B' || grade.letterGrade == 'B+' || grade.letterGrade == 'B-'}">
+                                                <span class="badge bg-primary bg-opacity-10 text-primary fw-bold px-3 py-2 rounded-pill fs-6">${grade.letterGrade}</span>
+                                            </c:when>
+                                            <c:when test="${grade.letterGrade == 'F'}">
+                                                <span class="badge bg-danger bg-opacity-10 text-danger fw-bold px-3 py-2 rounded-pill fs-6">${grade.letterGrade}</span>
+                                            </c:when>
+                                            <c:when test="${grade.letterGrade != 'N/A' && not empty grade.letterGrade}">
+                                                <span class="badge bg-warning bg-opacity-25 text-dark fw-bold px-3 py-2 rounded-pill fs-6">${grade.letterGrade}</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="text-muted fw-bold">-</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td class="text-end fw-bolder text-dark fs-5">
+                                        <c:choose>
+                                            <c:when test="${grade.letterGrade != 'N/A' && not empty grade.letterGrade}">
+                                                ${grade.gpaPoint}
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="text-muted">-</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="bi bi-journal-x display-4 text-secondary mb-3 d-block opacity-50"></i>
+                                        <div class="fw-bold fs-5 text-dark mb-1">No Grades Available</div>
+                                        <p class="small mb-0">Grades will appear once published by your course professors.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:otherwise>
+                    </c:choose>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
                                                                                         <%-- TAB: SETTINGS --%>
                                                                                             <div id="dt-settings" class="tab-panel">
@@ -3538,7 +3716,7 @@
                                                                         <c:when test="${not empty schedule}">
                                                                             <div id="scheduleTabListContainer">
                                                                                 <c:forEach var="enrollment" items="${schedule}">
-                                                                                    <div class="mobile-course-card schedule-tab-card" data-days="${enrollment.daysOfWeek}" onclick="openCourseModal('${enrollment.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openCourseModal('${enrollment.id}')" aria-label="View details for ${enrollment.courseCode}: ${enrollment.courseTitle}">
+                                                                                    <div class="mobile-course-card schedule-tab-card" data-days="${enrollment.daysOfWeek}" onclick="openStudentCourseSessions('${enrollment.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openStudentCourseSessions('${enrollment.id}')" aria-label="View 15-week sessions for ${enrollment.courseCode}: ${enrollment.courseTitle}">
                                                                                         <div class="d-flex justify-content-between align-items-start mb-2">
                                                                                             <div>
                                                                                                 <span class="mobile-card-code-badge me-1">${enrollment.courseCode}</span>
@@ -3556,7 +3734,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="mobile-card-footer d-flex justify-content-between align-items-center">
-                                                                                            <span class="small text-muted" style="font-size:0.72rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for details</span>
+                                                                                            <span class="small text-primary fw-semibold" style="font-size:0.72rem;"><i class="bi bi-calendar3-range me-1"></i>Tap for 15-Week Schedule</span>
                                                                                             <div class="d-flex align-items-center gap-2">
                                                                                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.7rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
                                                                                                 <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:26px;" onclick="event.stopPropagation(); confirmDropCourse('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}')">
@@ -3583,79 +3761,194 @@
                                                                     </c:choose>
                                                                 </section>
 
-                                                                <%--===== COURSES CATALOG SUB-VIEW =====--%>
                                                                 <section id="mobile-view-courses" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-courses">
                                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                                         <div>
                                                                             <h2 class="mobile-section-heading mb-0">Term Registration</h2>
-                                                                            <span class="text-muted" style="font-size:0.75rem;">Batch registration for ${studentSchool.schoolName}</span>
+                                                                            <span class="text-muted" style="font-size:0.75rem;">Batch registration &bull; ${studentSchool.schoolName}</span>
                                                                         </div>
                                                                     </div>
 
+                                                                    <c:if test="${latestTermRequest != null and latestTermRequest.status == 'REJECTED'}">
+                                                                        <div class="alert alert-danger d-flex align-items-center gap-2 p-3 mt-2 mb-3 mx-1 rounded-3 border-danger shadow-xs text-start">
+                                                                            <i class="bi bi-x-circle-fill text-danger fs-4 flex-shrink-0"></i>
+                                                                            <div>
+                                                                                <div class="fw-bold small text-danger">Registration Request Rejected</div>
+                                                                                <div class="text-muted" style="font-size:0.75rem;">Your request for ${latestTermRequest.termName} was not approved. Please visit the Dean's Office or re-apply below.</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </c:if>
+
                                                                     <c:choose>
-                                                                        <c:when test="${hasPendingTermRequest}">
-                                                                            <div class="alert alert-warning text-center fw-bold py-4 mt-2 mb-4 mx-1 rounded-4" style="background-color: #fffbeb; border: 2px dashed #fcd34d; color: #b45309;">
-                                                                                <i class="bi bi-hourglass-split display-5 d-block mb-2 text-warning"></i>
-                                                                                <h5 class="fw-bolder">Registration Pending</h5>
-                                                                                <p class="mb-0 fs-6">Please visit the Dean's Office to sign and complete payment for the term.</p>
+                                                                        <c:when test="${not empty studentTerm}">
+                                                                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-2 mb-4">
+                                                                                <div class="bg-primary text-white text-center py-4 px-3 position-relative" style="background: linear-gradient(135deg, #0f172a 0%, #1e40af 60%, #2563eb 100%);">
+                                                                                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: radial-gradient(circle at top right, rgba(255,255,255,0.18) 0%, transparent 60%); pointer-events: none;"></div>
+                                                                                    <div class="position-relative">
+                                                                                        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-2.5 py-1 mb-2 text-uppercase fw-bold" style="letter-spacing: 0.05em; font-size: 0.7rem;">
+                                                                                            <i class="bi bi-calendar3 me-1"></i>${studentTerm.termName}
+                                                                                        </span>
+                                                                                        <h4 class="fw-bolder mb-1 text-white">Course Registration</h4>
+                                                                                        <p class="text-white-50 small mb-2 mx-auto" style="max-width: 280px;">Standard course curriculum bundle for this term.</p>
+                                                                                        <div class="d-inline-flex flex-wrap align-items-center justify-content-center gap-1.5 mt-1">
+                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.72rem;">
+                                                                                                <i class="bi bi-journal-code me-1"></i>${termCourseCount} Courses
+                                                                                            </span>
+                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.72rem;">
+                                                                                                <i class="bi bi-award me-1"></i>${termTotalCredits} Credits
+                                                                                            </span>
+                                                                                            <c:choose>
+                                                                                                <c:when test="${isTermEnrolled}">
+                                                                                                    <span class="badge bg-success text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.72rem;">
+                                                                                                        <i class="bi bi-check-circle-fill me-1"></i>Enrolled
+                                                                                                    </span>
+                                                                                                </c:when>
+                                                                                                <c:when test="${hasPendingTermRequest}">
+                                                                                                    <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.72rem;">
+                                                                                                        <i class="bi bi-hourglass-split me-1"></i>Pending Dean
+                                                                                                    </span>
+                                                                                                </c:when>
+                                                                                                <c:when test="${isTermRegistered}">
+                                                                                                    <span class="badge bg-info text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.72rem;">
+                                                                                                        <i class="bi bi-patch-check-fill me-1"></i>Approved
+                                                                                                    </span>
+                                                                                                </c:when>
+                                                                                                <c:otherwise>
+                                                                                                    <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.72rem;">
+                                                                                                        <i class="bi bi-door-open me-1"></i>Open
+                                                                                                    </span>
+                                                                                                </c:otherwise>
+                                                                                            </c:choose>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="p-3">
+                                                                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                                                                        <h6 class="fw-bold text-dark mb-0"><i class="bi bi-stack me-2 text-primary"></i>Courses (${termCourseCount})</h6>
+                                                                                        <span class="text-muted small">${termTotalCredits} credits</span>
+                                                                                    </div>
+
+                                                                                    <div class="d-flex flex-column gap-2 mb-3">
+                                                                                        <c:forEach var="clazz" items="${termCourses}">
+                                                                                            <div class="border rounded-3 p-3 position-relative overflow-hidden shadow-xs" style="background-color: #ffffff; border-left: 4px solid ${enrolledCourseCodes.contains(clazz.courseCode) ? '#10b981' : (hasPendingTermRequest ? '#f59e0b' : '#3b82f6')} !important;">
+                                                                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                                                    <span class="badge bg-primary text-white rounded-pill px-2 py-0.5" style="font-size:0.7rem;">${clazz.courseCode}</span>
+                                                                                                    <div class="d-flex align-items-center gap-1">
+                                                                                                        <span class="badge bg-light text-dark border px-2 py-0.5 rounded-pill" style="font-size:0.68rem;">
+                                                                                                            <i class="bi bi-award me-1 text-warning"></i>${clazz.credits} Cr
+                                                                                                        </span>
+                                                                                                        <c:choose>
+                                                                                                            <c:when test="${enrolledCourseCodes.contains(clazz.courseCode)}">
+                                                                                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                    <i class="bi bi-check2 me-1"></i>Enrolled
+                                                                                                                </span>
+                                                                                                            </c:when>
+                                                                                                            <c:when test="${hasPendingTermRequest}">
+                                                                                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                    <i class="bi bi-hourglass-split me-1"></i>Pending
+                                                                                                                </span>
+                                                                                                            </c:when>
+                                                                                                            <c:when test="${isTermRegistered}">
+                                                                                                                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                    <i class="bi bi-check2 me-1"></i>Approved
+                                                                                                                </span>
+                                                                                                            </c:when>
+                                                                                                            <c:otherwise>
+                                                                                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                    <i class="bi bi-circle me-1"></i>Required
+                                                                                                                </span>
+                                                                                                            </c:otherwise>
+                                                                                                        </c:choose>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="fw-bold text-dark lh-sm mb-1.5" style="font-size: 0.92rem;">${clazz.courseTitle}</div>
+                                                                                                <div class="small text-muted d-flex align-items-center justify-content-between pt-1 border-top border-light-subtle" style="font-size: 0.78rem;">
+                                                                                                    <span><i class="bi bi-person-badge me-1 text-primary"></i>${clazz.professorName}</span>
+                                                                                                    <c:if test="${not empty clazz.roomName}">
+                                                                                                        <span><i class="bi bi-geo-alt me-1 text-secondary"></i>${clazz.roomName}</span>
+                                                                                                    </c:if>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </c:forEach>
+                                                                                        <c:if test="${empty termCourses}">
+                                                                                            <div class="text-center py-4 bg-light rounded-3" style="border: 2px dashed #cbd5e1;">
+                                                                                                <i class="bi bi-journal-x fs-2 text-muted mb-2 d-block"></i>
+                                                                                                <div class="small fw-bold text-muted">No courses configured for this term yet.</div>
+                                                                                            </div>
+                                                                                        </c:if>
+                                                                                    </div>
+
+                                                                                    <c:choose>
+                                                                                        <c:when test="${isTermEnrolled}">
+                                                                                            <div class="p-3 rounded-3 border border-success-subtle shadow-xs text-start mb-2" style="background-color: #f0fdf4;">
+                                                                                                <div class="d-flex align-items-center gap-2 mb-2">
+                                                                                                    <div class="rounded-circle p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="background-color: #dcfce7; width: 36px; height: 36px;">
+                                                                                                        <i class="bi bi-shield-fill-check text-success fs-5"></i>
+                                                                                                    </div>
+                                                                                                    <div>
+                                                                                                        <div class="fw-bold text-success" style="font-size: 0.88rem;">Enrolled & Confirmed</div>
+                                                                                                        <div class="text-muted" style="font-size: 0.75rem;">Active in all ${termCourseCount} courses for ${studentTerm.termName}.</div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <button type="button" class="btn btn-sm btn-success fw-bold rounded-pill w-100 py-2 shadow-xs d-flex align-items-center justify-content-center gap-1.5" onclick="switchMobileTab('schedule')">
+                                                                                                    <i class="bi bi-calendar3"></i> View Class Schedule
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </c:when>
+                                                                                        <c:when test="${hasPendingTermRequest}">
+                                                                                            <div class="p-3 rounded-3 border shadow-xs text-start mb-2" style="background-color: #fffdf5; border-color: #fde68a !important;">
+                                                                                                <div class="d-flex align-items-center gap-2 mb-2">
+                                                                                                    <div class="rounded-circle p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="background-color: #fef3c7; width: 36px; height: 36px;">
+                                                                                                        <i class="bi bi-hourglass-split text-warning fs-5"></i>
+                                                                                                    </div>
+                                                                                                    <div>
+                                                                                                        <div class="fw-bold text-dark" style="font-size: 0.88rem;">Registration Pending Verification</div>
+                                                                                                        <span class="badge bg-warning text-dark rounded-pill px-2 py-0.5" style="font-size: 0.68rem;">Awaiting Dean</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="text-muted" style="font-size: 0.78rem;">Please visit the Dean's Office to sign and complete payment for ${studentTerm.termName}.</div>
+                                                                                            </div>
+                                                                                        </c:when>
+                                                                                        <c:when test="${isTermRegistered}">
+                                                                                            <div class="p-3 rounded-3 border border-info-subtle shadow-xs text-start mb-2" style="background-color: #f0f9ff;">
+                                                                                                <div class="d-flex align-items-center gap-2">
+                                                                                                    <div class="rounded-circle p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="background-color: #e0f2fe; width: 36px; height: 36px;">
+                                                                                                        <i class="bi bi-patch-check-fill text-info fs-5"></i>
+                                                                                                    </div>
+                                                                                                    <div>
+                                                                                                        <div class="fw-bold text-dark" style="font-size: 0.88rem;">Registration Approved</div>
+                                                                                                        <div class="text-muted" style="font-size: 0.75rem;">Your term registration has been approved by the Dean's Office.</div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            <form action="${pageContext.request.contextPath}/student" method="POST" class="mt-2">
+                                                                                                <input type="hidden" name="action" value="batch_term_register">
+                                                                                                <input type="hidden" name="termId" value="${studentTerm.id}">
+                                                                                                <div class="mb-3 text-start">
+                                                                                                    <label class="form-label fw-bold text-dark small text-uppercase mb-1" style="letter-spacing:0.5px; font-size: 0.75rem;">Your Current Term</label>
+                                                                                                    <div class="input-group">
+                                                                                                        <span class="input-group-text bg-light border-end-0 text-primary"><i class="bi bi-calendar3"></i></span>
+                                                                                                        <input type="text" class="form-control border-start-0 bg-light fw-bold text-dark" value="${studentTerm.termName}" readonly style="cursor:not-allowed;">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold w-100 py-3 shadow-sm d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
+                                                                                                    <i class="bi bi-send-fill fs-5"></i> Submit Registration
+                                                                                                </button>
+                                                                                            </form>
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
+                                                                                </div>
                                                                             </div>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <c:if test="${latestTermRequest != null and latestTermRequest.status == 'REJECTED'}">
-                                                                                <div class="alert alert-danger d-flex align-items-center gap-2 p-3 mt-2 mb-3 mx-1 rounded-3 border-danger shadow-xs text-start">
-                                                                                    <i class="bi bi-x-circle-fill text-danger fs-4 flex-shrink-0"></i>
-                                                                                    <div>
-                                                                                        <div class="fw-bold small text-danger">Registration Request Rejected</div>
-                                                                                        <div class="text-muted" style="font-size:0.75rem;">Your request for ${latestTermRequest.termName} was not approved. Please visit the Dean's Office or re-apply below.</div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </c:if>
-                                                                            <c:choose>
-            <c:when test="${not empty studentTerm}">
-                <div class="card border-0 shadow-sm rounded-4 p-3 text-center mt-2">
-                    <i class="bi bi-clipboard2-check text-primary display-4 mb-2 d-block"></i>
-                    <h5 class="fw-bold mb-3">Courses for ${studentTerm.termName}</h5>
-                    
-                    <div class="text-start mb-4">
-                        <c:set var="termHasCourses" value="false" />
-                        <ul class="list-group list-group-flush rounded-3 border">
-                            <c:forEach var="clazz" items="${availableClasses}">
-                                <c:if test="${clazz.termId == studentTerm.id}">
-                                    <c:set var="termHasCourses" value="true" />
-                                    <li class="list-group-item py-2 px-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">${clazz.courseCode}</span>
-                                            <small class="text-muted">${clazz.credits} Cr</small>
-                                        </div>
-                                        <div class="fw-bold mt-1 text-truncate" style="font-size: 0.9rem;">${clazz.courseTitle}</div>
-                                    </li>
-                                </c:if>
-                            </c:forEach>
-                            <c:if test="${not termHasCourses}">
-                                <li class="list-group-item text-center text-muted py-3 small">No courses available for your current term yet.</li>
-                            </c:if>
-                        </ul>
-                    </div>
-
-                    <form action="${pageContext.request.contextPath}/student" method="POST" class="d-flex flex-column gap-3">
-                        <input type="hidden" name="action" value="batch_term_register">
-                        <input type="hidden" name="termId" value="${studentTerm.id}">
-                        <div class="text-start">
-                            <label class="form-label fw-bold small text-muted">Your Current Term</label>
-                            <input type="text" class="form-control form-control-lg rounded-3 border-2" value="${studentTerm.termName}" readonly>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold w-100" ${not termHasCourses ? 'disabled' : ''}>
-                            <i class="bi bi-send me-2"></i>Register All
-                        </button>
-                    </form>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div class="alert alert-warning text-center mt-3">
-                    Please complete your profile to set your current term before registering.
-                </div>
-            </c:otherwise>
-        </c:choose>
+                                                                            <div class="alert alert-warning text-center mt-3 py-4 rounded-3">
+                                                                                <i class="bi bi-exclamation-triangle-fill text-warning fs-3 mb-2 d-block"></i>
+                                                                                <div class="fw-bold">Current Term Not Specified</div>
+                                                                                <div class="small text-muted mt-1">Please complete your profile to set your current term before registering.</div>
+                                                                            </div>
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                 </section>
@@ -3855,9 +4148,9 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
+                                                                    <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
                                                                         <i class="bi bi-box-arrow-right me-2"></i>Sign Out
-                                                                    </a>
+                                                                    </button>
                                                                 </section>
 
                                                                 <%-- Floating Island Bottom Navigation Dock --%>
@@ -3913,7 +4206,11 @@
                                                                             <div class="sheet-header-meta"
                                                                                 id="sheetCourseMeta"></div>
                                                                             <button type="button"
-                                                                                class="btn btn-sm btn-light rounded-3 mt-3 w-100"
+                                                                                class="btn btn-sm btn-primary rounded-pill mt-3 w-100 fw-bold shadow-xs"
+                                                                                onclick="closeCourseModal(); openStudentCourseSessions(_lastActiveEnrollmentId);"><i
+                                                                                    class="bi bi-calendar3-range me-1.5"></i>View 15-Week Sessions</button>
+                                                                            <button type="button"
+                                                                                class="btn btn-sm btn-light rounded-3 mt-2 w-100"
                                                                                 onclick="closeCourseModal()"><i
                                                                                     class="bi bi-x me-1"></i>Close</button>
                                                                         </div>
@@ -3999,6 +4296,8 @@
                                                                     </div>
                                                                 </div>
 
+                                                                    <jsp:include page="/WEB-INF/views/common/course_sessions_modal.jsp" />
+
                                                                     <script>
                                                                         var enrollmentData = {};
                                                                     </script>
@@ -4007,22 +4306,41 @@
                                                                             value="${gradeMap[enrollment.id]}" />
                                                                         <c:set var="attList"
                                                                             value="${attendanceMap[enrollment.id]}" />
+                                                                        <c:set var="secRecords"
+                                                                            value="${sectionRecordsMap[enrollment.id]}" />
                                                                         <script>
                                                                             (function () {
                                                                                 var eid = ${ enrollment.id };
                                                                                 var attRows = [];
+                                                                                var studentAttMap = {};
                                                                                 <c:if test="${not empty attList}">
                                                                                     <c:forEach var="ae" items="${attList}">
                                                                                         attRows.push({date: '${ae.sessionDate}', status: '${ae.status}' });
+                                                                                        studentAttMap['${ae.sessionDate}'] = '${ae.status}';
+                                                                                    </c:forEach>
+                                                                                </c:if>
+                                                                                var recRows = [];
+                                                                                <c:if test="${not empty secRecords}">
+                                                                                    <c:forEach var="rec" items="${secRecords}">
+                                                                                        recRows.push({
+                                                                                            id: ${rec.id},
+                                                                                            sessionDate: '${rec.sessionDate}',
+                                                                                            date: '${rec.sessionDate}',
+                                                                                            studentStatus: studentAttMap['${rec.sessionDate}'] || null
+                                                                                        });
                                                                                     </c:forEach>
                                                                                 </c:if>
                                                                                 enrollmentData[eid] = {
+                                                                                    id: eid,
+                                                                                    classSectionId: ${enrollment.classSectionId},
                                                                                     code: '${enrollment.courseCode}',
-                                                                                    title: '${enrollment.courseTitle}',
+                                                                                    title: '${enrollment.courseTitle.replace("'", "\\'")}',
                                                                                     shift: '${enrollment.sessionShift}',
                                                                                     days: '${enrollment.daysOfWeek}',
                                                                                     room: '${enrollment.room}',
-                                                                                    prof: '${enrollment.professorName}',
+                                                                                    prof: '${enrollment.professorName.replace("'", "\\'")}',
+                                                                                    academicYear: '${enrollment.academicYear}',
+                                                                                    termName: '${enrollment.termName.replace("'", "\\'")}',
                                                                                     credits: ${ enrollment.credits },
                                                                                 attScore: <c:choose><c:when test="${enrollGrade != null}">${enrollGrade.attendanceScore}</c:when><c:otherwise>0</c:otherwise></c:choose>,
                                                                                     asgScore: <c:choose><c:when test="${enrollGrade != null}">${enrollGrade.assignmentScore}</c:when><c:otherwise>0</c:otherwise></c:choose>,
@@ -4031,7 +4349,9 @@
                                                                                                 totalScore: <c:choose><c:when test="${enrollGrade != null}">${enrollGrade.totalScore}</c:when><c:otherwise>0</c:otherwise></c:choose>,
                                                                                                     letter: '<c:choose><c:when test="${enrollGrade != null}">${enrollGrade.letterGrade}</c:when><c:otherwise>N/A</c:otherwise></c:choose>',
                                                                                                         gpa: <c:choose><c:when test="${enrollGrade != null}">${enrollGrade.gpaPoint}</c:when><c:otherwise>0</c:otherwise></c:choose>,
-                                                                                                            attendance: attRows
+                                                                                                            attendance: attRows,
+                                                                                                            studentAttendance: studentAttMap,
+                                                                                                            records: recRows
                                                                             };
     }) ();
                                                                         </script>
@@ -4225,7 +4545,24 @@
                                                                             }
                                                                         }
 
+                                                                        var _lastActiveEnrollmentId = null;
+
+                                                                        function openStudentCourseSessions(enrollmentId) {
+                                                                            var d = enrollmentData[parseInt(enrollmentId, 10)];
+                                                                            if (!d) {
+                                                                                for (var k in enrollmentData) {
+                                                                                    if (enrollmentData[k].classSectionId == enrollmentId) {
+                                                                                        d = enrollmentData[k];
+                                                                                        break;
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            if (!d) return;
+                                                                            renderCourseSessionsModalUI(d, false);
+                                                                        }
+
                                                                         function openCourseModal(enrollmentId) {
+                                                                            _lastActiveEnrollmentId = enrollmentId;
                                                                             _lastActiveCourseModalElement = document.activeElement;
                                                                             var d = enrollmentData[parseInt(enrollmentId, 10)];
                                                                             if (!d) return;
@@ -4463,7 +4800,7 @@
 
                                                                                     if (matched.length > 0) {
                                                                                         matched.forEach(function(sec) {
-                                                                                            tableHtml += '<div class="timetable-course-card">';
+                                                                                            tableHtml += '<div class="timetable-course-card" onclick="openStudentCourseSessions(' + sec.id + ')" role="button" tabindex="0" style="cursor:pointer;" title="View 15-Week Sessions">';
                                                                                             tableHtml += '<div class="d-flex justify-content-between align-items-center mb-1">';
                                                                                             tableHtml += '<span class="tt-code-badge">' + sec.code + '</span>';
                                                                                             tableHtml += '<span class="badge bg-light border text-secondary px-2 py-0 rounded-pill" style="font-size:0.68rem; font-weight:700;">' + sec.credits + ' Cr</span>';
@@ -4476,8 +4813,8 @@
                                                                                                 tableHtml += '<div class="tt-prof-row" title="Professor ' + sec.professor + '"><i class="bi bi-person-fill text-primary"></i> <span>' + sec.professor + '</span></div>';
                                                                                             }
                                                                                             tableHtml += '<div class="tt-actions-row justify-content-between align-items-center">';
-                                                                                            tableHtml += '<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small fw-bold"><i class="bi bi-check2 me-1"></i>Enrolled</span>';
-                                                                                            tableHtml += '<button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" onclick="confirmDropCourse(' + sec.classSectionId + ', \'' + sec.code + '\', \'' + sec.title.replace(/'/g, "\\'") + '\')"><i class="bi bi-trash3 me-1"></i>Drop</button>';
+                                                                                            tableHtml += '<button type="button" class="btn btn-sm btn-primary rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" onclick="event.stopPropagation(); openStudentCourseSessions(' + sec.id + ')"><i class="bi bi-calendar3-range me-1"></i>15 Sessions</button>';
+                                                                                            tableHtml += '<button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" onclick="event.stopPropagation(); confirmDropCourse(' + sec.classSectionId + ', \'' + sec.code + '\', \'' + sec.title.replace(/'/g, "\\'") + '\')"><i class="bi bi-trash3 me-1"></i>Drop</button>';
                                                                                             tableHtml += '</div>';
                                                                                             tableHtml += '</div>';
                                                                                         });
@@ -4724,25 +5061,68 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-3 mb-2" onclick="sessionStorage.removeItem('dismissProfileModal');">Save Profile</button>
-                        <button type="button" class="btn btn-light btn-lg w-100 fw-bold rounded-3" data-bs-dismiss="modal" onclick="document.getElementById('profileCompletionModal').style.display='none'; document.body.classList.remove('modal-open'); sessionStorage.setItem('dismissProfileModal', 'true');">Do it later</button>
+                        <button type="button" class="btn btn-light btn-lg w-100 fw-bold rounded-3" onclick="dismissProfileModal()">Do it later</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
     <script>
+        function dismissProfileModal() {
+            var el = document.getElementById('profileCompletionModal');
+            if (el) {
+                el.classList.remove('show', 'd-block');
+                el.style.display = 'none';
+            }
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            var backdrops = document.querySelectorAll('.modal-backdrop');
+            backdrops.forEach(function(b) { b.remove(); });
+            sessionStorage.setItem('dismissProfileModal', 'true');
+        }
+
         if (sessionStorage.getItem('dismissProfileModal') === 'true') {
             var profileModalEl = document.getElementById('profileCompletionModal');
             if (profileModalEl) {
-                profileModalEl.classList.remove('d-block');
+                profileModalEl.classList.remove('show', 'd-block');
                 profileModalEl.style.display = 'none';
             }
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
         } else {
             document.body.classList.add('modal-open');
         }
     </script>
 </c:if>
 
+<div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
+    <div style="background:#fff; border-radius:20px; padding:2rem 2.5rem; max-width:420px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fee2e2,#fecaca);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+            <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
+        </div>
+        <h5 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.5rem;">Sign Out?</h5>
+        <p style="color:#64748b;font-size:0.95rem;margin-bottom:1.75rem;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
+        <div style="display:flex;gap:0.75rem;justify-content:center;">
+            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
+            <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:none;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-weight:700;font-size:0.95rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(220,38,38,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
+        </div>
+    </div>
+</div>
+<style>
+@keyframes slideUpModal {
+    from { opacity:0; transform:translateY(30px) scale(0.95); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+}
+</style>
+<script>
+document.getElementById('logoutConfirmModal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
+});
+</script>
 </body>
 
         </html>

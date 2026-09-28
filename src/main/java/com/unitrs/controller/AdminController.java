@@ -1,9 +1,11 @@
 package com.unitrs.controller;
 
+import com.unitrs.model.entity.Role;
 import com.unitrs.model.entity.School;
 import com.unitrs.model.entity.User;
 import com.unitrs.repository.ClassSectionRepository;
 import com.unitrs.repository.CourseRepository;
+import com.unitrs.repository.EnrollmentRepository;
 import com.unitrs.repository.RoomRepository;
 import com.unitrs.repository.SchoolRepository;
 import com.unitrs.repository.TermRepository;
@@ -27,10 +29,22 @@ import java.util.Map;
 public class AdminController extends HttpServlet {
 
     private UserService userService;
+    private DeanService deanService;
+    private UserRepository userRepository;
 
     @Override
     public void init() throws ServletException {
-        this.userService = new UserServiceImpl(new UserRepository());
+        this.userRepository = new UserRepository();
+        this.userService = new UserServiceImpl(this.userRepository);
+        this.deanService = new DeanServiceImpl(
+                new CourseRepository(),
+                new TermRepository(),
+                this.userRepository,
+                new ClassSectionRepository(),
+                new RoomRepository(),
+                new SchoolRepository(),
+                new EnrollmentRepository()
+        );
     }
 
     @Override
@@ -42,9 +56,9 @@ public class AdminController extends HttpServlet {
         if (path == null || "/dashboard".equals(path)) {
             showDashboard(request, response);
         } else if ("/users".equals(path)) {
-            showUsers(request, response);
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?tab=users");
         } else if ("/deans".equals(path)) {
-            showDeans(request, response);
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?tab=deans");
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/dashboard");
         }
@@ -70,6 +84,18 @@ public class AdminController extends HttpServlet {
     private void showDashboard(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null || user.getRole() != Role.ADMIN) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+
+        User refreshedUser = userRepository.findById(user.getId());
+        if (refreshedUser != null) {
+            user = refreshedUser;
+            request.getSession().setAttribute("user", user);
+        }
+
         List<User> allUsers = userService.findAllUsers();
         List<User> unverified = userService.findUnverifiedUsers();
 
@@ -77,40 +103,15 @@ public class AdminController extends HttpServlet {
         request.setAttribute("pendingVerifications", unverified.size());
 
         long studentCount = allUsers.stream()
-                .filter(u -> u.getRole() != null && u.getRole().name().equals("STUDENT"))
+                .filter(u -> u.getRole() != null && u.getRole() == Role.STUDENT)
                 .count();
         long staffCount = allUsers.size() - studentCount;
 
         request.setAttribute("studentCount", studentCount);
         request.setAttribute("staffCount", staffCount);
 
-        request.getRequestDispatcher("/WEB-INF/views/admin/dashboard.jsp").forward(request, response);
-    }
-
-    private void showUsers(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        List<User> userList = userService.findAllUsers();
-        List<User> unverifiedList = userService.findUnverifiedUsers();
-
-        request.setAttribute("users", userList);
-        request.setAttribute("unverifiedStudents", unverifiedList);
-
-        request.getRequestDispatcher("/WEB-INF/views/admin/users.jsp").forward(request, response);
-    }
-
-    private void showDeans(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        DeanService deanService = new DeanServiceImpl(
-                new CourseRepository(),
-                new TermRepository(),
-                new UserRepository(),
-                new ClassSectionRepository(),
-                new RoomRepository(),
-                new SchoolRepository(),
-                new com.unitrs.repository.EnrollmentRepository()
-        );
+        request.setAttribute("users", allUsers);
+        request.setAttribute("unverifiedStudents", unverified);
 
         List<School> schools = deanService.getAllSchools();
         List<User> professors = userService.findProfessors();
@@ -126,7 +127,21 @@ public class AdminController extends HttpServlet {
         request.setAttribute("professors", professors);
         request.setAttribute("currentDeans", currentDeans);
 
-        request.getRequestDispatcher("/WEB-INF/views/admin/deans.jsp").forward(request, response);
+        String tab = request.getParameter("tab");
+        request.setAttribute("currentTab", tab != null ? tab : "overview");
+
+        String success = request.getParameter("success");
+        if (success != null) {
+            if ("verified".equals(success)) {
+                request.setAttribute("successMessage", "User verification successfully processed!");
+            } else if ("status".equals(success)) {
+                request.setAttribute("successMessage", "User account status successfully updated!");
+            } else if ("assigned".equals(success)) {
+                request.setAttribute("successMessage", "Dean assignment successfully updated!");
+            }
+        }
+
+        request.getRequestDispatcher("/WEB-INF/views/admin/dashboard.jsp").forward(request, response);
     }
 
     private void handleAssignDean(HttpServletRequest request, HttpServletResponse response)
@@ -135,21 +150,19 @@ public class AdminController extends HttpServlet {
         int schoolId = Integer.parseInt(request.getParameter("schoolId"));
         String professorIdStr = request.getParameter("professorId");
 
-        UserRepository userRepo = new UserRepository();
-
         List<User> professors = userService.findProfessors();
         for (User prof : professors) {
             if (prof.getDeanSchoolId() != null && prof.getDeanSchoolId() == schoolId) {
-                userRepo.assignDeanToSchool(prof.getId(), null);
+                userRepository.assignDeanToSchool(prof.getId(), null);
             }
         }
 
         if (professorIdStr != null && !professorIdStr.isEmpty()) {
             int professorId = Integer.parseInt(professorIdStr);
-            userRepo.assignDeanToSchool(professorId, schoolId);
+            userRepository.assignDeanToSchool(professorId, schoolId);
         }
 
-        response.sendRedirect(request.getContextPath() + "/admin/deans");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?tab=deans&success=assigned");
     }
 
     private void handleVerifyStudent(HttpServletRequest request, HttpServletResponse response)
@@ -162,7 +175,7 @@ public class AdminController extends HttpServlet {
         boolean isApproved = "approve".equals(action);
         userService.processUserVerification(userId, isApproved, role);
 
-        response.sendRedirect(request.getContextPath() + "/admin/users");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?tab=users&success=verified");
     }
 
     private void handleUpdateStatus(HttpServletRequest request, HttpServletResponse response)
@@ -174,6 +187,6 @@ public class AdminController extends HttpServlet {
         boolean isActive = "activate".equals(action);
         userService.updateUserStatus(userId, isActive);
 
-        response.sendRedirect(request.getContextPath() + "/admin/users");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?tab=users&success=status");
     }
 }
