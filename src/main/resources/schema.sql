@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS attendance_records (
     id INT AUTO_INCREMENT PRIMARY KEY,
     class_section_id INT NOT NULL,
     session_date DATE NOT NULL,
+    is_cancelled BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY uq_section_date (class_section_id, session_date),
     FOREIGN KEY (class_section_id) REFERENCES class_sections(id) ON DELETE CASCADE

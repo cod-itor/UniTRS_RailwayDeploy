@@ -22,6 +22,7 @@ public class AttendanceRecord {
     private int absentCount;
     private int lateCount;
     private int excusedCount;
+    private boolean isCancelled;
     private List<AttendanceEntry> entries;
 
 }
