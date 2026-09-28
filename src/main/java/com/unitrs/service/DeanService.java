@@ -18,7 +18,7 @@ public interface DeanService {
 
     void addCourse(String courseCode, String courseTitle, int credits, int schoolId);
 
-    void updateCourse(int id, String courseCode, String courseTitle, int credits, int schoolId);
+    void updateCourse(int id, String courseCode, String courseTitle, int credits, int schoolId, int deanSchoolId);
 
     List<School> getAllSchools();
 
@@ -32,9 +32,9 @@ public interface DeanService {
 
     void updateTerm(int id, int termNumber, String termName);
 
-    void assignCourseToTerm(int termId, int courseId);
+    void assignCourseToTerm(int termId, int courseId, int deanSchoolId);
 
-    void removeCourseFromTerm(int termId, int courseId);
+    void removeCourseFromTerm(int termId, int courseId, int deanSchoolId);
 
     Map<Term, List<Course>> getTermCurriculumMap(int schoolId);
 
@@ -45,11 +45,11 @@ public interface DeanService {
     List<ClassSection> getAllClassSections();
 
     void addClassSection(int termId, int courseId, int professorId, int roomId, String sessionShift, String daysOfWeek,
-            String academicYear);
+            String academicYear, int deanSchoolId);
 
-    void removeClassSection(int id);
+    void removeClassSection(int id, int deanSchoolId);
 
-    void unenrollStudentFromSection(int studentId, int classSectionId);
+    void unenrollStudentFromSection(int studentId, int classSectionId, int deanSchoolId);
 
     List<Room> getAllRooms();
 

@@ -64,7 +64,6 @@ public class AuthenticationFilter implements Filter {
         }
 
         if (path.startsWith("/auth/")
-                || path.startsWith("/api/validate/")
                 || path.startsWith("/static/")
                 || path.equals("/manifest.json")
                 || path.equals("/sw.js")

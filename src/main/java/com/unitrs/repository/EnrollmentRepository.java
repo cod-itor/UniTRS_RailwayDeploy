@@ -30,9 +30,11 @@ public class EnrollmentRepository extends BaseRepository {
     }
 
     public boolean enrollStudent(int studentId, int classSectionId) {
-
-        String sql = "INSERT INTO enrollments (student_id, class_section_id) VALUES (?, ?)";
-        return executeUpdate(sql, studentId, classSectionId) > 0;
+        String sql = "INSERT INTO enrollments (student_id, class_section_id) " +
+                     "SELECT ?, ? FROM class_sections cs " +
+                     "JOIN rooms r ON cs.room_id = r.id " +
+                     "WHERE cs.id = ? AND (SELECT COUNT(*) FROM enrollments WHERE class_section_id = ?) < r.capacity";
+        return executeUpdate(sql, studentId, classSectionId, classSectionId, classSectionId) > 0;
     }
 
     public boolean unenrollStudent(int studentId, int classSectionId) {

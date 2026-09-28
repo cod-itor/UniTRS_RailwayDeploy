@@ -9,7 +9,7 @@ import java.util.List;
 public class ClassSectionRepository extends BaseRepository {
 
     public List<ClassSection> findAllSections() {
-        String sql = "SELECT cs.*, c.course_code, c.course_title, c.credits, u.full_name as professor_name, t.term_name, r.room_number, r.capacity as room_capacity, COUNT(e.id) as enrolled_count " +
+        String sql = "SELECT cs.*, c.course_code, c.course_title, c.credits, c.school_id, u.full_name as professor_name, t.term_name, r.room_number, r.capacity as room_capacity, COUNT(e.id) as enrolled_count " +
                      "FROM class_sections cs " +
                      "JOIN courses c ON cs.course_id = c.id " +
                      "JOIN users u ON cs.professor_id = u.id " +
@@ -22,7 +22,7 @@ public class ClassSectionRepository extends BaseRepository {
     }
 
     public ClassSection findById(int id) {
-        String sql = "SELECT cs.*, c.course_code, c.course_title, c.credits, u.full_name as professor_name, t.term_name, r.room_number, r.capacity as room_capacity, COUNT(e.id) as enrolled_count " +
+        String sql = "SELECT cs.*, c.course_code, c.course_title, c.credits, c.school_id, u.full_name as professor_name, t.term_name, r.room_number, r.capacity as room_capacity, COUNT(e.id) as enrolled_count " +
                      "FROM class_sections cs " +
                      "JOIN courses c ON cs.course_id = c.id " +
                      "JOIN users u ON cs.professor_id = u.id " +
@@ -35,7 +35,7 @@ public class ClassSectionRepository extends BaseRepository {
     }
 
     public List<ClassSection> findByProfessorId(int professorId) {
-        String sql = "SELECT cs.*, c.course_code, c.course_title, c.credits, u.full_name as professor_name, t.term_name, r.room_number, r.capacity as room_capacity, COUNT(e.id) as enrolled_count " +
+        String sql = "SELECT cs.*, c.course_code, c.course_title, c.credits, c.school_id, u.full_name as professor_name, t.term_name, r.room_number, r.capacity as room_capacity, COUNT(e.id) as enrolled_count " +
                      "FROM class_sections cs " +
                      "JOIN courses c ON cs.course_id = c.id " +
                      "JOIN users u ON cs.professor_id = u.id " +
@@ -71,6 +71,7 @@ public class ClassSectionRepository extends BaseRepository {
         section.setId(rs.getInt("id"));
         section.setTermId(rs.getInt("term_id"));
         section.setCourseId(rs.getInt("course_id"));
+        section.setSchoolId(rs.getInt("school_id"));
         section.setProfessorId(rs.getInt("professor_id"));
         section.setRoomId(rs.getInt("room_id"));
         section.setSessionShift(SessionShift.valueOf(rs.getString("session_shift")));

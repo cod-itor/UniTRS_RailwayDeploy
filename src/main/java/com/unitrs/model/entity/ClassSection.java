@@ -10,6 +10,7 @@ public class ClassSection {
     private int id;
     private int termId;
     private int courseId;
+    private int schoolId;
     private int professorId;
     private int roomId;
     private SessionShift sessionShift;

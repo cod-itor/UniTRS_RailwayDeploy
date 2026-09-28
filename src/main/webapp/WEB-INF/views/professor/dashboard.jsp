@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1086,7 +1087,7 @@
         /* HEADER */
         .desktop-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             margin-bottom: 24px;
             padding: 10px 0;
@@ -2067,13 +2068,6 @@
 
     <main class="desktop-main" id="desktop-main-content" role="main" tabindex="-1">
         <header class="desktop-header">
-            <div>
-                <h1 class="header-title mb-0">Faculty Overview</h1>
-                <div class="text-muted small mt-1 fw-medium">
-                    <i class="bi bi-mortarboard-fill text-primary me-1" aria-hidden="true"></i>
-                    UniTRS Academic Faculty Portal &bull; Term 2026-2027
-                </div>
-            </div>
 
             <div class="header-actions">
                 <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
@@ -2875,11 +2869,34 @@
                                             </td>
                                             <td><span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill">${record.presentCount} Present</span></td>
                                             <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill">${record.absentCount} Absent</span></td>
-                                            <td><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill">${record.lateCount + record.excusedCount} Other</span></td>
+                                            <td>
+                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill">${record.lateCount + record.excusedCount} Other</span>
+                                                <c:if test="${record.cancelled}">
+                                                    <span class="badge bg-dark ms-1 rounded-pill">CANCELLED</span>
+                                                </c:if>
+                                            </td>
                                         </tr>
                                         <tr class="collapse" id="recordDetails_${section.id}_${record.id}">
                                             <td colspan="4" class="p-0 bg-light">
                                                 <div class="p-3 border-start border-end">
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <div class="small fw-semibold text-muted">Student Statuses for ${record.sessionDate}:</div>
+                                                        <form action="${pageContext.request.contextPath}/professor/attendance/cancel" method="post" class="d-inline">
+                                                            <input type="hidden" name="classSectionId" value="${section.id}">
+                                                            <input type="hidden" name="recordId" value="${record.id}">
+                                                            <input type="hidden" name="tab" value="classes">
+                                                            <c:choose>
+                                                                <c:when test="${record.cancelled}">
+                                                                    <input type="hidden" name="cancelAction" value="restore">
+                                                                    <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2 py-0" style="font-size:0.75rem;"><i class="bi bi-arrow-counterclockwise"></i> Restore Session</button>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <input type="hidden" name="cancelAction" value="cancel">
+                                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0" style="font-size:0.75rem;" onclick="return confirm('Are you sure you want to cancel this session? It will not count towards student attendance.');"><i class="bi bi-x-circle"></i> Cancel Session</button>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </form>
+                                                    </div>
                                                     <div class="small fw-semibold text-muted mb-2">Student Statuses for ${record.sessionDate}:</div>
                                                     <div class="row row-cols-1 row-cols-md-2 g-2">
                                                         <c:forEach var="entry" items="${record.entries}">
@@ -4489,7 +4506,7 @@
         '${section.id}': {
             id: ${section.id},
             code: '${section.courseCode}',
-            title: '${section.courseTitle.replace("'", "\\'")}',
+            title: '${fn:escapeXml(section.courseTitle)}',
             shift: '${section.sessionShift}',
             days: '${section.daysOfWeek}',
             room: '${section.roomName}',
@@ -4811,7 +4828,7 @@
         {
             id: ${sec.id},
             code: '${sec.courseCode}',
-            title: '${sec.courseTitle.replace("'", "\\'")}',
+            title: '${fn:escapeXml(sec.courseTitle)}',
             shift: '${sec.sessionShift != null ? sec.sessionShift : ""}',
             daysOfWeek: '${sec.daysOfWeek != null ? sec.daysOfWeek : ""}',
             room: '${sec.roomName != null ? sec.roomName : ""}',
@@ -5052,18 +5069,18 @@
 
 <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
 <div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
-    <div style="background:#fff; border-radius:20px; padding:2rem 2.5rem; max-width:420px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
-        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fee2e2,#fecaca);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
-            <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
-        </div>
-        <h5 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.5rem;">Sign Out?</h5>
-        <p style="color:#64748b;font-size:0.95rem;margin-bottom:1.75rem;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
-        <div style="display:flex;gap:0.75rem;justify-content:center;">
-            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
-            <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:none;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-weight:700;font-size:0.95rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(220,38,38,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
+        <div style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+            <div style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
+            </div>
+            <h4 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.75rem;">Sign Out?</h4>
+            <p style="color:#64748b;font-size:1rem;margin-bottom:2rem;line-height:1.5;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
+            <div style="display:flex;gap:1rem;justify-content:center;">
+                <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
+                <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:none;background:#b91c1c;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(185,28,28,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
+            </div>
         </div>
     </div>
-</div>
 <style>
 @keyframes slideUpModal {
     from { opacity:0; transform:translateY(30px) scale(0.95); }

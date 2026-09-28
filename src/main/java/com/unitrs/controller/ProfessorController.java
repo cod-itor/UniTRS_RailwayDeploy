@@ -79,13 +79,14 @@ public class ProfessorController extends HttpServlet {
                 List<Grade> grades = gradeRepository.findGradesByClassSectionId(section.getId());
                 sectionGradesMap.put(section.getId(), grades);
 
-                int totalSessions = records.size();
+                int totalSessions = (int) records.stream().filter(r -> !r.isCancelled()).count();
                 Map<Integer, Double> studentScores = new LinkedHashMap<>();
                 for (User student : students) {
                     int present = 0;
                     int late = 0;
                     int excused = 0;
                     for (AttendanceRecord rec : records) {
+                        if (rec.isCancelled()) continue;
                         if (rec.getEntries() != null) {
                             for (var entry : rec.getEntries()) {
                                 if (entry.getStudentId() == student.getId()) {
@@ -127,6 +128,10 @@ public class ProfessorController extends HttpServlet {
                     request.setAttribute("successMessage", "Extra make-up class session successfully scheduled!");
                 } else if ("grades".equals(success)) {
                     request.setAttribute("successMessage", "Grades successfully saved!");
+                } else if ("session_cancelled".equals(success)) {
+                    request.setAttribute("successMessage", "Session successfully cancelled!");
+                } else if ("session_restored".equals(success)) {
+                    request.setAttribute("successMessage", "Session successfully restored!");
                 } else {
                     request.setAttribute("successMessage", "Operation completed successfully!");
                 }
@@ -153,7 +158,38 @@ public class ProfessorController extends HttpServlet {
             return;
         }
 
-        if (path != null && path.equals("/attendance/save")) {
+        if (path != null && path.equals("/attendance/cancel")) {
+            try {
+                String recordIdStr = request.getParameter("recordId");
+                if (recordIdStr == null || recordIdStr.trim().isEmpty()) {
+                    throw new ValidationException("Record ID is required.");
+                }
+                int recordId = Integer.parseInt(recordIdStr.trim());
+                
+                String action = request.getParameter("cancelAction");
+                boolean isCancelled = "cancel".equals(action);
+                
+                String sectionIdStr = request.getParameter("classSectionId");
+                int classSectionId = Integer.parseInt(sectionIdStr.trim());
+                ClassSection section = classSectionRepository.findById(classSectionId);
+                if (section.getProfessorId() != user.getId() && (user.getDeanSchoolId() == null || user.getDeanSchoolId() != section.getSchoolId())) {
+                    throw new ValidationException("You are not authorized to manage attendance for this section.");
+                }
+
+                attendanceRepository.setRecordCancelled(recordId, isCancelled);
+
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), java.nio.charset.StandardCharsets.UTF_8) : "&tab=classes";
+                String successMsg = isCancelled ? "session_cancelled" : "session_restored";
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?success=" + successMsg + tabParam);
+            } catch (Exception e) {
+                e.printStackTrace();
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), java.nio.charset.StandardCharsets.UTF_8) : "&tab=classes";
+                String msg = (e.getMessage() != null && !e.getMessage().trim().isEmpty()) ? e.getMessage() : "Failed to cancel session.";
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + java.net.URLEncoder.encode(msg, java.nio.charset.StandardCharsets.UTF_8) + tabParam);
+            }
+        } else if (path != null && path.equals("/attendance/save")) {
             try {
                 String sectionIdStr = request.getParameter("classSectionId");
                 if (sectionIdStr == null || sectionIdStr.trim().isEmpty()) {
@@ -165,7 +201,7 @@ public class ProfessorController extends HttpServlet {
                 if (section == null) {
                     throw new ValidationException("Class section not found.");
                 }
-                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                if (section.getProfessorId() != user.getId() && (user.getDeanSchoolId() == null || user.getDeanSchoolId() != section.getSchoolId())) {
                     throw new ValidationException("You are not authorized to manage attendance for this section.");
                 }
 
@@ -218,7 +254,7 @@ public class ProfessorController extends HttpServlet {
                 if (section == null) {
                     throw new ValidationException("Class section not found.");
                 }
-                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                if (section.getProfessorId() != user.getId() && (user.getDeanSchoolId() == null || user.getDeanSchoolId() != section.getSchoolId())) {
                     throw new ValidationException("You are not authorized to add an extra class for this section.");
                 }
                 String sessionDateStr = request.getParameter("sessionDate");
@@ -257,7 +293,7 @@ public class ProfessorController extends HttpServlet {
                 if (section == null) {
                     throw new ValidationException("Class section not found.");
                 }
-                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                if (section.getProfessorId() != user.getId() && (user.getDeanSchoolId() == null || user.getDeanSchoolId() != section.getSchoolId())) {
                     throw new ValidationException("You are not authorized to manage grades for this section.");
                 }
 
@@ -344,7 +380,7 @@ public class ProfessorController extends HttpServlet {
                 if (section == null) {
                     throw new ValidationException("Class section not found.");
                 }
-                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                if (section.getProfessorId() != user.getId() && (user.getDeanSchoolId() == null || user.getDeanSchoolId() != section.getSchoolId())) {
                     throw new ValidationException("You are not authorized to export attendance for this section.");
                 }
 

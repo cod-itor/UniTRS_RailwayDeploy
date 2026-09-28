@@ -75,6 +75,11 @@ public class AttendanceRepository extends BaseRepository {
         return executeUpdate(sql, recordId, studentId, status, status) > 0;
     }
 
+    public boolean setRecordCancelled(int recordId, boolean isCancelled) {
+        String sql = "UPDATE attendance_records SET is_cancelled = ? WHERE id = ?";
+        return executeUpdate(sql, isCancelled, recordId) > 0;
+    }
+
     private AttendanceRecord mapResultSetToAttendanceRecord(ResultSet rs) throws SQLException {
         AttendanceRecord record = new AttendanceRecord();
         record.setId(rs.getInt("id"));
@@ -86,6 +91,7 @@ public class AttendanceRepository extends BaseRepository {
         record.setAbsentCount(rs.getInt("absent_count"));
         record.setLateCount(rs.getInt("late_count"));
         record.setExcusedCount(rs.getInt("excused_count"));
+        record.setCancelled(rs.getBoolean("is_cancelled"));
         return record;
     }
 

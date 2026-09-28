@@ -5,10 +5,10 @@ import java.util.List;
 
 public class GradeCalculator {
 
-    public static final double MAX_ATTENDANCE = 15.0;
-    public static final double MAX_ASSIGNMENT = 25.0;
+    public static final double MAX_ATTENDANCE = 10.0;
+    public static final double MAX_ASSIGNMENT = 20.0;
     public static final double MAX_MIDTERM = 30.0;
-    public static final double MAX_FINAL = 30.0;
+    public static final double MAX_FINAL = 40.0;
     public static final double MAX_TOTAL = 100.0;
 
     private GradeCalculator() {}
@@ -22,20 +22,20 @@ public class GradeCalculator {
     }
 
     public static String calculateLetterGrade(double totalScore) {
-        if (totalScore >= 95.0) {
+        if (totalScore >= 85.0) {
             return "A";
-        } else if (totalScore >= 89.0) {
+        } else if (totalScore >= 80.0) {
             return "B+";
-        } else if (totalScore >= 83.0) {
+        } else if (totalScore >= 70.0) {
             return "B";
-        } else if (totalScore >= 77.0) {
-            return "C+";
-        } else if (totalScore >= 71.0) {
-            return "C";
         } else if (totalScore >= 65.0) {
-            return "D+";
-        } else if (totalScore >= 60.0) {
+            return "C+";
+        } else if (totalScore >= 50.0) {
+            return "C";
+        } else if (totalScore >= 45.0) {
             return "D";
+        } else if (totalScore >= 40.0) {
+            return "E";
         } else {
             return "F";
         }
@@ -51,8 +51,8 @@ public class GradeCalculator {
             case "B" -> 3.00;
             case "C+" -> 2.50;
             case "C" -> 2.00;
-            case "D+" -> 1.50;
-            case "D" -> 1.00;
+            case "D" -> 1.50;
+            case "E" -> 1.00;
             default -> 0.00;
         };
     }

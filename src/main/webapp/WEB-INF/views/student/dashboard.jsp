@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+    <%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
         <!DOCTYPE html>
         <html lang="en">
 
@@ -2308,6 +2309,115 @@
                                                  .day-pill-btn {
                                                      transition: all 0.15s ease;
                                                  }
+        .premium-registration-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+            padding: 24px;
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+        }
+        .premium-registration-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.12);
+        }
+        .premium-registration-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 120px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .premium-registration-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        .reg-header {
+            text-align: center;
+        }
+        .reg-term-box {
+            background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+        .calendar-icon-wrapper {
+            position: relative;
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        .calendar-icon-wrapper .sparkles {
+            position: absolute;
+            top: -8px; right: -8px;
+            font-size: 16px;
+            animation: float-sparkle 3s ease-in-out infinite;
+        }
+        @keyframes float-sparkle {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { transform: translateY(-4px) scale(1.1); opacity: 1; }
+        }
+        .reg-meta-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 0 12px;
+        }
+        .reg-meta-list .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: #475569;
+            font-weight: 500;
+        }
+        .reg-meta-list .meta-item i {
+            font-size: 1.1rem;
+        }
+        .btn-premium-submit {
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 99px;
+            padding: 14px 24px;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            transition: all 0.2s ease;
+        }
+        .btn-premium-submit:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+            transform: translateY(-2px);
+            color: white;
+        }
+        .btn-premium-submit:disabled {
+            background: #cbd5e1;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
     </style>
         </head>
 
@@ -2954,19 +3064,43 @@
                                                                                                                 </div>
                                                                                                             </c:when>
                                                                                                             <c:otherwise>
-                                                                                                                <form action="${pageContext.request.contextPath}/student" method="POST" class="d-flex flex-column flex-md-row align-items-end gap-3 p-4 bg-light border shadow-sm rounded-4">
+                                                                                                                <form action="${pageContext.request.contextPath}/student" method="POST" class="premium-registration-card">
                                                                                                                     <input type="hidden" name="action" value="batch_term_register">
                                                                                                                     <input type="hidden" name="termId" value="${studentTerm.id}">
-                                                                                                                    <div class="flex-grow-1 w-100 text-start">
-                                                                                                                        <label class="form-label fw-bold text-dark small text-uppercase mb-2" style="letter-spacing:0.5px;">Your Current Term</label>
-                                                                                                                        <div class="input-group input-group-lg">
-                                                                                                                            <span class="input-group-text bg-white border-end-0 text-primary"><i class="bi bi-calendar3"></i></span>
-                                                                                                                            <input type="text" class="form-control border-start-0 bg-white fw-bold text-dark" value="${studentTerm.termName}" readonly style="cursor:not-allowed;">
+                                                                                                                    
+                                                                                                                    <div class="reg-header">
+                                                                                                                        <h5 class="fw-bold mb-1 text-dark">Term Registration</h5>
+                                                                                                                        <p class="text-muted small mb-0">Manage your courses & enrollment</p>
+                                                                                                                    </div>
+
+                                                                                                                    <div class="reg-term-box mt-2">
+                                                                                                                        <div class="calendar-icon-wrapper flex-shrink-0">
+                                                                                                                            <i class="bi bi-calendar3"></i>
+                                                                                                                            <div class="sparkles">✨</div>
+                                                                                                                        </div>
+                                                                                                                        <div class="term-details text-start">
+                                                                                                                            <div class="text-uppercase fw-bold text-primary mb-1" style="font-size:0.7rem; letter-spacing:1px;">Current Term</div>
+                                                                                                                            <h4 class="fw-bolder text-dark mb-2" style="font-size:1.3rem;">${studentTerm.termName}</h4>
+                                                                                                                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1 shadow-none border border-success-subtle"><i class="bi bi-check-circle-fill me-1"></i> Active Enrollment</span>
                                                                                                                         </div>
                                                                                                                     </div>
-                                                                                                                    <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold px-5 py-3 shadow w-100 w-md-auto d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
-                                                                                                                        <i class="bi bi-send-fill fs-5"></i> Submit Registration
-                                                                                                                    </button>
+
+                                                                                                                    <div class="reg-meta-list my-2">
+                                                                                                                        <div class="meta-item">
+                                                                                                                            <i class="bi bi-journal-check text-success"></i>
+                                                                                                                            <span>${empty termCourses ? '0' : termCourses.size()} Courses Registered</span>
+                                                                                                                        </div>
+                                                                                                                        <div class="meta-item">
+                                                                                                                            <i class="bi bi-bell text-primary"></i>
+                                                                                                                            <span>Registration Period Open</span>
+                                                                                                                        </div>
+                                                                                                                    </div>
+
+                                                                                                                    <div class="reg-actions mt-2">
+                                                                                                                        <button type="submit" class="btn btn-premium-submit w-100 d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
+                                                                                                                            <span>Submit Registration</span> <i class="bi bi-arrow-up-right"></i>
+                                                                                                                        </button>
+                                                                                                                    </div>
                                                                                                                 </form>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
@@ -3115,7 +3249,7 @@
                                                                                                 <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 py-1 fw-semibold me-1" style="font-size:0.75rem;" onclick="openStudentCourseSessions('${enrollment.id}')">
                                                                                                     <i class="bi bi-calendar3-range me-1"></i>15 Sessions
                                                                                                 </button>
-                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-semibold" onclick="confirmDropCourse('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}')" style="font-size:0.75rem;">
+                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-semibold" data-section-id="${enrollment.classSectionId}" data-course-code="${enrollment.courseCode}" data-course-title="${fn:escapeXml(enrollment.courseTitle)}" onclick="handleDropCourseBtn(this)" style="font-size:0.75rem;">
                                                                                                     <i class="bi bi-x-circle me-1"></i>Drop
                                                                                                 </button>
                                                                                             </td>
@@ -3294,7 +3428,7 @@
                     <input type="hidden" name="action" value="updateProfile">
                     <div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Student ID</label>
-                        <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : user.userIdentifier}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                        <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Current Term</label>
@@ -3737,7 +3871,7 @@
                                                                                             <span class="small text-primary fw-semibold" style="font-size:0.72rem;"><i class="bi bi-calendar3-range me-1"></i>Tap for 15-Week Schedule</span>
                                                                                             <div class="d-flex align-items-center gap-2">
                                                                                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.7rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
-                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:26px;" onclick="event.stopPropagation(); confirmDropCourse('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}')">
+                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:26px;" data-section-id="${enrollment.classSectionId}" data-course-code="${enrollment.courseCode}" data-course-title="${fn:escapeXml(enrollment.courseTitle)}" onclick="event.stopPropagation(); handleDropCourseBtn(this)">
                                                                                                     <i class="bi bi-x me-1"></i>Drop
                                                                                                 </button>
                                                                                             </div>
@@ -3924,19 +4058,38 @@
                                                                                             </div>
                                                                                         </c:when>
                                                                                         <c:otherwise>
-                                                                                            <form action="${pageContext.request.contextPath}/student" method="POST" class="mt-2">
+                                                                                            <form action="${pageContext.request.contextPath}/student" method="POST" class="premium-registration-card mt-2">
                                                                                                 <input type="hidden" name="action" value="batch_term_register">
                                                                                                 <input type="hidden" name="termId" value="${studentTerm.id}">
-                                                                                                <div class="mb-3 text-start">
-                                                                                                    <label class="form-label fw-bold text-dark small text-uppercase mb-1" style="letter-spacing:0.5px; font-size: 0.75rem;">Your Current Term</label>
-                                                                                                    <div class="input-group">
-                                                                                                        <span class="input-group-text bg-light border-end-0 text-primary"><i class="bi bi-calendar3"></i></span>
-                                                                                                        <input type="text" class="form-control border-start-0 bg-light fw-bold text-dark" value="${studentTerm.termName}" readonly style="cursor:not-allowed;">
+                                                                                                
+                                                                                                <div class="reg-header">
+                                                                                                    <h5 class="fw-bold mb-1 text-dark">Term Registration</h5>
+                                                                                                    <p class="text-muted small mb-0">Manage your courses</p>
+                                                                                                </div>
+
+                                                                                                <div class="reg-term-box mt-1 px-3 py-3">
+                                                                                                    <div class="calendar-icon-wrapper flex-shrink-0" style="width: 50px; height: 50px; font-size: 22px;">
+                                                                                                        <i class="bi bi-calendar3"></i>
+                                                                                                        <div class="sparkles" style="font-size: 12px; top:-5px; right:-5px;">✨</div>
+                                                                                                    </div>
+                                                                                                    <div class="term-details text-start">
+                                                                                                        <div class="text-uppercase fw-bold text-primary mb-1" style="font-size:0.65rem; letter-spacing:1px;">Current Term</div>
+                                                                                                        <h4 class="fw-bolder text-dark mb-1" style="font-size:1.1rem;">${studentTerm.termName}</h4>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                                <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold w-100 py-3 shadow-sm d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
-                                                                                                    <i class="bi bi-send-fill fs-5"></i> Submit Registration
-                                                                                                </button>
+
+                                                                                                <div class="reg-meta-list my-1">
+                                                                                                    <div class="meta-item" style="font-size: 0.8rem;">
+                                                                                                        <i class="bi bi-journal-check text-success"></i>
+                                                                                                        <span>${empty termCourses ? '0' : termCourses.size()} Courses Ready</span>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                                <div class="reg-actions mt-1">
+                                                                                                    <button type="submit" class="btn btn-premium-submit w-100 d-flex justify-content-center align-items-center gap-2" ${empty termCourses ? 'disabled' : ''}>
+                                                                                                        <span>Submit Registration</span> <i class="bi bi-arrow-up-right"></i>
+                                                                                                    </button>
+                                                                                                </div>
                                                                                             </form>
                                                                                         </c:otherwise>
                                                                                     </c:choose>
@@ -4104,7 +4257,7 @@
                                                                             <input type="hidden" name="action" value="updateProfile">
                                                                             <div class="mb-3">
                                                                                 <label class="form-label fw-bold small">Student ID</label>
-                                                                                <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : user.userIdentifier}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                                                                                <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
                                                                             </div>
                                                                             <div class="mb-3">
                                                                                 <label class="form-label fw-bold small">Current Term</label>
@@ -4334,13 +4487,13 @@
                                                                                     id: eid,
                                                                                     classSectionId: ${enrollment.classSectionId},
                                                                                     code: '${enrollment.courseCode}',
-                                                                                    title: '${enrollment.courseTitle.replace("'", "\\'")}',
+                                                                                    title: '${fn:escapeXml(enrollment.courseTitle)}',
                                                                                     shift: '${enrollment.sessionShift}',
                                                                                     days: '${enrollment.daysOfWeek}',
                                                                                     room: '${enrollment.room}',
-                                                                                    prof: '${enrollment.professorName.replace("'", "\\'")}',
+                                                                                    prof: '${fn:escapeXml(enrollment.professorName)}',
                                                                                     academicYear: '${enrollment.academicYear}',
-                                                                                    termName: '${enrollment.termName.replace("'", "\\'")}',
+                                                                                    termName: '${fn:escapeXml(enrollment.termName)}',
                                                                                     credits: ${ enrollment.credits },
                                                                                 attScore: <c:choose><c:when test="${enrollGrade != null}">${enrollGrade.attendanceScore}</c:when><c:otherwise>0</c:otherwise></c:choose>,
                                                                                     asgScore: <c:choose><c:when test="${enrollGrade != null}">${enrollGrade.assignmentScore}</c:when><c:otherwise>0</c:otherwise></c:choose>,
@@ -4363,7 +4516,7 @@
                                                                                 if (!enrollmentData[gid]) {
                                                                                     enrollmentData[gid] = {
                                                                                         code: '${g.courseCode}',
-                                                                                        title: '${g.courseTitle}',
+                                                                                        title: '${fn:escapeXml(g.courseTitle)}',
                                                                                         shift: '${not empty g.sessionShift ? g.sessionShift : "-"}',
                                                                                         days: '-',
                                                                                         room: '-',
@@ -4664,6 +4817,12 @@
                                                                             }
                                                                             new bootstrap.Modal(document.getElementById('enrollConfirmModal')).show();
                                                                         }
+                                                                        function handleDropCourseBtn(btn) {
+                                                                            var sectionId = btn.getAttribute('data-section-id');
+                                                                            var courseCode = btn.getAttribute('data-course-code');
+                                                                            var courseTitle = btn.getAttribute('data-course-title');
+                                                                            confirmDropCourse(sectionId, courseCode, courseTitle);
+                                                                        }
 
                                                                         function confirmDropCourse(sectionId, courseCode, courseTitle) {
                                                                             var secIdInput = document.getElementById('dropConfirmSectionId');
@@ -4688,13 +4847,13 @@
                                                                                 id: ${enr.id},
                                                                                 classSectionId: ${enr.classSectionId},
                                                                                 code: '${enr.courseCode}',
-                                                                                title: '${enr.courseTitle.replace("'", "\\'")}',
+                                                                                title: '${fn:escapeXml(enr.courseTitle)}',
                                                                                 credits: ${enr.credits},
                                                                                 shift: '${enr.sessionShift != null ? enr.sessionShift : ""}',
                                                                                 daysOfWeek: '${enr.daysOfWeek != null ? enr.daysOfWeek : ""}',
                                                                                 room: '${enr.room != null ? enr.room : ""}',
-                                                                                professor: '${enr.professorName != null ? enr.professorName.replace("'", "\\'") : ""}',
-                                                                                term: '${enr.termName != null ? enr.termName.replace("'", "\\'") : ""}',
+                                                                                professor: '${enr.professorName != null ? fn:escapeXml(enr.professorName) : ""}',
+                                                                                term: '${enr.termName != null ? fn:escapeXml(enr.termName) : ""}',
                                                                                 year: '${enr.academicYear != null ? enr.academicYear : ""}'
                                                                             },
                                                                             </c:forEach>
@@ -4814,7 +4973,7 @@
                                                                                             }
                                                                                             tableHtml += '<div class="tt-actions-row justify-content-between align-items-center">';
                                                                                             tableHtml += '<button type="button" class="btn btn-sm btn-primary rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" onclick="event.stopPropagation(); openStudentCourseSessions(' + sec.id + ')"><i class="bi bi-calendar3-range me-1"></i>15 Sessions</button>';
-                                                                                            tableHtml += '<button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" onclick="event.stopPropagation(); confirmDropCourse(' + sec.classSectionId + ', \'' + sec.code + '\', \'' + sec.title.replace(/'/g, "\\'") + '\')"><i class="bi bi-trash3 me-1"></i>Drop</button>';
+                                                                                            tableHtml += '<button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" data-section-id="' + sec.classSectionId + '" data-course-code="' + sec.code.replace(/"/g, "&quot;") + '" data-course-title="' + sec.title.replace(/"/g, "&quot;") + '" onclick="event.stopPropagation(); handleDropCourseBtn(this)"><i class="bi bi-trash3 me-1"></i>Drop</button>';
                                                                                             tableHtml += '</div>';
                                                                                             tableHtml += '</div>';
                                                                                         });
@@ -5046,7 +5205,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Student ID <span class="text-danger">*</span></label>
                             <input type="text" class="form-control form-control-lg" name="studentId" 
-                                value="${user.userIdentifier.startsWith('9') ? '' : user.userIdentifier}" 
+                                value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" 
                                 placeholder="e.g. 60240512" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
                         </div>
                         <div class="mb-4">
@@ -5097,18 +5256,18 @@
 </c:if>
 
 <div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
-    <div style="background:#fff; border-radius:20px; padding:2rem 2.5rem; max-width:420px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
-        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fee2e2,#fecaca);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
-            <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
-        </div>
-        <h5 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.5rem;">Sign Out?</h5>
-        <p style="color:#64748b;font-size:0.95rem;margin-bottom:1.75rem;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
-        <div style="display:flex;gap:0.75rem;justify-content:center;">
-            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
-            <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:none;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-weight:700;font-size:0.95rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(220,38,38,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
+        <div style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+            <div style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
+            </div>
+            <h4 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.75rem;">Sign Out?</h4>
+            <p style="color:#64748b;font-size:1rem;margin-bottom:2rem;line-height:1.5;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
+            <div style="display:flex;gap:1rem;justify-content:center;">
+                <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
+                <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:none;background:#b91c1c;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(185,28,28,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
+            </div>
         </div>
     </div>
-</div>
 <style>
 @keyframes slideUpModal {
     from { opacity:0; transform:translateY(30px) scale(0.95); }
