@@ -3428,7 +3428,7 @@
                     <input type="hidden" name="action" value="updateProfile">
                     <div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Student ID</label>
-                        <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : user.userIdentifier}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                        <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Current Term</label>
@@ -4257,7 +4257,7 @@
                                                                             <input type="hidden" name="action" value="updateProfile">
                                                                             <div class="mb-3">
                                                                                 <label class="form-label fw-bold small">Student ID</label>
-                                                                                <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : user.userIdentifier}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                                                                                <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
                                                                             </div>
                                                                             <div class="mb-3">
                                                                                 <label class="form-label fw-bold small">Current Term</label>
@@ -5205,7 +5205,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Student ID <span class="text-danger">*</span></label>
                             <input type="text" class="form-control form-control-lg" name="studentId" 
-                                value="${user.userIdentifier.startsWith('9') ? '' : user.userIdentifier}" 
+                                value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" 
                                 placeholder="e.g. 60240512" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
                         </div>
                         <div class="mb-4">
