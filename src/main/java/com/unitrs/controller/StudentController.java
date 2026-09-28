@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import com.unitrs.exceptions.ValidationException;
 import com.unitrs.model.entity.Role;
@@ -25,6 +26,10 @@ import com.unitrs.repository.EnrollmentRepository;
 import com.unitrs.repository.GradeRepository;
 import com.unitrs.repository.AttendanceRepository;
 import com.unitrs.repository.ClassSectionRepository;
+import com.unitrs.model.entity.TermRegistrationRequest;
+import com.unitrs.repository.TermRegistrationRepository;
+import com.unitrs.model.entity.Term;
+import com.unitrs.repository.TermRepository;
 import com.unitrs.utils.GradeCalculator;
 import com.unitrs.utils.ScheduleUtils;
 
@@ -37,6 +42,8 @@ public class StudentController extends HttpServlet {
     private GradeRepository gradeRepository;
     private AttendanceRepository attendanceRepository;
     private ClassSectionRepository classSectionRepository;
+    private TermRegistrationRepository termRegistrationRepository;
+    private TermRepository termRepository;
 
     @Override
     public void init() throws ServletException {
@@ -46,6 +53,8 @@ public class StudentController extends HttpServlet {
         this.gradeRepository = new GradeRepository();
         this.attendanceRepository = new AttendanceRepository();
         this.classSectionRepository = new ClassSectionRepository();
+        this.termRegistrationRepository = new TermRegistrationRepository();
+        this.termRepository = new TermRepository();
     }
 
     @Override
@@ -57,6 +66,12 @@ public class StudentController extends HttpServlet {
         if (user == null || user.getRole() != Role.STUDENT) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
+        }
+
+        User refreshedUser = userRepository.findById(user.getId());
+        if (refreshedUser != null) {
+            user = refreshedUser;
+            request.getSession().setAttribute("user", user);
         }
 
         if (path == null || path.equals("/") || path.equals("/dashboard")) {
@@ -90,6 +105,37 @@ public class StudentController extends HttpServlet {
                     attendanceMap.put(enrollment.getId(), entries);
                 }
                 request.setAttribute("attendanceMap", attendanceMap);
+
+                List<Term> allTerms = termRepository.findAll();
+                request.setAttribute("allTerms", allTerms);
+
+                Term studentTerm = null;
+                if (user.getCurrentTermId() != null) {
+                    for (Term t : allTerms) {
+                        if (t.getId() == user.getCurrentTermId()) {
+                            studentTerm = t;
+                            break;
+                        }
+                    }
+                }
+                request.setAttribute("studentTerm", studentTerm);
+
+                boolean missingProfileInfo = user.getCurrentTermId() == null || user.getUserIdentifier() == null || user.getUserIdentifier().trim().isEmpty() || user.getUserIdentifier().startsWith("9");
+                request.setAttribute("missingProfileInfo", missingProfileInfo);
+
+                boolean hasPendingTermRequest = false;
+                List<Term> pendingTerms = new ArrayList<>();
+                for (Term t : allTerms) {
+                    if (termRegistrationRepository.hasPendingRequest(user.getId(), t.getId())) {
+                        hasPendingTermRequest = true;
+                        pendingTerms.add(t);
+                    }
+                }
+                request.setAttribute("hasPendingTermRequest", hasPendingTermRequest);
+                request.setAttribute("pendingTerms", pendingTerms);
+
+                TermRegistrationRequest latestTermRequest = termRegistrationRepository.getLatestRequestByStudent(user.getId());
+                request.setAttribute("latestTermRequest", latestTermRequest);
 
                 Map<Integer, Grade> gradeMap = new HashMap<>();
                 for (Grade grade : grades) {
@@ -135,6 +181,42 @@ public class StudentController extends HttpServlet {
                     request.getSession().setAttribute("user", user);
                 }
                 response.sendRedirect(request.getContextPath() + "/student/dashboard?success=1");
+            } else if ("updateProfile".equals(action)) {
+                String newStudentId = request.getParameter("studentId");
+                if (user.getUserIdentifier() != null && !user.getUserIdentifier().startsWith("9")) {
+                    newStudentId = user.getUserIdentifier();
+                } else {
+                    if (newStudentId == null || !newStudentId.matches("^\\d{8}$")) {
+                        throw new ValidationException("Student ID must be exactly 8 digits.");
+                    }
+                    if (newStudentId.startsWith("9")) {
+                        throw new ValidationException("Student ID cannot start with '9' (reserved for temporary applicant IDs). Please enter your official university ID.");
+                    }
+                }
+                Integer termId;
+                if (user.getCurrentTermId() != null && user.getCurrentTermId() > 0) {
+                    termId = user.getCurrentTermId();
+                } else {
+                    String termIdParam = request.getParameter("currentTermId");
+                    if (termIdParam == null || termIdParam.trim().isEmpty()) {
+                        throw new ValidationException("Current Term is required.");
+                    }
+                    termId = Integer.parseInt(termIdParam);
+                }
+                
+                if (!newStudentId.equals(user.getUserIdentifier())) {
+                    User existing = userRepository.findByIdentifier(newStudentId);
+                    if (existing != null && existing.getId() != user.getId()) {
+                        throw new ValidationException("This Student ID is already registered to another account.");
+                    }
+                }
+
+                if (userRepository.updateStudentProfile(user.getId(), newStudentId, termId)) {
+                    user.setUserIdentifier(newStudentId);
+                    user.setCurrentTermId(termId);
+                    request.getSession().setAttribute("user", user);
+                }
+                response.sendRedirect(request.getContextPath() + "/student/dashboard?success=profile_updated");
             } else if ("enroll".equals(action)) {
                 int classSectionId = Integer.parseInt(request.getParameter("classSectionId"));
                 ClassSection targetSection = classSectionRepository.findById(classSectionId);
@@ -196,12 +278,27 @@ public class StudentController extends HttpServlet {
                 String tab = request.getParameter("tab");
                 String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), "UTF-8") : "&tab=schedule";
                 response.sendRedirect(request.getContextPath() + "/student/dashboard?success=dropped" + tabParam);
+            } else if ("batch_term_register".equals(action)) {
+                int termId = Integer.parseInt(request.getParameter("termId"));
+                Term term = termRepository.findById(termId);
+                if (term == null) {
+                    throw new ValidationException("Invalid term selected.");
+                }
+                if (termRegistrationRepository.hasPendingRequest(user.getId(), termId)) {
+                    throw new ValidationException("You already have a pending registration request for " + term.getTermName() + ".");
+                }
+                
+                boolean created = termRegistrationRepository.createRequest(user.getId(), termId);
+                if (!created) {
+                    throw new ValidationException("Failed to submit term registration request.");
+                }
+                response.sendRedirect(request.getContextPath() + "/student/dashboard?success=batch_requested&tab=registration");
             } else {
                 response.sendRedirect(request.getContextPath() + "/student/dashboard");
             }
         } catch (ValidationException e) {
             String tab = request.getParameter("tab");
-            String defaultTab = ("enroll".equals(action) || "unenroll".equals(action) || "drop".equals(action)) ? "&tab=courses" : "";
+            String defaultTab = ("enroll".equals(action) || "unenroll".equals(action) || "drop".equals(action) || "batch_term_register".equals(action)) ? "&tab=registration" : "";
             String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), "UTF-8") : defaultTab;
             response.sendRedirect(request.getContextPath() + "/student/dashboard?error="
                     + java.net.URLEncoder.encode(e.getMessage(), "UTF-8") + tabParam);

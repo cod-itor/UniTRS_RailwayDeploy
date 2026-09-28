@@ -748,6 +748,23 @@
                         <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
                         <input type="text" class="form-control" id="identifierInput" name="identifier" placeholder="e.g. 60240512" maxlength="20" autocomplete="off">
                     </div>
+                <div class="mb-3 d-none" id="currentTermContainer">
+                    <label for="currentTermSelect" class="form-label">Current Term <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                        <select class="form-select" id="currentTermSelect" name="currentTermId">
+                            <option value="" disabled selected>-- Select your current term --</option>
+                            <option value="1">Term 1</option>
+                            <option value="2">Term 2</option>
+                            <option value="3">Term 3</option>
+                            <option value="4">Term 4</option>
+                            <option value="5">Term 5</option>
+                            <option value="6">Term 6</option>
+                            <option value="7">Term 7</option>
+                            <option value="8">Term 8</option>
+                        </select>
+                    </div>
+                </div>
                     <div id="identifierValidation" class="validation-message text-muted"></div>
                 </div>
 
@@ -1131,6 +1148,9 @@
             identifierInput.required = false;
             identifierInput.value = '';
 
+            document.getElementById('currentTermContainer').classList.add('d-none');
+            document.getElementById('currentTermSelect').required = false;
+
             majorFieldContainer.classList.add('d-none');
             majorSelect.required = false;
 
@@ -1146,6 +1166,9 @@
             identifierInput.placeholder = 'e.g. 60240512';
             identifierInput.required = true;
             identifierValidation.textContent = '8-digit Student ID (numbers only, e.g. 60240512).';
+
+            document.getElementById('currentTermContainer').classList.remove('d-none');
+            document.getElementById('currentTermSelect').required = true;
 
             majorFieldContainer.classList.remove('d-none');
             majorSelect.required = true;
@@ -1163,6 +1186,9 @@
             identifierInput.placeholder = 'e.g. 80240101';
             identifierInput.required = true;
             identifierValidation.textContent = 'Enter your assigned university Professor/Faculty ID.';
+
+            document.getElementById('currentTermContainer').classList.add('d-none');
+            document.getElementById('currentTermSelect').required = false;
 
             majorFieldContainer.classList.add('d-none');
             majorSelect.required = false;
@@ -1412,6 +1438,11 @@
 
         let finalMajor = '';
         if (flowState.role === 'student' && flowState.applicantType === 'current') {
+            const currentTermSelect = document.getElementById('currentTermSelect');
+            if (!currentTermSelect || !currentTermSelect.value) {
+                showGlobalError('Please select your current academic term.');
+                return;
+            }
             if (!majorSelect.value) {
                 showGlobalError('Please select your major.');
                 return;
@@ -1466,6 +1497,8 @@
         formData.append('confirmPassword', confirmPassword);
         formData.append('major', finalMajor);
         formData.append('gender', finalGender);
+        const termSelect = document.getElementById('currentTermSelect');
+        if (termSelect && !termSelect.disabled) { formData.append('currentTermId', termSelect.value); }
 
         submitBtn.disabled = true;
         const originalBtnText = submitBtn.innerHTML;

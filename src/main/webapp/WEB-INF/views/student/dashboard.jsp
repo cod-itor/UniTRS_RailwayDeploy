@@ -2304,6 +2304,9 @@
                                                         <button id="tab-transcript" onclick="switchDesktopTab('transcript', this)">
                                                             <i class="bi bi-file-earmark-bar-graph"></i> Transcript
                                                         </button>
+                                                        <button id="tab-holidays" onclick="switchDesktopTab('holidays', this)">
+                                                            <i class="bi bi-calendar-heart"></i> School Holidays
+                                                        </button>
                                                         <button id="tab-settings" onclick="switchDesktopTab('settings', this)">
                                                             <i class="bi bi-gear"></i> Settings
                                                         </button>
@@ -2321,9 +2324,7 @@
                                                     </div>
                                                 </aside>
 
-                                                <%-- MAIN CONTENT --%>
                                                     <main class="desktop-main">
-                                                        <%-- HEADER --%>
                                                             <header class="desktop-header">
                                                                 <div>
                                                                     <div class="header-title">Student Overview</div>
@@ -2335,7 +2336,10 @@
                                                                 </div>
 
                                                                 <div class="header-actions">
-                                                                    
+                                                                    <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
+                                                                        <i class="bi bi-calendar-heart text-danger"></i>
+                                                                        <span class="small">Holidays</span>
+                                                                    </button>
 
                                                                     <div class="dropdown">
                                                                         <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="studentProfileDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="User profile menu for ${user.fullName}">
@@ -2733,143 +2737,89 @@
                                                                             <%-- TAB: REGISTRATION (Data Table) --%>
                                                                                 <div id="dt-registration"
                                                                                     class="tab-panel">
-                                                                                    <div class="table-card">
-                                                                                        <div class="tc-header">
-                                                                                            <h3>Available Courses for
-                                                                                                Registration</h3>
-                                                                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2 fw-semibold">
-                                                                  <i class="bi bi-journal-check me-1"></i>${availableClasses.size()} Available Sections
-                                                              </span>
-                                                                                        </div>
-                                                                                        <div class="tc-table-wrap">
-                                                                                            <table class="tc-table">
-                                                                                                <thead>
-                                                                                                    <tr>
-                                                                                                        <th>Course</th>
-                                                                                                        <th>Professor
-                                                                                                        </th>
-                                                                                                        <th>Time / Shift
-                                                                                                        </th>
-                                                                                                        <th>Status</th>
-                                                                                                        <th>Credits</th>
-                                                                                                        <th>Capacity
-                                                                                                        </th>
-                                                                                                        <th>Action</th>
-                                                                                                    </tr>
-                                                                                                </thead>
-                                                                                                <tbody>
-                                                                                                    <c:forEach
-                                                                                                        var="section"
-                                                                                                        items="${availableClasses}">
-                                                                                                        <tr>
-                                                                                                            <td>
-                                                                                                                <div
-                                                                                                                    class="d-flex align-items-center">
-                                                                                                                    <div
-                                                                                                                        class="tc-course-icon">
-                                                                                                                        <i
-                                                                                                                            class="bi bi-journal-text"></i>
-                                                                                                                    </div>
-                                                                                                                    <div>
-                                                                                                                        <div
-                                                                                                                            class="fw-bold text-dark">
-                                                                                                                            ${section.courseCode}
-                                                                                                                        </div>
-                                                                                                                        <div
-                                                                                                                            class="small text-muted">
-                                                                                                                            ${section.courseTitle}
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </td>
-                                                                                                            <td>${section.professorName}
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                <div
-                                                                                                                    class="fw-bold">
-                                                                                                                    ${section.sessionShift}
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="small text-muted">
-                                                                                                                    ${section.daysOfWeek}
-                                                                                                                </div>
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                <c:choose>
-                                                                                                                    <c:when
-                                                                                                                        test="${section.enrolledCount >= section.roomCapacity}">
-                                                                                                                        <span
-                                                                                                                            class="tc-badge warning">Full</span>
-                                                                                                                    </c:when>
-                                                                                                                    <c:otherwise>
-                                                                                                                        <span
-                                                                                                                            class="tc-badge success">Available</span>
-                                                                                                                    </c:otherwise>
-                                                                                                                </c:choose>
-                                                                                                            </td>
-                                                                                                            <td
-                                                                                                                class="fw-bold">
-                                                                                                                ${section.credits}
-                                                                                                            </td>
-                                                                                                            <td>${section.enrolledCount}
-                                                                                                                /
-                                                                                                                ${section.roomCapacity}
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                <c:set
-                                                                                                                        var="isEnrolled"
-                                                                                                                        value="false" />
-                                                                                                                    <c:forEach
-                                                                                                                        var="myClass"
-                                                                                                                        items="${schedule}">
-                                                                                                                        <c:if
-                                                                                                                            test="${myClass.courseCode == section.courseCode}">
-                                                                                                                            <c:set
-                                                                                                                                var="isEnrolled"
-                                                                                                                                value="true" />
-                                                                                                                        </c:if>
-                                                                                                                    </c:forEach>
-                                                                                                                    <c:choose>
-                                                                                                                        <c:when
-                                                                                                                            test="${isEnrolled}">
-                                                                                                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 small fw-bold"><i class="bi bi-check2 me-1"></i> Enrolled</span>
-                                                                                                                        </c:when>
-                                                                                                                        <c:when
-                                                                                                                            test="${section.enrolledCount >= section.roomCapacity}">
-                                                                                                                            <button
-                                                                                                                                type="button"
-                                                                                                                                class="btn btn-sm btn-outline-danger rounded-pill fw-bold disabled">Full</button>
-                                                                                                                        </c:when>
-                                                                                                                        <c:otherwise>
-                                                                                                                            <button
-                                                                                                                                type="button"
-                                                                                                                                class="btn btn-sm btn-dark rounded-pill px-3 fw-bold"
-                                                                                                                                onclick="openEnrollConfirm('${section.id}', '${section.courseCode}', '${section.courseTitle}', '${section.professorName}', 'registration')">Enroll</button>
-                                                                                                                        </c:otherwise>
-                                                                                                                    </c:choose>
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                    </c:forEach>
-                                                                                                    <c:if
-                                                                                                        test="${empty availableClasses}">
-                                                                                                        <tr>
-                                                                                                            <td colspan="7"
-                                                                                                                class="text-center py-4 text-muted">
-                                                                                                                No
-                                                                                                                classes
-                                                                                                                available
-                                                                                                                to
-                                                                                                                register
-                                                                                                                for
-                                                                                                                right
-                                                                                                                now.
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                    </c:if>
-                                                                                                </tbody>
-                                                                                            </table>
-                                                                                        </div>
-                                                                                    </div>
+                                                                                    <c:choose>
+                                                                                        <c:when test="${hasPendingTermRequest}">
+                                                                                            <div class="alert alert-warning text-center fw-bold py-5 my-4 mx-3 rounded-4" style="background-color: #fffbeb; border: 2px dashed #fcd34d; color: #b45309;">
+                                                                                                <i class="bi bi-hourglass-split display-4 d-block mb-3 text-warning"></i>
+                                                                                                <h4 class="fw-bolder">Registration Pending</h4>
+                                                                                                <p class="mb-0 fs-5">Please visit the Dean's Office to sign and complete payment for the term.</p>
+                                                                                            </div>
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            <c:if test="${latestTermRequest != null and latestTermRequest.status == 'REJECTED'}">
+                                                                                                <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mx-3 mb-4 rounded-3 border-danger shadow-xs text-start">
+                                                                                                    <i class="bi bi-x-circle-fill text-danger fs-3"></i>
+                                                                                                    <div>
+                                                                                                        <div class="fw-bold text-danger">Term Registration Request Rejected</div>
+                                                                                                        <div class="small text-muted">Your previous registration request for ${latestTermRequest.termName} was not approved. Please visit the Dean's Office for assistance or resubmit your registration below.</div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </c:if>
+                                                                                            <div class="table-card p-4">
+    <div class="text-center py-4">
+        <i class="bi bi-clipboard2-check text-primary display-3 mb-3"></i>
+        <h3 class="mb-3 fw-bold">Batch Term Registration</h3>
+        <p class="text-muted mb-4 mx-auto" style="max-width:600px;">
+            Register for your assigned term with a single click. Your request will be sent to the Dean's office for approval.
+        </p>
+        
+        <c:choose>
+            <c:when test="${not empty studentTerm}">
+                <h4 class="fw-bold mb-3">Courses for ${studentTerm.termName}</h4>
+                <div class="table-responsive mb-4 text-start">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Title</th>
+                                <th>Credits</th>
+                                <th>Professor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:set var="termHasCourses" value="false" />
+                            <c:forEach var="clazz" items="${availableClasses}">
+                                <c:if test="${clazz.termId == studentTerm.id}">
+                                    <c:set var="termHasCourses" value="true" />
+                                    <tr>
+                                        <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle">${clazz.courseCode}</span></td>
+                                        <td class="fw-bold">${clazz.courseTitle}</td>
+                                        <td>${clazz.credits} Credits</td>
+                                        <td>${clazz.professorName}</td>
+                                    </tr>
+                                </c:if>
+                            </c:forEach>
+                            <c:if test="${not termHasCourses}">
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-3">No courses available for your current term yet.</td>
+                                </tr>
+                            </c:if>
+                        </tbody>
+                    </table>
+                </div>
+
+                <form action="${pageContext.request.contextPath}/student" method="POST" class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-3 max-w-md mx-auto" style="max-width: 500px;">
+                    <input type="hidden" name="action" value="batch_term_register">
+                    <input type="hidden" name="termId" value="${studentTerm.id}">
+                    <div class="flex-grow-1 w-100 text-start">
+                        <label class="form-label fw-bold small text-muted">Your Current Term</label>
+                        <input type="text" class="form-control form-control-lg rounded-3 border-2" value="${studentTerm.termName}" readonly>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold px-4 mt-md-4 w-100 w-md-auto" ${not termHasCourses ? 'disabled' : ''}>
+                        <i class="bi bi-send me-2"></i>Register All
+                    </button>
+                </form>
+            </c:when>
+            <c:otherwise>
+                <div class="alert alert-warning text-center">
+                    Please complete your profile to set your current term before registering.
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</div>
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
                                                                                 </div>
 
 
@@ -2881,6 +2831,9 @@
                                                                     <p class="text-muted small mb-0">Overview of your enrolled courses, lecture shifts, and classroom locations</p>
                                                                 </div>
                                                                 <div class="d-flex align-items-center gap-3">
+                                                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
+                                                                        <i class="bi bi-calendar-heart me-1"></i> School Holidays
+                                                                    </button>
                                                                     <div class="view-toggle-group" role="group" aria-label="Schedule View Switcher">
                                                                         <button type="button" class="view-toggle-btn active" id="btnStudentViewTimetable" onclick="setStudentScheduleView('grid')">
                                                                             <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i> Timetable Grid
@@ -3132,97 +3085,81 @@
                                                                                         </div>
 
                                                                                         <%-- TAB: SETTINGS --%>
-                                                                                            <div id="dt-settings"
-                                                                                                class="tab-panel">
-                                                                                                <div class="table-card"
-                                                                                                    style="max-width: 600px;">
-                                                                                                    <h3 class="mb-4">
-                                                                                                        Account Settings
-                                                                                                    </h3>
+                                                                                            <div id="dt-settings" class="tab-panel">
+    <div class="mb-4">
+        <h2 class="h4 fw-bold text-dark mb-1">Account Settings</h2>
+        <p class="text-muted small mb-0">Manage profile information and security settings</p>
+    </div>
 
-                                                                                                    <div
-                                                                                                        class="d-flex align-items-center gap-4 mb-4 pb-4 border-bottom">
-                                                                                                        <div class="user-avatar"
-                                                                                                            style="width:80px;height:80px;">
-                                                                                                            <c:choose>
-                                                                                                                <c:when
-                                                                                                                    test="${user.gender == 'FEMALE'}">
-                                                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_female.svg"
-                                                                                                                        alt="Avatar">
-                                                                                                                </c:when>
-                                                                                                                <c:otherwise>
-                                                                                                                    <img src="${pageContext.request.contextPath}/static/images/default_male.svg"
-                                                                                                                        alt="Avatar">
-                                                                                                                </c:otherwise>
-                                                                                                            </c:choose>
-                                                                                                        </div>
-                                                                                                        <div>
-                                                                                                            <h4
-                                                                                                                class="mb-1 fw-bold">
-                                                                                                                ${user.fullName}
-                                                                                                            </h4>
-                                                                                                            <p
-                                                                                                                class="text-muted mb-0">
-                                                                                                                ${user.email}
-                                                                                                            </p>
-                                                                                                        </div>
-                                                                                                    </div>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="table-card mb-4">
+                <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-person-badge text-primary me-2"></i>Profile Information</h3>
+                <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                    <div class="user-avatar" style="width:64px; height:64px; border-radius:20px;">
+                        <c:choose>
+                            <c:when test="${user.gender == 'FEMALE'}">
+                                <img src="${pageContext.request.contextPath}/static/images/default_female.svg" alt="Avatar">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="Avatar">
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                    <div>
+                        <h4 class="h6 fw-bold text-dark mb-1">${user.fullName}</h4>
+                        <div class="text-muted small">${user.email}</div>
+                    </div>
+                </div>
 
-                                                                                                    <h5
-                                                                                                        class="fw-bold mb-3">
-                                                                                                        Security
-                                                                                                        (Two-Factor
-                                                                                                        Authentication)
-                                                                                                    </h5>
-                                                                                                    <div
-                                                                                                        class="d-flex justify-content-between align-items-center p-3 bg-light rounded-4 mb-3">
-                                                                                                        <div>
-                                                                                                            <div
-                                                                                                                class="fw-bold text-dark mb-1">
-                                                                                                                Email
-                                                                                                                OTP
-                                                                                                                Verification
-                                                                                                            </div>
-                                                                                                            <div
-                                                                                                                class="small text-muted">
-                                                                                                                Require
-                                                                                                                an OTP
-                                                                                                                sent to
-                                                                                                                your
-                                                                                                                email
-                                                                                                                when
-                                                                                                                logging
-                                                                                                                in.
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                        <form
-                                                                                                            action="${pageContext.request.contextPath}/auth/update-2fa"
-                                                                                                            method="POST"
-                                                                                                            class="m-0">
-                                                                                                            <input
-                                                                                                                type="hidden"
-                                                                                                                name="redirect"
-                                                                                                                value="/student/dashboard?tab=settings">
-                                                                                                            <input
-                                                                                                                type="hidden"
-                                                                                                                name="twoFactorEnabled"
-                                                                                                                value="${!user.twoFactorEnabled}">
-                                                                                                            <c:choose>
-                                                                                                                <c:when
-                                                                                                                    test="${user.twoFactorEnabled}">
-                                                                                                                    <button
-                                                                                                                        type="submit"
-                                                                                                                        class="btn btn-sm btn-danger rounded-pill px-4 fw-bold">Disable</button>
-                                                                                                                </c:when>
-                                                                                                                <c:otherwise>
-                                                                                                                    <button
-                                                                                                                        type="submit"
-                                                                                                                        class="btn btn-sm btn-success rounded-pill px-4 fw-bold">Enable</button>
-                                                                                                                </c:otherwise>
-                                                                                                            </c:choose>
-                                                                                                        </form>
-                                                                                                    </div>
-                                                                                                </div>
+                <form action="${pageContext.request.contextPath}/student" method="POST" class="p-3 bg-light rounded-4 border">
+                    <input type="hidden" name="action" value="updateProfile">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted">Student ID</label>
+                        <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : user.userIdentifier}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted">Current Term</label>
+                        <select class="form-select" name="currentTermId" required ${user.currentTermId != null and user.currentTermId > 0 ? 'style="pointer-events: none; background-color: #e9ecef;" tabindex="-1"' : ''}>
+                            <c:if test="${empty user.currentTermId}">
+                                <option value="" disabled selected>-- Select Term --</option>
+                            </c:if>
+                            <c:forEach var="term" items="${allTerms}">
+                                <option value="${term.id}" ${user.currentTermId == term.id ? 'selected' : ''}>${term.termName}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">Update Profile</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="table-card mb-4">
+                <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-shield-lock text-primary me-2"></i>Security & Authentication</h3>
+                
+                <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="p-3 bg-light rounded-4 border mb-4">
+                    <input type="hidden" name="redirect" value="/student/dashboard?tab=settings">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <label for="desktopTwoFactorSwitch" class="fw-bold text-dark mb-0 cursor-pointer">Two-Factor Authentication (2FA)</label>
+                            <p class="small text-muted mb-0 mt-1">Receive an OTP security code via email each time you log in.</p>
+                        </div>
+                        <div class="form-check form-switch fs-4 mb-0">
+                            <input class="form-check-input" type="checkbox" role="switch" id="desktopTwoFactorSwitch" name="twoFactorEnabled" value="true" ${user.twoFactorEnabled ? 'checked' : ''} onchange="this.form.submit()">
+                            <c:if test="${user.twoFactorEnabled}">
+                                <input type="hidden" name="twoFactorEnabled" value="false">
+                            </c:if>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dt-holidays" class="tab-panel">
+                                                                                                <jsp:include page="/WEB-INF/views/common/school_holidays_view.jsp" />
                                                                                             </div>
 
                                                                     </c:otherwise>
@@ -3332,6 +3269,9 @@
                                                                             </span>
                                                                         </div>
                                                                     </div>
+                                                                    <button class="mobile-top-action-btn me-1" type="button" data-bs-toggle="modal" data-bs-target="#schoolHolidaysModal" aria-label="School Holidays">
+                                                                        <i class="bi bi-calendar-heart text-danger"></i>
+                                                                    </button>
                                                                     <button class="mobile-top-action-btn" type="button" onclick="switchMobileTab('profile')" aria-label="Go to Student Profile and Settings">
                                                                         <i class="bi bi-person-gear"></i>
                                                                     </button>
@@ -3565,10 +3505,24 @@
                                                                             <h2 class="mobile-section-heading mb-0">Class Schedule</h2>
                                                                             <span class="text-muted" style="font-size:0.75rem;">7-Day Weekly Timetable</span>
                                                                         </div>
-                                                                        <span class="mobile-section-badge" id="scheduleTabCount">${schedule.size()} Enrolled</span>
+                                                                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-bold">${schedule.size()} Courses</span>
                                                                     </div>
 
-                                                                    <%-- Day Filter Pills for Schedule --%>
+                                                                    <div class="mobile-course-card p-3 mb-2 border-danger-subtle bg-danger-subtle bg-opacity-10" onclick="new bootstrap.Modal(document.getElementById('schoolHolidaysModal')).show()" role="button" tabindex="0" style="cursor:pointer;">
+                                                                        <div class="d-flex align-items-center justify-content-between">
+                                                                            <div class="d-flex align-items-center gap-2">
+                                                                                <div class="p-2 rounded-3 bg-danger bg-opacity-10 text-danger">
+                                                                                    <i class="bi bi-calendar-heart fs-6"></i>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <div class="fw-bold text-dark" style="font-size:0.85rem;">School Holidays Calendar</div>
+                                                                                    <div class="small text-muted" style="font-size:0.72rem;">View upcoming breaks & observances</div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <span class="badge bg-danger text-white rounded-pill px-2.5 py-1" style="font-size:0.68rem;">View</span>
+                                                                        </div>
+                                                                    </div>
+
                                                                     <div class="schedule-day-filter-strip" id="scheduleTabFilterStrip" role="tablist" aria-label="Schedule Day Filter">
                                                                         <button type="button" class="schedule-filter-pill active" onclick="filterScheduleTabView('all', this)">All Week</button>
                                                                         <button type="button" class="schedule-filter-pill" onclick="filterScheduleTabView('mon', this)">Mon</button>
@@ -3633,96 +3587,77 @@
                                                                 <section id="mobile-view-courses" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-courses">
                                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                                         <div>
-                                                                            <h2 class="mobile-section-heading mb-0">Course Registration</h2>
-                                                                            <span class="text-muted" style="font-size:0.75rem;">Available for ${studentSchool.schoolName}</span>
+                                                                            <h2 class="mobile-section-heading mb-0">Term Registration</h2>
+                                                                            <span class="text-muted" style="font-size:0.75rem;">Batch registration for ${studentSchool.schoolName}</span>
                                                                         </div>
-                                                                        <span class="mobile-section-badge" id="mobileCourseCountBadge">${availableClasses.size()} Classes</span>
                                                                     </div>
 
-                                                                    <div class="input-group mb-3 shadow-sm rounded-4 overflow-hidden border bg-white">
-                                                                        <span class="input-group-text bg-white border-0 text-muted ps-3"><i class="bi bi-search"></i></span>
-                                                                        <input type="text" id="mobileCourseSearchInput" class="form-control border-0 py-2" placeholder="Search code, title, professor..." oninput="filterMobileCourses(this.value)" aria-label="Search course catalog">
-                                                                        <button type="button" class="btn bg-white border-0 text-muted pe-3" id="clearMobileCourseSearchBtn" style="display:none;" onclick="clearMobileCourseSearch()" aria-label="Clear search">
-                                                                            <i class="bi bi-x-circle-fill"></i>
-                                                                        </button>
-                                                                    </div>
-
-                                                                    <div id="mobileCourseList">
-                                                                        <c:forEach var="section" items="${availableClasses}">
-                                                                            <div class="mobile-course-card mobile-course-item" style="cursor:default;">
-                                                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                    <c:choose>
+                                                                        <c:when test="${hasPendingTermRequest}">
+                                                                            <div class="alert alert-warning text-center fw-bold py-4 mt-2 mb-4 mx-1 rounded-4" style="background-color: #fffbeb; border: 2px dashed #fcd34d; color: #b45309;">
+                                                                                <i class="bi bi-hourglass-split display-5 d-block mb-2 text-warning"></i>
+                                                                                <h5 class="fw-bolder">Registration Pending</h5>
+                                                                                <p class="mb-0 fs-6">Please visit the Dean's Office to sign and complete payment for the term.</p>
+                                                                            </div>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <c:if test="${latestTermRequest != null and latestTermRequest.status == 'REJECTED'}">
+                                                                                <div class="alert alert-danger d-flex align-items-center gap-2 p-3 mt-2 mb-3 mx-1 rounded-3 border-danger shadow-xs text-start">
+                                                                                    <i class="bi bi-x-circle-fill text-danger fs-4 flex-shrink-0"></i>
                                                                                     <div>
-                                                                                        <span class="mobile-card-code-badge me-1">${section.courseCode}</span>
-                                                                                        <span class="badge bg-secondary bg-opacity-10 text-secondary">${section.credits} Credits</span>
-                                                                                    </div>
-                                                                                    <span class="badge bg-light text-dark border">${section.termName}</span>
-                                                                                </div>
-                                                                                <h3 class="mobile-card-title mb-2" style="font-size:0.95rem;">${section.courseTitle}</h3>
-                                                                                <div class="mobile-card-meta mb-3">
-                                                                                    <div class="mobile-card-meta-row">
-                                                                                        <i class="bi bi-person text-primary"></i> ${section.professorName}
-                                                                                    </div>
-                                                                                    <div class="mobile-card-meta-row">
-                                                                                        <i class="bi bi-clock text-primary"></i> ${section.sessionShift} (${section.daysOfWeek})
-                                                                                    </div>
-                                                                                    <div class="mobile-card-meta-row">
-                                                                                        <i class="bi bi-door-open text-primary"></i> Room ${section.roomName}
+                                                                                        <div class="fw-bold small text-danger">Registration Request Rejected</div>
+                                                                                        <div class="text-muted" style="font-size:0.75rem;">Your request for ${latestTermRequest.termName} was not approved. Please visit the Dean's Office or re-apply below.</div>
                                                                                     </div>
                                                                                 </div>
+                                                                            </c:if>
+                                                                            <c:choose>
+            <c:when test="${not empty studentTerm}">
+                <div class="card border-0 shadow-sm rounded-4 p-3 text-center mt-2">
+                    <i class="bi bi-clipboard2-check text-primary display-4 mb-2 d-block"></i>
+                    <h5 class="fw-bold mb-3">Courses for ${studentTerm.termName}</h5>
+                    
+                    <div class="text-start mb-4">
+                        <c:set var="termHasCourses" value="false" />
+                        <ul class="list-group list-group-flush rounded-3 border">
+                            <c:forEach var="clazz" items="${availableClasses}">
+                                <c:if test="${clazz.termId == studentTerm.id}">
+                                    <c:set var="termHasCourses" value="true" />
+                                    <li class="list-group-item py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">${clazz.courseCode}</span>
+                                            <small class="text-muted">${clazz.credits} Cr</small>
+                                        </div>
+                                        <div class="fw-bold mt-1 text-truncate" style="font-size: 0.9rem;">${clazz.courseTitle}</div>
+                                    </li>
+                                </c:if>
+                            </c:forEach>
+                            <c:if test="${not termHasCourses}">
+                                <li class="list-group-item text-center text-muted py-3 small">No courses available for your current term yet.</li>
+                            </c:if>
+                        </ul>
+                    </div>
 
-                                                                                <%-- Seat Capacity Meter --%>
-                                                                                <c:set var="capRatio" value="${section.roomCapacity > 0 ? (section.enrolledCount * 100 / section.roomCapacity) : 0}" />
-                                                                                <div class="mb-3">
-                                                                                    <div class="d-flex justify-content-between small text-muted" style="font-size:0.72rem;">
-                                                                                        <span><i class="bi bi-people-fill me-1"></i>Seat Capacity</span>
-                                                                                        <span class="fw-bold ${section.enrolledCount >= section.roomCapacity ? 'text-danger' : (capRatio >= 75 ? 'text-warning' : 'text-success')}">
-                                                                                            ${section.enrolledCount} / ${section.roomCapacity} seats (${Math.round(capRatio)}%)
-                                                                                        </span>
-                                                                                    </div>
-                                                                                    <div class="capacity-bar-wrap">
-                                                                                        <div class="capacity-bar" style="width:${capRatio > 100 ? 100 : capRatio}%;background:${section.enrolledCount >= section.roomCapacity ? '#ef4444' : (capRatio >= 75 ? '#f59e0b' : '#10b981')};"></div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                                                                                    <c:set var="isEnrolledM" value="false" />
-                                                                                    <c:forEach var="myClass" items="${schedule}">
-                                                                                        <c:if test="${myClass.courseCode == section.courseCode}">
-                                                                                            <c:set var="isEnrolledM" value="true" />
-                                                                                        </c:if>
-                                                                                    </c:forEach>
-                                                                                    <span class="small text-muted" style="font-size:0.75rem;">Status</span>
-                                                                                    <c:choose>
-                                                                                        <c:when test="${isEnrolledM}">
-                                                                                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3 py-2 small fw-bold">
-                                                                                                <i class="bi bi-check2 me-1"></i> Enrolled
-                                                                                            </span>
-                                                                                        </c:when>
-                                                                                        <c:when test="${section.enrolledCount >= section.roomCapacity}">
-                                                                                            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-2 disabled" style="min-height:44px;">Class Full</button>
-                                                                                        </c:when>
-                                                                                        <c:otherwise>
-                                                                                            <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 py-2 fw-bold" style="min-height:44px;" data-section-id="${section.id}" data-course-code="${section.courseCode}" data-course-title="${section.courseTitle}" data-professor-name="${section.professorName}" onclick="openEnrollConfirm(this.dataset.sectionId, this.dataset.courseCode, this.dataset.courseTitle, this.dataset.professorName, 'courses')">
-                                                                                                <i class="bi bi-plus-lg me-1"></i> Enroll Now
-                                                                                            </button>
-                                                                                        </c:otherwise>
-                                                                                    </c:choose>
-                                                                                </div>
-                                                                            </div>
-                                                                        </c:forEach>
-                                                                        <div id="mobileCourseEmpty" class="text-center py-5 text-muted" style="display:none;">
-                                                                            <i class="bi bi-search fs-1 text-secondary mb-2 d-block"></i>
-                                                                            <div class="fw-bold">No Matching Courses</div>
-                                                                            <p class="small">Try searching with a different course title or code.</p>
-                                                                        </div>
-                                                                        <c:if test="${empty availableClasses}">
-                                                                            <div class="text-center py-5 text-muted">
-                                                                                <i class="bi bi-journal-x fs-1 text-secondary mb-2 d-block"></i>
-                                                                                <div class="fw-bold">No Classes Available</div>
-                                                                                <p class="small">No classes currently open for registration in this term.</p>
-                                                                            </div>
-                                                                        </c:if>
-                                                                    </div>
+                    <form action="${pageContext.request.contextPath}/student" method="POST" class="d-flex flex-column gap-3">
+                        <input type="hidden" name="action" value="batch_term_register">
+                        <input type="hidden" name="termId" value="${studentTerm.id}">
+                        <div class="text-start">
+                            <label class="form-label fw-bold small text-muted">Your Current Term</label>
+                            <input type="text" class="form-control form-control-lg rounded-3 border-2" value="${studentTerm.termName}" readonly>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold w-100" ${not termHasCourses ? 'disabled' : ''}>
+                            <i class="bi bi-send me-2"></i>Register All
+                        </button>
+                    </form>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="alert alert-warning text-center mt-3">
+                    Please complete your profile to set your current term before registering.
+                </div>
+            </c:otherwise>
+        </c:choose>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 </section>
 
                                                                 <%--===== GRADES & TRANSCRIPT SUB-VIEW =====--%>
@@ -3868,7 +3803,31 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <%-- Two-Factor Security Card --%>
+                                                                    <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
+                                                                        <div class="fw-bold small text-dark mb-3">
+                                                                            <i class="bi bi-person-lines-fill me-2 text-primary"></i>Profile Details
+                                                                        </div>
+                                                                        <form action="${pageContext.request.contextPath}/student" method="POST">
+                                                                            <input type="hidden" name="action" value="updateProfile">
+                                                                            <div class="mb-3">
+                                                                                <label class="form-label fw-bold small">Student ID</label>
+                                                                                <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : user.userIdentifier}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label class="form-label fw-bold small">Current Term</label>
+                                                                                <select class="form-select" name="currentTermId" required ${user.currentTermId != null and user.currentTermId > 0 ? 'style="pointer-events: none; background-color: #e9ecef;" tabindex="-1"' : ''}>
+                                                                                    <c:if test="${empty user.currentTermId}">
+                                                                                        <option value="" disabled selected>-- Select Term --</option>
+                                                                                    </c:if>
+                                                                                    <c:forEach var="term" items="${allTerms}">
+                                                                                        <option value="${term.id}" ${user.currentTermId == term.id ? 'selected' : ''}>${term.termName}</option>
+                                                                                    </c:forEach>
+                                                                                </select>
+                                                                            </div>
+                                                                            <button type="submit" class="btn btn-primary w-100 fw-bold rounded-3">Update Profile</button>
+                                                                        </form>
+                                                                    </div>
+
                                                                     <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
                                                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                                                             <div>
@@ -4702,7 +4661,6 @@
                                                                                 var urlParams = new URLSearchParams(window.location.search);
                                                                                 var tab = urlParams.get('tab');
                                                                                 if (tab) {
-                                                                                    // Mobile tab restoration
                                                                                     if (document.getElementById('mobile-view-' + tab)) {
                                                                                         switchMobileTab(tab);
                                                                                     } else if (tab === 'registration') {
@@ -4715,7 +4673,6 @@
                                                                                         switchMobileTab('home');
                                                                                     }
 
-                                                                                    // Desktop tab restoration
                                                                                     var dtBtn = document.getElementById('tab-' + tab);
                                                                                     if (dtBtn) {
                                                                                         switchDesktopTab(tab, dtBtn);
@@ -4723,6 +4680,10 @@
                                                                                         switchDesktopTab('registration', document.getElementById('tab-registration'));
                                                                                     } else if (tab === 'grades') {
                                                                                         switchDesktopTab('transcript', document.getElementById('tab-transcript'));
+                                                                                    } else if (tab === 'settings') {
+                                                                                        switchDesktopTab('settings', document.getElementById('tab-settings'));
+                                                                                    } else if (tab === 'holidays') {
+                                                                                        switchDesktopTab('holidays', document.getElementById('tab-holidays'));
                                                                                     } else if (tab === 'profile') {
                                                                                         switchDesktopTab('settings', document.getElementById('tab-settings'));
                                                                                     } else if (tab === 'home') {
@@ -4732,6 +4693,56 @@
                                                                             } catch (e) {}
                                                                         });
                                                                     </script>
-        </body>
+                                                                    <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
+        
+<c:if test="${missingProfileInfo}">
+    <div class="modal fade show d-block" id="profileCompletionModal" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Complete Your Profile</h5>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-4">Please provide your valid 8-digit Student ID and your current Academic Term to continue.</p>
+                    <form action="${pageContext.request.contextPath}/student" method="POST" id="profileCompletionForm">
+                        <input type="hidden" name="action" value="updateProfile">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Student ID <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="studentId" 
+                                value="${user.userIdentifier.startsWith('9') ? '' : user.userIdentifier}" 
+                                placeholder="e.g. 60240512" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Current Term <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-lg" name="currentTermId" required ${user.currentTermId != null and user.currentTermId > 0 ? 'style="pointer-events: none; background-color: #e9ecef;" tabindex="-1"' : ''}>
+                                <c:if test="${empty user.currentTermId}">
+                                    <option value="" disabled selected>-- Select Term --</option>
+                                </c:if>
+                                <c:forEach var="term" items="${allTerms}">
+                                    <option value="${term.id}" ${user.currentTermId == term.id ? 'selected' : ''}>${term.termName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-3 mb-2" onclick="sessionStorage.removeItem('dismissProfileModal');">Save Profile</button>
+                        <button type="button" class="btn btn-light btn-lg w-100 fw-bold rounded-3" data-bs-dismiss="modal" onclick="document.getElementById('profileCompletionModal').style.display='none'; document.body.classList.remove('modal-open'); sessionStorage.setItem('dismissProfileModal', 'true');">Do it later</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        if (sessionStorage.getItem('dismissProfileModal') === 'true') {
+            var profileModalEl = document.getElementById('profileCompletionModal');
+            if (profileModalEl) {
+                profileModalEl.classList.remove('d-block');
+                profileModalEl.style.display = 'none';
+            }
+        } else {
+            document.body.classList.add('modal-open');
+        }
+    </script>
+</c:if>
+
+</body>
 
         </html>

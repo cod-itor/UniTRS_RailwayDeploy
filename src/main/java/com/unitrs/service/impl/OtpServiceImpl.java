@@ -6,26 +6,17 @@ import com.unitrs.repository.OtpRepository;
 import com.unitrs.repository.UserRepository;
 import com.unitrs.service.OtpService;
 import com.unitrs.utils.EmailService;
+import lombok.RequiredArgsConstructor;
 
 import java.security.SecureRandom;
 import java.util.logging.Logger;
-
+@RequiredArgsConstructor
 public class OtpServiceImpl implements OtpService {
 
     private static final Logger LOGGER = Logger.getLogger(OtpServiceImpl.class.getName());
     private static final SecureRandom RANDOM = new SecureRandom();
     private final OtpRepository otpRepository;
     private final UserRepository userRepository;
-
-    public OtpServiceImpl() {
-        this.otpRepository = new OtpRepository();
-        this.userRepository = new UserRepository();
-    }
-
-    public OtpServiceImpl(OtpRepository otpRepository, UserRepository userRepository) {
-        this.otpRepository = otpRepository;
-        this.userRepository = userRepository;
-    }
 
     private String generateSixDigitCode() {
         int code = RANDOM.nextInt(900000) + 100000;

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
     is_active BOOLEAN DEFAULT TRUE,
     dean_school_id INT UNIQUE DEFAULT NULL,      -- A user can be the Dean of at most one school
     student_school_id INT DEFAULT NULL,          -- The school a student officially belongs to
+    current_term_id INT DEFAULT NULL,            -- The term the student is currently enrolled in
     two_factor_enabled BOOLEAN DEFAULT FALSE,
     failed_attempts INT DEFAULT 0,
     locked_until TIMESTAMP NULL DEFAULT NULL,
@@ -97,6 +98,18 @@ CREATE TABLE IF NOT EXISTS enrollments (
     UNIQUE KEY uq_student_section (student_id, class_section_id),
     INDEX idx_enrollments_student_id (student_id),
     INDEX idx_enrollments_class_section_id (class_section_id)
+);
+
+-- 6.5 Term Registration Requests
+CREATE TABLE IF NOT EXISTS term_registration_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    term_id INT NOT NULL,
+    status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (term_id) REFERENCES terms(id) ON DELETE CASCADE,
+    UNIQUE KEY uq_student_term (student_id, term_id)
 );
 
 -- 7. Attendance Records Table

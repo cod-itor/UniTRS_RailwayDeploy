@@ -40,7 +40,8 @@ public class DeanController extends HttpServlet {
             new UserRepository(),
             new ClassSectionRepository(),
             new RoomRepository(),
-            new SchoolRepository()
+            new SchoolRepository(),
+            new com.unitrs.repository.EnrollmentRepository()
         );
     }
 
@@ -77,6 +78,10 @@ public class DeanController extends HttpServlet {
         for (ClassSection s : sections) {
             sectionStudentsMap.put(s.getId(), userRepo.findStudentsByClassSection(s.getId()));
         }
+
+        com.unitrs.repository.TermRegistrationRepository termRegRepo = new com.unitrs.repository.TermRegistrationRepository();
+        List<com.unitrs.model.entity.TermRegistrationRequest> pendingTermRequests = termRegRepo.getPendingRequestsBySchool(deanSchoolId);
+        request.setAttribute("pendingTermRequests", pendingTermRequests);
 
         request.setAttribute("deanSchool", deanSchool);
         request.setAttribute("courses", courses);
@@ -220,6 +225,32 @@ public class DeanController extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("roomId"));
                 deanService.deleteRoom(id);
                 successMessage = "Room deleted.";
+
+            } else if ("approveTermRequest".equals(action)) {
+                activeTab = "requests";
+                int requestId = Integer.parseInt(request.getParameter("requestId"));
+                com.unitrs.repository.TermRegistrationRepository termRegRepo = new com.unitrs.repository.TermRegistrationRepository();
+                com.unitrs.model.entity.TermRegistrationRequest req = termRegRepo.findById(requestId);
+                if (req != null && "PENDING".equals(req.getStatus())) {
+                    termRegRepo.updateStatus(requestId, "APPROVED");
+                    
+                    com.unitrs.repository.UserRepository userRepo = new com.unitrs.repository.UserRepository();
+                    userRepo.updateCurrentTerm(req.getStudentId(), req.getTermId());
+                    
+                    successMessage = "Registration request approved and student's term updated.";
+                } else {
+                    throw new ValidationException("Request not found or already processed.");
+                }
+
+            } else if ("rejectTermRequest".equals(action)) {
+                activeTab = "requests";
+                int requestId = Integer.parseInt(request.getParameter("requestId"));
+                com.unitrs.repository.TermRegistrationRepository termRegRepo = new com.unitrs.repository.TermRegistrationRepository();
+                if (termRegRepo.updateStatus(requestId, "REJECTED")) {
+                    successMessage = "Registration request rejected.";
+                } else {
+                    throw new ValidationException("Failed to reject request.");
+                }
             }
 
             String tabParam = "&tab=" + URLEncoder.encode(activeTab, StandardCharsets.UTF_8);

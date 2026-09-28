@@ -108,7 +108,8 @@ public class AdminController extends HttpServlet {
                 new UserRepository(),
                 new ClassSectionRepository(),
                 new RoomRepository(),
-                new SchoolRepository()
+                new SchoolRepository(),
+                new com.unitrs.repository.EnrollmentRepository()
         );
 
         List<School> schools = deanService.getAllSchools();

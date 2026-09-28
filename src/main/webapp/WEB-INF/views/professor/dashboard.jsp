@@ -2049,6 +2049,9 @@
             <button role="tab" id="tab-schedule" aria-selected="false" aria-controls="dt-schedule" tabindex="-1" onclick="switchDesktopTab('schedule', this)">
                 <i class="bi bi-calendar-event" aria-hidden="true"></i> Term Schedule
             </button>
+            <button role="tab" id="tab-holidays" aria-selected="false" aria-controls="dt-holidays" tabindex="-1" onclick="switchDesktopTab('holidays', this)">
+                <i class="bi bi-calendar-heart" aria-hidden="true"></i> School Holidays
+            </button>
             <button role="tab" id="tab-settings" aria-selected="false" aria-controls="dt-settings" tabindex="-1" onclick="switchDesktopTab('settings', this)">
                 <i class="bi bi-gear" aria-hidden="true"></i> Settings
             </button>
@@ -2062,9 +2065,7 @@
         </div>
     </aside>
 
-    <%-- DESKTOP MAIN CONTENT --%>
     <main class="desktop-main" id="desktop-main-content" role="main" tabindex="-1">
-        <%-- HEADER --%>
         <header class="desktop-header">
             <div>
                 <h1 class="header-title mb-0">Faculty Overview</h1>
@@ -2075,6 +2076,10 @@
             </div>
 
             <div class="header-actions">
+                <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
+                    <i class="bi bi-calendar-heart text-danger"></i>
+                    <span class="small">Holidays</span>
+                </button>
                 <c:if test="${sessionScope.user.deanSchoolId != null}">
                     <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2" style="font-size: 0.85rem;">
                         <i class="bi bi-mortarboard-fill text-primary" aria-hidden="true"></i> Switch to Dean View
@@ -2549,9 +2554,6 @@
             </c:forEach>
         </div>
 
-        <%-- ================================================================== --%>
-        <%-- TAB: SCHEDULE                                                      --%>
-        <%-- ================================================================== --%>
         <div id="dt-schedule" class="tab-panel" role="tabpanel" aria-labelledby="tab-schedule" tabindex="0">
             <div class="timetable-toolbar">
                 <div>
@@ -2559,6 +2561,9 @@
                     <p class="text-muted small mb-0">Overview of classroom allocations, schedule shifts, and lecture sessions</p>
                 </div>
                 <div class="d-flex align-items-center gap-3">
+                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
+                        <i class="bi bi-calendar-heart me-1"></i> School Holidays
+                    </button>
                     <div class="view-toggle-group" role="group" aria-label="Schedule View Switcher">
                         <button type="button" class="view-toggle-btn active" id="btnViewTimetable" onclick="setScheduleView('grid')">
                             <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i> Timetable Grid
@@ -2756,12 +2761,13 @@
                 </div>
             </div>
         </div>
-    </main>
-</div><!-- End Desktop App Container -->
 
-    <%-- ================================================================== --%>
-    <%-- DESKTOP MODALS (ACCESSIBLE & MODERNIZED)                            --%>
-    <%-- ================================================================== --%>
+        <div id="dt-holidays" class="tab-panel" role="tabpanel" aria-labelledby="tab-holidays" tabindex="0">
+            <jsp:include page="/WEB-INF/views/common/school_holidays_view.jsp" />
+        </div>
+    </main>
+</div>
+
     <c:forEach var="entry" items="${sectionStudentsMap}">
         <c:set var="section" value="${entry.key}" />
         <c:set var="students" value="${entry.value}" />
@@ -3762,7 +3768,6 @@
         </div>
     </c:if>
     
-    <!-- Top Bar with Safe Area Awareness -->
     <header class="mobile-top-bar" role="banner">
         <div class="mobile-user-info">
             <div class="mobile-avatar-frame" aria-hidden="true">
@@ -3780,9 +3785,14 @@
                 <span class="mobile-badge-pill"><i class="bi bi-mortarboard-fill me-1"></i>Faculty Member</span>
             </div>
         </div>
-        <button class="mobile-top-action-btn" type="button" data-bs-toggle="modal" data-bs-target="#mobileSecurityModal" aria-label="Security & Notifications">
-            <i class="bi bi-bell"></i>
-        </button>
+        <div class="d-flex align-items-center gap-1">
+            <button class="mobile-top-action-btn" type="button" data-bs-toggle="modal" data-bs-target="#schoolHolidaysModal" aria-label="School Holidays">
+                <i class="bi bi-calendar-heart text-danger"></i>
+            </button>
+            <button class="mobile-top-action-btn" type="button" data-bs-toggle="modal" data-bs-target="#mobileSecurityModal" aria-label="Security & Notifications">
+                <i class="bi bi-bell"></i>
+            </button>
+        </div>
     </header>
 
     <!-- ===== HOME VIEW ===== -->
@@ -3975,7 +3985,6 @@
         </div>
     </section>
 
-    <!-- ===== SCHEDULE VIEW ===== -->
     <section id="mobile-view-schedule" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-schedule">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
@@ -3985,7 +3994,21 @@
             <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-bold" id="profScheduleTabCount">${sectionStudentsMap.size()} Classes</span>
         </div>
 
-        <%-- Day Filter Pills --%>
+        <div class="mobile-course-card p-3 mb-2 border-danger-subtle bg-danger-subtle bg-opacity-10" onclick="new bootstrap.Modal(document.getElementById('schoolHolidaysModal')).show()" role="button" tabindex="0" style="cursor:pointer;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="p-2 rounded-3 bg-danger bg-opacity-10 text-danger">
+                        <i class="bi bi-calendar-heart fs-6"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark" style="font-size:0.85rem;">School Holidays Calendar</div>
+                        <div class="small text-muted" style="font-size:0.72rem;">View upcoming breaks & observances</div>
+                    </div>
+                </div>
+                <span class="badge bg-danger text-white rounded-pill px-2.5 py-1" style="font-size:0.68rem;">View</span>
+            </div>
+        </div>
+
         <div class="schedule-day-filter-strip" id="profScheduleDayFilterStrip" role="tablist" aria-label="Schedule Day Filter">
             <button type="button" class="schedule-filter-pill active" onclick="filterProfScheduleTabView('all', this)">All Week</button>
             <button type="button" class="schedule-filter-pill" onclick="filterProfScheduleTabView('mon', this)">Mon</button>
@@ -4972,6 +4995,8 @@
                     switchDesktopTab(tab, dtBtn);
                 } else if (tab === 'profile') {
                     switchDesktopTab('settings', document.getElementById('tab-settings'));
+                } else if (tab === 'holidays') {
+                    switchDesktopTab('holidays', document.getElementById('tab-holidays'));
                 } else if (tab === 'home') {
                     switchDesktopTab('dashboard', document.getElementById('tab-dashboard'));
                 }
@@ -4980,6 +5005,6 @@
     });
 </script>
 
-
+<jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
 </body>
 </html>
