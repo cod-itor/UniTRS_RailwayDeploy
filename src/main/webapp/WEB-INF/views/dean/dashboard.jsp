@@ -1334,9 +1334,9 @@
 
                             <!-- Logout Button -->
                             <div class="p-3 bg-light border-top">
-                                <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem;">
+                                <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem;">
                                     <i class="bi bi-box-arrow-right"></i> Logout
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2523,9 +2523,9 @@
 
             <!-- Sign Out Button -->
             <div class="pt-2 mb-4">
-                <a href="${pageContext.request.contextPath}/auth/logout" class="btn btn-danger w-100 rounded-pill py-3 fw-bold text-decoration-none shadow-sm" style="min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-danger w-100 rounded-pill py-3 fw-bold shadow-sm" style="min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px;">
                     <i class="bi bi-box-arrow-right"></i> Sign Out of Dean Account
-                </a>
+                </button>
             </div>
         </section>
 
@@ -3271,5 +3271,32 @@
         }
     </script>
     <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
+<div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
+    <div style="background:#fff; border-radius:20px; padding:2rem 2.5rem; max-width:420px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fee2e2,#fecaca);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+            <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
+        </div>
+        <h5 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.5rem;">Sign Out?</h5>
+        <p style="color:#64748b;font-size:0.95rem;margin-bottom:1.75rem;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
+        <div style="display:flex;gap:0.75rem;justify-content:center;">
+            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
+            <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.65rem 1.5rem;border-radius:50px;border:none;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-weight:700;font-size:0.95rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(220,38,38,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
+        </div>
+    </div>
+</div>
+<style>
+@keyframes slideUpModal {
+    from { opacity:0; transform:translateY(30px) scale(0.95); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+}
+</style>
+<script>
+document.getElementById('logoutConfirmModal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
+});
+</script>
 </body>
 </html>

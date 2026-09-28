@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 import com.unitrs.exceptions.ValidationException;
 import com.unitrs.model.entity.Role;
@@ -20,6 +22,7 @@ import com.unitrs.model.entity.ClassSection;
 import com.unitrs.model.entity.Enrollment;
 import com.unitrs.model.entity.Grade;
 import com.unitrs.model.entity.AttendanceEntry;
+import com.unitrs.model.entity.AttendanceRecord;
 import com.unitrs.repository.UserRepository;
 import com.unitrs.repository.SchoolRepository;
 import com.unitrs.repository.EnrollmentRepository;
@@ -99,12 +102,18 @@ public class StudentController extends HttpServlet {
                 request.setAttribute("termGpa", termGpa);
 
                 Map<Integer, List<AttendanceEntry>> attendanceMap = new HashMap<>();
+                Map<Integer, List<AttendanceRecord>> sectionRecordsMap = new HashMap<>();
                 for (Enrollment enrollment : schedule) {
                     List<AttendanceEntry> entries = attendanceRepository
                             .findStudentAttendanceByEnrollmentId(enrollment.getClassSectionId(), user.getId());
                     attendanceMap.put(enrollment.getId(), entries);
+
+                    List<AttendanceRecord> records = attendanceRepository
+                            .findRecordsByClassSectionId(enrollment.getClassSectionId());
+                    sectionRecordsMap.put(enrollment.getId(), records);
                 }
                 request.setAttribute("attendanceMap", attendanceMap);
+                request.setAttribute("sectionRecordsMap", sectionRecordsMap);
 
                 List<Term> allTerms = termRepository.findAll();
                 request.setAttribute("allTerms", allTerms);
@@ -136,6 +145,69 @@ public class StudentController extends HttpServlet {
 
                 TermRegistrationRequest latestTermRequest = termRegistrationRepository.getLatestRequestByStudent(user.getId());
                 request.setAttribute("latestTermRequest", latestTermRequest);
+
+                List<ClassSection> termCourses = new ArrayList<>();
+                Set<String> seenCourseCodes = new HashSet<>();
+                int termTotalCredits = 0;
+                if (studentTerm != null && availableClasses != null) {
+                    for (ClassSection cs : availableClasses) {
+                        if (cs.getTermId() == studentTerm.getId()) {
+                            if (!seenCourseCodes.contains(cs.getCourseCode())) {
+                                seenCourseCodes.add(cs.getCourseCode());
+                                termCourses.add(cs);
+                                termTotalCredits += cs.getCredits();
+                            }
+                        }
+                    }
+                }
+                if (studentTerm != null && schedule != null) {
+                    for (Enrollment enr : schedule) {
+                        if (studentTerm.getTermName() != null && studentTerm.getTermName().equalsIgnoreCase(enr.getTermName())) {
+                            if (!seenCourseCodes.contains(enr.getCourseCode())) {
+                                seenCourseCodes.add(enr.getCourseCode());
+                                ClassSection cs = new ClassSection();
+                                cs.setTermId(studentTerm.getId());
+                                cs.setCourseCode(enr.getCourseCode());
+                                cs.setCourseTitle(enr.getCourseTitle());
+                                cs.setCredits(enr.getCredits());
+                                cs.setProfessorName(enr.getProfessorName());
+                                cs.setRoomName(enr.getRoom());
+                                cs.setSessionShift(enr.getSessionShift());
+                                cs.setDaysOfWeek(enr.getDaysOfWeek());
+                                termCourses.add(cs);
+                                termTotalCredits += enr.getCredits();
+                            }
+                        }
+                    }
+                }
+                request.setAttribute("termCourses", termCourses);
+                request.setAttribute("termTotalCredits", termTotalCredits);
+                request.setAttribute("termCourseCount", termCourses.size());
+
+                Set<String> enrolledCourseCodes = new HashSet<>();
+                boolean isTermEnrolled = false;
+                if (schedule != null) {
+                    for (Enrollment enr : schedule) {
+                        enrolledCourseCodes.add(enr.getCourseCode());
+                        if (studentTerm != null && studentTerm.getTermName() != null && studentTerm.getTermName().equalsIgnoreCase(enr.getTermName())) {
+                            isTermEnrolled = true;
+                        }
+                    }
+                }
+                request.setAttribute("enrolledCourseCodes", enrolledCourseCodes);
+                request.setAttribute("isTermEnrolled", isTermEnrolled);
+
+                boolean isTermRegistered = false;
+                if (studentTerm != null) {
+                    if (hasPendingTermRequest) {
+                        isTermRegistered = true;
+                    } else if (latestTermRequest != null && latestTermRequest.getTermId() == studentTerm.getId() && "APPROVED".equalsIgnoreCase(latestTermRequest.getStatus())) {
+                        isTermRegistered = true;
+                    } else if (isTermEnrolled) {
+                        isTermRegistered = true;
+                    }
+                }
+                request.setAttribute("isTermRegistered", isTermRegistered);
 
                 Map<Integer, Grade> gradeMap = new HashMap<>();
                 for (Grade grade : grades) {

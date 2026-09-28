@@ -123,6 +123,8 @@ public class ProfessorController extends HttpServlet {
             if (success != null) {
                 if ("attendance".equals(success)) {
                     request.setAttribute("successMessage", "Attendance successfully recorded!");
+                } else if ("extra_class_added".equals(success)) {
+                    request.setAttribute("successMessage", "Extra make-up class session successfully scheduled!");
                 } else if ("grades".equals(success)) {
                     request.setAttribute("successMessage", "Grades successfully saved!");
                 } else {
@@ -203,6 +205,44 @@ public class ProfessorController extends HttpServlet {
                 String tab = request.getParameter("tab");
                 String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + URLEncoder.encode(tab.trim(), StandardCharsets.UTF_8) : "&tab=classes";
                 String msg = (e.getMessage() != null && !e.getMessage().trim().isEmpty()) ? e.getMessage() : "Failed to save attendance.";
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode(msg, StandardCharsets.UTF_8) + tabParam);
+            }
+        } else if (path != null && path.equals("/attendance/add-extra")) {
+            try {
+                String sectionIdStr = request.getParameter("classSectionId");
+                if (sectionIdStr == null || sectionIdStr.trim().isEmpty()) {
+                    throw new ValidationException("Class section ID is required.");
+                }
+                int classSectionId = Integer.parseInt(sectionIdStr.trim());
+                ClassSection section = classSectionRepository.findById(classSectionId);
+                if (section == null) {
+                    throw new ValidationException("Class section not found.");
+                }
+                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                    throw new ValidationException("You are not authorized to add an extra class for this section.");
+                }
+                String sessionDateStr = request.getParameter("sessionDate");
+                if (sessionDateStr == null || sessionDateStr.trim().isEmpty()) {
+                    throw new ValidationException("Please select a valid session date.");
+                }
+                java.sql.Date sessionDate;
+                try {
+                    sessionDate = java.sql.Date.valueOf(sessionDateStr.trim());
+                } catch (IllegalArgumentException e) {
+                    throw new ValidationException("Invalid session date format.");
+                }
+                AttendanceRecord existing = attendanceRepository.findRecordBySectionAndDate(classSectionId, sessionDate);
+                if (existing == null) {
+                    attendanceRepository.createRecord(classSectionId, sessionDate);
+                }
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + URLEncoder.encode(tab.trim(), StandardCharsets.UTF_8) : "&tab=schedule";
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?success=extra_class_added" + tabParam);
+            } catch (Exception e) {
+                e.printStackTrace();
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + URLEncoder.encode(tab.trim(), StandardCharsets.UTF_8) : "&tab=schedule";
+                String msg = (e.getMessage() != null && !e.getMessage().trim().isEmpty()) ? e.getMessage() : "Failed to add extra class.";
                 response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode(msg, StandardCharsets.UTF_8) + tabParam);
             }
         } else if (path != null && path.equals("/grades/save")) {
