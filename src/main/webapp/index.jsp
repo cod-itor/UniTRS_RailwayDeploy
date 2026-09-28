@@ -4,24 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniTRS - University Management System</title>
-    <meta name="description" content="Empowering education with UniTRS. The modern University Management System for students, professors, and administrators.">
+    <title>UniTRS | University Management System</title>
+    <meta name="description" content="UniTRS: The dedicated University Management System. Streamlining academics with a high-density, calm design architecture.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
 
     <style>
         :root {
-            /* Brightened gradients for perfect contrast against dark backgrounds */
             --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             --secondary-gradient: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
-            --dark-bg: #0b1423; /* Slightly deeper for better text contrast */
-            --section-bg: #111c30;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --text-main: #f8fafc; /* Brighter white */
-            --text-muted: #cbd5e1; /* Brighter gray for readability */
+            --dark-bg: #090e17; 
+            --section-bg: #0d1522;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc; 
         }
 
         body {
@@ -30,30 +28,38 @@
             background-color: var(--dark-bg);
             color: var(--text-main);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Ambient Background Animations */
+        .text-muted { color: #94a3b8 !important; }
+        .text-light-muted { color: #cbd5e1 !important; }
+
+        /* --- Performance-Optimized CSS Animations --- */
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-up {
+            animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+
+        /* Ambient Background */
         .ambient-bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: -1;
-            background: radial-gradient(circle at 15% 50%, rgba(79, 172, 254, 0.08), transparent 40%),
-                        radial-gradient(circle at 85% 30%, rgba(0, 242, 254, 0.08), transparent 40%);
+            background: radial-gradient(circle at 15% 50%, rgba(79, 172, 254, 0.06), transparent 40%),
+                        radial-gradient(circle at 85% 30%, rgba(0, 242, 254, 0.06), transparent 40%);
             pointer-events: none;
         }
 
-        /* Typography Tools */
         .text-gradient {
             background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block; /* Prevents clipping bugs on wrapping */
-        }
-        .text-gradient-alt {
-            background: var(--secondary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: inline-block;
@@ -61,20 +67,21 @@
 
         /* --- Custom Navbar --- */
         .navbar-custom {
-            background: rgba(11, 20, 35, 0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(9, 14, 23, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--glass-border);
             padding: 1rem 0;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            transition: all 0.3s ease;
         }
 
         .navbar-brand {
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: #ffffff !important;
             display: flex;
             align-items: center;
@@ -82,17 +89,14 @@
         }
 
         .nav-link-custom {
-            color: var(--text-main) !important;
+            color: var(--text-muted) !important;
             font-weight: 500;
-            margin: 0 0.5rem;
-            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            margin: 0 0.8rem;
+            transition: color 0.2s ease;
         }
+        .nav-link-custom:hover { color: #f8fafc !important; }
 
-        .nav-link-custom:hover {
-            color: #00f2fe !important;
-        }
-
-        /* Mobile Navbar adjustments */
         @media (max-width: 991px) {
             .navbar-collapse {
                 background: var(--section-bg);
@@ -100,129 +104,127 @@
                 border-radius: 12px;
                 margin-top: 1rem;
                 border: 1px solid var(--glass-border);
-                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            }
-            .nav-link-custom {
-                margin: 0.5rem 0;
-                font-size: 1.1rem;
             }
         }
 
         /* Buttons */
         .btn-glass {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             color: #ffffff !important;
-            padding: 0.6rem 1.8rem;
-            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
         .btn-glass:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
         }
 
         .btn-gradient {
             background: var(--primary-gradient);
             border: none;
-            color: #111c30 !important; /* Dark text for high contrast on bright gradient */
-            padding: 0.6rem 1.8rem;
-            border-radius: 50px;
+            color: #090e17 !important;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
             font-weight: 700;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.15);
         }
         .btn-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
-            color: #111c30 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.3);
         }
 
-        /* --- Hero Section 1 (Main) --- */
+        /* --- Hero Section --- */
         .hero {
-            min-height: 100vh;
+            min-height: 90vh;
             display: flex;
             align-items: center;
-            padding-top: 100px;
+            padding-top: 120px;
             position: relative;
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 7vw, 4.5rem); /* Better mobile scaling */
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 800;
-            line-height: 1.2;
+            line-height: 1.1;
             margin-bottom: 1.5rem;
-            color: #ffffff;
+            letter-spacing: -0.02em;
         }
 
         .hero p {
-            font-size: clamp(1.1rem, 2vw, 1.25rem);
-            color: var(--text-muted);
+            font-size: clamp(1.05rem, 1.5vw, 1.15rem);
             max-width: 600px;
-            margin-bottom: 2.5rem;
-            line-height: 1.7;
+            margin-bottom: 2rem;
+            line-height: 1.6;
         }
 
-        .hero-img-wrapper {
-            position: relative;
-            z-index: 1;
-            margin-top: 2rem;
-        }
-        .hero-img-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -10%; left: -10%; right: -10%; bottom: -10%;
-            background: radial-gradient(circle, rgba(0,242,254,0.15) 0%, transparent 60%);
-            z-index: -1;
-        }
-        .hero-dashboard-mock {
-            background: rgba(17, 34, 64, 0.9);
+        /* High-Density Mockup UI */
+        .mockup-container {
+            background: rgba(13, 21, 34, 0.8);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 1.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
-            transition: transform 0.5s ease;
-        }
-        .hero-dashboard-mock:hover {
-            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
-        }
-
-        @media (max-width: 991px) {
-            .hero-dashboard-mock {
-                transform: none; /* Disable 3D on mobile for better visibility */
-            }
-            .hero {
-                padding-top: 120px;
-                padding-bottom: 4rem;
-                text-align: center;
-            }
-            .hero p { margin: 0 auto 2.5rem; }
-            .hero .d-flex { justify-content: center; }
-        }
-
-        /* --- Hero Section 2 (Vision) --- */
-        .vision-section {
-            padding: 6rem 0;
-            background: var(--section-bg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
             position: relative;
-            border-top: 1px solid var(--glass-border);
+        }
+        .mockup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
             border-bottom: 1px solid var(--glass-border);
         }
-        .vision-section h2 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            color: #ffffff;
+        .mockup-row {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid transparent;
+            transition: background 0.2s;
+        }
+        .mockup-row:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--glass-border);
+        }
+        .skeleton-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); opacity: 0.8; }
+        .skeleton-line { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.2); }
+        .skeleton-pill { height: 20px; width: 60px; border-radius: 12px; background: rgba(0,242,254,0.15); border: 1px solid rgba(0,242,254,0.3); }
+
+        /* Fast Data Ribbon */
+        .data-ribbon {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 2rem;
+        }
+        .data-stat { display: flex; flex-direction: column; }
+        .data-stat-num { font-size: 1.5rem; font-weight: 700; color: #fff; }
+        .data-stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+
+        @media (max-width: 991px) {
+            .hero { padding-top: 100px; text-align: center; }
+            .hero p { margin: 0 auto 2rem; }
+            .hero .d-flex.gap-3 { justify-content: center; }
+            .data-ribbon { justify-content: center; flex-wrap: wrap; gap: 2rem; }
+            .mockup-container { margin-top: 3rem; }
         }
 
-        /* --- Roles Showcase --- */
+        /* --- Showcase Section (Roles zig-zag) --- */
         .showcase-section {
-            padding: 6rem 0;
+            padding: 8rem 0;
             position: relative;
+            background: var(--section-bg);
+            border-top: 1px solid var(--glass-border);
         }
         .showcase-block {
             margin-bottom: 5rem;
@@ -248,7 +250,6 @@
             color: #ffffff;
         }
         .showcase-content p {
-            color: var(--text-muted);
             font-size: 1.1rem;
             line-height: 1.7;
         }
@@ -279,143 +280,93 @@
             width: 100%;
         }
         
-        /* Fixed icon visibility */
-        .showcase-visual i {
+        .showcase-visual i.bg-icon {
             font-size: clamp(6rem, 15vw, 10rem);
-            color: rgba(255, 255, 255, 0.05); /* Solid transparent instead of gradient for reliable contrast */
+            color: rgba(255, 255, 255, 0.05); 
             text-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
         }
 
-        /* --- Bento Features Grid --- */
-        .features {
-            padding: 6rem 0;
+        /* --- Information Dense Architecture Section --- */
+        .architecture-section {
+            padding: 8rem 0;
+            background: var(--dark-bg);
+        }
+        .arch-header {
+            max-width: 600px;
+            margin-bottom: 4rem;
+        }
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .arch-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        .arch-card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(0,242,254,0.3);
+        }
+        .arch-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: rgba(0,242,254,0.1);
+            color: #00f2fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .arch-card h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: #fff; }
+        .arch-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin: 0; }
+
+        /* --- Dense Data Table Preview Section --- */
+        .preview-section {
+            padding: 8rem 0;
+            position: relative;
             background: var(--section-bg);
             border-top: 1px solid var(--glass-border);
         }
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.5rem;
-        }
-        .bento-card {
-            background: rgba(255,255,255,0.03);
+        .preview-bento {
+            background: rgba(13, 21, 34, 0.5);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            padding: 2.5rem;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
         }
-        .bento-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.08), transparent 40%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 0;
-            pointer-events: none;
-        }
-        .bento-card:hover::before { opacity: 1; }
-        .bento-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 242, 254, 0.4);
-            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.1);
-        }
-        .bento-card > * { position: relative; z-index: 1; }
-        .bento-span-8 { grid-column: span 8; }
-        .bento-span-4 { grid-column: span 4; }
-        .bento-span-6 { grid-column: span 6; }
-        
-        @media (max-width: 992px) {
-            .bento-span-8, .bento-span-4, .bento-span-6 { grid-column: span 12; }
-            .bento-card { padding: 2rem; }
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
+        .feature-list { list-style: none; padding: 0; margin: 2rem 0 0; }
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
             margin-bottom: 1.5rem;
-            color: #00f2fe;
-            display: inline-block;
         }
-        .feature-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #ffffff;
-        }
-        .feature-text {
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 0;
+        .feature-list i { color: #00f2fe; font-size: 1.2rem; margin-right: 1rem; margin-top: 2px; }
+        .feature-list div h5 { font-size: 1.05rem; color: #fff; margin-bottom: 0.25rem; font-weight: 600; }
+        .feature-list div p { font-size: 0.9rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
+
+        @media (max-width: 991px) {
+            .preview-bento { grid-template-columns: 1fr; padding: 2rem; gap: 2rem; }
         }
 
         /* --- Footer --- */
         .footer-custom {
-            background: #060b13; /* Very dark for distinct footer */
-            padding: 5rem 0 2rem;
+            background: #060a10; 
+            padding: 4rem 0 2rem;
             border-top: 1px solid var(--glass-border);
         }
-        .footer-brand {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .footer-brand i { color: #00f2fe; }
-        .footer-desc {
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            max-width: 300px;
-        }
-        .footer-title {
-            color: #ffffff;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-        }
-        .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .footer-links li { margin-bottom: 0.8rem; }
-        .footer-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
+        .footer-title { color: #fff; font-weight: 600; font-size: 0.95rem; margin-bottom: 1.25rem; }
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
         .footer-links a:hover { color: #00f2fe; }
-        .social-icons a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            color: #ffffff;
-            margin-right: 0.5rem;
-            transition: all 0.3s;
-        }
-        .social-icons a:hover {
-            background: var(--primary-gradient);
-            border-color: transparent;
-            transform: translateY(-3px);
-            color: #111c30;
-        }
-        .footer-bottom {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-            color: #64748b;
-            font-size: 0.9rem;
-        }
     </style>
 </head>
 
@@ -426,58 +377,114 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container">
-            <a class="navbar-brand text-decoration-none" href="#">
-                <i class="bi bi-mortarboard-fill"></i> UniTRS
+            <a class="navbar-brand text-decoration-none animate-up" href="#">
+                <i class="bi bi-mortarboard-fill text-gradient"></i> UniTRS
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: rgba(255,255,255,0.15);">
-                <span class="bi bi-list text-white" style="font-size: 1.7rem;"></span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border: none;">
+                <i class="bi bi-list text-white fs-2"></i>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse animate-up delay-100" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#vision">Our Vision</a></li>
-                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#showcase">Roles</a></li>
-                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#showcase">Portals</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#architecture">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#capabilities">Security</a></li>
                 </ul>
                 <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0 justify-content-center justify-content-lg-start">
-                    <button id="pwaInstallBtn" class="btn btn-glass btn-sm rounded-pill px-3 py-2 text-decoration-none" style="display: none;" onclick="window.promptPwaInstall()">
-                        <i class="bi bi-download me-1"></i> App
-                    </button>
-                    <a href="${pageContext.request.contextPath}/auth/login" class="text-decoration-none text-white fw-bold mx-2">Sign In</a>
-                    <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-gradient text-decoration-none">Get Started</a>
+                    <a href="${pageContext.request.contextPath}/auth/login" class="text-decoration-none text-muted fw-semibold hover-white">Sign In</a>
+                    <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-glass">Portal</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section 1 (Main) -->
+    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6 mb-5 mb-lg-0">
-                    <h1>The Modern <br><span class="text-gradient">Academic Core</span></h1>
-                    <p>UniTRS bridges the gap between students, educators, and administrators with a secure, 4-tier Jakarta EE architecture. Experience the future of university management today.</p>
-                    <div class="d-flex gap-3 flex-wrap">
-                        <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-gradient">Join the Network</a>
-                        <a href="#showcase" class="btn btn-glass">Explore Roles</a>
+                <div class="col-lg-6">
+                    <div class="animate-up">
+                        <span class="badge bg-dark border border-secondary text-light-muted mb-3 px-3 py-2 rounded-pill fw-medium" style="font-size: 0.8rem;">
+                            <i class="bi bi-lightning-charge-fill text-warning me-1"></i> Jakarta EE 10 Powered
+                        </span>
+                        <h1>Calm Design for <br><span class="text-gradient">Complex Academics</span></h1>
+                        <p class="text-light-muted">UniTRS cuts through administrative noise. Designed exclusively for the modern academic model, connecting thousands of students and faculties through a high-density, low-friction portal.</p>
+                    </div>
+                    
+                    <div class="d-flex gap-3 flex-wrap animate-up delay-100">
+                        <a href="${pageContext.request.contextPath}/auth/register" class="btn btn-gradient">Open Dashboard</a>
+                        <a href="#showcase" class="btn btn-glass">Read Docs</a>
+                    </div>
+
+                    <div class="data-ribbon animate-up delay-200">
+                        <div class="data-stat">
+                            <span class="data-stat-num">4,000+</span>
+                            <span class="data-stat-label">Active Students</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-num">12</span>
+                            <span class="data-stat-label">Colleges & Schools</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-num">4-Tier</span>
+                            <span class="data-stat-label">Architecture</span>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6 d-none d-md-block">
-                    <div class="hero-img-wrapper">
-                        <div class="hero-dashboard-mock">
-                            <!-- Abstract UI Mockup -->
-                            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div style="width:30px;height:30px;border-radius:50%;background:var(--primary-gradient);"></div>
-                                    <div style="width:100px;height:10px;background:#334155;border-radius:5px;"></div>
-                                </div>
-                                <div style="width:60px;height:20px;background:#334155;border-radius:10px;"></div>
+
+                <!-- High-Density SaaS Mockup -->
+                <div class="col-lg-6 d-none d-lg-block animate-up delay-300">
+                    <div class="mockup-container">
+                        <!-- Header -->
+                        <div class="mockup-header">
+                            <div>
+                                <div class="skeleton-line mb-2" style="width: 140px; background: #fff; height: 12px;"></div>
+                                <div class="skeleton-line" style="width: 80px; height: 8px;"></div>
                             </div>
-                            <div class="row g-3 mb-4">
-                                <div class="col-4"><div style="height:80px;background:rgba(255,255,255,0.05);border-radius:10px;padding:15px;"><div style="width:40px;height:40px;background:rgba(0,242,254,0.3);border-radius:8px;margin-bottom:10px;"></div></div></div>
-                                <div class="col-4"><div style="height:80px;background:rgba(255,255,255,0.05);border-radius:10px;padding:15px;"><div style="width:40px;height:40px;background:rgba(166,193,238,0.3);border-radius:8px;margin-bottom:10px;"></div></div></div>
-                                <div class="col-4"><div style="height:80px;background:rgba(255,255,255,0.05);border-radius:10px;padding:15px;"><div style="width:40px;height:40px;background:rgba(255,255,255,0.15);border-radius:8px;margin-bottom:10px;"></div></div></div>
+                            <div class="d-flex gap-2">
+                                <div style="width: 32px; height: 32px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);"></div>
+                                <div style="width: 80px; height: 32px; border-radius: 6px; background: var(--primary-gradient);"></div>
                             </div>
-                            <div style="height:120px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px dashed rgba(255,255,255,0.15);"></div>
+                        </div>
+                        
+                        <!-- Filter Bar -->
+                        <div class="d-flex gap-2 mb-3">
+                            <div class="skeleton-line" style="width: 60px; height: 24px; border-radius: 12px;"></div>
+                            <div class="skeleton-line" style="width: 80px; height: 24px; border-radius: 12px;"></div>
+                            <div class="skeleton-line" style="width: 50px; height: 24px; border-radius: 12px; background: rgba(0,242,254,0.1);"></div>
+                        </div>
+
+                        <!-- Data Rows -->
+                        <div class="mockup-row">
+                            <div class="skeleton-avatar me-3"></div>
+                            <div class="flex-grow-1">
+                                <div class="skeleton-line mb-1" style="width: 120px;"></div>
+                                <div class="skeleton-line" style="width: 70px; opacity: 0.5;"></div>
+                            </div>
+                            <div class="skeleton-pill"></div>
+                        </div>
+                        <div class="mockup-row">
+                            <div class="skeleton-avatar me-3" style="background: rgba(255,255,255,0.1);"></div>
+                            <div class="flex-grow-1">
+                                <div class="skeleton-line mb-1" style="width: 150px;"></div>
+                                <div class="skeleton-line" style="width: 90px; opacity: 0.5;"></div>
+                            </div>
+                            <div class="skeleton-pill" style="background: rgba(255,255,255,0.1); border-color: transparent;"></div>
+                        </div>
+                        <div class="mockup-row">
+                            <div class="skeleton-avatar me-3" style="background: rgba(255,255,255,0.1);"></div>
+                            <div class="flex-grow-1">
+                                <div class="skeleton-line mb-1" style="width: 110px;"></div>
+                                <div class="skeleton-line" style="width: 60px; opacity: 0.5;"></div>
+                            </div>
+                            <div class="skeleton-pill" style="background: rgba(255,255,255,0.1); border-color: transparent;"></div>
+                        </div>
+                        <div class="mockup-row" style="opacity: 0.5;">
+                            <div class="skeleton-avatar me-3" style="background: rgba(255,255,255,0.05);"></div>
+                            <div class="flex-grow-1">
+                                <div class="skeleton-line mb-1" style="width: 130px;"></div>
+                                <div class="skeleton-line" style="width: 80px; opacity: 0.5;"></div>
+                            </div>
+                            <div class="skeleton-pill" style="background: transparent; border-color: var(--glass-border);"></div>
                         </div>
                     </div>
                 </div>
@@ -485,112 +492,135 @@
         </div>
     </section>
 
-    <!-- Hero Section 2 (Vision) -->
-    <section id="vision" class="vision-section text-center">
-        <div class="container">
-            <h2 class="text-white">Transforming <br class="d-md-none"><span class="text-gradient-alt">Education</span></h2>
-            <p class="lead text-muted mx-auto mt-3" style="max-width: 800px;">
-                Legacy systems slow down academic progress. We built UniTRS from the ground up using robust Jakarta EE technologies to deliver real-time transcripts, seamless enrollment, and zero-friction communication between faculties.
-            </p>
-        </div>
-    </section>
-
-    <!-- Showcase Section (Roles) -->
+    <!-- Showcase Section (Roles Zig-Zag Feature Telling) -->
     <section id="showcase" class="showcase-section">
         <div class="container">
-            <div class="text-center mb-5 pb-4">
-                <h2 class="fw-bold text-white">Dedicated Workspaces</h2>
-                <p class="text-muted">Four distinct portals. One unified ecosystem.</p>
+            <div class="text-center mb-5 pb-4 animate-up">
+                <h2 class="fw-bold text-white">Unified Academic Portals</h2>
+                <p class="text-light-muted">Connecting every college and school across the university.</p>
             </div>
 
             <!-- Student Block -->
-            <div class="showcase-block">
+            <div class="showcase-block animate-up delay-100">
                 <div class="showcase-visual">
-                    <i class="bi bi-backpack4"></i>
+                    <i class="bi bi-backpack4 bg-icon"></i>
                 </div>
                 <div class="showcase-content flex-grow-1">
                     <div class="showcase-icon-wrapper"><i class="bi bi-person-badge"></i></div>
                     <h3>Student Portal</h3>
-                    <p>Designed for clarity and speed. Register via University ID, verify your identity, and access the Batch Term Enrollment system. View your real-time weekly schedule and track a live GPA transcript across all 4 assessment components.</p>
-                    <ul class="list-unstyled text-muted mt-3">
-                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Instant Batch Term Registration</li>
-                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Real-time Grades & GPA</li>
-                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> PWA Support for Mobile Access</li>
+                    <p class="text-light-muted">Register via your official University ID. Access our streamlined Batch Term Enrollment system, view your weekly schedule, and track a live GPA transcript across all assessments, whether you're in the College of Law or the School of Business.</p>
+                    <ul class="list-unstyled text-light-muted mt-3">
+                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Cohort Term Registrations</li>
+                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Real-time Transcripts</li>
+                        <li><i class="bi bi-check-circle-fill text-info me-2"></i> Installable Mobile App</li>
                     </ul>
                 </div>
             </div>
 
             <!-- Professor Block -->
-            <div class="showcase-block">
+            <div class="showcase-block animate-up delay-100">
                 <div class="showcase-visual">
-                    <i class="bi bi-easel"></i>
+                    <i class="bi bi-easel bg-icon"></i>
                 </div>
                 <div class="showcase-content flex-grow-1">
                     <div class="showcase-icon-wrapper" style="color: #a6c1ee; border-color: rgba(166,193,238,0.3); background: rgba(166,193,238,0.1);"><i class="bi bi-person-workspace"></i></div>
-                    <h3>Professor Portal</h3>
-                    <p>Streamline your teaching workflow. View assigned morning, afternoon, evening, or weekend sections. Manage class rosters, track daily attendance, and input continuous assessments with automatic letter grade calculations.</p>
-                    <ul class="list-unstyled text-muted mt-3">
-                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> 4-Component Grade Management</li>
-                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Daily Attendance Tracking</li>
-                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Excel Roster Exports</li>
+                    <h3>Faculty & Professors</h3>
+                    <p class="text-light-muted">Built to support rigorous teaching standards. Manage class rosters, track daily attendance, and utilize our automated 4-component continuous grading system directly linked to the registrar.</p>
+                    <ul class="list-unstyled text-light-muted mt-3">
+                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> 4-Component Assessment System</li>
+                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Daily Roster Tracking</li>
+                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Excel Integrations</li>
                     </ul>
                 </div>
             </div>
 
             <!-- Dean Block -->
-            <div class="showcase-block">
+            <div class="showcase-block animate-up delay-100">
                 <div class="showcase-visual">
-                    <i class="bi bi-bank"></i>
+                    <i class="bi bi-bank bg-icon"></i>
                 </div>
                 <div class="showcase-content flex-grow-1">
                     <div class="showcase-icon-wrapper" style="color: #f6e05e; border-color: rgba(246,224,94,0.3); background: rgba(246,224,94,0.1);"><i class="bi bi-award"></i></div>
-                    <h3>Dean & Administration</h3>
-                    <p>Govern the academic structure. Bundle courses into specific terms, allocate physical rooms and professors, and review pending student enrollment requests for cohorts under your faculty.</p>
-                    <ul class="list-unstyled text-muted mt-3">
+                    <h3>Deans & Administration</h3>
+                    <p class="text-light-muted">Govern the academic structure of your specific College or School. Bundle courses into terms, allocate campus rooms on Northbridge Road, and review pending student enrollment requests efficiently.</p>
+                    <ul class="list-unstyled text-light-muted mt-3">
                         <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Term-Course Bundling</li>
-                        <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Room & Capacity Scheduling</li>
-                        <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Faculty Governance</li>
+                        <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Campus Room Scheduling</li>
+                        <li><i class="bi bi-check-circle-fill text-warning me-2"></i> Enrollment Approvals</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Bento Features Section -->
-    <section id="features" class="features">
+    <!-- Information Dense Architecture Section -->
+    <section id="architecture" class="architecture-section">
         <div class="container">
-            <div class="text-center mb-5 pb-3">
-                <h2 class="fw-bold text-white">Under The Hood</h2>
-                <p class="text-muted">Built with security and scale in mind.</p>
+            <div class="arch-header animate-up">
+                <h2 class="fw-bold text-white mb-3">Role-Based Architecture</h2>
+                <p class="text-light-muted">A modular, progressive disclosure system. Users only see what they need, minimizing cognitive load while maintaining absolute control over complex academic data.</p>
             </div>
-            
-            <div class="bento-grid">
-                <!-- Large Security Card -->
-                <div class="bento-card bento-span-8">
-                    <i class="bi bi-shield-check feature-icon"></i>
-                    <h3 class="feature-title">Bank-Grade Security</h3>
-                    <p class="feature-text">BCrypt password hashing combined with a custom Two-Factor Authentication (2FA) and OTP flow via Email ensures only authorized personnel access academic records. Role-based routing prevents privilege escalation.</p>
-                </div>
 
-                <!-- Small Analytics -->
-                <div class="bento-card bento-span-4">
-                    <i class="bi bi-graph-up-arrow feature-icon"></i>
-                    <h3 class="feature-title">Smart Grading</h3>
-                    <p class="feature-text">Automated calculations for Attendance (15%), Assignments (25%), Midterm (30%), and Final (30%) straight to a standardized GPA metric.</p>
+            <div class="arch-grid">
+                <!-- Card 1 -->
+                <div class="arch-card animate-up delay-100">
+                    <div class="arch-icon"><i class="bi bi-person-badge"></i></div>
+                    <h4>Student Dashboard</h4>
+                    <p>Action-driven interface prioritizing looming deadlines. Features instant batch term registration, real-time GPA tracking, and installable PWA mobile access.</p>
                 </div>
-
-                <!-- Medium Workflow -->
-                <div class="bento-card bento-span-6">
-                    <i class="bi bi-calendar-range feature-icon"></i>
-                    <h3 class="feature-title">Shift-Based Scheduling</h3>
-                    <p class="feature-text">Comprehensive scheduling accommodating Morning, Afternoon, Evening, and Weekend shifts across multiple academic years and physical room constraints.</p>
+                <!-- Card 2 -->
+                <div class="arch-card animate-up delay-200">
+                    <div class="arch-icon"><i class="bi bi-person-workspace"></i></div>
+                    <h4>Faculty Tools</h4>
+                    <p>Designed for fast data entry. Professors manage class rosters and utilize an automated 4-component continuous grading rubric directly linked to the registrar.</p>
                 </div>
+                <!-- Card 3 -->
+                <div class="arch-card animate-up delay-300">
+                    <div class="arch-icon"><i class="bi bi-diagram-3"></i></div>
+                    <h4>Administrative Core</h4>
+                    <p>Cross-college integration handles data across all university bodies. Deans bundle courses, allocate physical rooms, and approve cohort enrollments seamlessly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- Medium PWA -->
-                <div class="bento-card bento-span-6">
-                    <i class="bi bi-phone feature-icon"></i>
-                    <h3 class="feature-title">Installable PWA</h3>
-                    <p class="feature-text">Native-like mobile experience. Install the UniTRS portal directly to your device home screen for quick, reliable access anytime.</p>
+    <!-- Detailed Capability Preview -->
+    <section id="capabilities" class="preview-section">
+        <div class="container">
+            <div class="preview-bento animate-up">
+                <div>
+                    <h2 class="fw-bold text-white mb-3">Engineered for Scale</h2>
+                    <p class="text-light-muted mb-4">Under the hood, UniTRS uses a robust database schema heavily optimized with views and strict foreign key constraints, ensuring zero data anomalies.</p>
+                    
+                    <ul class="feature-list">
+                        <li>
+                            <i class="bi bi-shield-check"></i>
+                            <div>
+                                <h5>Bank-Grade Security</h5>
+                                <p>BCrypt hashing combined with custom Two-Factor Authentication (2FA) via Email ensures strict privacy.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bi bi-calendar-range"></i>
+                            <div>
+                                <h5>Shift-Based Scheduling</h5>
+                                <p>Accommodates diverse student bodies with automated scheduling for Morning, Afternoon, Evening, and Weekend shifts.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <div>
+                                <h5>Standardized Grading</h5>
+                                <p>Pre-configured calculation logic for Attendance (15%), Assignments (25%), Midterm (30%), and Final (30%).</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="h-100 w-100 rounded-4 d-flex align-items-center justify-content-center" style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); min-height: 400px; position: relative; overflow: hidden;">
+                    <!-- Abstract Code/Data visualization -->
+                    <div style="position: absolute; width: 150%; height: 150%; background: radial-gradient(circle, rgba(0,242,254,0.05) 0%, transparent 60%);"></div>
+                    <i class="bi bi-server" style="font-size: 8rem; color: rgba(255,255,255,0.02); text-shadow: 0 0 30px rgba(0,242,254,0.1);"></i>
                 </div>
             </div>
         </div>
@@ -599,59 +629,71 @@
     <!-- Footer -->
     <footer class="footer-custom">
         <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-4 text-center text-lg-start">
-                    <div class="footer-brand justify-content-center justify-content-lg-start">
-                        <i class="bi bi-mortarboard-fill"></i> UniTRS
+            <div class="row g-4 mb-5">
+                <div class="col-lg-5">
+                    <div class="navbar-brand mb-3">
+                        <i class="bi bi-mortarboard-fill text-gradient"></i> <span class="ms-1">UniTRS</span>
                     </div>
-                    <p class="footer-desc mx-auto mx-lg-0">A modern, robust University Management System built with Jakarta EE 10 to streamline academic operations globally.</p>
-                    <div class="social-icons justify-content-center justify-content-lg-start d-flex">
-                        <a href="#"><i class="bi bi-github"></i></a>
-                        <a href="#"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#"><i class="bi bi-linkedin"></i></a>
-                    </div>
+                    <p class="text-muted" style="max-width: 320px; font-size: 0.9rem; line-height: 1.6;">
+                        The official University Management System powering modern academic infrastructure. Founded on the principles of academic excellence and technological advancement.
+                    </p>
                 </div>
-                <div class="col-lg-2 offset-lg-2 col-md-4 text-center text-md-start">
-                    <h4 class="footer-title">Platform</h4>
+                <div class="col-lg-2 col-6">
+                    <h5 class="footer-title">Platform</h5>
                     <ul class="footer-links">
-                        <li><a href="${pageContext.request.contextPath}/auth/login">Student Portal</a></li>
+                        <li><a href="${pageContext.request.contextPath}/auth/login">Student Login</a></li>
                         <li><a href="${pageContext.request.contextPath}/auth/login">Faculty Portal</a></li>
-                        <li><a href="#features">Features</a></li>
+                        <li><a href="${pageContext.request.contextPath}/auth/login">Admin Dashboard</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-2 col-md-4 text-center text-md-start">
-                    <h4 class="footer-title">Company</h4>
+                <div class="col-lg-2 col-6">
+                    <h5 class="footer-title">Departments</h5>
                     <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Contact Support</a></li>
+                        <li><a href="#">Science & Tech</a></li>
+                        <li><a href="#">Arts & Humanities</a></li>
+                        <li><a href="#">School of Business</a></li>
+                        <li><a href="#">Graduate Studies</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-2 col-md-4 text-center text-md-start">
-                    <h4 class="footer-title">Legal</h4>
+                <div class="col-lg-3">
+                    <h5 class="footer-title">Contact & Legal</h5>
                     <ul class="footer-links">
+                        <li class="d-flex align-items-start mb-2">
+                            <i class="bi bi-geo-alt me-2 text-muted mt-1"></i>
+                            <span style="font-size: 0.9rem;">Northbridge Road, Sen Sok<br>Phnom Penh, Cambodia</span>
+                        </li>
                         <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Security</a></li>
+                        <li><a href="#">IT Guidelines</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="footer-bottom">
-                &copy; 2026 UniTRS Project - ITE204 Java Enterprise Edition. All rights reserved.
+            <div class="d-flex justify-content-between align-items-center pt-4 border-top" style="border-color: var(--glass-border) !important;">
+                <span class="text-muted" style="font-size: 0.85rem;">&copy; 2026 UniTRS System. All rights reserved.</span>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-muted hover-white transition"><i class="bi bi-github fs-5"></i></a>
+                    <a href="#" class="text-muted hover-white transition"><i class="bi bi-twitter-x fs-5"></i></a>
+                </div>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Simple glow effect for bento cards tracking mouse movement
-        document.querySelectorAll('.bento-card').forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', x + 'px');
-                card.style.setProperty('--mouse-y', y + 'px');
+        // Intersection Observer for triggering animations on scroll to prevent lag
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+            // Initially pause animations for elements below the fold
+            document.querySelectorAll('.showcase-section .animate-up, .architecture-section .animate-up, .preview-section .animate-up').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
             });
         });
     </script>
