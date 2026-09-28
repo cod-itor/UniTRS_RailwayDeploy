@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -4489,7 +4490,7 @@
         '${section.id}': {
             id: ${section.id},
             code: '${section.courseCode}',
-            title: '${section.courseTitle.replace("'", "\\'")}',
+            title: '${fn:escapeXml(section.courseTitle)}',
             shift: '${section.sessionShift}',
             days: '${section.daysOfWeek}',
             room: '${section.roomName}',
@@ -4811,7 +4812,7 @@
         {
             id: ${sec.id},
             code: '${sec.courseCode}',
-            title: '${sec.courseTitle.replace("'", "\\'")}',
+            title: '${fn:escapeXml(sec.courseTitle)}',
             shift: '${sec.sessionShift != null ? sec.sessionShift : ""}',
             daysOfWeek: '${sec.daysOfWeek != null ? sec.daysOfWeek : ""}',
             room: '${sec.roomName != null ? sec.roomName : ""}',

@@ -12,21 +12,21 @@ public class GradeCalculatorTest {
 
     @Test
     void testCalculateTotal() {
-        assertEquals(85.0, GradeCalculator.calculateTotal(15.0, 20.0, 25.0, 25.0));
-        assertEquals(100.0, GradeCalculator.calculateTotal(15.0, 25.0, 30.0, 30.0));
+        assertEquals(80.0, GradeCalculator.calculateTotal(10.0, 20.0, 25.0, 25.0));
+        assertEquals(100.0, GradeCalculator.calculateTotal(10.0, 20.0, 30.0, 40.0));
         assertEquals(0.0, GradeCalculator.calculateTotal(-5.0, 0.0, 0.0, 0.0));
     }
 
     @Test
     void testCalculateLetterGrade() {
-        assertEquals("A", GradeCalculator.calculateLetterGrade(95.0));
-        assertEquals("B+", GradeCalculator.calculateLetterGrade(89.5));
-        assertEquals("B", GradeCalculator.calculateLetterGrade(84.0));
-        assertEquals("C+", GradeCalculator.calculateLetterGrade(78.0));
-        assertEquals("C", GradeCalculator.calculateLetterGrade(72.0));
-        assertEquals("D+", GradeCalculator.calculateLetterGrade(66.0));
-        assertEquals("D", GradeCalculator.calculateLetterGrade(60.0));
-        assertEquals("F", GradeCalculator.calculateLetterGrade(59.9));
+        assertEquals("A", GradeCalculator.calculateLetterGrade(85.0));
+        assertEquals("B+", GradeCalculator.calculateLetterGrade(84.0));
+        assertEquals("B", GradeCalculator.calculateLetterGrade(79.0));
+        assertEquals("C+", GradeCalculator.calculateLetterGrade(69.0));
+        assertEquals("C", GradeCalculator.calculateLetterGrade(64.0));
+        assertEquals("D", GradeCalculator.calculateLetterGrade(49.0));
+        assertEquals("E", GradeCalculator.calculateLetterGrade(44.0));
+        assertEquals("F", GradeCalculator.calculateLetterGrade(39.9));
     }
 
     @Test
@@ -36,8 +36,8 @@ public class GradeCalculatorTest {
         assertEquals(3.0, GradeCalculator.calculateGpaPoint("B"));
         assertEquals(2.5, GradeCalculator.calculateGpaPoint("C+"));
         assertEquals(2.0, GradeCalculator.calculateGpaPoint("C"));
-        assertEquals(1.5, GradeCalculator.calculateGpaPoint("D+"));
-        assertEquals(1.0, GradeCalculator.calculateGpaPoint("D"));
+        assertEquals(1.5, GradeCalculator.calculateGpaPoint("D"));
+        assertEquals(1.0, GradeCalculator.calculateGpaPoint("E"));
         assertEquals(0.0, GradeCalculator.calculateGpaPoint("F"));
         assertEquals(0.0, GradeCalculator.calculateGpaPoint("N/A"));
         assertEquals(0.0, GradeCalculator.calculateGpaPoint(null));
@@ -108,11 +108,11 @@ public class GradeCalculatorTest {
 
     @Test
     void testCalculateAttendanceScore() {
-        assertEquals(15.0, GradeCalculator.calculateAttendanceScore(10, 0, 0, 10));
-        assertEquals(15.0, GradeCalculator.calculateAttendanceScore(0, 0, 0, 0));
-        assertEquals(7.5, GradeCalculator.calculateAttendanceScore(5, 0, 0, 10));
-        assertEquals(8.25, GradeCalculator.calculateAttendanceScore(5, 1, 0, 10));
-        assertEquals(9.75, GradeCalculator.calculateAttendanceScore(5, 1, 1, 10));
+        assertEquals(10.0, GradeCalculator.calculateAttendanceScore(10, 0, 0, 10));
+        assertEquals(10.0, GradeCalculator.calculateAttendanceScore(0, 0, 0, 0));
+        assertEquals(5.0, GradeCalculator.calculateAttendanceScore(5, 0, 0, 10));
+        assertEquals(5.5, GradeCalculator.calculateAttendanceScore(5, 1, 0, 10));
+        assertEquals(6.5, GradeCalculator.calculateAttendanceScore(5, 1, 1, 10));
         assertEquals(0.0, GradeCalculator.calculateAttendanceScore(0, 0, 0, 10));
     }
 }

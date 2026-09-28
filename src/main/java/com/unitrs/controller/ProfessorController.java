@@ -165,7 +165,7 @@ public class ProfessorController extends HttpServlet {
                 if (section == null) {
                     throw new ValidationException("Class section not found.");
                 }
-                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                if (section.getProfessorId() != user.getId() && (user.getDeanSchoolId() == null || user.getDeanSchoolId() != section.getSchoolId())) {
                     throw new ValidationException("You are not authorized to manage attendance for this section.");
                 }
 
@@ -218,7 +218,7 @@ public class ProfessorController extends HttpServlet {
                 if (section == null) {
                     throw new ValidationException("Class section not found.");
                 }
-                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                if (section.getProfessorId() != user.getId() && (user.getDeanSchoolId() == null || user.getDeanSchoolId() != section.getSchoolId())) {
                     throw new ValidationException("You are not authorized to add an extra class for this section.");
                 }
                 String sessionDateStr = request.getParameter("sessionDate");
@@ -257,7 +257,7 @@ public class ProfessorController extends HttpServlet {
                 if (section == null) {
                     throw new ValidationException("Class section not found.");
                 }
-                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                if (section.getProfessorId() != user.getId() && (user.getDeanSchoolId() == null || user.getDeanSchoolId() != section.getSchoolId())) {
                     throw new ValidationException("You are not authorized to manage grades for this section.");
                 }
 
@@ -344,7 +344,7 @@ public class ProfessorController extends HttpServlet {
                 if (section == null) {
                     throw new ValidationException("Class section not found.");
                 }
-                if (section.getProfessorId() != user.getId() && user.getDeanSchoolId() == null) {
+                if (section.getProfessorId() != user.getId() && (user.getDeanSchoolId() == null || user.getDeanSchoolId() != section.getSchoolId())) {
                     throw new ValidationException("You are not authorized to export attendance for this section.");
                 }
 

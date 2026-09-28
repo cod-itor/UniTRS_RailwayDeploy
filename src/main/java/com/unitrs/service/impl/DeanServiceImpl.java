@@ -97,10 +97,16 @@ public class DeanServiceImpl implements DeanService {
     }
 
     @Override
-    public void updateCourse(int id, String courseCode, String courseTitle, int credits, int schoolId) {
+    public void updateCourse(int id, String courseCode, String courseTitle, int credits, int schoolId, int deanSchoolId) {
         Course course = courseRepository.findById(id);
         if (course == null) {
             throw new ValidationException("Course not found.");
+        }
+        if (course.getSchoolId() != deanSchoolId) {
+            throw new ValidationException("Access denied. This course belongs to a different school.");
+        }
+        if (schoolId != deanSchoolId) {
+            throw new ValidationException("Access denied. You cannot assign this course to a different school.");
         }
         if (schoolId <= 0) {
             throw new ValidationException("School must be selected.");
@@ -175,10 +181,13 @@ public class DeanServiceImpl implements DeanService {
     }
 
     @Override
-    public void assignCourseToTerm(int termId, int courseId) {
+    public void assignCourseToTerm(int termId, int courseId, int deanSchoolId) {
         Course course = courseRepository.findById(courseId);
         if (course == null) {
             throw new ValidationException("Course not found.");
+        }
+        if (course.getSchoolId() != deanSchoolId) {
+            throw new ValidationException("Access denied. This course belongs to a different school.");
         }
         List<Course> currentCourses = termRepository.findCoursesByTerm(termId, course.getSchoolId());
         if (currentCourses.size() >= 5) {
@@ -189,7 +198,14 @@ public class DeanServiceImpl implements DeanService {
     }
 
     @Override
-    public void removeCourseFromTerm(int termId, int courseId) {
+    public void removeCourseFromTerm(int termId, int courseId, int deanSchoolId) {
+        Course course = courseRepository.findById(courseId);
+        if (course == null) {
+            throw new ValidationException("Course not found.");
+        }
+        if (course.getSchoolId() != deanSchoolId) {
+            throw new ValidationException("Access denied. This course belongs to a different school.");
+        }
         List<ClassSection> sections = classSectionRepository.findAllSections();
         boolean hasActiveSection = sections.stream()
                 .anyMatch(s -> s.getTermId() == termId && s.getCourseId() == courseId);
@@ -228,7 +244,7 @@ public class DeanServiceImpl implements DeanService {
     }
 
     @Override
-    public void addClassSection(int termId, int courseId, int professorId, int roomId, String sessionShift, String daysOfWeek, String academicYear) {
+    public void addClassSection(int termId, int courseId, int professorId, int roomId, String sessionShift, String daysOfWeek, String academicYear, int deanSchoolId) {
         if (daysOfWeek == null || daysOfWeek.trim().isEmpty()) {
             throw new ValidationException("Days of week cannot be empty.");
         }
@@ -239,6 +255,9 @@ public class DeanServiceImpl implements DeanService {
         Course course = courseRepository.findById(courseId);
         if (course == null) {
             throw new ValidationException("Course not found.");
+        }
+        if (course.getSchoolId() != deanSchoolId) {
+            throw new ValidationException("Access denied. This course belongs to a different school.");
         }
 
         List<Course> coursesInTerm = termRepository.findCoursesByTerm(termId, course.getSchoolId());
@@ -327,10 +346,13 @@ public class DeanServiceImpl implements DeanService {
     }
 
     @Override
-    public void removeClassSection(int id) {
+    public void removeClassSection(int id, int deanSchoolId) {
         ClassSection section = classSectionRepository.findById(id);
         if (section == null) {
             throw new ValidationException("Class section not found.");
+        }
+        if (section.getSchoolId() != deanSchoolId) {
+            throw new ValidationException("Access denied. This section belongs to a different school.");
         }
         if (!classSectionRepository.delete(id)) {
             throw new RuntimeException("Failed to delete class section.");
@@ -338,7 +360,14 @@ public class DeanServiceImpl implements DeanService {
     }
 
     @Override
-    public void unenrollStudentFromSection(int studentId, int classSectionId) {
+    public void unenrollStudentFromSection(int studentId, int classSectionId, int deanSchoolId) {
+        ClassSection section = classSectionRepository.findById(classSectionId);
+        if (section == null) {
+            throw new ValidationException("Class section not found.");
+        }
+        if (section.getSchoolId() != deanSchoolId) {
+            throw new ValidationException("Access denied. This section belongs to a different school.");
+        }
         if (!enrollmentRepository.unenrollStudent(studentId, classSectionId)) {
             throw new ValidationException("Failed to unenroll student from section.");
         }

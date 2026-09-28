@@ -146,7 +146,7 @@ public class DeanController extends HttpServlet {
                 String code = request.getParameter("courseCode");
                 String title = request.getParameter("courseTitle");
                 int credits = Integer.parseInt(request.getParameter("credits"));
-                deanService.updateCourse(id, code, title, credits, deanSchoolId);
+                deanService.updateCourse(id, code, title, credits, deanSchoolId, deanSchoolId);
                 successMessage = "Course successfully updated.";
 
             } else if ("addTerm".equals(action)) {
@@ -168,14 +168,14 @@ public class DeanController extends HttpServlet {
                 activeTab = "bundles";
                 int termId = Integer.parseInt(request.getParameter("termId"));
                 int courseId = Integer.parseInt(request.getParameter("courseId"));
-                deanService.assignCourseToTerm(termId, courseId);
+                deanService.assignCourseToTerm(termId, courseId, deanSchoolId);
                 successMessage = "Course bundled to Term successfully.";
 
             } else if ("unbundleCourse".equals(action)) {
                 activeTab = "bundles";
                 int termId = Integer.parseInt(request.getParameter("termId"));
                 int courseId = Integer.parseInt(request.getParameter("courseId"));
-                deanService.removeCourseFromTerm(termId, courseId);
+                deanService.removeCourseFromTerm(termId, courseId, deanSchoolId);
                 successMessage = "Course removed from Term.";
 
             } else if ("addClassSection".equals(action)) {
@@ -188,20 +188,20 @@ public class DeanController extends HttpServlet {
                 String daysOfWeek = request.getParameter("daysOfWeek");
                 String academicYear = request.getParameter("academicYear");
 
-                deanService.addClassSection(termId, courseId, professorId, roomId, sessionShift, daysOfWeek, academicYear);
+                deanService.addClassSection(termId, courseId, professorId, roomId, sessionShift, daysOfWeek, academicYear, deanSchoolId);
                 successMessage = "Class Section successfully scheduled.";
 
             } else if ("removeClassSection".equals(action)) {
                 activeTab = "schedules";
                 int id = Integer.parseInt(request.getParameter("sectionId"));
-                deanService.removeClassSection(id);
+                deanService.removeClassSection(id, user.getDeanSchoolId());
                 successMessage = "Class Section removed.";
 
             } else if ("unenrollStudent".equals(action)) {
                 activeTab = "schedules";
                 int studentId = Integer.parseInt(request.getParameter("studentId"));
                 int sectionId = Integer.parseInt(request.getParameter("sectionId"));
-                deanService.unenrollStudentFromSection(studentId, sectionId);
+                deanService.unenrollStudentFromSection(studentId, sectionId, user.getDeanSchoolId());
                 successMessage = "Student unenrolled successfully.";
 
             } else if ("addRoom".equals(action)) {

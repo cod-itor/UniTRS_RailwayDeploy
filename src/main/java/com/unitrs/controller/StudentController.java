@@ -319,8 +319,9 @@ public class StudentController extends HttpServlet {
 
                 for (Enrollment enrolled : currentSchedule) {
                     boolean sameYear = (enrolled.getAcademicYear() != null && enrolled.getAcademicYear().equals(targetSection.getAcademicYear()));
+                    boolean sameTerm = (enrolled.getTermName() != null && enrolled.getTermName().equalsIgnoreCase(targetSection.getTermName()));
                     boolean sameShift = (enrolled.getSessionShift() != null && enrolled.getSessionShift() == targetSection.getSessionShift());
-                    if (sameYear && sameShift) {
+                    if (sameYear && sameTerm && sameShift) {
                         if (ScheduleUtils.daysOverlap(enrolled.getDaysOfWeek(), targetSection.getDaysOfWeek())) {
                             throw new ValidationException("Schedule conflict: You are already enrolled in "
                                     + enrolled.getCourseCode() + " during " + enrolled.getSessionShift()

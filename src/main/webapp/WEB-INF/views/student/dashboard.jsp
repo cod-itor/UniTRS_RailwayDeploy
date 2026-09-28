@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+    <%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
         <!DOCTYPE html>
         <html lang="en">
 
@@ -3115,7 +3116,7 @@
                                                                                                 <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 py-1 fw-semibold me-1" style="font-size:0.75rem;" onclick="openStudentCourseSessions('${enrollment.id}')">
                                                                                                     <i class="bi bi-calendar3-range me-1"></i>15 Sessions
                                                                                                 </button>
-                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-semibold" onclick="confirmDropCourse('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}')" style="font-size:0.75rem;">
+                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-semibold" data-section-id="${enrollment.classSectionId}" data-course-code="${enrollment.courseCode}" data-course-title="${fn:escapeXml(enrollment.courseTitle)}" onclick="handleDropCourseBtn(this)" style="font-size:0.75rem;">
                                                                                                     <i class="bi bi-x-circle me-1"></i>Drop
                                                                                                 </button>
                                                                                             </td>
@@ -3737,7 +3738,7 @@
                                                                                             <span class="small text-primary fw-semibold" style="font-size:0.72rem;"><i class="bi bi-calendar3-range me-1"></i>Tap for 15-Week Schedule</span>
                                                                                             <div class="d-flex align-items-center gap-2">
                                                                                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.7rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
-                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:26px;" onclick="event.stopPropagation(); confirmDropCourse('${enrollment.classSectionId}', '${enrollment.courseCode}', '${enrollment.courseTitle}')">
+                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:26px;" data-section-id="${enrollment.classSectionId}" data-course-code="${enrollment.courseCode}" data-course-title="${fn:escapeXml(enrollment.courseTitle)}" onclick="event.stopPropagation(); handleDropCourseBtn(this)">
                                                                                                     <i class="bi bi-x me-1"></i>Drop
                                                                                                 </button>
                                                                                             </div>
@@ -4334,13 +4335,13 @@
                                                                                     id: eid,
                                                                                     classSectionId: ${enrollment.classSectionId},
                                                                                     code: '${enrollment.courseCode}',
-                                                                                    title: '${enrollment.courseTitle.replace("'", "\\'")}',
+                                                                                    title: '${fn:escapeXml(enrollment.courseTitle)}',
                                                                                     shift: '${enrollment.sessionShift}',
                                                                                     days: '${enrollment.daysOfWeek}',
                                                                                     room: '${enrollment.room}',
-                                                                                    prof: '${enrollment.professorName.replace("'", "\\'")}',
+                                                                                    prof: '${fn:escapeXml(enrollment.professorName)}',
                                                                                     academicYear: '${enrollment.academicYear}',
-                                                                                    termName: '${enrollment.termName.replace("'", "\\'")}',
+                                                                                    termName: '${fn:escapeXml(enrollment.termName)}',
                                                                                     credits: ${ enrollment.credits },
                                                                                 attScore: <c:choose><c:when test="${enrollGrade != null}">${enrollGrade.attendanceScore}</c:when><c:otherwise>0</c:otherwise></c:choose>,
                                                                                     asgScore: <c:choose><c:when test="${enrollGrade != null}">${enrollGrade.assignmentScore}</c:when><c:otherwise>0</c:otherwise></c:choose>,
@@ -4363,7 +4364,7 @@
                                                                                 if (!enrollmentData[gid]) {
                                                                                     enrollmentData[gid] = {
                                                                                         code: '${g.courseCode}',
-                                                                                        title: '${g.courseTitle}',
+                                                                                        title: '${fn:escapeXml(g.courseTitle)}',
                                                                                         shift: '${not empty g.sessionShift ? g.sessionShift : "-"}',
                                                                                         days: '-',
                                                                                         room: '-',
@@ -4664,6 +4665,12 @@
                                                                             }
                                                                             new bootstrap.Modal(document.getElementById('enrollConfirmModal')).show();
                                                                         }
+                                                                        function handleDropCourseBtn(btn) {
+                                                                            var sectionId = btn.getAttribute('data-section-id');
+                                                                            var courseCode = btn.getAttribute('data-course-code');
+                                                                            var courseTitle = btn.getAttribute('data-course-title');
+                                                                            confirmDropCourse(sectionId, courseCode, courseTitle);
+                                                                        }
 
                                                                         function confirmDropCourse(sectionId, courseCode, courseTitle) {
                                                                             var secIdInput = document.getElementById('dropConfirmSectionId');
@@ -4688,13 +4695,13 @@
                                                                                 id: ${enr.id},
                                                                                 classSectionId: ${enr.classSectionId},
                                                                                 code: '${enr.courseCode}',
-                                                                                title: '${enr.courseTitle.replace("'", "\\'")}',
+                                                                                title: '${fn:escapeXml(enr.courseTitle)}',
                                                                                 credits: ${enr.credits},
                                                                                 shift: '${enr.sessionShift != null ? enr.sessionShift : ""}',
                                                                                 daysOfWeek: '${enr.daysOfWeek != null ? enr.daysOfWeek : ""}',
                                                                                 room: '${enr.room != null ? enr.room : ""}',
-                                                                                professor: '${enr.professorName != null ? enr.professorName.replace("'", "\\'") : ""}',
-                                                                                term: '${enr.termName != null ? enr.termName.replace("'", "\\'") : ""}',
+                                                                                professor: '${enr.professorName != null ? fn:escapeXml(enr.professorName) : ""}',
+                                                                                term: '${enr.termName != null ? fn:escapeXml(enr.termName) : ""}',
                                                                                 year: '${enr.academicYear != null ? enr.academicYear : ""}'
                                                                             },
                                                                             </c:forEach>
@@ -4814,7 +4821,7 @@
                                                                                             }
                                                                                             tableHtml += '<div class="tt-actions-row justify-content-between align-items-center">';
                                                                                             tableHtml += '<button type="button" class="btn btn-sm btn-primary rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" onclick="event.stopPropagation(); openStudentCourseSessions(' + sec.id + ')"><i class="bi bi-calendar3-range me-1"></i>15 Sessions</button>';
-                                                                                            tableHtml += '<button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" onclick="event.stopPropagation(); confirmDropCourse(' + sec.classSectionId + ', \'' + sec.code + '\', \'' + sec.title.replace(/'/g, "\\'") + '\')"><i class="bi bi-trash3 me-1"></i>Drop</button>';
+                                                                                            tableHtml += '<button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:24px;" data-section-id="' + sec.classSectionId + '" data-course-code="' + sec.code.replace(/"/g, "&quot;") + '" data-course-title="' + sec.title.replace(/"/g, "&quot;") + '" onclick="event.stopPropagation(); handleDropCourseBtn(this)"><i class="bi bi-trash3 me-1"></i>Drop</button>';
                                                                                             tableHtml += '</div>';
                                                                                             tableHtml += '</div>';
                                                                                         });
