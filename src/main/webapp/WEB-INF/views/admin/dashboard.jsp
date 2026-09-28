@@ -607,50 +607,68 @@
                 margin-bottom: 12px;
             }
 
-            .mobile-bottom-dock {
+            .mobile-dock, .mobile-bottom-dock {
                 position: fixed;
-                bottom: 16px;
-                left: 16px;
-                right: 16px;
-                max-width: 508px;
-                margin: 0 auto;
-                background: rgba(15, 23, 42, 0.94);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                border-radius: 99px;
-                padding: 8px 12px;
+                bottom: calc(12px + env(safe-area-inset-bottom, 8px));
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100% - 24px);
+                max-width: 480px;
+                background: rgba(255, 255, 255, 0.92);
+                backdrop-filter: blur(24px) saturate(180%);
+                -webkit-backdrop-filter: blur(24px) saturate(180%);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                border-radius: 28px;
                 display: flex;
-                justify-content: space-around;
                 align-items: center;
+                justify-content: space-around;
+                padding: 6px 8px;
                 z-index: 1040;
-                box-shadow: 0 16px 40px rgba(15, 23, 42, 0.35);
-                border: 1px solid rgba(255, 255, 255, 0.15);
+                box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
             }
 
             .dock-tab-btn {
-                background: transparent;
-                border: none;
-                color: #94a3b8;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 3px;
+                justify-content: center;
+                background: transparent;
+                border: none;
+                color: #64748b;
                 font-size: 0.68rem;
-                font-weight: 700;
-                padding: 6px 14px;
-                border-radius: 99px;
-                transition: all 0.2s;
-                position: relative;
+                font-weight: 600;
+                letter-spacing: -0.01em;
+                flex: 1;
+                max-width: 84px;
+                min-height: 46px;
+                padding: 5px 4px;
+                border-radius: 18px;
                 cursor: pointer;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                text-decoration: none;
+                position: relative;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
             }
 
-            .dock-tab-btn i {
-                font-size: 1.15rem;
+            .dock-tab-btn:active {
+                transform: scale(0.92);
             }
 
             .dock-tab-btn.active {
-                color: #ffffff;
-                background: rgba(255, 255, 255, 0.15);
+                color: #2563eb;
+                background: rgba(37, 99, 235, 0.09);
+                font-weight: 700;
+            }
+
+            .dock-tab-btn i {
+                font-size: 1.25rem;
+                margin-bottom: 2px;
+                transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .dock-tab-btn.active i {
+                transform: scale(1.08);
             }
         }
     </style>
@@ -1655,7 +1673,7 @@
                 <i class="bi bi-people"></i>
                 <span>Users</span>
                 <c:if test="${pendingVerifications > 0}">
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark font-monospace" style="font-size:0.58rem; transform: translate(-75%, 20%) !important;">
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.58rem; transform: translate(-75%, 20%) !important;">
                         ${pendingVerifications}
                     </span>
                 </c:if>

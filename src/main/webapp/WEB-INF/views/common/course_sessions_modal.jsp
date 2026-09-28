@@ -169,64 +169,90 @@ var _activeIsProfessor = false;
 
 function calculateCourse15Sessions(course) {
     var shiftTimes = {
-        'MORNING': { start: '08:00 AM', end: '11:15 AM', label: 'Morning' },
-        'AFTERNOON': { start: '02:00 PM', end: '05:15 PM', label: 'Afternoon' },
-        'EVENING': { start: '05:45 PM', end: '08:45 PM', label: 'Evening' },
-        'WEEKEND': { start: '08:00 AM', end: '04:30 PM', label: 'Weekend' }
+        'MORNING': { start: '08:00 AM', end: '11:15 AM', half1Start: '08:00 AM', half1End: '09:30 AM', half2Start: '09:45 AM', half2End: '11:15 AM', label: 'Morning' },
+        'AFTERNOON': { start: '02:00 PM', end: '05:15 PM', half1Start: '02:00 PM', half1End: '03:30 PM', half2Start: '03:45 PM', half2End: '05:15 PM', label: 'Afternoon' },
+        'EVENING': { start: '05:45 PM', end: '08:45 PM', half1Start: '05:45 PM', half1End: '07:15 PM', half2Start: '07:30 PM', half2End: '08:45 PM', label: 'Evening' },
+        'WEEKEND': { start: '08:00 AM', end: '04:30 PM', half1Start: '08:00 AM', half1End: '12:00 PM', half2Start: '12:15 PM', half2End: '04:30 PM', label: 'Weekend' }
     };
     var shiftKey = (course.shift || 'MORNING').toUpperCase();
     var shiftInfo = shiftTimes[shiftKey] || shiftTimes['MORNING'];
 
+    var termNumber = 1;
+    if (course.termName) {
+        var match = course.termName.match(/\d+/);
+        if (match) termNumber = parseInt(match[0], 10);
+    }
+    var isEndTerm = (termNumber > 0 && termNumber % 3 === 0);
+
     var daysStr = (course.days || course.daysOfWeek || 'mon').toLowerCase();
-    var dayOffset = 0;
-    if (daysStr.indexOf('sun') !== -1) dayOffset = 6;
-    else if (daysStr.indexOf('sat') !== -1) dayOffset = 5;
-    else if (daysStr.indexOf('fri') !== -1) dayOffset = 4;
-    else if (daysStr.indexOf('thu') !== -1) dayOffset = 3;
-    else if (daysStr.indexOf('wed') !== -1) dayOffset = 2;
-    else if (daysStr.indexOf('tue') !== -1) dayOffset = 1;
-    else if (daysStr.indexOf('mon') !== -1) dayOffset = 0;
+    var courseIndex = 0;
+    if (daysStr.indexOf('mon') !== -1) courseIndex = 0;
+    else if (daysStr.indexOf('wed') !== -1) courseIndex = (isEndTerm ? 1 : 2);
+    else if (daysStr.indexOf('thu') !== -1) courseIndex = (isEndTerm ? 2 : 3);
+    else if (daysStr.indexOf('tue') !== -1) courseIndex = 1;
+    else if (daysStr.indexOf('fri') !== -1) courseIndex = (isEndTerm ? 2 : 4);
 
     var startYear = 2026;
     if (course.academicYear) {
         var ym = course.academicYear.match(/\d{4}/);
         if (ym) startYear = parseInt(ym[0], 10);
     }
-    var isSpring = false;
-    if (course.termName) {
-        var tl = course.termName.toLowerCase();
-        if (tl.indexOf('spring') !== -1 || tl === 'term 2' || tl === 'term 4' || tl === 'term 6' || tl === 'term 8') {
-            isSpring = true;
-        }
-    }
-    var startMonth = isSpring ? 1 : 8;
+    var startMonth = 8;
+    if (termNumber === 2 || termNumber === 5 || termNumber === 8 || termNumber === 11) startMonth = 0;
+    else if (termNumber === 3 || termNumber === 6 || termNumber === 9 || termNumber === 12) startMonth = 4;
+
     var baseDate = new Date(startYear, startMonth, 1);
     while (baseDate.getDay() !== 1) {
         baseDate.setDate(baseDate.getDate() + 1);
     }
-
-    var firstClassDate = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayOffset);
+    var firstMonday = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate());
 
     var records = course.records || [];
     var scheduledDatesSet = {};
     var sessions = [];
+    var sessionNumber = 1;
 
-    for (var w = 0; w < 15; w++) {
-        var sDate = new Date(firstClassDate.getFullYear(), firstClassDate.getMonth(), firstClassDate.getDate() + (w * 7));
+    function pushSession(sDate, tStart, tEnd) {
         var yyyy = sDate.getFullYear();
         var mm = String(sDate.getMonth() + 1).padStart(2, '0');
         var dd = String(sDate.getDate()).padStart(2, '0');
         var iso = yyyy + '-' + mm + '-' + dd;
         scheduledDatesSet[iso] = true;
         sessions.push({
-            sessionNumber: w + 1,
+            sessionNumber: sessionNumber++,
             isExtra: false,
             dateObj: sDate,
             dateIso: iso,
-            timeStart: shiftInfo.start,
-            timeEnd: shiftInfo.end,
-            timeLabel: shiftInfo.start + ' - ' + shiftInfo.end
+            timeStart: tStart,
+            timeEnd: tEnd,
+            timeLabel: tStart + ' - ' + tEnd
         });
+    }
+
+    for (var w = 0; w < 15; w++) {
+        var weekMonday = new Date(firstMonday.getFullYear(), firstMonday.getMonth(), firstMonday.getDate() + (w * 7));
+        
+        if (!isEndTerm) {
+            var sDate = new Date(weekMonday.getFullYear(), weekMonday.getMonth(), weekMonday.getDate() + courseIndex);
+            pushSession(sDate, shiftInfo.start, shiftInfo.end);
+        } else {
+            if (courseIndex === 0) {
+                var d1 = new Date(weekMonday.getFullYear(), weekMonday.getMonth(), weekMonday.getDate());
+                pushSession(d1, shiftInfo.start, shiftInfo.end);
+                var d2 = new Date(weekMonday.getFullYear(), weekMonday.getMonth(), weekMonday.getDate() + 1);
+                pushSession(d2, shiftInfo.half1Start, shiftInfo.half1End);
+            } else if (courseIndex === 1) {
+                var d1 = new Date(weekMonday.getFullYear(), weekMonday.getMonth(), weekMonday.getDate() + 1);
+                pushSession(d1, shiftInfo.half2Start, shiftInfo.half2End);
+                var d2 = new Date(weekMonday.getFullYear(), weekMonday.getMonth(), weekMonday.getDate() + 2);
+                pushSession(d2, shiftInfo.start, shiftInfo.end);
+            } else if (courseIndex === 2) {
+                var d1 = new Date(weekMonday.getFullYear(), weekMonday.getMonth(), weekMonday.getDate() + 3);
+                pushSession(d1, shiftInfo.start, shiftInfo.end);
+                var d2 = new Date(weekMonday.getFullYear(), weekMonday.getMonth(), weekMonday.getDate() + 4);
+                pushSession(d2, shiftInfo.half1Start, shiftInfo.half1End);
+            }
+        }
     }
 
     var extraCounter = 16;
