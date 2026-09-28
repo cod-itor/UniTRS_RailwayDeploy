@@ -4549,6 +4549,14 @@
 
                                                                         function openStudentCourseSessions(enrollmentId) {
                                                                             var d = enrollmentData[parseInt(enrollmentId, 10)];
+                                                                            if (!d) {
+                                                                                for (var k in enrollmentData) {
+                                                                                    if (enrollmentData[k].classSectionId == enrollmentId) {
+                                                                                        d = enrollmentData[k];
+                                                                                        break;
+                                                                                    }
+                                                                                }
+                                                                            }
                                                                             if (!d) return;
                                                                             renderCourseSessionsModalUI(d, false);
                                                                         }
