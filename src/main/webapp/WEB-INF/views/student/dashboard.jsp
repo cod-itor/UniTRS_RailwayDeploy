@@ -2583,6 +2583,8 @@
         </head>
 
         <body>
+                <c:set var="needStudentId" value="${empty user.userIdentifier or user.userIdentifier.startsWith('9')}" />
+                <c:set var="needCurrentTerm" value="${empty user.currentTermId or user.currentTermId le 0}" />
 
                 <c:set var="earnedCredits" value="0" />
                 <c:forEach var="gradeItem" items="${grades}">
@@ -3544,14 +3546,23 @@
 
                 <form action="${pageContext.request.contextPath}/student" method="POST" class="p-3 bg-light rounded-4 border">
                     <input type="hidden" name="action" value="updateProfile">
-                    <div class="mb-3">
+                    <c:choose><c:when test="${needStudentId}">
+<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Student ID</label>
-                        <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                        <input type="text" class="form-control" name="studentId" value="" placeholder="e.g. 60240512" maxlength="8" inputmode="numeric" autocomplete="off" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" data-student-id-input>
+<div class="validation-message small mt-1 text-muted" data-student-id-msg>8-digit Student ID (numbers only, e.g. 60240512).</div>
                     </div>
-                    <div class="mb-3">
+</c:when><c:otherwise>
+<div class="mb-3">
+    <label class="form-label fw-bold small text-muted">Student ID</label>
+    <div class="fw-semibold text-dark font-monospace">${fn:escapeXml(user.userIdentifier)}</div>
+</div>
+</c:otherwise></c:choose>
+                    <c:choose><c:when test="${needCurrentTerm}">
+<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Current Term</label>
-                        <select class="form-select" name="currentTermId" required ${user.currentTermId != null and user.currentTermId > 0 ? 'style="pointer-events: none; background-color: #e9ecef;" tabindex="-1"' : ''}>
-                            <c:if test="${empty user.currentTermId}">
+                        <select class="form-select" name="currentTermId" required>
+                            <c:if test="${needCurrentTerm}">
                                 <option value="" disabled selected>-- Select Term --</option>
                             </c:if>
                             <c:forEach var="term" items="${allTerms}">
@@ -3559,7 +3570,15 @@
                             </c:forEach>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">Update Profile</button>
+</c:when><c:otherwise>
+<div class="mb-3">
+    <label class="form-label fw-bold small text-muted">Current Term</label>
+    <div class="fw-semibold text-dark">${studentTerm.termName}</div>
+</div>
+</c:otherwise></c:choose>
+                    <c:if test="${needStudentId or needCurrentTerm}">
+<button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">Update Profile</button>
+</c:if>
                 </form>
             </div>
         </div>
@@ -4369,14 +4388,23 @@
                                                                         </div>
                                                                         <form action="${pageContext.request.contextPath}/student" method="POST">
                                                                             <input type="hidden" name="action" value="updateProfile">
-                                                                            <div class="mb-3">
+                                                                            <c:choose><c:when test="${needStudentId}">
+<div class="mb-3">
                                                                                 <label class="form-label fw-bold small">Student ID</label>
-                                                                                <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                                                                                <input type="text" class="form-control" name="studentId" value="" placeholder="e.g. 60240512" maxlength="8" inputmode="numeric" autocomplete="off" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" data-student-id-input>
+<div class="validation-message small mt-1 text-muted" data-student-id-msg>8-digit Student ID (numbers only, e.g. 60240512).</div>
                                                                             </div>
-                                                                            <div class="mb-3">
+</c:when><c:otherwise>
+<div class="mb-3">
+    <label class="form-label fw-bold small text-muted">Student ID</label>
+    <div class="fw-semibold text-dark font-monospace">${fn:escapeXml(user.userIdentifier)}</div>
+</div>
+</c:otherwise></c:choose>
+                                                                            <c:choose><c:when test="${needCurrentTerm}">
+<div class="mb-3">
                                                                                 <label class="form-label fw-bold small">Current Term</label>
-                                                                                <select class="form-select" name="currentTermId" required ${user.currentTermId != null and user.currentTermId > 0 ? 'style="pointer-events: none; background-color: #e9ecef;" tabindex="-1"' : ''}>
-                                                                                    <c:if test="${empty user.currentTermId}">
+                                                                                <select class="form-select" name="currentTermId" required>
+                                                                                    <c:if test="${needCurrentTerm}">
                                                                                         <option value="" disabled selected>-- Select Term --</option>
                                                                                     </c:if>
                                                                                     <c:forEach var="term" items="${allTerms}">
@@ -4384,7 +4412,15 @@
                                                                                     </c:forEach>
                                                                                 </select>
                                                                             </div>
-                                                                            <button type="submit" class="btn btn-primary w-100 fw-bold rounded-3">Update Profile</button>
+</c:when><c:otherwise>
+<div class="mb-3">
+    <label class="form-label fw-bold small text-muted">Current Term</label>
+    <div class="fw-semibold text-dark">${studentTerm.termName}</div>
+</div>
+</c:otherwise></c:choose>
+                                                                            <c:if test="${needStudentId or needCurrentTerm}">
+<button type="submit" class="btn btn-primary w-100 fw-bold rounded-3">Update Profile</button>
+</c:if>
                                                                         </form>
                                                                     </div>
 
@@ -5313,19 +5349,27 @@
                     <h5 class="modal-title fw-bold">Complete Your Profile</h5>
                 </div>
                 <div class="modal-body p-4">
-                    <p class="text-muted mb-4">Please provide your valid 8-digit Student ID and your current Academic Term to continue.</p>
+                    <p class="text-muted mb-4">
+                        <c:choose>
+                            <c:when test="${needStudentId and needCurrentTerm}">Please provide your valid 8-digit Student ID and your current Academic Term to continue.</c:when>
+                            <c:when test="${needStudentId}">Please provide your valid 8-digit Student ID to continue.</c:when>
+                            <c:otherwise>Please select your current Academic Term to continue.</c:otherwise>
+                        </c:choose>
+                    </p>
                     <form action="${pageContext.request.contextPath}/student" method="POST" id="profileCompletionForm">
                         <input type="hidden" name="action" value="updateProfile">
-                        <div class="mb-3">
+                        <c:choose><c:when test="${needStudentId}">
+<div class="mb-3">
                             <label class="form-label fw-bold">Student ID <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-lg" name="studentId" 
-                                value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" 
-                                placeholder="e.g. 60240512" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                            <input type="text" class="form-control form-control-lg" name="studentId" value="" placeholder="e.g. 60240512" maxlength="8" inputmode="numeric" autocomplete="off" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" data-student-id-input>
+<div class="validation-message small mt-1 text-muted" data-student-id-msg>8-digit Student ID (numbers only, e.g. 60240512).</div>
                         </div>
-                        <div class="mb-4">
+</c:when></c:choose>
+                        <c:choose><c:when test="${needCurrentTerm}">
+<div class="mb-4">
                             <label class="form-label fw-bold">Current Term <span class="text-danger">*</span></label>
-                            <select class="form-select form-select-lg" name="currentTermId" required ${user.currentTermId != null and user.currentTermId > 0 ? 'style="pointer-events: none; background-color: #e9ecef;" tabindex="-1"' : ''}>
-                                <c:if test="${empty user.currentTermId}">
+                            <select class="form-select form-select-lg" name="currentTermId" required>
+                                <c:if test="${needCurrentTerm}">
                                     <option value="" disabled selected>-- Select Term --</option>
                                 </c:if>
                                 <c:forEach var="term" items="${allTerms}">
@@ -5333,6 +5377,7 @@
                                 </c:forEach>
                             </select>
                         </div>
+</c:when></c:choose>
                         <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-3 mb-2" onclick="sessionStorage.removeItem('dismissProfileModal');">Save Profile</button>
                         <button type="button" class="btn btn-light btn-lg w-100 fw-bold rounded-3" onclick="dismissProfileModal()">Do it later</button>
                     </form>
@@ -5395,6 +5440,25 @@ document.getElementById('logoutConfirmModal').addEventListener('click', function
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
 });
+</script>
+<script>
+(function () {
+    var msgs = {
+        muted: '8-digit Student ID (numbers only, e.g. 60240512).'
+    };
+    document.querySelectorAll('[data-student-id-input]').forEach(function (input) {
+        var box = input.parentElement.querySelector('[data-student-id-msg]');
+        function show(cls, html) { box.className = 'validation-message small mt-1 ' + cls; box.innerHTML = html; }
+        input.addEventListener('input', function () {
+            var v = input.value.trim();
+            if (!v) show('text-muted', msgs.muted);
+            else if (!/^\d+$/.test(v)) show('text-danger', '<i class="bi bi-x-circle"></i> Numbers only! Letters and symbols are not allowed.');
+            else if (v.charAt(0) === '9') show('text-danger', '<i class="bi bi-x-circle"></i> Student ID cannot start with 9 (reserved for temporary applicant IDs).');
+            else if (v.length < 8) show('text-warning', '<i class="bi bi-info-circle"></i> Student ID must be 8 digits (' + v.length + '/8)');
+            else show('text-success', '<i class="bi bi-check-circle"></i> Valid 8-digit Student ID');
+        });
+    });
+})();
 </script>
 </body>
 
