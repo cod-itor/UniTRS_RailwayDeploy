@@ -5,7 +5,12 @@ import com.unitrs.model.entity.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class UserRepository extends BaseRepository {
 
@@ -96,6 +101,47 @@ public class UserRepository extends BaseRepository {
     public List<User> findProfessors() {
         String sql = "SELECT * FROM users WHERE role = 'PROFESSOR' AND is_active = TRUE ORDER BY full_name ASC";
         return executeQuery(sql, this::mapResultSetToUser);
+    }
+
+    public Set<String> findAvailableShifts(int professorId) {
+        String sql = "SELECT session_shift FROM professor_availability WHERE professor_id = ?";
+        return new LinkedHashSet<>(executeQuery(sql, rs -> rs.getString("session_shift"), professorId));
+    }
+
+    public Map<Integer, Set<String>> findAllProfessorAvailability() {
+        Map<Integer, Set<String>> result = new HashMap<>();
+        String sql = "SELECT professor_id, session_shift FROM professor_availability";
+        executeQuery(sql, rs -> {
+            result.computeIfAbsent(rs.getInt("professor_id"), k -> new LinkedHashSet<>()).add(rs.getString("session_shift"));
+            return null;
+        });
+        return result;
+    }
+
+    public boolean replaceProfessorAvailability(int professorId, Collection<String> shifts) {
+        try (java.sql.Connection conn = com.unitrs.utils.DatabaseUtils.getConnection()) {
+            conn.setAutoCommit(false);
+            try (java.sql.PreparedStatement del = conn.prepareStatement("DELETE FROM professor_availability WHERE professor_id = ?");
+                 java.sql.PreparedStatement ins = conn.prepareStatement("INSERT INTO professor_availability (professor_id, session_shift) VALUES (?, ?)")) {
+                del.setInt(1, professorId);
+                del.executeUpdate();
+                for (String shift : shifts) {
+                    ins.setInt(1, professorId);
+                    ins.setString(2, shift);
+                    ins.addBatch();
+                }
+                ins.executeBatch();
+                conn.commit();
+                return true;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            }
+        } catch (SQLException e) {
+            java.util.logging.Logger.getLogger(UserRepository.class.getName())
+                    .log(java.util.logging.Level.SEVERE, "Error saving professor availability", e);
+            return false;
+        }
     }
 
     public boolean updateUserStatus(int id, boolean isActive) {

@@ -121,6 +121,7 @@ UniTRS follows a classic 4-tier enterprise Jakarta EE architecture with separati
   * Schedule new sections linking course, assigned professor, classroom facility, session shift, days of week, and academic year.
   * Set room capacity limits and monitor student enrollment counts.
 * **Faculty Assignment:** Assign professors to specific courses and scheduled class sections.
+* **Academic Calendar & Holiday Management:** Oversee and configure school holidays directly from the dashboard, ensuring accurate session scheduling across the academic year.
 
 ---
 
@@ -161,7 +162,9 @@ Engineered in [AttendanceExcelExporter.java](file:///Users/ditarector/Desktop/AL
 
 ---
 
-### 7. Progressive Web App (PWA) & Mobile Operation
+### 7. Premium PWA & Native App-Like Operation
+* **Premium Glassmorphic UI:** Features advanced CSS techniques like backdrop filters, sticky safe-area headers, floating bottom navigation docks, and glitch-free modals to deliver an immersive, SPA-like experience without heavy frontend frameworks.
+* **Native Action Sheets & Gestures:** Replaces standard browser alerts and dropdowns with smooth, mobile-optimized action sheets for actions like grading and schedule filtering.
 * **Full PWA Compliance:** Includes [manifest.json](file:///Users/ditarector/Desktop/ALLOFMYPROJECT/ITE204_UniTRS/src/main/webapp/manifest.json), service worker cache ([sw.js](file:///Users/ditarector/Desktop/ALLOFMYPROJECT/ITE204_UniTRS/src/main/webapp/sw.js)), and client lifecycle manager ([pwa.js](file:///Users/ditarector/Desktop/ALLOFMYPROJECT/ITE204_UniTRS/src/main/webapp/static/js/pwa.js)).
 * **Home Screen Installation:** Prompts for mobile installation on both iOS Safari and Android Chrome.
 * **Offline Fallback:** Standalone [offline.html](file:///Users/ditarector/Desktop/ALLOFMYPROJECT/ITE204_UniTRS/src/main/webapp/offline.html) provides offline status messaging with automatic online reconnection detection.
@@ -262,8 +265,8 @@ The schema in [schema.sql](file:///Users/ditarector/Desktop/ALLOFMYPROJECT/ITE20
 | **Spreadsheet Engine** | Apache POI 5.2.5 (`poi`, `poi-ooxml`) |
 | **Security** | jBCrypt 0.4 (Password Hashing), Email OTP 2FA, Jakarta Servlet Filters |
 | **Email Service** | Resend API HTTP Client (`EmailService.java`) |
-| **Mobile & PWA** | Web App Manifest, Service Workers, Offline Caching, Touch Icons |
-| **Frontend UI** | Bootstrap 5.3, Bootstrap Icons, Sonner Toasts, QR Code Generator (`qrcode.min.js`), Vanilla CSS |
+| **Mobile & PWA** | Web App Manifest, Service Workers, Offline Caching, Touch Icons, Safe-Area Insets |
+| **Frontend UI** | Premium Glassmorphism, Bootstrap 5.3, Vanilla CSS, Native-like Action Sheets, Sonner Toasts, QR Code Generator (`qrcode.min.js`) |
 | **Boilerplate Reduction**| Project Lombok 1.18.38 |
 | **Testing** | JUnit Jupiter 5.10.2, Surefire Plugin |
 | **Build & Deploy** | Maven Wrapper (`mvnw`), Docker Multi-Stage Build, Docker Compose |

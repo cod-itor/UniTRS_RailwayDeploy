@@ -87,9 +87,16 @@
                     <input type="hidden" id="emailPayload" name="email" value="${email}">
                     
                     <div class="mb-4 text-center">
-                        <label for="otpCode" class="form-label-dark">Enter 6-Digit Code</label>
-                        <input type="text" class="form-control otp-input-dark" id="otpCode" name="otpCode"
-                               maxlength="6" placeholder="------" pattern="[0-9]{6}" required autofocus autocomplete="one-time-code">
+                        <label class="form-label-dark mb-3">Enter 6-Digit Code</label>
+                        <div class="otp-box-container d-flex justify-content-center gap-2 mb-2">
+                            <input type="text" class="form-control otp-box" maxlength="1" autocomplete="one-time-code" inputmode="numeric" autofocus required>
+                            <input type="text" class="form-control otp-box" maxlength="1" autocomplete="off" inputmode="numeric" required>
+                            <input type="text" class="form-control otp-box" maxlength="1" autocomplete="off" inputmode="numeric" required>
+                            <input type="text" class="form-control otp-box" maxlength="1" autocomplete="off" inputmode="numeric" required>
+                            <input type="text" class="form-control otp-box" maxlength="1" autocomplete="off" inputmode="numeric" required>
+                            <input type="text" class="form-control otp-box" maxlength="1" autocomplete="off" inputmode="numeric" required>
+                        </div>
+                        <input type="hidden" id="otpCode" name="otpCode" required>
                         <div class="form-text text-secondary mt-2 small">
                             <i class="bi bi-clock me-1"></i>Code expires in 10 minutes.
                         </div>
@@ -224,6 +231,61 @@
             triggerSuccessFlow();
         }
 
+        // Modern OTP Input Logic
+        const otpBoxes = document.querySelectorAll('.otp-box');
+        
+        function updateHiddenInput() {
+            otpCodeInput.value = Array.from(otpBoxes).map(box => box.value).join('');
+            if (otpCodeInput.value.length === 6) {
+                otpForm.requestSubmit();
+            }
+        }
+
+        otpBoxes.forEach((box, index) => {
+            box.addEventListener('input', (e) => {
+                // Ensure only numbers
+                box.value = box.value.replace(/[^0-9]/g, '');
+                
+                if (box.value !== '') {
+                    if (index < otpBoxes.length - 1) {
+                        otpBoxes[index + 1].focus();
+                    }
+                }
+                updateHiddenInput();
+            });
+
+            box.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace') {
+                    if (box.value === '' && index > 0) {
+                        otpBoxes[index - 1].focus();
+                        otpBoxes[index - 1].value = '';
+                    }
+                } else if (e.key === 'ArrowLeft' && index > 0) {
+                    otpBoxes[index - 1].focus();
+                } else if (e.key === 'ArrowRight' && index < otpBoxes.length - 1) {
+                    otpBoxes[index + 1].focus();
+                }
+                updateHiddenInput();
+            });
+
+            box.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+                const numbers = pastedData.replace(/[^0-9]/g, '').slice(0, 6);
+                
+                numbers.split('').forEach((num, i) => {
+                    if (i < otpBoxes.length) {
+                        otpBoxes[i].value = num;
+                    }
+                });
+                
+                // Focus next available box or the last box
+                const focusIndex = Math.min(numbers.length, otpBoxes.length - 1);
+                otpBoxes[focusIndex].focus();
+                updateHiddenInput();
+            });
+        });
+
         otpForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const code = otpCodeInput.value.trim();
@@ -273,13 +335,7 @@
             }
         });
 
-        // Auto-submit when user finishes typing the 6th digit
-        otpCodeInput.addEventListener('input', () => {
-            const val = otpCodeInput.value.trim();
-            if (val.length === 6 && /^\d{6}$/.test(val)) {
-                otpForm.requestSubmit();
-            }
-        });
+
 
         // Resend OTP with cooldown
         let resendCooldown = 0;

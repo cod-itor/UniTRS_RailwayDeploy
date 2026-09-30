@@ -17,6 +17,11 @@ public class EmailService {
             .build();
 
     public static boolean sendHtmlEmail(String toEmail, String subject, String htmlContent) {
+        if (Boolean.getBoolean("unitrs.email.disabled")) {
+            LOGGER.info("[EmailService DISABLED] Skipping email to " + toEmail + " (" + subject + ")");
+            return true;
+        }
+
         String apiKey = CredentialsLoader.getResendApiKey();
         String from = CredentialsLoader.getMailFrom();
 

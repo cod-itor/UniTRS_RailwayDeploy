@@ -1,15 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Professor Dashboard - UniTRS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
     <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,7 +109,7 @@
                 gap: 4px;
                 background: #e0f2fe;
                 color: #0369a1;
-                font-size: 0.7rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 padding: 2px 10px;
                 border-radius: 20px;
@@ -194,7 +196,7 @@
             }
 
             .hero-label {
-                font-size: 0.65rem;
+                font-size: 0.75rem;
                 font-weight: 800;
                 letter-spacing: 0.8px;
                 color: rgba(255, 255, 255, 0.85);
@@ -228,7 +230,7 @@
                 gap: 5px;
                 background: rgba(255, 255, 255, 0.95);
                 color: #0369a1;
-                font-size: 0.68rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 padding: 3px 10px;
                 border-radius: 12px;
@@ -287,7 +289,7 @@
             }
 
             .ds-day {
-                font-size: 0.68rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 text-transform: uppercase;
                 margin-bottom: 4px;
@@ -455,7 +457,7 @@
             }
 
             .mc-badge {
-                font-size: 0.7rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 background: #f1f5f9;
                 color: #64748b;
@@ -544,7 +546,7 @@
             }
 
             .id-card-univ-title {
-                font-size: 0.72rem;
+                font-size: 0.75rem;
                 font-weight: 800;
                 letter-spacing: 1.2px;
                 color: #fbbf24;
@@ -664,7 +666,7 @@
                 background: transparent;
                 border: none;
                 color: #64748b;
-                font-size: 0.68rem;
+                font-size: 0.75rem;
                 font-weight: 600;
                 letter-spacing: -0.01em;
                 flex: 1;
@@ -719,32 +721,6 @@
                 to { opacity: 1; transform: translateY(0); }
             }
 
-            /* Floating Toast */
-            .mobile-toast {
-                position: fixed;
-                bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
-                left: 50%;
-                transform: translateX(-50%) translateY(20px);
-                background: #0f172a;
-                color: #ffffff;
-                padding: 9px 18px;
-                border-radius: 99px;
-                font-size: 0.8rem;
-                font-weight: 700;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
-                z-index: 1060;
-                opacity: 0;
-                pointer-events: none;
-                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            }
-
-            .mobile-toast.show {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
 
             
             /* Action Sheets */
@@ -819,7 +795,7 @@
                 line-height: 1.25;
             }
             .sheet-menu-desc {
-                font-size: 0.74rem;
+                font-size: 0.75rem;
                 font-weight: 500;
                 color: #64748b;
                 margin-top: 2px;
@@ -837,13 +813,13 @@
             .student-row { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 10px; }
             .student-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
             .student-name { font-size: 0.9rem; font-weight: 700; color: #0f172a; }
-            .student-id { font-size: 0.7rem; color: #64748b; font-family: monospace; }
+            .student-id { font-size: 0.75rem; color: #64748b; font-family: monospace; }
             
             /* Attendance Radio Chips */
             .radio-group { display: flex; gap: 6px; flex-wrap: wrap; }
             .radio-chip { flex: 1; min-width: 70px; }
             .radio-chip input { display: none; }
-            .radio-chip label { display: block; text-align: center; font-size: 0.7rem; font-weight: 700; padding: 8px 4px; border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; cursor: pointer; transition: all 0.15s; }
+            .radio-chip label { display: block; text-align: center; font-size: 0.75rem; font-weight: 700; padding: 8px 4px; border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; cursor: pointer; transition: all 0.15s; }
             .radio-chip input[value="PRESENT"]:checked + label { background: #16a34a; border-color: #16a34a; color: white; }
             .radio-chip input[value="ABSENT"]:checked + label { background: #dc2626; border-color: #dc2626; color: white; }
             .radio-chip input[value="LATE"]:checked + label { background: #d97706; border-color: #d97706; color: white; }
@@ -852,13 +828,145 @@
             /* Grading Inputs */
             .grade-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
             .grade-input-box { background: #f8fafc; border-radius: 10px; padding: 8px 10px; border: 1px solid #e2e8f0; }
-            .grade-input-label { font-size: 0.65rem; font-weight: 700; color: #64748b; margin-bottom: 4px; display: block; }
+            .grade-input-label { font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 4px; display: block; }
             .grade-input-box input { width: 100%; border: none; background: transparent; font-size: 1.1rem; font-weight: 800; color: #0f172a; outline: none; padding: 0; }
             .grade-input-box input:focus { color: #2563eb; }
+
+            /* ===== Mobile audit fixes ===== */
+            /* Desktop rules (.mc-header etc.) are unscoped and load later: re-assert mobile values with higher specificity */
+            .mobile-app-container .mc-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+            .mobile-app-container .mc-header > div { min-width: 0; }
+            .mobile-app-container .mc-title { font-size: 0.98rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; line-height: 1.3; overflow-wrap: anywhere; }
+            .mobile-app-container .mc-meta-item { min-width: 0; overflow-wrap: anywhere; }
+            .mobile-app-container .mc-code { display: inline-block; }
+
+            /* Any inline font-size below 12px is raised to 12px */
+            .mobile-app-container [style*="font-size:0.6"],
+            .mobile-app-container [style*="font-size:0.7"],
+            .mobile-app-container [style*="font-size: 0.6"],
+            .mobile-app-container [style*="font-size: 0.7"],
+            .action-sheet [style*="font-size:0.6"],
+            .action-sheet [style*="font-size:0.7"] { font-size: 0.75rem !important; }
+
+            /* Top bar: long names must ellipsize instead of pushing the action buttons out */
+            .mobile-user-info { flex: 1 1 auto; }
+            .mobile-user-info > div:last-child { min-width: 0; }
+            .mobile-top-bar > .d-flex { flex-shrink: 0; margin-left: 12px; }
+            .mobile-badge-pill { white-space: nowrap; }
+
+            /* Hero banner */
+            .hero-title { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+            .hero-meta-row { flex-wrap: wrap; row-gap: 2px; }
+            .hero-status-tag { white-space: nowrap; }
+
+            /* Strips: leave room for the lift/shadow of the active item so it is not clipped by overflow */
+            .mobile-date-strip { padding: 4px 0 12px; margin-bottom: 8px; }
+            .schedule-filter-pill { min-height: 44px; }
+
+            /* Stats carousel: consistent scroll snapping */
+            .stat-card-item > div:last-child { min-width: 0; }
+
+            /* Section headers wrap instead of overflowing at 320px */
+            .section-header { gap: 12px; }
+            .section-header .section-title { min-width: 0; overflow-wrap: anywhere; }
+            .mobile-app-container .section-title { line-height: 1.3; }
+
+            /* Cards: tidy internal rows */
+            .mobile-course-card .border-top { gap: 8px; }
+            .mobile-course-card .btn-xs { min-height: 40px !important; padding: 0 14px !important; font-size: 0.75rem !important; display: inline-flex; align-items: center; }
+            .mobile-class-item .btn { min-height: 44px !important; }
+            .mobile-app-container .form-select,
+            .mobile-app-container .form-control { font-size: 16px; min-height: 44px; }
+            #mobileClassSearchInput { min-width: 0; }
+            #clearMobileClassSearchBtn { min-width: 44px; }
+            .mobile-app-container .alert { font-size: 0.875rem; overflow-wrap: anywhere; }
+            .mobile-app-container .alert-dismissible { padding-right: 48px !important; }
+
+
+            /* Faculty ID card */
+            .id-card-top { flex-wrap: wrap; gap: 8px; }
+            .id-card-univ-title { min-width: 0; letter-spacing: 0.8px; }
+            .id-number-pill { max-width: 100%; min-height: 32px; }
+            .id-number-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .id-card-barcode-row { gap: 8px; }
+
+            /* Profile detail rows: long values wrap on the right instead of squashing labels */
+            .mobile-profile-row { gap: 16px; }
+            .mobile-profile-row > span:first-child { flex-shrink: 0; }
+            .mobile-profile-row > span:last-child { text-align: right; min-width: 0; overflow-wrap: anywhere; }
+
+            /* Dock: keep label above safe area and tap targets >= 44px */
+            .dock-tab-btn { min-height: 48px; }
+            .dock-tab-btn span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+            /* Sheets: dvh so the browser toolbar does not push content off screen; safe-area padding */
+            .action-sheet-overlay { overscroll-behavior: contain; }
+            .action-sheet { max-height: 85vh; max-height: 85dvh; overscroll-behavior: contain; }
+            .action-sheet > .sheet-body:last-child { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important; }
+            .sheet-header { gap: 12px; flex-wrap: wrap; padding: 16px 20px 12px; }
+            .sheet-header > div:first-child { min-width: 0; flex: 1 1 auto; }
+            .sheet-header .sheet-title, .sheet-header .small { overflow-wrap: anywhere; }
+            .sheet-header .btn { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .sheet-body { padding: 16px 20px; -webkit-overflow-scrolling: touch; }
+            .sheet-body .btn-sm, .sheet-body a.btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+            .sheet-footer { padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px)); }
+            .sheet-menu-btn { min-height: 64px; font-family: inherit; }
+            .sheet-menu-btn:hover { transform: none; }
+            .sheet-menu-title, .sheet-menu-desc { overflow-wrap: anywhere; }
+
+            /* Attendance / grades forms */
+            .student-info { gap: 12px; }
+            .student-name { min-width: 0; overflow-wrap: anywhere; }
+            .student-id { flex-shrink: 0; }
+            .radio-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+            .radio-chip { min-width: 0; }
+            .radio-chip label { padding: 13px 2px; min-height: 44px; }
+            .radio-chip input:focus-visible + label { outline: 2px solid #2563eb; outline-offset: 2px; }
+            .radio-chip { position: relative; }
+            .radio-chip input { display: block; position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; pointer-events: none; }
+            .grade-input-box { min-height: 56px; }
+            .grade-input-box input { font-size: 1.1rem; min-height: 28px; }
+            .grade-input-box:focus-within { border-color: #2563eb; background: #fff; }
+
+            /* Logout confirmation dialog (fixed-position, not a Bootstrap modal) */
+            .logout-modal-overlay { padding: 16px !important; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important; box-sizing: border-box; }
+            .logout-modal-card { padding: 28px 20px 20px !important; width: 100% !important; max-width: 400px !important; box-sizing: border-box; max-height: 100%; overflow-y: auto; }
+            .logout-modal-actions { gap: 12px !important; }
+            .logout-modal-actions > * { min-height: 48px; box-sizing: border-box; padding: 10px 12px !important; font-size: 0.95rem !important; white-space: nowrap; }
+
+            /* Bootstrap modals opened on mobile (notifications, holidays, sessions) */
+            .modal .btn-close { padding: 12px; }
+        }
+
+        @media (max-width: 359.98px) {
+            .mobile-app-container { padding-left: 12px !important; padding-right: 12px !important; }
+            .mobile-top-bar { margin-left: -12px; margin-right: -12px; padding-left: 12px; padding-right: 12px; }
+            .hero-avatar-box { width: 60px; height: 60px; font-size: 1.8rem; border-radius: 16px; }
+            .mobile-hero-banner { padding: 16px; gap: 12px; }
+            .mobile-user-greeting { font-size: 0.95rem; }
+            .dock-tab-btn { padding: 5px 2px; }
+        }
+
+        @media (max-width: 400px) {
+            .logout-modal-actions { flex-direction: column-reverse; }
         }
     </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
 </head>
 <body>
+<%-- Sonner flash notification triggers (single copy; serves both desktop and mobile layouts) --%>
+<c:if test="${param.twoFactorUpdated == 'true'}">
+    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Two-Factor Authentication" data-message="Two-Factor Authentication (2FA) is now enabled for your account."></div>
+</c:if>
+<c:if test="${param.twoFactorUpdated == 'false'}">
+    <div class="sonner-flash-trigger d-none" data-type="info" data-title="Two-Factor Authentication" data-message="Two-Factor Authentication (2FA) has been disabled for your account."></div>
+</c:if>
+<c:if test="${not empty successMessage}">
+    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Success" data-message="<c:out value='${successMessage}' />"></div>
+</c:if>
+<c:if test="${not empty errorMessage}">
+    <div class="sonner-flash-trigger d-none" data-type="error" data-title="Action Failed" data-message="<c:out value='${errorMessage}' />"></div>
+</c:if>
 <div class="d-none d-md-flex desktop-app-container">
     <style>
         body.modal-open {
@@ -2007,18 +2115,57 @@
         .slide-qr-overlay.light-theme .slide-qr-canvas-card {
             box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15), 0 0 0 1px #e2e8f0;
         }
-        .qr-preset-btn {
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 4px 12px;
-            transition: all 0.15s ease;
+        /* ---- Class Link QR generator ---- */
+        #classQrModal .modal-content { border: 0; border-radius: 20px; }
+        #classQrModal .modal-header { padding: 20px 24px; border-bottom: 1px solid #eef2f6; background: #fff; }
+        #classQrModal .modal-body { padding: 24px; }
+        #classQrModal .modal-footer { padding: 16px 24px; border-top: 1px solid #eef2f6; background: #f8fafc; gap: 12px; }
+        #classQrModal .qr-head-icon { width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #2563eb; display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+        #classQrModal .qr-section + .qr-section { margin-top: 24px; padding-top: 24px; border-top: 1px solid #eef2f6; }
+        #classQrModal .qr-section-title { font-size: 0.75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #64748b; margin-bottom: 14px; }
+        #classQrModal .qr-field + .qr-field { margin-top: 16px; }
+        #classQrModal .form-label { font-size: 0.875rem; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+        #classQrModal .form-control, #classQrModal .form-select { min-height: 46px; border-radius: 12px; font-size: 1rem; box-shadow: none; }
+        #classQrModal .input-group .form-control { border-radius: 0 12px 12px 0; }
+        #classQrModal .input-group-text { border-radius: 12px 0 0 12px; background: #fff; color: #64748b; }
+        #classQrModal .qr-label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+        #classQrModal .qr-label-row .form-label { margin-bottom: 0; }
+        #classQrModal .qr-inline-btn { min-height: 32px; padding: 0 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+        #classQrModal .qr-help { font-size: 0.8rem; color: #64748b; margin-top: 6px; }
+        #classQrModal .qr-counter { font-size: 0.75rem; color: #94a3b8; font-weight: 600; }
+        .qr-preset-row { display: flex; flex-wrap: wrap; gap: 8px; }
+        .qr-preset-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 14px; border-radius: 999px; font-size: 0.875rem; font-weight: 600; background: #fff; border: 1px solid #dbe2ea; color: #334155; transition: background .15s, border-color .15s, color .15s; }
+        .qr-preset-btn:hover { background: #f8fafc; border-color: #b6c2d0; color: #0f172a; }
+        .qr-preset-btn.active, .qr-preset-btn.active:hover { background-color: #0f172a; color: #ffffff; border-color: #0f172a; }
+        .qr-preset-btn.active i { color: #ffffff !important; }
+        .qr-preview-card { position: sticky; top: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 380px; padding: 24px; border-radius: 20px; background: #f8fafc; border: 1px solid #e8edf3; text-align: center; }
+        .qr-empty-icon { width: 72px; height: 72px; border-radius: 50%; background: #eef2f6; color: #94a3b8; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 14px; }
+        .qr-canvas-frame { padding: 12px; background: #fff; border-radius: 16px; border: 1px solid #e8edf3; box-shadow: 0 8px 24px -8px rgba(15, 23, 42, .12); cursor: pointer; margin-bottom: 16px; }
+        .qr-canvas-frame canvas { display: block; width: 100%; max-width: 232px; height: auto; }
+        .qr-expand-btn { min-height: 40px; margin-top: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+        #classQrModal .modal-footer .btn { min-height: 44px; font-weight: 600; }
+        @media (max-width: 767.98px) {
+            #classQrModal .modal-dialog { margin: 12px; }
+            #classQrModal .modal-header, #classQrModal .modal-body, #classQrModal .modal-footer { padding-left: 16px; padding-right: 16px; }
+            .qr-preview-card { position: static; min-height: 0; }
+            #classQrModal .modal-footer { flex-direction: column-reverse; align-items: stretch; }
+            #classQrModal .modal-footer .qr-footer-group { width: 100%; align-items: stretch; gap: 8px; }
+            #classQrModal .modal-footer .qr-footer-group .btn { flex: 1 1 0; justify-content: center; padding-left: 8px; padding-right: 8px; }
+            #classQrModal .modal-footer .qr-close-btn { display: none; }
         }
-        .qr-preset-btn.active {
-            background-color: #0f172a;
-            color: #ffffff;
-            border-color: #0f172a;
-        }
+
+        /* Round 2: shared inner-surface helpers (replace heavy inline styles) */
+        .prof-inner-row { background:#f8fafc; border:1px solid #e8edf3; border-radius:16px; }
+        .prof-tool-btn { background:#fff; border:1px solid #e8edf3; border-radius:16px; min-height:44px; transition: background .15s, border-color .15s; }
+        .prof-tool-btn:hover { background:#f8fafc; border-color:#cbd5e1; }
+        .prof-tool-icon { width:42px; height:42px; flex:0 0 42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.25rem; }
+        .prof-tool-icon.sky { background:#e0f2fe; color:#0369a1; }
+        .prof-tool-icon.mint { background:#dcfce7; color:#166534; }
+        .prof-tool-title { font-size:0.9rem; font-weight:700; color:#0f172a; }
+        .prof-tool-desc { font-size:0.8rem; color:#64748b; }
+        .desktop-main .table-card, .desktop-main .chart-card, .desktop-main .seg-card { min-width:0; }
+        .desktop-main .tc-table td { overflow-wrap:anywhere; }
+        .logout-modal-card button:focus-visible, .logout-modal-card a:focus-visible { outline:3px solid #2563eb; outline-offset:2px; }
     </style>
 
     <!-- Accessible Skip to Content Link -->
@@ -2057,22 +2204,19 @@
                 <i class="bi bi-gear" aria-hidden="true"></i> Settings
             </button>
         </nav>
-
-        <div class="sidebar-promo">
-            <div class="star-icon"><i class="bi bi-person-workspace" aria-hidden="true"></i></div>
-            <h4>Faculty Portal</h4>
-            <p>Active Term 2026-2027. Record attendance and grade submissions on time.</p>
-            <button type="button" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))">View My Schedule</button>
-        </div>
     </aside>
 
     <main class="desktop-main" id="desktop-main-content" role="main" tabindex="-1">
         <header class="desktop-header">
 
             <div class="header-actions">
-                <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
-                    <i class="bi bi-calendar-heart text-danger"></i>
-                    <span class="small">Holidays</span>
+                <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-2 fw-bold d-inline-flex align-items-center gap-2" style="font-size: 0.85rem;" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
+                    <i class="bi bi-calendar-heart text-danger" aria-hidden="true"></i>
+                    <span>Holidays</span>
+                </button>
+                <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-2 fw-bold d-inline-flex align-items-center gap-2" style="font-size: 0.85rem;" onclick="openReportModal()" title="Report an Issue">
+                    <i class="bi bi-flag text-danger" aria-hidden="true"></i>
+                    <span>Report</span>
                 </button>
                 <c:if test="${sessionScope.user.deanSchoolId != null}">
                     <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2" style="font-size: 0.85rem;">
@@ -2156,35 +2300,15 @@
             </div>
         </header>
 
-        <%-- ALERTS --%>
-        <div aria-live="polite">
-            <c:if test="${param.twoFactorUpdated == 'true'}">
-                <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                    <i class="bi bi-shield-check me-2" aria-hidden="true"></i>Two-Factor Authentication (2FA) is now <strong>enabled</strong> for your account.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-            <c:if test="${param.twoFactorUpdated == 'false'}">
-                <div class="alert alert-info alert-dismissible fade show rounded-4" role="alert">
-                    <i class="bi bi-shield-slash me-2" aria-hidden="true"></i>Two-Factor Authentication (2FA) has been <strong>disabled</strong> for your account.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-            <c:if test="${not empty successMessage}">
-                <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                    <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>${successMessage}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-            <c:if test="${not empty errorMessage}">
-                <div class="alert alert-danger alert-dismissible fade show rounded-4" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>${errorMessage}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-        </div>
 
-        <%-- Calculate total enrolled students --%>
+        <c:if test="${empty availableShifts}">
+        <div class="alert alert-warning rounded-4 d-flex align-items-center justify-content-between gap-3 flex-wrap" role="alert">
+            <div><i class="bi bi-clock-history me-2" aria-hidden="true"></i><strong>Set your teaching availability.</strong> Deans can't assign you to classes until you choose the shifts you are free.</div>
+            <button type="button" class="btn btn-sm btn-warning rounded-pill px-3 fw-semibold" onclick="switchDesktopTab('settings', document.getElementById('tab-settings'))">Set availability</button>
+        </div>
+    </c:if>
+
+    <%-- Calculate total enrolled students --%>
         <c:set var="totalEnrolledCount" value="0" />
         <c:forEach var="entry" items="${sectionStudentsMap}">
             <c:set var="totalEnrolledCount" value="${totalEnrolledCount + entry.value.size()}" />
@@ -2207,10 +2331,6 @@
                     </div>
                     <div class="mc-value">${sectionStudentsMap.size()}</div>
                     <div class="mc-subtitle">Active teaching sections this semester</div>
-                    <div class="mc-footer">
-                        <span class="mc-trend positive"><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Active</span>
-                        <span class="mc-extra">Term 2026-2027</span>
-                    </div>
                 </div>
 
                 <div class="metric-card">
@@ -2224,10 +2344,6 @@
                     </div>
                     <div class="mc-value">${totalEnrolledCount}</div>
                     <div class="mc-subtitle">Students currently enrolled in your classes</div>
-                    <div class="mc-footer">
-                        <span class="mc-trend positive"><i class="bi bi-person-check-fill" aria-hidden="true"></i> Enrolled</span>
-                        <span class="mc-extra">Across ${sectionStudentsMap.size()} Sections</span>
-                    </div>
                 </div>
 
                 <div class="metric-card">
@@ -2241,10 +2357,6 @@
                     </div>
                     <div class="mc-value">${sectionStudentsMap.size()}</div>
                     <div class="mc-subtitle">Classroom meeting blocks per week</div>
-                    <div class="mc-footer">
-                        <span class="mc-trend neutral"><i class="bi bi-clock-history" aria-hidden="true"></i> Midterm & Final</span>
-                        <span class="mc-extra">On Track</span>
-                    </div>
                 </div>
             </div>
 
@@ -2270,22 +2382,22 @@
                         <c:forEach var="entry" items="${sectionStudentsMap}">
                             <c:set var="section" value="${entry.key}" />
                             <c:set var="students" value="${entry.value}" />
-                            <div class="p-3 bg-light rounded-4 d-flex justify-content-between align-items-center border">
+                            <div class="p-3 prof-inner-row d-flex flex-wrap justify-content-between align-items-center gap-2">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="tc-course-icon" style="width:48px; height:48px; border-radius:16px; background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center; font-size:1.4rem;">
+                                    <div class="prof-tool-icon sky" style="width:48px; height:48px; flex-basis:48px; border-radius:16px; font-size:1.4rem;">
                                         <i class="bi bi-book-half" aria-hidden="true"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold text-dark fs-6">${section.courseCode} - ${section.courseTitle}</div>
-                                        <div class="text-muted small mt-1">
-                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle me-2"><i class="bi bi-clock me-1" aria-hidden="true"></i>${section.sessionShift}</span>
-                                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle me-2"><i class="bi bi-calendar-event me-1" aria-hidden="true"></i>${section.daysOfWeek}</span>
+                                        <div class="text-muted small mt-1 d-flex flex-wrap align-items-center gap-2">
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle"><i class="bi bi-clock me-1" aria-hidden="true"></i>${section.sessionShift}</span>
+                                            <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle"><i class="bi bi-calendar-event me-1" aria-hidden="true"></i>${section.daysOfWeek}</span>
                                             <span><i class="bi bi-door-open me-1" aria-hidden="true"></i>Room ${section.roomName}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
-                                    <button type="button" class="btn btn-sm btn-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}">
+                                    <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-semibold shadow-none" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}">
                                         <i class="bi bi-clipboard-check me-1" aria-hidden="true"></i> Take Attendance
                                     </button>
                                 </div>
@@ -2298,47 +2410,34 @@
                     <div class="seg-header">
                         <h3><i class="bi bi-tools text-primary me-2" aria-hidden="true"></i>Faculty Quick Tools</h3>
                     </div>
-                    <div class="d-flex flex-column gap-3 p-1">
-                        <button type="button" class="btn btn-light border w-100 p-3 rounded-4 text-start d-flex align-items-center justify-content-between shadow-none" onclick="openClassQrModal()">
+                    <div class="d-flex flex-column gap-3">
+                        <button type="button" class="prof-tool-btn w-100 p-3 text-start d-flex align-items-center justify-content-between gap-2" onclick="openClassQrModal()">
                             <div class="d-flex align-items-center gap-3">
-                                <div style="width: 42px; height: 42px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                                    <i class="bi bi-qr-code-scan"></i>
+                                <div class="prof-tool-icon sky">
+                                    <i class="bi bi-qr-code-scan" aria-hidden="true"></i>
                                 </div>
                                 <div>
-                                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">Class Link QR Hub</div>
-                                    <div class="text-muted" style="font-size: 0.76rem;">Generate presentation QR for Telegram, Classroom & links</div>
+                                    <div class="prof-tool-title">Class Link QR Hub</div>
+                                    <div class="prof-tool-desc">Generate presentation QR for Telegram, Classroom & links</div>
                                 </div>
                             </div>
-                            <i class="bi bi-chevron-right text-muted small"></i>
+                            <i class="bi bi-chevron-right text-muted small" aria-hidden="true"></i>
                         </button>
 
                         <c:if test="${not empty sectionStudentsMap}">
-                            <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-light border w-100 p-3 rounded-4 text-start d-flex align-items-center justify-content-between text-decoration-none shadow-none">
+                            <a href="${pageContext.request.contextPath}/professor/attendance/export" class="prof-tool-btn w-100 p-3 text-start d-flex align-items-center justify-content-between gap-2 text-decoration-none">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div style="width: 42px; height: 42px; border-radius: 12px; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                                        <i class="bi bi-file-earmark-excel-fill"></i>
+                                    <div class="prof-tool-icon mint">
+                                        <i class="bi bi-file-earmark-excel-fill" aria-hidden="true"></i>
                                     </div>
                                     <div>
-                                        <div class="fw-bold text-dark" style="font-size: 0.9rem;">Export Attendance Register</div>
-                                        <div class="text-muted" style="font-size: 0.76rem;">Download master spreadsheet (.xlsx) across all sections</div>
+                                        <div class="prof-tool-title">Export Attendance Register</div>
+                                        <div class="prof-tool-desc">Download master spreadsheet (.xlsx) across all sections</div>
                                     </div>
                                 </div>
-                                <i class="bi bi-download text-muted small"></i>
+                                <i class="bi bi-download text-muted small" aria-hidden="true"></i>
                             </a>
                         </c:if>
-
-                        <button type="button" class="btn btn-light border w-100 p-3 rounded-4 text-start d-flex align-items-center justify-content-between shadow-none" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))">
-                            <div class="d-flex align-items-center gap-3">
-                                <div style="width: 42px; height: 42px; border-radius: 12px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                                    <i class="bi bi-calendar-week-fill"></i>
-                                </div>
-                                <div>
-                                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">Term Timetable</div>
-                                    <div class="text-muted" style="font-size: 0.76rem;">View weekly room schedules and timetable breakdown</div>
-                                </div>
-                            </div>
-                            <i class="bi bi-chevron-right text-muted small"></i>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -2384,8 +2483,11 @@
                                     <td>
                                         <div class="fw-semibold text-dark">${section.daysOfWeek}</div>
                                         <div class="text-muted small">${section.sessionShift}</div>
-                                    </td>
-                                    <td><span class="badge bg-light text-dark border"><i class="bi bi-door-open me-1" aria-hidden="true"></i>${section.roomName}</span></td>
+                                    <c:if test="${not empty section.startDate}">
+                            <div class="text-muted small mt-1"><i class="bi bi-flag me-1" aria-hidden="true"></i>Starts ${section.startDateLabel}</div>
+                        </c:if>
+                    </td>
+                                    <td><span class="badge bg-light text-dark border fw-semibold"><i class="bi bi-door-open me-1" aria-hidden="true"></i>${section.roomName}</span></td>
                                     <td><span class="tc-badge success"><i class="bi bi-people-fill me-1" aria-hidden="true"></i>${students.size()} Students</span></td>
                                     <td class="text-end pe-3">
                                         <div class="d-inline-flex align-items-center gap-1">
@@ -2394,8 +2496,8 @@
                                                 <span>Attendance</span>
                                             </button>
                                             <div class="dropdown d-inline-block">
-                                                <button type="button" class="btn btn-sm btn-light border rounded-pill px-2 py-1 text-secondary shadow-none" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="body" title="More Actions">
-                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                <button type="button" class="btn btn-sm btn-light border rounded-pill px-2 py-1 text-secondary-emphasis shadow-none" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="body" title="More Actions" aria-label="More actions for ${section.courseCode}">
+                                                    <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border rounded-3 py-1" style="font-size: 0.85rem;">
                                                     <li>
@@ -2435,7 +2537,7 @@
         <%-- TAB: MY CLASSES                                                    --%>
         <%-- ================================================================== --%>
         <div id="dt-classes" class="tab-panel" role="tabpanel" aria-labelledby="tab-classes" tabindex="0">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
                     <h2 class="h4 fw-bold text-dark mb-1">Assigned Classes & Student Rosters</h2>
                     <p class="text-muted small mb-0">Review student enrollment, record session attendance, and submit academic grades</p>
@@ -2466,12 +2568,12 @@
                 <c:set var="section" value="${entry.key}" />
                 <c:set var="students" value="${entry.value}" />
 
-                <section class="table-card mb-4 desktop-class-card" data-course-code="${section.courseCode.toLowerCase()}" data-course-title="${section.courseTitle.toLowerCase()}" aria-labelledby="section-heading-${section.id}">
+                <section class="table-card desktop-class-card" data-course-code="${section.courseCode.toLowerCase()}" data-course-title="${section.courseTitle.toLowerCase()}" aria-labelledby="section-heading-${section.id}">
                     <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-3 gap-3">
                         <div>
                             <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="badge bg-primary fs-6 px-3 py-1 rounded-pill">${section.courseCode}</span>
-                                <span class="badge bg-light text-dark border px-3 py-1 rounded-pill">${section.termName}</span>
+                                <span class="badge bg-primary px-3 py-2 rounded-pill" style="font-size:0.85rem;">${section.courseCode}</span>
+                                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill" style="font-size:0.8rem;">${section.termName}</span>
                             </div>
                             <h3 class="h5 fw-bold text-dark mb-1" id="section-heading-${section.id}">${section.courseTitle}</h3>
                             <div class="text-muted small d-flex flex-wrap align-items-center gap-3">
@@ -2530,7 +2632,7 @@
                             <tbody>
                                 <c:forEach var="student" items="${students}">
                                     <tr>
-                                        <td><span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace">${student.formattedIdentifier}</span></td>
+                                        <td><span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace fw-semibold">${student.formattedIdentifier}</span></td>
                                         <td><strong class="text-dark">${student.fullName}</strong></td>
                                         <td class="text-muted">${student.email}</td>
                                         <td><span class="tc-badge info">${student.major}</span></td>
@@ -2555,9 +2657,6 @@
                     <p class="text-muted small mb-0">Overview of classroom allocations, schedule shifts, and lecture sessions</p>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
-                        <i class="bi bi-calendar-heart me-1"></i> School Holidays
-                    </button>
                     <div class="view-toggle-group" role="group" aria-label="Schedule View Switcher">
                         <button type="button" class="view-toggle-btn active" id="btnViewTimetable" onclick="setScheduleView('grid')">
                             <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i> Timetable Grid
@@ -2580,7 +2679,7 @@
                 <div class="timetable-stats-bar">
                     <div class="tt-stat-chip">
                         <div class="tt-stat-icon" style="background:#eff6ff; color:#2563eb;">
-                            <i class="bi bi-journal-bookmark-fill"></i>
+                            <i class="bi bi-journal-bookmark-fill" aria-hidden="true"></i>
                         </div>
                         <div class="tt-stat-info">
                             <span class="tt-stat-label">Assigned Sections</span>
@@ -2589,7 +2688,7 @@
                     </div>
                     <div class="tt-stat-chip">
                         <div class="tt-stat-icon" style="background:#f0fdf4; color:#16a34a;">
-                            <i class="bi bi-people-fill"></i>
+                            <i class="bi bi-people-fill" aria-hidden="true"></i>
                         </div>
                         <div class="tt-stat-info">
                             <span class="tt-stat-label">Total Students</span>
@@ -2604,7 +2703,7 @@
                     </div>
                     <div class="tt-stat-chip">
                         <div class="tt-stat-icon" style="background:#fdf4ff; color:#a855f7;">
-                            <i class="bi bi-clock-history"></i>
+                            <i class="bi bi-clock-history" aria-hidden="true"></i>
                         </div>
                         <div class="tt-stat-info">
                             <span class="tt-stat-label">Academic Year</span>
@@ -2638,33 +2737,33 @@
                         <c:set var="section" value="${entry.key}" />
                         <c:set var="students" value="${entry.value}" />
                         <div class="col-md-6 col-xl-4">
-                            <div class="table-card h-100 mb-0 d-flex flex-column justify-content-between" onclick="openProfCourseSessions('${section.id}')" role="button" tabindex="0" style="cursor:pointer;" title="View 15-Week Sessions">
+                            <div class="table-card h-100 mb-0 d-flex flex-column justify-content-between" onclick="openProfCourseSessions('${section.id}')" onkeydown="if((event.key==='Enter'||event.key===' ')&&event.target===this){event.preventDefault();openProfCourseSessions('${section.id}');}" role="button" tabindex="0" style="cursor:pointer;" title="View 15-Week Sessions">
                                 <div>
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill fw-bold">${section.courseCode}</span>
                                         <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill"><i class="bi bi-people me-1" aria-hidden="true"></i>${students.size()} Students</span>
                                     </div>
                                     <h3 class="h6 fw-bold text-dark mb-3">${section.courseTitle}</h3>
-                                    <div class="p-3 bg-light rounded-4 mb-3">
+                                    <div class="p-3 prof-inner-row mb-3">
                                         <div class="d-flex align-items-center mb-2">
                                             <i class="bi bi-calendar3 text-primary me-2 fs-5" aria-hidden="true"></i>
                                             <div>
                                                 <div class="small fw-bold text-dark">${section.daysOfWeek}</div>
-                                                <div class="text-muted" style="font-size:0.75rem;">Session Days</div>
+                                                <div class="text-muted" style="font-size:0.8rem;">Session Days</div>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center mb-2">
                                             <i class="bi bi-clock text-primary me-2 fs-5" aria-hidden="true"></i>
                                             <div>
                                                 <div class="small fw-bold text-dark">${section.sessionShift}</div>
-                                                <div class="text-muted" style="font-size:0.75rem;">Shift Time</div>
+                                                <div class="text-muted" style="font-size:0.8rem;">Shift Time</div>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <i class="bi bi-door-open text-primary me-2 fs-5" aria-hidden="true"></i>
                                             <div>
                                                 <div class="small fw-bold text-dark">Room ${section.roomName}</div>
-                                                <div class="text-muted" style="font-size:0.75rem;">Assigned Classroom</div>
+                                                <div class="text-muted" style="font-size:0.8rem;">Assigned Classroom</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2693,6 +2792,15 @@
                 <p class="text-muted small mb-0">Manage security settings, two-factor authentication, and academic roles</p>
             </div>
 
+            <div class="table-card" style="margin-bottom: 20px;">
+                <h3 class="h5 fw-bold text-dark mb-1"><i class="bi bi-clock-history text-primary me-2" aria-hidden="true"></i>Teaching Availability</h3>
+                <p class="text-muted small mb-3">Tell the dean which shifts you are free to teach. Deans can only assign you to classes in the shifts you confirm here.</p>
+                <jsp:include page="/WEB-INF/views/common/professor_availability_form.jsp">
+                    <jsp:param name="idPrefix" value="deskAvail" />
+                    <jsp:param name="returnTab" value="settings" />
+                </jsp:include>
+            </div>
+
             <div class="row g-4">
                 <div class="col-lg-6">
                     <!-- Profile Card -->
@@ -2700,7 +2808,7 @@
                         <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-person-badge text-primary me-2" aria-hidden="true"></i>Faculty Profile</h3>
                         <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
                             <div class="user-avatar" style="width:64px; height:64px; border-radius:20px;">
-                                <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="" aria-hidden="true" onerror="this.src='https://ui-avatars.com/api/?name=${sessionScope.user.fullName}&background=e2e8f0&color=475569'">
+                                <img src="${pageContext.request.contextPath}/static/images/${sessionScope.user.gender == 'FEMALE' ? 'default_female' : 'default_male'}.svg" alt="" aria-hidden="true" onerror="this.src='https://ui-avatars.com/api/?name=${sessionScope.user.fullName}&background=e2e8f0&color=475569'">
                             </div>
                             <div>
                                 <h4 class="h6 fw-bold text-dark mb-1">${sessionScope.user.fullName}</h4>
@@ -2709,9 +2817,9 @@
                             </div>
                         </div>
                         <div class="small">
-                            <div class="d-flex justify-content-between py-2 border-bottom">
+                            <div class="d-flex justify-content-between align-items-start py-2 border-bottom">
                                 <span class="text-muted">Email Address</span>
-                                <span class="fw-semibold text-dark">${sessionScope.user.email}</span>
+                                <span class="fw-semibold text-dark text-end text-break ms-3">${sessionScope.user.email}</span>
                             </div>
                             <div class="d-flex justify-content-between py-2 border-bottom">
                                 <span class="text-muted">Account Role</span>
@@ -2719,7 +2827,7 @@
                             </div>
                             <div class="d-flex justify-content-between py-2">
                                 <span class="text-muted">Academic Term</span>
-                                <span class="fw-semibold text-dark">AY 2026-2027</span>
+                                <span class="fw-semibold text-dark">AY ${currentAcademicYear}</span>
                             </div>
                         </div>
                     </div>
@@ -2730,11 +2838,11 @@
                     <div class="table-card mb-4">
                         <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-shield-lock text-primary me-2" aria-hidden="true"></i>Security & Authentication</h3>
                         
-                        <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="p-3 bg-light rounded-4 border mb-4">
+                        <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="p-3 prof-inner-row mb-4">
                             <input type="hidden" name="redirect" value="/professor/dashboard?tab=settings">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center gap-3">
                                 <div>
-                                    <label for="desktopTwoFactorSwitch" class="fw-bold text-dark mb-0 cursor-pointer">Two-Factor Authentication (2FA)</label>
+                                    <label for="desktopTwoFactorSwitch" class="fw-bold text-dark mb-0" style="cursor:pointer;">Two-Factor Authentication (2FA)</label>
                                     <p class="small text-muted mb-0 mt-1" id="twoFactorHelp">Receive an OTP security code via email each time you log in.</p>
                                 </div>
                                 <div class="form-check form-switch fs-4 mb-0">
@@ -2746,7 +2854,7 @@
                         <div class="border-top pt-3">
                             <h4 class="h6 fw-bold text-dark mb-2">Session Termination</h4>
                             <p class="small text-muted mb-3">Safely sign out of your faculty account on this browser.</p>
-                            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger rounded-pill px-4 fw-bold">
+                            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger rounded-pill px-4 py-2 fw-bold">
                                 <i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i> Sign Out
                             </button>
                         </div>
@@ -2849,10 +2957,11 @@
                             </div>
                         </c:if>
                         <c:if test="${not empty records}">
+                            <div class="table-responsive">
                             <table class="table mb-0 align-middle" aria-label="Attendance history records for ${section.courseCode}">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" class="ps-4">Date (Click to View Breakdown)</th>
+                                        <th scope="col" class="ps-4">Date <span class="text-muted fw-normal small">(select to expand)</span></th>
                                         <th scope="col">Present</th>
                                         <th scope="col">Absent</th>
                                         <th scope="col">Late/Excused</th>
@@ -2870,7 +2979,7 @@
                                             <td><span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill">${record.presentCount} Present</span></td>
                                             <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill">${record.absentCount} Absent</span></td>
                                             <td>
-                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill">${record.lateCount + record.excusedCount} Other</span>
+                                                <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle px-2 py-1 rounded-pill">${record.lateCount + record.excusedCount} Other</span>
                                                 <c:if test="${record.cancelled}">
                                                     <span class="badge bg-dark ms-1 rounded-pill">CANCELLED</span>
                                                 </c:if>
@@ -2888,16 +2997,15 @@
                                                             <c:choose>
                                                                 <c:when test="${record.cancelled}">
                                                                     <input type="hidden" name="cancelAction" value="restore">
-                                                                    <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2 py-0" style="font-size:0.75rem;"><i class="bi bi-arrow-counterclockwise"></i> Restore Session</button>
+                                                                    <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size:0.8rem;"><i class="bi bi-arrow-counterclockwise"></i> Restore Session</button>
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <input type="hidden" name="cancelAction" value="cancel">
-                                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0" style="font-size:0.75rem;" onclick="return confirm('Are you sure you want to cancel this session? It will not count towards student attendance.');"><i class="bi bi-x-circle"></i> Cancel Session</button>
+                                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1" style="font-size:0.8rem;" onclick="return confirm('Are you sure you want to cancel this session? It will not count towards student attendance.');"><i class="bi bi-x-circle"></i> Cancel Session</button>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </form>
                                                     </div>
-                                                    <div class="small fw-semibold text-muted mb-2">Student Statuses for ${record.sessionDate}:</div>
                                                     <div class="row row-cols-1 row-cols-md-2 g-2">
                                                         <c:forEach var="entry" items="${record.entries}">
                                                             <div class="col">
@@ -2925,10 +3033,11 @@
                                     </c:forEach>
                                 </tbody>
                             </table>
+                            </div>
                         </c:if>
                     </div>
                     <div class="modal-footer border-0 bg-light py-3 rounded-bottom-4">
-                        <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -3032,120 +3141,131 @@
     </c:forEach>
 
     <div class="modal fade" id="classQrModal" tabindex="-1" aria-labelledby="classQrModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
-                <div class="modal-header bg-light py-3 border-0">
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
-                            <i class="bi bi-qr-code-scan fs-5"></i>
-                        </div>
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="qr-head-icon"><i class="bi bi-qr-code-scan" aria-hidden="true"></i></span>
                         <div>
-                            <h5 class="modal-title h6 fw-bold mb-0 text-dark" id="classQrModalLabel">Class Link QR Generator</h5>
-                            <p class="text-muted small mb-0">Generate a scannable QR code for student groups, slides, or classroom materials</p>
+                            <h5 class="modal-title fw-bold text-dark mb-0" id="classQrModalLabel">Class Link QR</h5>
+                            <p class="text-muted small mb-0">Create a scannable code for your student group, slides or materials.</p>
                         </div>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4">
+
+                <div class="modal-body">
                     <div class="row g-4">
                         <div class="col-lg-7">
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark mb-1">Target Class Section</label>
-                                <select id="qrCourseSelect" class="form-select rounded-3 shadow-none border" onchange="onQrCourseChanged()">
-                                    <option value="" data-code="Class Link" data-title="General Class Link">General / Custom Class Link</option>
-                                    <c:forEach var="entry" items="${sectionStudentsMap}">
-                                        <c:set var="sec" value="${entry.key}" />
-                                        <option value="${sec.id}" data-code="<c:out value="${sec.courseCode}"/>" data-title="<c:out value="${sec.courseTitle}"/>">
-                                            <c:out value="${sec.courseCode}"/> — <c:out value="${sec.courseTitle}"/> (<c:out value="${sec.sessionShift}"/>)
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark mb-1">Link Category</label>
-                                <div class="d-flex flex-wrap gap-2">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn active" data-type="telegram" onclick="applyQrPreset('telegram')">
-                                        <i class="bi bi-telegram text-primary me-1"></i> Telegram
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="classroom" onclick="applyQrPreset('classroom')">
-                                        <i class="bi bi-google text-success me-1"></i> Classroom
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="drive" onclick="applyQrPreset('drive')">
-                                        <i class="bi bi-folder2-open text-warning me-1"></i> Drive / Slides
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="whatsapp" onclick="applyQrPreset('whatsapp')">
-                                        <i class="bi bi-whatsapp text-success me-1"></i> WhatsApp
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="custom" onclick="applyQrPreset('custom')">
-                                        <i class="bi bi-link-45deg me-1"></i> Custom
-                                    </button>
+                            <div class="qr-section">
+                                <div class="qr-section-title">Class</div>
+                                <div class="qr-field">
+                                    <label for="qrCourseSelect" class="form-label">Target class section</label>
+                                    <select id="qrCourseSelect" class="form-select" onchange="onQrCourseChanged()">
+                                        <option value="" data-code="Class Link" data-title="General Class Link">General / Custom Class Link</option>
+                                        <c:forEach var="entry" items="${sectionStudentsMap}">
+                                            <c:set var="sec" value="${entry.key}" />
+                                            <option value="${sec.id}" data-code="<c:out value="${sec.courseCode}"/>" data-title="<c:out value="${sec.courseTitle}"/>">
+                                                <c:out value="${sec.courseCode}"/> — <c:out value="${sec.courseTitle}"/> (<c:out value="${sec.sessionShift}"/>)
+                                            </option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark mb-1 d-flex justify-content-between align-items-center">
-                                    <span>Paste or Enter Link <span class="text-danger">*</span></span>
-                                    <button type="button" class="btn btn-link p-0 text-primary small text-decoration-none" onclick="pasteQrUrl()">
-                                        <i class="bi bi-clipboard me-1"></i>Paste from Clipboard
-                                    </button>
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-link-45deg"></i></span>
-                                    <input type="url" id="qrUrlInput" class="form-control border-start-0 ps-0 shadow-none" placeholder="https://t.me/+AbCdEf... or https://classroom.google.com/..." oninput="updateQrCode()" autocomplete="off">
+                            <div class="qr-section">
+                                <div class="qr-section-title">Link</div>
+                                <div class="qr-field">
+                                    <div class="form-label" id="qrPresetLabel">Link type</div>
+                                    <div class="qr-preset-row" role="group" aria-labelledby="qrPresetLabel">
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn active" data-type="telegram" aria-pressed="true" onclick="applyQrPreset('telegram')">
+                                            <i class="bi bi-telegram text-primary" aria-hidden="true"></i> Telegram
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn" data-type="classroom" aria-pressed="false" onclick="applyQrPreset('classroom')">
+                                            <i class="bi bi-google text-success" aria-hidden="true"></i> Classroom
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn" data-type="drive" aria-pressed="false" onclick="applyQrPreset('drive')">
+                                            <i class="bi bi-folder2-open text-warning" aria-hidden="true"></i> Drive / Slides
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn" data-type="whatsapp" aria-pressed="false" onclick="applyQrPreset('whatsapp')">
+                                            <i class="bi bi-whatsapp text-success" aria-hidden="true"></i> WhatsApp
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn" data-type="custom" aria-pressed="false" onclick="applyQrPreset('custom')">
+                                            <i class="bi bi-link-45deg" aria-hidden="true"></i> Custom
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="form-text small text-muted" id="qrUrlHelper">Students will be redirected to this link when they scan the QR code.</div>
+                                <div class="qr-field">
+                                    <div class="qr-label-row">
+                                        <label for="qrUrlInput" class="form-label">Link <span class="text-danger">*</span></label>
+                                        <button type="button" class="btn btn-link qr-inline-btn" onclick="pasteQrUrl()">
+                                            <i class="bi bi-clipboard me-1" aria-hidden="true"></i>Paste
+                                        </button>
+                                    </div>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-link-45deg" aria-hidden="true"></i></span>
+                                        <input type="url" id="qrUrlInput" class="form-control" placeholder="https://t.me/+AbCdEf... or https://classroom.google.com/..." oninput="updateQrCode()" autocomplete="off" aria-describedby="qrUrlHelper">
+                                    </div>
+                                    <div class="qr-help" id="qrUrlHelper">Students are sent to this link when they scan the code.</div>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark mb-1">Slide Display Title</label>
-                                <input type="text" id="qrTitleInput" class="form-control rounded-3 shadow-none border" placeholder="e.g. Join Class Telegram Group" oninput="updateQrCode()" maxlength="60">
-                            </div>
-
-                            <div>
-                                <label class="form-label small fw-bold text-dark mb-1">Slide Note / Instruction (Optional)</label>
-                                <input type="text" id="qrNoteInput" class="form-control rounded-3 shadow-none border" placeholder="e.g. Scan with your phone camera to join" oninput="updateQrCode()" maxlength="80">
+                            <div class="qr-section">
+                                <div class="qr-section-title">Slide text</div>
+                                <div class="qr-field">
+                                    <div class="qr-label-row">
+                                        <label for="qrTitleInput" class="form-label">Title</label>
+                                        <span class="qr-counter" id="qrTitleCount" aria-hidden="true">0/60</span>
+                                    </div>
+                                    <input type="text" id="qrTitleInput" class="form-control" placeholder="e.g. Join Class Telegram Group" oninput="updateQrCode()" maxlength="60">
+                                </div>
+                                <div class="qr-field">
+                                    <div class="qr-label-row">
+                                        <label for="qrNoteInput" class="form-label">Instruction <span class="text-muted fw-normal">(optional)</span></label>
+                                        <span class="qr-counter" id="qrNoteCount" aria-hidden="true">0/80</span>
+                                    </div>
+                                    <input type="text" id="qrNoteInput" class="form-control" placeholder="e.g. Scan with your phone camera to join" oninput="updateQrCode()" maxlength="80">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
-                            <div class="w-100 p-3 bg-light rounded-4 border text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 340px;">
-                                <div id="qrEmptyState" class="py-5 text-muted">
-                                    <i class="bi bi-qr-code fs-1 d-block mb-2 text-secondary opacity-50"></i>
-                                    <div class="fw-semibold small">No Link Entered</div>
-                                    <div class="small text-muted" style="font-size:0.75rem;">Paste a link on the left to generate QR code</div>
+                        <div class="col-lg-5">
+                            <div class="qr-preview-card">
+                                <div id="qrEmptyState" class="text-muted">
+                                    <span class="qr-empty-icon"><i class="bi bi-qr-code" aria-hidden="true"></i></span>
+                                    <div class="fw-bold text-dark">No link yet</div>
+                                    <div class="small mt-1">Enter a link and your QR code appears here.</div>
                                 </div>
                                 <div id="qrPreviewWrap" style="display:none;" class="w-100 d-flex flex-column align-items-center">
-                                    <div class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-1 mb-2 fw-semibold" id="qrPreviewBadge" style="font-size:0.75rem;">
-                                        Class Link
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 mb-3 fw-semibold" id="qrPreviewBadge" style="font-size:0.8rem;">Class Link</span>
+                                    <div class="qr-canvas-frame" onclick="expandToSlideQr()" title="Click to view the large presentation slide">
+                                        <canvas id="qrCanvasPreview" aria-label="QR code preview"></canvas>
                                     </div>
-                                    <div class="p-2 bg-white rounded-3 border shadow-sm mb-2" style="cursor: pointer;" onclick="expandToSlideQr()" title="Click to view large presentation slide">
-                                        <canvas id="qrCanvasPreview" style="display:block; max-width: 220px; max-height: 220px; width: 100%; height: auto;"></canvas>
-                                    </div>
-                                    <div class="small fw-bold text-dark text-truncate w-100 px-2" id="qrPreviewTitle"></div>
-                                    <div class="small text-muted text-truncate w-100 px-2" id="qrPreviewUrl" style="font-size:0.72rem;"></div>
-                                    <div class="mt-2 text-primary small fw-semibold" style="cursor:pointer;" onclick="expandToSlideQr()">
-                                        <i class="bi bi-arrows-fullscreen me-1"></i>Click to expand for presentation
-                                    </div>
+                                    <div class="fw-bold text-dark text-truncate w-100 px-2" id="qrPreviewTitle"></div>
+                                    <div class="small text-muted text-truncate w-100 px-2 mt-1" id="qrPreviewUrl"></div>
+                                    <button type="button" class="btn btn-link qr-expand-btn" onclick="expandToSlideQr()">
+                                        <i class="bi bi-arrows-fullscreen me-1" aria-hidden="true"></i>Expand for presentation
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer bg-light py-3 border-0 d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2 fw-semibold" id="qrCopyLinkBtn" onclick="copyQrLink()" disabled>
-                            <i class="bi bi-link-45deg me-1"></i>Copy Link
+
+                <div class="modal-footer d-flex flex-wrap justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2 qr-footer-group">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-3 d-inline-flex align-items-center gap-2" id="qrCopyLinkBtn" onclick="copyQrLink()" disabled>
+                            <i class="bi bi-link-45deg" aria-hidden="true"></i>Copy link
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3 py-2 fw-semibold" id="qrDownloadBtn" onclick="downloadQrImage()" disabled>
-                            <i class="bi bi-download me-1"></i>Download PNG
+                        <button type="button" class="btn btn-outline-success rounded-pill px-3 d-inline-flex align-items-center gap-2" id="qrDownloadBtn" onclick="downloadQrImage()" disabled>
+                            <i class="bi bi-download" aria-hidden="true"></i>Download PNG
                         </button>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <button type="button" class="btn btn-sm btn-light rounded-pill px-3 py-2" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm d-inline-flex align-items-center gap-2" id="qrPresentBtn" onclick="expandToSlideQr()" disabled>
-                            <i class="bi bi-easel-fill"></i>
-                            <span>Present on Slide (Big QR)</span>
+                    <div class="d-flex align-items-center gap-2 qr-footer-group">
+                        <button type="button" class="btn btn-light rounded-pill px-3 qr-close-btn" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary rounded-pill px-4 d-inline-flex align-items-center gap-2 shadow-sm" id="qrPresentBtn" onclick="expandToSlideQr()" disabled>
+                            <i class="bi bi-easel-fill" aria-hidden="true"></i>
+                            <span>Present on slide</span>
                         </button>
                     </div>
                 </div>
@@ -3292,9 +3412,11 @@
                 if (btn.getAttribute('data-type') === type) {
                     btn.classList.add('active', 'btn-primary', 'text-white');
                     btn.classList.remove('btn-outline-secondary');
+                    btn.setAttribute('aria-pressed', 'true');
                 } else {
                     btn.classList.remove('active', 'btn-primary', 'text-white');
                     btn.classList.add('btn-outline-secondary');
+                    btn.setAttribute('aria-pressed', 'false');
                 }
             });
 
@@ -3351,7 +3473,15 @@
             updateQrCode();
         }
 
+        function updateQrCounters() {
+            var t = document.getElementById('qrTitleInput'), n = document.getElementById('qrNoteInput');
+            var tc = document.getElementById('qrTitleCount'), nc = document.getElementById('qrNoteCount');
+            if (t && tc) tc.textContent = t.value.length + '/' + (t.maxLength > 0 ? t.maxLength : 60);
+            if (n && nc) nc.textContent = n.value.length + '/' + (n.maxLength > 0 ? n.maxLength : 80);
+        }
+
         function updateQrCode() {
+            updateQrCounters();
             var urlInput = document.getElementById('qrUrlInput');
             var rawUrl = urlInput ? urlInput.value.trim() : '';
             var emptyState = document.getElementById('qrEmptyState');
@@ -3519,6 +3649,7 @@
         }
 
         function showCopiedFeedback() {
+            if (window.Sonner) Sonner.success('Link copied to clipboard.', 'Copied');
             var btn = document.getElementById('qrCopyLinkBtn');
             if (btn) {
                 var origHtml = btn.innerHTML;
@@ -3763,26 +3894,6 @@
 
 <div class="d-block d-md-none mobile-app-container">
 
-    <c:if test="${param.twoFactorUpdated == 'true'}">
-        <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
-            <i class="bi bi-shield-check me-1"></i>2FA <strong>enabled</strong>.<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </c:if>
-    <c:if test="${param.twoFactorUpdated == 'false'}">
-        <div class="alert alert-info alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
-            <i class="bi bi-shield-slash me-1"></i>2FA <strong>disabled</strong>.<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </c:if>
-    <c:if test="${not empty successMessage}">
-        <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
-            <i class="bi bi-check-circle-fill me-1"></i>${successMessage}<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </c:if>
-    <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-1"></i>${errorMessage}<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </c:if>
     
     <header class="mobile-top-bar" role="banner">
         <div class="mobile-user-info">
@@ -3926,14 +4037,14 @@
 
     <!-- ===== CLASSES VIEW ===== -->
     <section id="mobile-view-classes" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-classes">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div class="me-auto" style="min-width:0;">
                 <h2 class="section-title mb-0">Assigned Classes</h2>
                 <span class="text-muted" style="font-size:0.75rem;">Sections, rosters, roll call & grades</span>
             </div>
             <div class="d-flex align-items-center gap-2">
                 <c:if test="${not empty sectionStudentsMap}">
-                    <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm" style="font-size:0.75rem;" title="Export all attendance">
+                    <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm" style="font-size:0.75rem;min-height:44px;" title="Export all attendance">
                         <i class="bi bi-file-earmark-excel-fill text-success"></i> Export All
                     </a>
                 </c:if>
@@ -3957,6 +4068,12 @@
             </div>
         </c:if>
         
+        <div id="profClassesTabEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+            <i class="bi bi-search text-muted fs-2 mb-2 d-block"></i>
+            <div class="fw-bold small text-dark mb-1">No matching classes</div>
+            <div class="small text-muted">Try a different code or title.</div>
+        </div>
+
         <div id="mobileClassList">
             <c:forEach var="entry" items="${sectionStudentsMap}">
                 <c:set var="section" value="${entry.key}" />
@@ -4002,8 +4119,8 @@
     </section>
 
     <section id="mobile-view-schedule" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-schedule">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
+        <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+            <div style="min-width:0;">
                 <h2 class="section-title mb-0">Teaching Timetable</h2>
                 <span class="text-muted" style="font-size:0.75rem;">7-Day lecture & room breakdown</span>
             </div>
@@ -4114,22 +4231,31 @@
 
         <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
             <div class="fw-bold small text-dark mb-3"><i class="bi bi-mortarboard me-2 text-primary"></i>Faculty Details</div>
-            <div class="d-flex justify-content-between py-2 border-bottom small">
+            <div class="d-flex justify-content-between mobile-profile-row py-2 border-bottom small">
                 <span class="text-muted">Role:</span>
                 <span class="fw-semibold text-dark">Professor / Faculty</span>
             </div>
-            <div class="d-flex justify-content-between py-2 border-bottom small">
+            <div class="d-flex justify-content-between mobile-profile-row py-2 border-bottom small">
                 <span class="text-muted">Department / School:</span>
                 <span class="fw-semibold text-dark">${not empty professorSchool ? professorSchool.schoolName : (not empty sessionScope.user.major ? sessionScope.user.major : 'Science & Technology')}</span>
             </div>
-            <div class="d-flex justify-content-between py-2 border-bottom small">
+            <div class="d-flex justify-content-between mobile-profile-row py-2 border-bottom small">
                 <span class="text-muted">Classes Assigned:</span>
                 <span class="fw-bold text-primary">${sectionStudentsMap.size()} Sections</span>
             </div>
-            <div class="d-flex justify-content-between py-2 small">
+            <div class="d-flex justify-content-between mobile-profile-row py-2 small">
                 <span class="text-muted">Account Status:</span>
                 <span class="badge bg-success bg-opacity-10 text-success fw-bold">Active Faculty</span>
             </div>
+        </div>
+
+        <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
+            <div class="fw-bold small text-dark mb-1"><i class="bi bi-clock-history me-2 text-primary"></i>Teaching Availability</div>
+            <div class="text-muted mb-3" style="font-size:0.75rem;">Deans can only assign you to classes in the shifts you confirm.</div>
+            <jsp:include page="/WEB-INF/views/common/professor_availability_form.jsp">
+                <jsp:param name="idPrefix" value="mobAvail" />
+                <jsp:param name="returnTab" value="profile" />
+            </jsp:include>
         </div>
 
         <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
@@ -4144,7 +4270,7 @@
                 <input type="hidden" name="redirect" value="/professor/dashboard?tab=profile">
                 <div class="input-group">
                     <label class="input-group-text small bg-light" for="mobileTwoFactorSelectProf">Status</label>
-                    <select id="mobileTwoFactorSelectProf" name="twoFactorEnabled" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <select id="mobileTwoFactorSelectProf" name="twoFactorEnabled" class="form-select form-select-sm" style="min-width:0;" onchange="this.form.submit()">
                         <option value="false" ${!sessionScope.user.twoFactorEnabled ? 'selected' : ''}>Disabled</option>
                         <option value="true" ${sessionScope.user.twoFactorEnabled ? 'selected' : ''}>Enabled</option>
                     </select>
@@ -4152,6 +4278,10 @@
                 </div>
             </form>
         </div>
+
+        <button type="button" class="btn btn-outline-secondary w-100 rounded-3 py-2 fw-semibold mb-3 d-flex align-items-center justify-content-center gap-2" style="min-height:44px;" onclick="openReportModal()">
+            <i class="bi bi-flag text-danger" aria-hidden="true"></i>Report an Issue
+        </button>
 
         <c:if test="${sessionScope.user.deanSchoolId != null}">
             <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-dark w-100 rounded-pill py-3 fw-bold mb-3 d-flex align-items-center justify-content-center gap-2 shadow-sm text-white text-decoration-none" style="min-height:48px;">
@@ -4183,11 +4313,6 @@
         </button>
     </nav>
 
-    <!-- Toast Notification for Clipboard -->
-    <div id="mobileToast" class="mobile-toast" role="status" aria-live="polite">
-        <i class="bi bi-check2-circle text-success fs-6"></i>
-        <span id="mobileToastText">Copied to clipboard!</span>
-    </div>
 </div>
 
 <!-- Mobile Security / Notifications Modal -->
@@ -4196,7 +4321,7 @@
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-0 pb-0">
                 <h6 class="modal-title fw-bold" id="securityModalLabel"><i class="bi bi-bell me-2 text-primary"></i>Notifications</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="p-3 bg-light rounded-3 mb-3">
@@ -4227,7 +4352,7 @@
                 <div class="sheet-title" id="casCode">COURSE</div>
                 <div class="small text-muted fw-bold mt-1" id="casTitle">Title</div>
             </div>
-            <button class="btn btn-light rounded-circle" onclick="closeSheet('courseActionSheet')"><i class="bi bi-x fs-5"></i></button>
+            <button type="button" class="btn btn-light rounded-circle" aria-label="Close" onclick="closeSheet('courseActionSheet')"><i class="bi bi-x fs-5"></i></button>
         </div>
         <div class="sheet-body pb-4">
             <button class="sheet-menu-btn sheet-menu-btn-info" onclick="openSubSheet('rosterSheet')">
@@ -4323,18 +4448,18 @@
                     <div class="d-flex flex-column gap-2 py-2">
                         <c:forEach var="student" items="${students}">
                             <div class="d-flex align-items-center justify-content-between p-3 bg-white rounded-4 border shadow-sm">
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-3" style="min-width:0;flex:1 1 auto;">
                                     <div class="mobile-avatar-frame" style="width:44px;height:44px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
                                         <img src="https://ui-avatars.com/api/?name=${student.fullName}&background=0284c7&color=fff&bold=true" alt="${student.fullName}" style="width:100%;height:100%;object-fit:cover;">
                                     </div>
-                                    <div>
-                                        <div class="fw-bold text-dark text-truncate" style="max-width: 170px;">${student.fullName}</div>
+                                    <div style="min-width:0;">
+                                        <div class="fw-bold text-dark text-truncate">${student.fullName}</div>
                                         <div class="text-muted small" style="font-size:0.75rem;">
-                                            <span class="badge bg-light border text-secondary me-1">ID: ${student.formattedIdentifier}</span>
+                                            <span class="badge bg-light border text-secondary me-1 mw-100 text-truncate d-inline-block align-bottom">ID: ${student.formattedIdentifier}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-end">
+                                <div class="text-end flex-shrink-0 ms-2">
                                     <c:if test="${not empty student.email}">
                                         <a href="mailto:${student.email}" class="btn btn-sm btn-light border rounded-pill px-3 py-1 text-primary small fw-semibold" title="${student.email}">
                                             <i class="bi bi-envelope-fill me-1"></i>Email
@@ -4466,15 +4591,15 @@
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div class="fw-bold text-dark"><i class="bi bi-calendar3 me-2"></i>${record.sessionDate}</div>
                         </div>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex flex-wrap gap-2">
                             <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1"><i class="bi bi-check-circle-fill me-1"></i>${record.presentCount} Present</span>
                             <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1"><i class="bi bi-x-circle-fill me-1"></i>${record.absentCount} Absent</span>
                         </div>
                         <div class="mt-2 pt-2 border-top">
-                            <a class="text-decoration-none small fw-bold text-primary" data-bs-toggle="collapse" href="#mobRecordDetails_${section.id}_${record.id}">View Student Breakdown <i class="bi bi-chevron-down"></i></a>
+                            <a class="text-decoration-none small fw-bold text-primary d-inline-block py-2" data-bs-toggle="collapse" href="#mobRecordDetails_${section.id}_${record.id}">View Student Breakdown <i class="bi bi-chevron-down"></i></a>
                             <div class="collapse mt-2" id="mobRecordDetails_${section.id}_${record.id}">
                                 <c:forEach var="entry" items="${record.entries}">
-                                    <div class="d-flex justify-content-between border-bottom py-1 small">
+                                    <div class="d-flex justify-content-between gap-3 border-bottom py-1 small">
                                         <span>${entry.studentName}</span>
                                         <c:choose>
                                             <c:when test="${entry.status == 'PRESENT'}"><span class="text-success fw-bold">P</span></c:when>
@@ -4586,6 +4711,8 @@
             items[i].style.display = match ? '' : 'none';
             if (match) visibleCount++;
         }
+        var clearBtn = document.getElementById('clearMobileClassSearchBtn');
+        if (clearBtn) clearBtn.style.display = q ? '' : 'none';
         var emptyEl = document.getElementById('profClassesTabEmpty');
         if (emptyEl) {
             emptyEl.style.display = (visibleCount === 0 && items.length > 0) ? 'block' : 'none';
@@ -4593,13 +4720,13 @@
     }
 
     function clearMobileClassSearch() {
-        var inp = document.getElementById('mobileClassSearch');
+        var inp = document.getElementById('mobileClassSearchInput');
         if (inp) inp.value = '';
         filterMobileClasses('');
     }
 
     function filterProfScheduleTabView(dayShort, element) {
-        var strip = document.getElementById('profScheduleFilterStrip');
+        var strip = document.getElementById('profScheduleDayFilterStrip');
         if (strip) {
             var pills = strip.querySelectorAll('.schedule-filter-pill');
             pills.forEach(function (p) { p.classList.remove('active'); });
@@ -4665,16 +4792,7 @@
         }
 
         function onCopySuccess() {
-            var toast = document.getElementById('mobileToast');
-            var toastText = document.getElementById('mobileToastText');
-            if (toast) {
-                if (toastText) toastText.textContent = 'Faculty ID copied: ' + idText;
-                toast.classList.add('show');
-                clearTimeout(window._profToastTimer);
-                window._profToastTimer = setTimeout(function () {
-                    toast.classList.remove('show');
-                }, 2500);
-            }
+            if (window.Sonner) Sonner.success('Faculty ID copied: ' + idText, 'Copied');
             if (btnEl) {
                 var origHtml = btnEl.innerHTML;
                 btnEl.innerHTML = '<i class="bi bi-check2 text-success"></i> <span>Copied!</span>';
@@ -4685,7 +4803,7 @@
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            var openSheets = document.querySelectorAll('.course-action-sheet.open');
+            var openSheets = document.querySelectorAll('.action-sheet-overlay.open');
             openSheets.forEach(function(sh) { sh.classList.remove('open'); });
             document.body.style.overflow = '';
         }
@@ -5026,6 +5144,10 @@
                 updated++;
             }
         });
+        if (window.Sonner) {
+            if (updated > 0) Sonner.success('Attendance scores calculated for ' + updated + (updated === 1 ? ' student.' : ' students.'), 'Attendance Calculated');
+            else Sonner.info('No session roll-call data available to calculate.', 'Nothing to Calculate');
+        }
         if (btn) {
             var origHtml = btn.innerHTML;
             btn.innerHTML = '<i class="bi bi-check2 text-success me-1"></i> Calculated!';
@@ -5068,14 +5190,18 @@
 </script>
 
 <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
-<div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
-        <div style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+<jsp:include page="/WEB-INF/views/common/report_modal.jsp">
+    <jsp:param name="formAction" value="${pageContext.request.contextPath}/professor/report"/>
+    <jsp:param name="returnTab" value="dashboard"/>
+</jsp:include>
+<div id="logoutConfirmModal" class="logout-modal-overlay" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
+        <div class="logout-modal-card" style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
             <div style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
                 <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
             </div>
             <h4 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.75rem;">Sign Out?</h4>
             <p style="color:#64748b;font-size:1rem;margin-bottom:2rem;line-height:1.5;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
-            <div style="display:flex;gap:1rem;justify-content:center;">
+            <div class="logout-modal-actions" style="display:flex;gap:1rem;justify-content:center;">
                 <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
                 <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:none;background:#b91c1c;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(185,28,28,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
             </div>
@@ -5095,5 +5221,6 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
 });
 </script>
+<script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
 </body>
 </html>

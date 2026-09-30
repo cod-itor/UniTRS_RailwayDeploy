@@ -76,6 +76,8 @@ CREATE TABLE IF NOT EXISTS class_sections (
     session_shift ENUM('MORNING', 'AFTERNOON', 'EVENING', 'WEEKEND') NOT NULL,
     days_of_week VARCHAR(50) NOT NULL,           -- e.g. 'Mon - Fri'
     academic_year VARCHAR(20) NOT NULL,          -- e.g. '2025-2026'
+    start_date DATE DEFAULT NULL,                -- first class meeting (on/after the fixed term start)
+    end_date DATE DEFAULT NULL,                  -- date of the 15th class session
     FOREIGN KEY (term_id) REFERENCES terms(id) ON DELETE RESTRICT,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE RESTRICT,
     FOREIGN KEY (professor_id) REFERENCES users(id) ON DELETE RESTRICT,
@@ -98,6 +100,32 @@ CREATE TABLE IF NOT EXISTS enrollments (
     UNIQUE KEY uq_student_section (student_id, class_section_id),
     INDEX idx_enrollments_student_id (student_id),
     INDEX idx_enrollments_class_section_id (class_section_id)
+);
+
+-- 6.4 Professor Availability (shifts a professor is free to teach; the dean can only schedule within these)
+CREATE TABLE IF NOT EXISTS professor_availability (
+    professor_id INT NOT NULL,
+    session_shift ENUM('MORNING', 'AFTERNOON', 'EVENING', 'WEEKEND') NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (professor_id, session_shift),
+    FOREIGN KEY (professor_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 6.6 Issue Reports (submitted by students and professors, shown to deans and admins)
+CREATE TABLE IF NOT EXISTS reports (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reporter_id INT NOT NULL,
+    reporter_name VARCHAR(100) NOT NULL,
+    reporter_role ENUM('STUDENT', 'PROFESSOR') NOT NULL,
+    school_id INT DEFAULT NULL,
+    category VARCHAR(60) NOT NULL,
+    issue VARCHAR(100) NOT NULL,
+    details VARCHAR(500) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (school_id) REFERENCES schools(id) ON DELETE SET NULL,
+    INDEX idx_reports_school_id (school_id),
+    INDEX idx_reports_created_at (created_at)
 );
 
 -- 6.5 Term Registration Requests

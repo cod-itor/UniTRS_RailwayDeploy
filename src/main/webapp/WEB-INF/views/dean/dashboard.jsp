@@ -1,11 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
         <!DOCTYPE html>
         <html lang="en">
 
         <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
             <title>Dean Dashboard - UniTRS</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
@@ -673,10 +674,12 @@
                         width: 100% !important;
                         max-width: 540px !important;
                         margin: 0 auto !important;
-                        padding: 0 16px calc(84px + env(safe-area-inset-bottom, 16px)) !important;
+                        padding: 0 16px calc(100px + env(safe-area-inset-bottom, 0px)) !important;
                         background: #f8fafc;
                         min-height: 100vh;
+                        min-height: 100dvh;
                         box-sizing: border-box !important;
+                        overflow-x: clip;
                     }
 
                     /* Sticky Safe-Area Aware Top Bar */
@@ -695,8 +698,8 @@
                     }
 
                     .dean-top-avatar {
-                        width: 42px;
-                        height: 42px;
+                        width: 44px;
+                        height: 44px;
                         border-radius: 14px;
                         overflow: hidden;
                         background: #eff6ff;
@@ -721,7 +724,9 @@
                         color: #1d4ed8;
                         text-decoration: none;
                         transition: all 0.2s ease;
-                        min-height: 36px;
+                        min-height: 44px;
+                        padding: 6px 14px;
+                        flex-shrink: 0;
                     }
 
                     .dean-prof-switch-pill:active {
@@ -757,7 +762,7 @@
                     /* Hero Banner */
                     .dean-hero-banner {
                         background: linear-gradient(135deg, #091e3a 0%, #1e3a8a 60%, #2563eb 100%);
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 20px;
                         color: #ffffff;
                         position: relative;
@@ -783,8 +788,8 @@
                     /* KPI 2x2 Grid */
                     .dean-kpi-grid {
                         display: grid;
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 10px;
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                        gap: 12px;
                         margin-bottom: 16px;
                         width: 100%;
                         box-sizing: border-box;
@@ -793,10 +798,12 @@
                     .dean-kpi-card {
                         background: #ffffff;
                         border-radius: 20px;
-                        padding: 14px 16px;
+                        padding: 16px;
                         border: 1px solid rgba(226, 232, 240, 0.75);
                         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
                         display: flex;
+                        min-width: 0;
+                        cursor: pointer;
                         flex-direction: column;
                         justify-content: space-between;
                         min-height: 94px;
@@ -858,11 +865,11 @@
                         display: flex;
                         gap: 8px;
                         overflow-x: auto;
-                        padding-bottom: 8px;
-                        margin-bottom: 16px;
+                        padding: 2px 16px 8px;
+                        margin: 0 -16px 16px;
                         -webkit-overflow-scrolling: touch;
                         scrollbar-width: none;
-                        width: 100%;
+                        width: auto;
                         box-sizing: border-box;
                     }
 
@@ -882,6 +889,7 @@
                         font-weight: 700;
                         color: #1e293b;
                         white-space: nowrap;
+                        flex-shrink: 0;
                         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
                         min-height: 44px;
                         cursor: pointer;
@@ -914,7 +922,9 @@
                         margin-bottom: 12px;
                         transition: transform 0.15s ease, box-shadow 0.15s ease;
                         width: 100%;
+                        min-width: 0;
                         box-sizing: border-box;
+                        overflow-wrap: anywhere;
                     }
 
                     .mobile-course-card:active {
@@ -943,7 +953,7 @@
                     .mc-meta {
                         display: flex;
                         flex-wrap: wrap;
-                        gap: 10px;
+                        gap: 8px 12px;
                         font-size: 0.78rem;
                         color: #64748b;
                         font-weight: 500;
@@ -953,6 +963,8 @@
                         display: inline-flex;
                         align-items: center;
                         gap: 5px;
+                        min-width: 0;
+                        max-width: 100%;
                     }
 
                     /* Capacity bar */
@@ -997,10 +1009,10 @@
                         border: 1px solid rgba(226, 232, 240, 0.85);
                         border-radius: 14px;
                         padding: 12px 14px 12px 42px;
-                        font-size: 0.88rem;
+                        font-size: 16px;
                         color: #0f172a;
                         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-                        min-height: 46px;
+                        min-height: 48px;
                     }
 
                     .mobile-search-bar input:focus {
@@ -1039,9 +1051,11 @@
                         border-radius: 12px;
                         font-size: 0.82rem;
                         font-weight: 700;
+                        line-height: 1.2;
                         color: #64748b;
                         transition: all 0.2s ease;
-                        min-height: 42px;
+                        min-width: 0;
+                        min-height: 44px;
                     }
 
                     .dean-seg-btn.active {
@@ -1053,9 +1067,10 @@
                     /* Executive Dean Digital Credential ID Card */
                     .dean-cred-card {
                         background: linear-gradient(135deg, #091e3a 0%, #172554 45%, #1e3a8a 100%);
-                        border-radius: 24px;
-                        padding: 22px;
+                        border-radius: 20px;
+                        padding: 20px;
                         color: #ffffff;
+                        overflow-wrap: anywhere;
                         position: relative;
                         overflow: hidden;
                         box-shadow: 0 16px 36px rgba(9, 30, 58, 0.3);
@@ -1112,7 +1127,7 @@
                     .mobile-dock,
                     .mobile-bottom-dock {
                         position: fixed;
-                        bottom: calc(12px + env(safe-area-inset-bottom, 8px));
+                        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
                         left: 50%;
                         transform: translateX(-50%);
                         width: calc(100% - 24px);
@@ -1125,7 +1140,7 @@
                         display: flex;
                         align-items: center;
                         justify-content: space-around;
-                        padding: 6px 8px;
+                        padding: 6px;
                         z-index: 1040;
                         box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
                     }
@@ -1138,13 +1153,14 @@
                         background: transparent;
                         border: none;
                         color: #64748b;
-                        font-size: 0.68rem;
+                        font-size: 0.75rem;
                         font-weight: 600;
-                        letter-spacing: -0.01em;
-                        flex: 1;
+                        letter-spacing: -0.02em;
+                        flex: 1 1 0;
+                        min-width: 0;
                         max-width: 84px;
-                        min-height: 46px;
-                        padding: 5px 4px;
+                        min-height: 48px;
+                        padding: 5px 2px;
                         border-radius: 18px;
                         cursor: pointer;
                         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1176,44 +1192,22 @@
                         color: #2563eb;
                     }
 
-                    /* Mobile Toast */
-                    .mobile-toast {
-                        position: fixed;
-                        bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
-                        left: 50%;
-                        transform: translateX(-50%) translateY(20px);
-                        background: #0f172a;
-                        color: #ffffff;
-                        padding: 9px 18px;
-                        border-radius: 99px;
-                        font-size: 0.8rem;
-                        font-weight: 700;
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
-                        z-index: 1060;
-                        opacity: 0;
-                        pointer-events: none;
-                        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-                    }
-
-                    .mobile-toast.show {
-                        opacity: 1;
-                        transform: translateX(-50%) translateY(0);
-                        pointer-events: auto;
+                    /* Sonner toaster: respect notch on phones (keeps toasts above dock/modals via z-index 10000) */
+                    .sonner-toaster { top: calc(env(safe-area-inset-top, 0px) + 1rem); }
+                    @media (max-width: 576px) {
+                        .sonner-toaster { top: calc(env(safe-area-inset-top, 0px) + 0.75rem); left: 12px; right: 12px; }
                     }
 
                     /* Filter chip strip */
                     .filter-chip-strip {
                         display: flex;
-                        gap: 6px;
+                        gap: 8px;
                         overflow-x: auto;
-                        padding-bottom: 6px;
-                        margin-bottom: 12px;
+                        padding: 4px 16px 8px;
+                        margin: 0 -16px 8px;
                         -webkit-overflow-scrolling: touch;
                         scrollbar-width: none;
-                        width: 100%;
+                        width: auto;
                         box-sizing: border-box;
                     }
 
@@ -1235,6 +1229,15 @@
                         min-height: 36px;
                         display: inline-flex;
                         align-items: center;
+                        flex-shrink: 0;
+                        position: relative;
+                    }
+
+                    /* enlarge hit area to 44px without growing the chip */
+                    .filter-chip::after {
+                        content: '';
+                        position: absolute;
+                        inset: -4px 0;
                     }
 
                     .filter-chip.active {
@@ -1243,6 +1246,145 @@
                         border-color: #2563eb;
                         font-weight: 700;
                     }
+
+                    /* ---------- Audit fixes ---------- */
+                    .fw-extrabold { font-weight: 800; }
+                    .text-indigo { color: #4f46e5; }
+
+                    .dean-glass-badge {
+                        background: rgba(255, 255, 255, 0.18);
+                        border: 1px solid rgba(255, 255, 255, 0.22);
+                    }
+
+                    /* Top bar */
+                    .dean-top-left { flex: 1 1 auto; min-width: 0; }
+                    .dean-top-text { min-width: 0; }
+                    .dean-top-text > .d-flex { min-width: 0; }
+                    .dean-top-right { flex-shrink: 0; }
+
+                    .dean-top-btn {
+                        width: 44px;
+                        height: 44px;
+                        flex-shrink: 0;
+                        border: 1px solid rgba(226, 232, 240, 0.8);
+                    }
+
+                    @media (max-width: 429.98px) {
+                        .dean-prof-switch-pill {
+                            width: 44px;
+                            padding: 0;
+                            justify-content: center;
+                            font-size: 1.05rem;
+                        }
+
+                        .dean-prof-switch-pill span { display: none; }
+                    }
+
+                    @media (max-width: 379.98px) {
+                        .dean-top-role { display: none !important; }
+                    }
+
+                    @media (max-width: 359.98px) {
+                        .dean-top-avatar { display: none; }
+                    }
+
+                    /* Section headers: let title shrink, keep action visible */
+                    .mobile-sub-view > .d-flex.justify-content-between { gap: 12px; }
+                    .mobile-sub-view > .d-flex.justify-content-between > div:first-child { min-width: 0; }
+                    .mobile-sub-view > .d-flex.justify-content-between > .btn { flex-shrink: 0; }
+                    .mobile-sub-view h2, .mobile-sub-view h3 { overflow-wrap: anywhere; }
+                    .mobile-sub-view > .d-flex.justify-content-between > .btn-link {
+                        min-height: 44px;
+                        padding: 0 4px !important;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 4px;
+                    }
+
+                    .dean-hero-top { flex-wrap: wrap; gap: 8px; }
+                    .dean-hero-top .badge { white-space: normal; text-align: left; }
+                    .dean-hero-banner h2 { overflow-wrap: anywhere; }
+
+                    /* Cards: header rows wrap instead of overflowing */
+                    .mobile-course-card > .d-flex.justify-content-between { flex-wrap: wrap; gap: 8px; }
+                    .mobile-course-card .badge { max-width: 100%; white-space: normal; text-align: left; }
+                    .mobile-course-card .list-group-item { gap: 8px; }
+                    .mobile-course-card .list-group-item:last-child { border-bottom: 0 !important; }
+                    .mobile-course-card .list-group-item > div:first-child { min-width: 0; }
+                    .mobile-course-card .list-group-item > form { flex-shrink: 0; }
+                    .mobile-course-card .list-group-item .btn {
+                        min-width: 44px;
+                        min-height: 44px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .mobile-course-card .btn:not([data-id]) {
+                        min-height: 44px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 4px;
+                    }
+
+                    /* small copy-ID chips: bigger hit area, same look */
+                    .mobile-course-card .btn[data-id] { position: relative; }
+                    .mobile-course-card .btn[data-id]::after { content: ''; position: absolute; inset: -10px -4px; }
+
+                    .mobile-course-card .flex-grow-1 > .d-flex > .badge { flex-shrink: 0; margin-left: 8px; }
+                    .min-w-0 { min-width: 0; }
+
+                    .dean-cred-head, .dean-cred-foot { flex-wrap: wrap; gap: 8px 12px; }
+                    .dean-cred-foot .btn { min-height: 44px; }
+
+                    .dock-tab-btn > span:not(.badge) {
+                        max-width: 100%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    @media (max-width: 374.98px) {
+                        .dock-tab-btn { font-size: 0.68rem; }
+                    }
+
+                    /* Modals (shared by mobile + desktop markup) */
+                    .modal { --bs-modal-margin: 16px; }
+
+                    .modal-dialog {
+                        margin: var(--bs-modal-margin) auto;
+                        width: calc(100% - 32px);
+                    }
+
+                    .modal-content { border-radius: 20px !important; }
+                    .modal-header { padding: 16px; gap: 12px; }
+                    .modal-body { padding: 16px; overflow-wrap: anywhere; }
+                    .modal-footer { padding: 12px 16px; gap: 8px; }
+                    .modal-footer > * { margin: 0; }
+                    .modal-footer .btn { flex: 1 1 0; min-height: 44px; }
+                    .modal-body .btn { min-height: 44px; }
+                    .modal-title { font-size: 1rem; overflow-wrap: anywhere; }
+                    .modal .btn-close { padding: 12px; flex-shrink: 0; }
+                    .modal .form-control,
+                    .modal .form-select,
+                    .modal .form-control-sm { font-size: 16px; min-height: 46px; }
+                    .modal-body .list-group-item { gap: 8px; }
+                    .modal-body .list-group-item > div:first-child { min-width: 0; }
+                    .modal-body .list-group-item > form { flex-shrink: 0; }
+
+                    /* Logout confirm (inline-styled overlay) */
+                    #logoutConfirmModal { padding: 16px; box-sizing: border-box; }
+                    #logoutConfirmModal .logout-modal-card {
+                        padding: 24px 20px !important;
+                        width: 100% !important;
+                        max-width: 400px !important;
+                        box-sizing: border-box;
+                        border-radius: 20px !important;
+                    }
+                    #logoutConfirmModal .logout-modal-card p { font-size: 0.95rem !important; margin-bottom: 20px !important; }
+                    #logoutConfirmModal .logout-modal-actions { flex-direction: column-reverse; gap: 8px !important; }
+                    #logoutConfirmModal .logout-modal-actions > * { min-height: 48px; box-sizing: border-box; }
                 }
 
                 @media (min-width: 768px) {
@@ -1250,7 +1392,148 @@
                         display: none !important;
                     }
                 }
+
+                /* ---- Round 2: desktop tab content polish ---- */
+                body .tc-header {
+                    gap: 16px;
+                    flex-wrap: wrap;
+                }
+
+                body .tc-header p {
+                    max-width: 60ch;
+                }
+
+                body .tc-table th {
+                    color: #64748b;
+                    white-space: nowrap;
+                }
+
+                body .tc-table td {
+                    overflow-wrap: anywhere;
+                }
+
+                body .tc-table td .btn,
+                body .tc-header .btn {
+                    white-space: nowrap;
+                }
+
+                .tc-actions {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                }
+
+                .tc-actions form {
+                    margin: 0;
+                }
+
+                .tc-table td .mc-icon-sm {
+                    width: 28px;
+                    height: 28px;
+                    font-size: 0.85rem;
+                    border-radius: 8px;
+                    flex-shrink: 0;
+                }
+
+                .tc-empty {
+                    text-align: center;
+                    color: #64748b;
+                    padding: 32px 16px !important;
+                }
+
+                .tc-search {
+                    position: relative;
+                    width: 280px;
+                    max-width: 100%;
+                }
+
+                .tc-search i {
+                    position: absolute;
+                    left: 14px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #64748b;
+                    pointer-events: none;
+                }
+
+                .tc-search input {
+                    padding-left: 38px;
+                    border-radius: 99px;
+                    background: #f8fafc;
+                }
+
+                .section-head {
+                    margin-bottom: 16px;
+                }
+
+                .section-head h3 {
+                    font-size: 1rem;
+                    font-weight: 800;
+                    color: var(--brand-dark);
+                    margin: 0;
+                }
+
+                .section-head p {
+                    margin: 4px 0 0;
+                }
+
+                body .bundle-card .card-header h5 {
+                    font-size: 1rem;
+                }
+
+                body .bundle-card .list-group-item {
+                    gap: 12px;
+                }
+
+                body .bundle-card .list-group-item .fw-semibold {
+                    overflow-wrap: anywhere;
+                }
+
+                .modal .form-label {
+                    font-size: 0.85rem;
+                    color: #334155;
+                    margin-bottom: 6px;
+                }
+
+                .modal .modal-title {
+                    font-size: 1.05rem;
+                }
+
+                .modal .modal-footer {
+                    gap: 8px;
+                }
+
+                .modal .modal-footer > * {
+                    margin: 0;
+                }
+
+                .modal .btn-close:focus-visible {
+                    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+                }
+
+                .sidebar-nav button:focus-visible,
+                .user-profile:focus-visible,
+                .header-actions .btn:focus-visible {
+                    outline: 2px solid var(--brand-primary);
+                    outline-offset: 2px;
+                }
+
+                .sidebar-search input:focus-visible {
+                    border-color: var(--brand-primary);
+                    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+                }
+
+                .header-actions .btn {
+                    font-size: 0.85rem;
+                    min-height: 40px;
+                    white-space: nowrap;
+                }
+            .term-hidden { display: none !important; }
             </style>
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
         </head>
 
         <body>
@@ -1274,47 +1557,47 @@
                         </div>
 
                         <nav class="sidebar-nav" role="tablist" aria-label="Dean Administration sections">
-                            <button role="tab" id="tab-courses"
+                            <button role="tab" id="tab-courses" aria-controls="dt-courses"
                                 aria-selected="${activeTab == 'courses' ? 'true' : 'false'}"
                                 class="${activeTab == 'courses' ? 'active' : ''}"
                                 onclick="switchDeanTab('courses', this)">
                                 <i class="bi bi-book-fill"></i> Master Courses
                                 <span class="nav-badge">${courses.size()}</span>
                             </button>
-                            <button role="tab" id="tab-terms" aria-selected="${activeTab == 'terms' ? 'true' : 'false'}"
+                            <button role="tab" id="tab-terms" aria-controls="dt-terms" aria-selected="${activeTab == 'terms' ? 'true' : 'false'}"
                                 class="${activeTab == 'terms' ? 'active' : ''}" onclick="switchDeanTab('terms', this)">
                                 <i class="bi bi-calendar3"></i> Academic Terms
                                 <span class="nav-badge">${terms.size()}</span>
                             </button>
-                            <button role="tab" id="tab-students"
+                            <button role="tab" id="tab-students" aria-controls="dt-students"
                                 aria-selected="${activeTab == 'students' ? 'true' : 'false'}"
                                 class="${activeTab == 'students' ? 'active' : ''}"
                                 onclick="switchDeanTab('students', this)">
                                 <i class="bi bi-people-fill"></i> Students
                                 <span class="nav-badge">${students.size()}</span>
                             </button>
-                            <button role="tab" id="tab-bundles"
+                            <button role="tab" id="tab-bundles" aria-controls="dt-bundles"
                                 aria-selected="${activeTab == 'bundles' ? 'true' : 'false'}"
                                 class="${activeTab == 'bundles' ? 'active' : ''}"
                                 onclick="switchDeanTab('bundles', this)">
                                 <i class="bi bi-collection-fill"></i> Curriculum Bundles
                                 <span class="nav-badge">${curriculumMap.size()}</span>
                             </button>
-                            <button role="tab" id="tab-schedules"
+                            <button role="tab" id="tab-schedules" aria-controls="dt-schedules"
                                 aria-selected="${activeTab == 'schedules' ? 'true' : 'false'}"
                                 class="${activeTab == 'schedules' ? 'active' : ''}"
                                 onclick="switchDeanTab('schedules', this)">
                                 <i class="bi bi-clock-history"></i> Class Schedules
                                 <span class="nav-badge">${sections.size()}</span>
                             </button>
-                            <button role="tab" id="tab-facilities"
+                            <button role="tab" id="tab-facilities" aria-controls="dt-facilities"
                                 aria-selected="${activeTab == 'facilities' ? 'true' : 'false'}"
                                 class="${activeTab == 'facilities' ? 'active' : ''}"
                                 onclick="switchDeanTab('facilities', this)">
                                 <i class="bi bi-building-fill"></i> Facilities
                                 <span class="nav-badge">${rooms.size()}</span>
                             </button>
-                            <button role="tab" id="tab-requests"
+                            <button role="tab" id="tab-requests" aria-controls="dt-requests"
                                 aria-selected="${activeTab == 'requests' ? 'true' : 'false'}"
                                 class="${activeTab == 'requests' ? 'active' : ''}"
                                 onclick="switchDeanTab('requests', this)">
@@ -1324,7 +1607,14 @@
                                         class="nav-badge bg-danger text-white border-danger">${pendingTermRequests.size()}</span>
                                 </c:if>
                             </button>
-                            <button role="tab" id="tab-holidays"
+                            <button role="tab" id="tab-reports" aria-controls="dt-reports"
+                                aria-selected="${activeTab == 'reports' ? 'true' : 'false'}"
+                                class="${activeTab == 'reports' ? 'active' : ''}"
+                                onclick="switchDeanTab('reports', this)">
+                                <i class="bi bi-flag-fill"></i> Reports
+                                <span class="nav-badge">${reports.size()}</span>
+                            </button>
+                            <button role="tab" id="tab-holidays" aria-controls="dt-holidays"
                                 aria-selected="${activeTab == 'holidays' ? 'true' : 'false'}"
                                 class="${activeTab == 'holidays' ? 'active' : ''}"
                                 onclick="switchDeanTab('holidays', this)">
@@ -1340,22 +1630,17 @@
 
                             <div class="header-actions">
                                 <button type="button"
-                                    class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs"
+                                    class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-inline-flex align-items-center gap-2"
                                     onclick="switchDeanTab('holidays', document.getElementById('tab-holidays'))"
                                     title="View School Holidays">
-                                    <i class="bi bi-calendar-heart text-danger"></i>
-                                    <span class="small">Holidays</span>
+                                    <i class="bi bi-calendar-heart text-danger" aria-hidden="true"></i>
+                                    Holidays
                                 </button>
 
                                 <a href="${pageContext.request.contextPath}/professor/dashboard"
-                                    class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2"
-                                    style="font-size: 0.85rem;">
+                                    class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-inline-flex align-items-center gap-2">
                                     <i class="bi bi-person-workspace text-primary"></i> Switch to Professor View
                                 </a>
-
-                                <button type="button" class="action-btn" aria-label="Notifications">
-                                    <i class="bi bi-bell"></i>
-                                </button>
 
                                 <div class="dropdown">
                                     <button class="user-profile dropdown-toggle border-0 text-start" type="button"
@@ -1480,42 +1765,24 @@
                             </div>
                         </header>
 
-                        <%-- ALERTS --%>
-                            <div aria-live="polite">
+                        <%-- FLASH MESSAGES (shown once as Sonner toasts) --%>
+                            <div class="d-none" aria-hidden="true">
                                 <c:if test="${param.twoFactorUpdated == 'true'}">
-                                    <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                                        <i class="bi bi-shield-check me-2"></i>Two-Factor Authentication (2FA) is now
-                                        <strong>enabled</strong> for your account.
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
+                                    <div class="sonner-flash-trigger d-none" data-type="success" data-title="2FA Enabled" data-message="Two-Factor Authentication (2FA) is now enabled for your account."></div>
                                 </c:if>
                                 <c:if test="${param.twoFactorUpdated == 'false'}">
-                                    <div class="alert alert-info alert-dismissible fade show rounded-4" role="alert">
-                                        <i class="bi bi-shield-slash me-2"></i>Two-Factor Authentication (2FA) has been
-                                        <strong>disabled</strong> for your account.
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
+                                    <div class="sonner-flash-trigger d-none" data-type="info" data-title="2FA Disabled" data-message="Two-Factor Authentication (2FA) has been disabled for your account."></div>
                                 </c:if>
                                 <c:if test="${not empty successMessage}">
-                                    <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                                        <i class="bi bi-check-circle-fill me-2"></i>${successMessage}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
+                                    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Success" data-message="<c:out value='${successMessage}' />"></div>
                                 </c:if>
                                 <c:if test="${not empty errorMessage}">
-                                    <div class="alert alert-danger alert-dismissible fade show rounded-4" role="alert">
-                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>${errorMessage}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
+                                    <div class="sonner-flash-trigger d-none" data-type="error" data-title="Action Failed" data-message="<c:out value='${errorMessage}' />"></div>
                                 </c:if>
                             </div>
 
                             <%-- TOP METRIC STATS CARDS --%>
-                                <div class="metrics-grid">
+                                <div class="metrics-grid metrics-grid-5">
                                     <div class="metric-card">
                                         <div class="mc-icon-wrap">
                                             <div class="mc-icon blue"><i class="bi bi-book-half"></i></div>
@@ -1566,7 +1833,7 @@
                                     <%-- TAB 1: MASTER COURSES --%>
                                         <%--=========================================================--%>
                                             <section id="dt-courses"
-                                                class="tab-section ${activeTab == 'courses' ? 'active' : ''}">
+                                                class="tab-section ${activeTab == 'courses' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-courses">
                                                 <div class="table-card">
                                                     <div class="tc-header">
                                                         <div>
@@ -1638,7 +1905,7 @@
                                                 <%-- TAB 2: ACADEMIC TERMS --%>
                                                     <%--=========================================================--%>
                                                         <section id="dt-terms"
-                                                            class="tab-section ${activeTab == 'terms' ? 'active' : ''}">
+                                                            class="tab-section ${activeTab == 'terms' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-terms">
                                                             <div class="table-card">
                                                                 <div class="tc-header">
                                                                     <div>
@@ -1706,7 +1973,7 @@
                                                             <%-- TAB 3: STUDENTS IN SCHOOL --%>
                                                                 <%--=========================================================--%>
                                                                     <section id="dt-students"
-                                                                        class="tab-section ${activeTab == 'students' ? 'active' : ''}">
+                                                                        class="tab-section ${activeTab == 'students' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-students">
                                                                         <div class="table-card">
                                                                             <div class="tc-header">
                                                                                 <div>
@@ -1719,10 +1986,11 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="d-flex align-items-center gap-3">
+                                                                                    class="d-flex align-items-center gap-3 flex-wrap">
                                                                                     <select id="studentTermFilter"
-                                                                                        class="form-select border-2 rounded-pill"
-                                                                                        style="min-width: 150px;"
+                                                                                        class="form-select rounded-pill"
+                                                                                        aria-label="Filter students by term"
+                                                                                        style="min-width: 160px;"
                                                                                         onchange="filterStudentsByTerm(this.value)">
                                                                                         <option value="all">All Terms
                                                                                         </option>
@@ -1819,7 +2087,7 @@
                                                                                         </c:forEach>
                                                                                         <c:if test="${empty students}">
                                                                                             <tr>
-                                                                                                <td colspan="6"
+                                                                                                <td colspan="7"
                                                                                                     class="text-center text-muted py-4">
                                                                                                     No students
                                                                                                     currently enrolled
@@ -1836,20 +2104,11 @@
                                                                         <%-- TAB 4: CURRICULUM BUNDLING --%>
                                                                             <%--=========================================================--%>
                                                                                 <section id="dt-bundles"
-                                                                                    class="tab-section ${activeTab == 'bundles' ? 'active' : ''}">
-                                                                                    <div
-                                                                                        class="d-flex justify-content-between align-items-center mb-3">
-                                                                                        <div>
-                                                                                            <h3
-                                                                                                class="h5 fw-bold text-dark mb-0">
-                                                                                                Term Curriculum Bundles
-                                                                                            </h3>
-                                                                                            <p
-                                                                                                class="text-muted small mb-0">
-                                                                                                Assign and bundle
-                                                                                                courses offered in each
-                                                                                                academic term.</p>
-                                                                                        </div>
+                                                                                    class="tab-section ${activeTab == 'bundles' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-bundles">
+                                                                                    <div class="section-head">
+                                                                                        <h3>Term Curriculum Bundles</h3>
+                                                                                        <p class="text-muted small">Assign and bundle courses offered in each
+                                                                                            academic term.</p>
                                                                                     </div>
 
                                                                                     <div class="row g-4">
@@ -1966,7 +2225,7 @@
                                                                                 </section>
 
                                                                                 <section id="dt-schedules"
-                                                                                    class="tab-section ${activeTab == 'schedules' ? 'active' : ''}">
+                                                                                    class="tab-section ${activeTab == 'schedules' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-schedules">
                                                                                     <div class="table-card">
                                                                                         <div class="tc-header">
                                                                                             <div>
@@ -1982,6 +2241,12 @@
                                                                                             </div>
                                                                                             <div
                                                                                                 class="d-flex align-items-center gap-2">
+<select id="scheduleTermFilter" class="form-select rounded-pill" style="min-width:180px;" aria-label="Filter class schedules by term" onchange="filterSchedulesByTerm(this.value)">
+<option value="all">All Terms</option>
+<c:forEach var="term" items="${terms}">
+<option value="<c:out value='${term.termName}'/>"><c:out value="${term.termName}"/></option>
+</c:forEach>
+</select>
                                                                                                 <button type="button"
                                                                                                     class="btn btn-outline-danger rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2 shadow-xs"
                                                                                                     onclick="switchDeanTab('holidays', document.getElementById('tab-holidays'))"
@@ -2002,7 +2267,7 @@
                                                                                         </div>
 
                                                                                         <div class="tc-table-wrap">
-                                                                                            <table class="tc-table">
+                                                                                            <table class="tc-table" id="schedulesTable">
                                                                                                 <thead>
                                                                                                     <tr>
                                                                                                         <th>Term &
@@ -2026,8 +2291,7 @@
                                                                                                     <c:forEach
                                                                                                         var="section"
                                                                                                         items="${sections}">
-                                                                                                        <tr
-                                                                                                            class="searchable-row">
+                                                                                                        <tr class="searchable-row schedule-row" data-term="<c:out value='${section.termName}'/>">
                                                                                                             <td>
                                                                                                                 <span
                                                                                                                     class="badge bg-info-subtle text-info-emphasis border px-2 py-1 rounded-pill">${section.termName}</span>
@@ -2048,8 +2312,7 @@
                                                                                                             <td>
                                                                                                                 <div
                                                                                                                     class="d-flex align-items-center gap-2">
-                                                                                                                    <div class="mc-icon blue"
-                                                                                                                        style="width:28px; height:28px; font-size:0.85rem; border-radius:8px;">
+                                                                                                                    <div class="mc-icon mc-icon-sm blue">
                                                                                                                         <i
                                                                                                                             class="bi bi-person-badge"></i>
                                                                                                                     </div>
@@ -2065,6 +2328,10 @@
                                                                                                                     <i
                                                                                                                         class="bi bi-calendar-event me-1"></i>${section.daysOfWeek}
                                                                                                                 </div>
+<c:if test="${not empty section.startDate}">
+<div class="small text-muted mt-1"><i class="bi bi-flag me-1"></i>Starts ${section.startDateLabel}</div>
+<div class="small text-muted"><i class="bi bi-flag-fill me-1"></i>15th session ${section.endDateLabel}</div>
+</c:if>
                                                                                                             </td>
                                                                                                             <td>
                                                                                                                 <div
@@ -2089,12 +2356,12 @@
                                                                                                             </td>
                                                                                                             <td
                                                                                                                 class="text-end">
+<div class="tc-actions">
                                                                                                                 <button
                                                                                                                     type="button"
-                                                                                                                    class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1"
+                                                                                                                    class="btn btn-sm btn-outline-primary rounded-pill px-3"
                                                                                                                     data-bs-toggle="modal"
-                                                                                                                    data-bs-target="#sectionStudentsModal${section.id}"
-                                                                                                                    style="font-size:0.8rem;">
+                                                                                                                    data-bs-target="#sectionStudentsModal${section.id}">
                                                                                                                     <i
                                                                                                                         class="bi bi-people me-1"></i>
                                                                                                                     Students
@@ -2102,8 +2369,7 @@
                                                                                                                 </button>
                                                                                                                 <form
                                                                                                                     action="${pageContext.request.contextPath}/dean/dashboard"
-                                                                                                                    method="post"
-                                                                                                                    style="display:inline;">
+                                                                                                                    method="post">
                                                                                                                     <input
                                                                                                                         type="hidden"
                                                                                                                         name="action"
@@ -2115,14 +2381,14 @@
                                                                                                                     <button
                                                                                                                         type="submit"
                                                                                                                         class="btn btn-sm btn-outline-danger rounded-pill px-3"
-                                                                                                                        onclick="return confirm('Are you sure you want to delete this scheduled class section?');"
-                                                                                                                        style="font-size:0.8rem;">
+                                                                                                                        onclick="return confirm('Are you sure you want to delete this scheduled class section?');">
                                                                                                                         <i
                                                                                                                             class="bi bi-trash me-1"></i>
                                                                                                                         Delete
                                                                                                                     </button>
                                                                                                                 </form>
-                                                                                                            </td>
+</div>
+</td>
                                                                                                         </tr>
                                                                                                     </c:forEach>
                                                                                                     <c:if
@@ -2153,7 +2419,7 @@
                                                                                     <%-- TAB 6: FACILITY MANAGEMENT --%>
                                                                                         <%--=========================================================--%>
                                                                                             <section id="dt-facilities"
-                                                                                                class="tab-section ${activeTab == 'facilities' ? 'active' : ''}">
+                                                                                                class="tab-section ${activeTab == 'facilities' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-facilities">
                                                                                                 <div class="table-card">
                                                                                                     <div
                                                                                                         class="tc-header">
@@ -2233,8 +2499,7 @@
                                                                                                                         <td>
                                                                                                                             <div
                                                                                                                                 class="d-flex align-items-center gap-2">
-                                                                                                                                <div class="mc-icon cyan"
-                                                                                                                                    style="width:28px; height:28px; font-size:0.85rem; border-radius:8px;">
+                                                                                                                                <div class="mc-icon mc-icon-sm cyan">
                                                                                                                                     <i
                                                                                                                                         class="bi bi-door-open"></i>
                                                                                                                                 </div>
@@ -2250,8 +2515,7 @@
                                                                                                                             class="text-end">
                                                                                                                             <form
                                                                                                                                 action="${pageContext.request.contextPath}/dean/dashboard"
-                                                                                                                                method="post"
-                                                                                                                                style="display:inline;">
+                                                                                                                                method="post" class="d-inline">
                                                                                                                                 <input
                                                                                                                                     type="hidden"
                                                                                                                                     name="action"
@@ -2297,194 +2561,162 @@
                                                                                             </section>
 
                                                                                             <section id="dt-requests"
-                                                                                                class="tab-section ${activeTab == 'requests' ? 'active' : ''}">
-                                                                                                <div
-                                                                                                    class="content-header d-flex justify-content-between align-items-center">
-                                                                                                    <div>
-                                                                                                        <h2>Student
-                                                                                                            Registration
-                                                                                                            Requests
-                                                                                                        </h2>
-                                                                                                        <p
-                                                                                                            class="text-muted">
-                                                                                                            Review and
-                                                                                                            approve
-                                                                                                            batch term
-                                                                                                            registration
-                                                                                                            requests.
-                                                                                                        </p>
-                                                                                                    </div>
-                                                                                                </div>
-
-                                                                                                <div
-                                                                                                    class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                                                                                                    <div
-                                                                                                        class="card-header bg-white border-bottom py-3 px-4">
-                                                                                                        <div
-                                                                                                            class="d-flex justify-content-between align-items-center">
-                                                                                                            <h5
-                                                                                                                class="mb-0 fw-bold">
-                                                                                                                <i
-                                                                                                                    class="bi bi-inbox me-2 text-primary"></i>
-                                                                                                                Pending
-                                                                                                                Requests
-                                                                                                            </h5>
-                                                                                                            <div class="input-group"
-                                                                                                                style="max-width: 300px;">
-                                                                                                                <span
-                                                                                                                    class="input-group-text bg-light border-end-0"><i
-                                                                                                                        class="bi bi-search text-muted"></i></span>
-                                                                                                                <input
-                                                                                                                    type="text"
-                                                                                                                    class="form-control border-start-0 bg-light"
-                                                                                                                    id="requestSearchInput"
-                                                                                                                    placeholder="Search student name..."
-                                                                                                                    onkeyup="filterTable('requestSearchInput', 'requestsTable')">
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class="table-responsive">
-                                                                                                        <table
-                                                                                                            class="table table-hover align-middle mb-0"
-                                                                                                            id="requestsTable">
-                                                                                                            <thead
-                                                                                                                class="table-light text-muted small text-uppercase"
-                                                                                                                style="letter-spacing: 0.5px;">
-                                                                                                                <tr>
-                                                                                                                    <th
-                                                                                                                        class="px-4 py-3">
-                                                                                                                        Date
-                                                                                                                    </th>
-                                                                                                                    <th
-                                                                                                                        class="py-3">
-                                                                                                                        Student
-                                                                                                                        Name
-                                                                                                                    </th>
-                                                                                                                    <th
-                                                                                                                        class="py-3">
-                                                                                                                        Student
-                                                                                                                        ID
-                                                                                                                    </th>
-                                                                                                                    <th
-                                                                                                                        class="py-3">
-                                                                                                                        Term
-                                                                                                                        Requested
-                                                                                                                    </th>
-                                                                                                                    <th
-                                                                                                                        class="py-3 text-end px-4">
-                                                                                                                        Actions
-                                                                                                                    </th>
-                                                                                                                </tr>
-                                                                                                            </thead>
-                                                                                                            <tbody>
-                                                                                                                <c:forEach
-                                                                                                                    var="req"
-                                                                                                                    items="${pendingTermRequests}">
-                                                                                                                    <tr>
-                                                                                                                        <td
-                                                                                                                            class="px-4 py-3">
-                                                                                                                            <fmt:formatDate
-                                                                                                                                value="${req.createdAt}"
-                                                                                                                                pattern="MMM dd, yyyy HH:mm" />
-                                                                                                                        </td>
-                                                                                                                        <td
-                                                                                                                            class="py-3 fw-bold">
-                                                                                                                            ${req.studentName}
-                                                                                                                        </td>
-                                                                                                                        <td
-                                                                                                                            class="py-3">
-                                                                                                                            ${req.studentIdentifier}
-                                                                                                                        </td>
-                                                                                                                        <td
-                                                                                                                            class="py-3">
-                                                                                                                            <span
-                                                                                                                                class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">${req.termName}</span>
-                                                                                                                        </td>
-                                                                                                                        <td
-                                                                                                                            class="py-3 text-end px-4">
-                                                                                                                            <div
-                                                                                                                                class="d-flex justify-content-end gap-2">
-                                                                                                                                <form
-                                                                                                                                    action="${pageContext.request.contextPath}/dean"
-                                                                                                                                    method="POST"
-                                                                                                                                    class="d-inline">
-                                                                                                                                    <input
-                                                                                                                                        type="hidden"
-                                                                                                                                        name="action"
-                                                                                                                                        value="approveTermRequest">
-                                                                                                                                    <input
-                                                                                                                                        type="hidden"
-                                                                                                                                        name="requestId"
-                                                                                                                                        value="${req.id}">
-                                                                                                                                    <button
-                                                                                                                                        type="submit"
-                                                                                                                                        class="btn btn-sm btn-success rounded-pill fw-bold"
-                                                                                                                                        onclick="return confirm('Approve request and enroll student in all classes for this term?');">
-                                                                                                                                        <i
-                                                                                                                                            class="bi bi-check-lg me-1"></i>
-                                                                                                                                        Approve
-                                                                                                                                    </button>
-                                                                                                                                </form>
-                                                                                                                                <form
-                                                                                                                                    action="${pageContext.request.contextPath}/dean"
-                                                                                                                                    method="POST"
-                                                                                                                                    class="d-inline">
-                                                                                                                                    <input
-                                                                                                                                        type="hidden"
-                                                                                                                                        name="action"
-                                                                                                                                        value="rejectTermRequest">
-                                                                                                                                    <input
-                                                                                                                                        type="hidden"
-                                                                                                                                        name="requestId"
-                                                                                                                                        value="${req.id}">
-                                                                                                                                    <button
-                                                                                                                                        type="submit"
-                                                                                                                                        class="btn btn-sm btn-outline-danger rounded-pill fw-bold"
-                                                                                                                                        onclick="return confirm('Reject this registration request?');">
-                                                                                                                                        <i
-                                                                                                                                            class="bi bi-x-lg"></i>
-                                                                                                                                    </button>
-                                                                                                                                </form>
-                                                                                                                            </div>
-                                                                                                                        </td>
-                                                                                                                    </tr>
-                                                                                                                </c:forEach>
-                                                                                                                <c:if
-                                                                                                                    test="${empty pendingTermRequests}">
-                                                                                                                    <tr>
-                                                                                                                        <td colspan="5"
-                                                                                                                            class="text-center py-5 text-muted">
-                                                                                                                            <i
-                                                                                                                                class="bi bi-inbox fs-1 d-block mb-3 text-secondary opacity-50"></i>
-                                                                                                                            <h5>No
-                                                                                                                                pending
-                                                                                                                                requests
-                                                                                                                            </h5>
-                                                                                                                            <p
-                                                                                                                                class="mb-0">
-                                                                                                                                All
-                                                                                                                                student
-                                                                                                                                registration
-                                                                                                                                requests
-                                                                                                                                have
-                                                                                                                                been
-                                                                                                                                processed.
-                                                                                                                            </p>
-                                                                                                                        </td>
-                                                                                                                    </tr>
-                                                                                                                </c:if>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </section>
+                                                                                                class="tab-section ${activeTab == 'requests' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-requests">
+                                <div class="table-card">
+                                    <div class="tc-header">
+                                        <div>
+                                            <h3>Student Registration Requests</h3>
+                                            <p class="text-muted small mb-0 mt-1">Review and approve batch term
+                                                registration requests.</p>
+                                        </div>
+                                        <div class="tc-search">
+                                            <i class="bi bi-search" aria-hidden="true"></i>
+                                            <input type="text" class="form-control" id="requestSearchInput"
+                                                placeholder="Search student name..." aria-label="Search student requests"
+                                                onkeyup="filterTable('requestSearchInput', 'requestsTable')">
+                                        </div>
+                                    </div>
+                                    <div class="tc-table-wrap">
+                                        <table class="tc-table" id="requestsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Student Name</th>
+                                                    <th>Student ID</th>
+                                                    <th>Term Requested</th>
+                                                    <th class="text-end">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="req" items="${pendingTermRequests}">
+                                                    <tr class="searchable-row">
+                                                        <td>
+                                                            ${req.createdAtLabel}
+                                                        </td>
+                                                        <td class="fw-bold text-dark">${req.studentName}</td>
+                                                        <td><span
+                                                                class="badge bg-light text-dark border px-2 py-1 rounded-pill font-monospace">${req.studentIdentifier}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span
+                                                                class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-pill">${req.termName}</span>
+                                                        </td>
+                                                        <td class="text-end">
+                                                            <div class="tc-actions">
+                                                                <form action="${pageContext.request.contextPath}/dean"
+                                                                    method="POST" class="d-inline">
+                                                                    <input type="hidden" name="action"
+                                                                        value="approveTermRequest">
+                                                                    <input type="hidden" name="requestId"
+                                                                        value="${req.id}">
+                                                                    <button type="submit"
+                                                                        class="btn btn-sm btn-success rounded-pill px-3 fw-semibold"
+                                                                        onclick="return confirm('Approve request and enroll student in all classes for this term?');">
+                                                                        <i class="bi bi-check-lg me-1"></i> Approve
+                                                                    </button>
+                                                                </form>
+                                                                <form action="${pageContext.request.contextPath}/dean"
+                                                                    method="POST" class="d-inline">
+                                                                    <input type="hidden" name="action"
+                                                                        value="rejectTermRequest">
+                                                                    <input type="hidden" name="requestId"
+                                                                        value="${req.id}">
+                                                                    <button type="submit"
+                                                                        class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-semibold"
+                                                                        title="Reject request"
+                                                                        aria-label="Reject request from ${req.studentName}"
+                                                                        onclick="return confirm('Reject this registration request?');">
+                                                                        <i class="bi bi-x-lg me-1"></i> Reject
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                                <c:if test="${empty pendingTermRequests}">
+                                                    <tr>
+                                                        <td colspan="5" class="tc-empty">
+                                                            <i class="bi bi-inbox fs-1 d-block mb-2 opacity-50"
+                                                                aria-hidden="true"></i>
+                                                            <div class="fw-bold text-dark">No pending requests</div>
+                                                            <p class="mb-0 small">All student registration requests have
+                                                                been processed.</p>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
 
                                                                                             <section id="dt-holidays"
-                                                                                                class="tab-section ${activeTab == 'holidays' ? 'active' : ''}">
+                                                                                                class="tab-section ${activeTab == 'holidays' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-holidays">
                                                                                                 <jsp:include
                                                                                                     page="/WEB-INF/views/common/school_holidays_view.jsp" />
                                                                                             </section>
+
+<section id="dt-reports" class="tab-section ${activeTab == 'reports' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-reports">
+    <div class="table-card">
+        <div class="tc-header">
+            <div>
+                <h3>Reports <span class="badge bg-secondary-subtle text-secondary-emphasis border rounded-pill ms-1" id="reportsTotalBadge"><c:out value="${reports.size()}"/></span></h3>
+                <p class="text-muted small mb-0 mt-1">Issues submitted by students and professors.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <select id="reportCategoryFilter" class="form-select rounded-pill" style="min-width:180px;" aria-label="Filter reports by category" onchange="filterReportsByCategory()">
+                    <option value="all">All Categories</option>
+                </select>
+            </div>
+        </div>
+        <div class="tc-table-wrap">
+            <table class="tc-table" id="reportsTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Reporter</th>
+                        <th>Role</th>
+                        <th>Category</th>
+                        <th>Issue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="r" items="${reports}">
+                        <tr class="searchable-row report-row" data-category="<c:out value='${r.category}'/>">
+                            <td class="text-nowrap small">${r.createdAtLabel}</td>
+                            <td>
+                                <div class="fw-semibold"><c:out value="${r.reporterName}"/></div>
+                                <div class="small text-muted"><c:out value="${r.reporterIdentifier}"/><c:if test="${not empty r.reporterEmail}"> &middot; <c:out value="${r.reporterEmail}"/></c:if></div>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${r.reporterRole == 'PROFESSOR'}"><span class="badge rounded-pill px-2 py-1" style="background:rgba(111,66,193,.12);color:#6f42c1;border:1px solid rgba(111,66,193,.3);">Professor</span></c:when>
+                                    <c:otherwise><span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1">Student</span></c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td><span class="badge bg-light text-dark border rounded-pill px-2 py-1"><c:out value="${r.category}"/></span></td>
+                            <td style="min-width:240px; white-space:normal; overflow-wrap:anywhere;"><c:out value="${r.issue}"/><c:if test="${not empty r.details}"><div class="small text-muted mt-1" style="white-space:pre-wrap; overflow-wrap:anywhere; font-weight:400;"><c:out value="${r.details}"/></div></c:if></td>
+                        </tr>
+                    </c:forEach>
+                    <c:if test="${empty reports}">
+                        <tr>
+                            <td colspan="5" class="tc-empty">
+                                <i class="bi bi-flag fs-1 d-block mb-2 opacity-50" aria-hidden="true"></i>
+                                <div class="fw-bold text-dark">No reports yet</div>
+                                <p class="mb-0 small">Reports from students and professors will appear here.</p>
+                            </td>
+                        </tr>
+                    </c:if>
+                    <tr id="reportsNoMatchRow" style="display:none;">
+                        <td colspan="5" class="tc-empty">
+                            <div class="fw-bold text-dark">No reports in this category</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
                     </main>
             </div>
@@ -2492,8 +2724,8 @@
             <div class="mobile-app-container d-block d-md-none">
 
                 <header class="dean-mobile-topbar" role="banner">
-                    <div class="d-flex align-items-center justify-content-between w-100">
-                        <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center justify-content-between w-100 gap-2">
+                        <div class="dean-top-left d-flex align-items-center gap-2">
                             <div class="dean-top-avatar">
                                 <c:choose>
                                     <c:when test="${user.gender == 'FEMALE'}">
@@ -2506,35 +2738,34 @@
                                     </c:otherwise>
                                 </c:choose>
                             </div>
-                            <div>
+                            <div class="dean-top-text">
                                 <div class="d-flex align-items-center gap-2">
-                                    <span class="fw-extrabold text-dark"
+                                    <span class="fw-extrabold text-dark text-truncate"
                                         style="font-size: 1.05rem; letter-spacing: -0.02em;">Dean Admin</span>
                                     <span
-                                        class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-2 py-0"
-                                        style="font-size:0.65rem; font-weight:700;">DEAN</span>
+                                        class="dean-top-role badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-2 py-0"
+                                        style="font-size:0.75rem; font-weight:700;">DEAN</span>
                                 </div>
                                 <div class="text-muted small fw-medium text-truncate"
-                                    style="max-width: 170px; font-size: 0.75rem;">${user.fullName}</div>
+                                    style="font-size: 0.75rem;">${user.fullName}</div>
                             </div>
                         </div>
 
-                        <div class="d-flex align-items-center gap-2">
+                        <div class="dean-top-right d-flex align-items-center gap-2">
                             <button type="button"
-                                class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center shadow-xs"
-                                style="width: 38px; height: 38px; border: 1px solid rgba(226,232,240,0.8);"
+                                class="dean-top-btn btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center"
                                 data-bs-toggle="modal" data-bs-target="#schoolHolidaysModal"
                                 aria-label="School Holidays">
                                 <i class="bi bi-calendar-heart text-danger" style="font-size: 1rem;"></i>
                             </button>
                             <a href="${pageContext.request.contextPath}/professor/dashboard"
-                                class="dean-prof-switch-pill text-decoration-none" title="Switch to Professor View">
+                                class="dean-prof-switch-pill text-decoration-none" title="Switch to Professor View"
+                                aria-label="Switch to Professor View">
                                 <i class="bi bi-person-workspace text-primary"></i>
                                 <span>Prof View</span>
                             </a>
                             <button type="button"
-                                class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center shadow-xs"
-                                style="width: 38px; height: 38px; border: 1px solid rgba(226,232,240,0.8);"
+                                class="dean-top-btn btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center"
                                 onclick="switchDeanMobileTab('profile')" aria-label="Open profile settings">
                                 <i class="bi bi-gear-fill text-secondary" style="font-size: 1rem;"></i>
                             </button>
@@ -2545,19 +2776,19 @@
                 <section id="mobile-view-home" class="mobile-sub-view active" role="tabpanel"
                     aria-labelledby="dock-tab-home">
                     <div class="dean-hero-banner">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-1 font-monospace"
+                        <div class="dean-hero-top d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge dean-glass-badge text-white rounded-pill px-3 py-1 font-monospace"
                                 style="font-size:0.75rem; font-weight:700;">
                                 <i class="bi bi-mortarboard-fill me-1 text-warning"></i>${deanSchool.schoolName}
                             </span>
                             <span class="badge bg-success bg-opacity-90 text-white rounded-pill px-2 py-1"
-                                style="font-size:0.7rem; font-weight:700;">
+                                style="font-size:0.75rem; font-weight:700;">
                                 <i class="bi bi-circle-fill me-1" style="font-size:0.5rem;"></i>Active Term
                             </span>
                         </div>
                         <h2 class="fw-extrabold text-white mb-1" style="font-size:1.35rem; letter-spacing:-0.02em;">Dean
                             Leadership Hub</h2>
-                        <p class="text-white text-opacity-80 small mb-3">Academic Curriculum & Department Administration
+                        <p class="text-white text-opacity-75 small mb-3">Academic Curriculum & Department Administration
                         </p>
                     </div>
 
@@ -2569,12 +2800,12 @@
                                 <div>
                                     <div class="fw-bold small text-dark">${pendingTermRequests.size()} Student
                                         Request(s) Pending</div>
-                                    <div class="text-muted" style="font-size:0.72rem;">Tap to review and approve
+                                    <div class="text-muted" style="font-size:0.75rem;">Tap to review and approve
                                         registrations</div>
                                 </div>
                             </div>
                             <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1"
-                                style="font-size:0.7rem;">Review</span>
+                                style="font-size:0.75rem;">Review</span>
                         </div>
                     </c:if>
 
@@ -2612,6 +2843,19 @@
                                 <div class="dean-kpi-label">Enrolled Students</div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="mobile-course-card d-flex align-items-center justify-content-between gap-2 mb-3" id="deanHomeReportsCard"
+                        onclick="switchDeanMobileTab('reports')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchDeanMobileTab('reports');}"
+                        role="button" tabindex="0" style="min-height:44px; cursor:pointer;">
+                        <div class="d-flex align-items-center gap-2 min-w-0">
+                            <div class="p-2 rounded-3 bg-danger bg-opacity-10 text-danger"><i class="bi bi-flag-fill" aria-hidden="true"></i></div>
+                            <div>
+                                <div class="fw-bold text-dark" style="font-size:0.9rem;">Reports</div>
+                                <div class="text-muted" style="font-size:0.75rem;">Issues from students &amp; professors</div>
+                            </div>
+                        </div>
+                        <span class="badge bg-danger rounded-pill px-3 py-1" style="font-size:0.75rem;"><c:out value="${reports.size()}"/></span>
                     </div>
 
                     <!-- Quick Action Horizontal Strip -->
@@ -2673,6 +2917,9 @@
                                     ${section.roomName}</div>
                                 <div class="mc-meta-item"><i
                                         class="bi bi-calendar3 text-primary"></i>${section.daysOfWeek}</div>
+<c:if test="${not empty section.startDate}">
+<div class="mc-meta-item"><i class="bi bi-flag text-primary"></i>Starts ${section.startDateLabel}</div>
+</c:if>
                             </div>
                             <div class="pt-2 border-top">
                                 <div class="d-flex justify-content-between align-items-center text-muted"
@@ -2724,6 +2971,9 @@
                                     </button>
                                 </div>
                             </c:forEach>
+                            <c:if test="${empty terms}">
+                                <div class="text-center text-muted py-3 small">No academic terms yet.</div>
+                            </c:if>
                         </div>
                     </div>
                 </section>
@@ -2739,12 +2989,12 @@
                         </div>
                         <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-bold"
                             data-bs-toggle="modal" data-bs-target="#addCourseModal"
-                            style="font-size:0.8rem; min-height:40px;">
+                            style="font-size:0.8rem; min-height:44px;">
                             <i class="bi bi-plus-lg me-1"></i> New Course
                         </button>
                     </div>
 
-                    <div class="dean-seg-control mb-3">
+                    <div class="dean-segmented-ctrl">
                         <button type="button" id="deanSegCatalogBtn" class="dean-seg-btn active"
                             onclick="toggleDeanCourseSegment('catalog')">
                             <i class="bi bi-book me-1"></i> Courses Catalog (${courses.size()})
@@ -2777,7 +3027,7 @@
                                     <button type="button"
                                         class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold"
                                         data-bs-toggle="modal" data-bs-target="#editCourseModal${course.id}"
-                                        style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
+                                        style="min-height:44px; display:inline-flex; align-items:center; gap:4px;">
                                         <i class="bi bi-pencil"></i> Edit
                                     </button>
                                     <form action="${pageContext.request.contextPath}/dean/dashboard" method="post"
@@ -2787,7 +3037,7 @@
                                         <button type="submit"
                                             class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold"
                                             onclick="return confirm('Are you sure you want to delete course ${course.courseCode}?');"
-                                            style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
+                                            style="min-height:44px; display:inline-flex; align-items:center; gap:4px;">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>
                                     </form>
@@ -2871,7 +3121,7 @@
                         </div>
                         <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-bold"
                             data-bs-toggle="modal" data-bs-target="#scheduleClassModal"
-                            style="font-size:0.8rem; min-height:42px;">
+                            style="font-size:0.8rem; min-height:44px;">
                             <i class="bi bi-plus-lg me-1"></i> Schedule
                         </button>
                     </div>
@@ -2887,12 +3137,12 @@
                                 <div>
                                     <div class="fw-bold text-dark" style="font-size:0.85rem;">School Holidays Calendar
                                     </div>
-                                    <div class="small text-muted" style="font-size:0.72rem;">View upcoming breaks &
+                                    <div class="small text-muted" style="font-size:0.75rem;">View upcoming breaks &
                                         observances</div>
                                 </div>
                             </div>
                             <span class="badge bg-danger text-white rounded-pill px-2.5 py-1"
-                                style="font-size:0.68rem;">View</span>
+                                style="font-size:0.75rem;">View</span>
                         </div>
                     </div>
 
@@ -2902,7 +3152,13 @@
                             aria-label="Search schedules" oninput="filterMobileDeanSchedules(this.value)">
                     </div>
 
-                    <div class="filter-chip-strip" id="deanScheduleFilterStrip">
+                    <select id="mobileScheduleTermFilter" class="form-select rounded-pill mb-2" aria-label="Filter class schedules by term" onchange="filterMobileSchedulesByTerm(this.value)">
+<option value="all">All Terms</option>
+<c:forEach var="term" items="${terms}">
+<option value="<c:out value='${term.termName}'/>"><c:out value="${term.termName}"/></option>
+</c:forEach>
+</select>
+<div class="filter-chip-strip" id="deanScheduleFilterStrip">
                         <button type="button" class="filter-chip active"
                             onclick="filterDeanScheduleShift('all', this)">All</button>
                         <button type="button" class="filter-chip"
@@ -2919,7 +3175,7 @@
                     <div id="mobileDeanSchedulesContainer">
                         <c:forEach var="section" items="${sections}">
                             <div class="mobile-course-card mobile-dean-section-item"
-                                data-shift="${section.sessionShift}" data-days="${section.daysOfWeek}">
+                                data-term="<c:out value='${section.termName}'/>" data-shift="${section.sessionShift}" data-days="${section.daysOfWeek}">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <div>
                                         <span class="mc-code me-1">${section.courseCode}</span>
@@ -2958,7 +3214,7 @@
                                     <button type="button"
                                         class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold"
                                         data-bs-toggle="modal" data-bs-target="#sectionStudentsModal${section.id}"
-                                        style="min-height:38px; display:inline-flex; align-items:center; gap:4px; font-size:0.8rem;">
+                                        style="min-height:44px; display:inline-flex; align-items:center; gap:4px; font-size:0.8rem;">
                                         <i class="bi bi-people"></i> Students (${section.enrolledCount})
                                     </button>
                                     <form action="${pageContext.request.contextPath}/dean/dashboard" method="post"
@@ -2968,7 +3224,7 @@
                                         <button type="submit"
                                             class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold"
                                             onclick="return confirm('Are you sure you want to delete this scheduled class section?');"
-                                            style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
+                                            style="min-height:44px; display:inline-flex; align-items:center; gap:4px;">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>
                                     </form>
@@ -3014,7 +3270,7 @@
 
                             <div class="d-flex align-items-center text-muted small mb-3">
                                 <i class="bi bi-clock me-1 text-primary"></i>
-                                <fmt:formatDate value="${req.createdAt}" pattern="MMM dd, yyyy HH:mm" />
+                                ${req.createdAtLabel}
                             </div>
 
                             <div class="d-flex gap-2 pt-2 border-top">
@@ -3043,13 +3299,62 @@
                     </c:forEach>
 
                     <c:if test="${empty pendingTermRequests}">
-                        <div class="card border-0 shadow-sm rounded-4 p-5 text-center my-3">
-                            <i class="bi bi-inbox text-muted opacity-50 display-4 mb-2"></i>
+                        <div class="mobile-course-card text-center py-4 my-3">
+                            <i class="bi bi-inbox text-muted opacity-50 fs-1 mb-2 d-block"></i>
                             <h5 class="fw-bold text-dark mb-1">No Pending Requests</h5>
                             <p class="text-muted small mb-0">All student registration requests have been reviewed and
                                 processed.</p>
                         </div>
                     </c:if>
+                </section>
+
+                <section id="mobile-view-reports" class="mobile-sub-view" role="tabpanel" aria-label="Reports">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <button type="button" class="btn btn-light border rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0"
+                            style="width:44px;height:44px;" onclick="switchDeanMobileTab('home')" aria-label="Back to home">
+                            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                        </button>
+                        <div style="min-width:0;">
+                            <h2 class="fw-extrabold text-dark mb-0" style="font-size:1.25rem;">Reports</h2>
+                            <span class="text-muted" style="font-size:0.75rem;"><c:out value="${reports.size()}"/> submitted</span>
+                        </div>
+                    </div>
+
+                    <div class="mobile-search-bar">
+                        <i class="bi bi-search"></i>
+                        <input type="text" id="mobileReportSearch" placeholder="Search reports..."
+                            aria-label="Search reports" oninput="filterMobileReports()">
+                    </div>
+                    <select id="mobileReportCategoryFilter" class="form-select rounded-pill mb-2" style="min-height:44px;" aria-label="Filter reports by category" onchange="filterMobileReports()">
+                        <option value="all">All Categories</option>
+                    </select>
+
+                    <c:forEach var="r" items="${reports}">
+                        <div class="mobile-course-card mb-3 p-3 mobile-report-item" data-category="<c:out value='${r.category}'/>">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <div style="min-width:0;">
+                                    <div class="fw-bold text-dark" style="font-size:0.95rem; overflow-wrap:anywhere;"><c:out value="${r.reporterName}"/></div>
+                                    <div class="text-muted" style="font-size:0.75rem; overflow-wrap:anywhere;"><c:out value="${r.reporterIdentifier}"/></div>
+                                </div>
+                                <c:choose>
+                                    <c:when test="${r.reporterRole == 'PROFESSOR'}"><span class="badge rounded-pill px-2 py-1 flex-shrink-0" style="font-size:0.75rem;background:rgba(111,66,193,.12);color:#6f42c1;border:1px solid rgba(111,66,193,.3);">Professor</span></c:when>
+                                    <c:otherwise><span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 flex-shrink-0" style="font-size:0.75rem;">Student</span></c:otherwise>
+                                </c:choose>
+                            </div>
+                            <span class="badge bg-light text-dark border rounded-pill px-2 py-1 mb-2" style="font-size:0.75rem;"><c:out value="${r.category}"/></span>
+                            <div class="text-dark mb-2" style="font-size:0.85rem; overflow-wrap:anywhere;"><c:out value="${r.issue}"/></div><c:if test="${not empty r.details}"><div class="small text-muted mt-1" style="white-space:pre-wrap; overflow-wrap:anywhere; font-weight:400;"><c:out value="${r.details}"/></div></c:if>
+                            <div class="text-muted d-flex align-items-center" style="font-size:0.75rem;">
+                                <i class="bi bi-clock me-1 text-primary"></i>
+                                ${r.createdAtLabel}
+                            </div>
+                        </div>
+                    </c:forEach>
+
+                    <div id="mobileReportsEmpty" class="mobile-course-card text-center py-4 my-3" style="${empty reports ? '' : 'display:none;'}">
+                        <i class="bi bi-flag text-muted opacity-50 fs-1 mb-2 d-block"></i>
+                        <h5 class="fw-bold text-dark mb-1"><c:choose><c:when test="${empty reports}">No reports yet</c:when><c:otherwise>No matching reports</c:otherwise></c:choose></h5>
+                        <p class="text-muted small mb-0"><c:choose><c:when test="${empty reports}">Reports from students and professors will appear here.</c:when><c:otherwise>Try clearing search or filters</c:otherwise></c:choose></p>
+                    </div>
                 </section>
 
                 <!-- ===== TAB 4: PEOPLE DIRECTORY ===== -->
@@ -3097,14 +3402,14 @@
                                                 style="font-size:0.92rem;">${prof.fullName}</span>
                                             <span
                                                 class="badge bg-primary-subtle text-primary border rounded-pill px-2 py-0"
-                                                style="font-size:0.65rem;">FACULTY</span>
+                                                style="font-size:0.75rem;">FACULTY</span>
                                         </div>
                                         <div class="text-muted small text-truncate" style="font-size:0.78rem;">
                                             ${prof.email}</div>
                                         <div class="mt-1">
                                             <button type="button"
                                                 class="btn btn-sm btn-light border rounded-pill px-2 py-0 fw-bold font-monospace"
-                                                style="font-size:0.7rem;" data-id="${prof.formattedIdentifier}"
+                                                style="font-size:0.75rem;" data-id="${prof.formattedIdentifier}"
                                                 onclick="copyDeanId(this.getAttribute('data-id'), this)"
                                                 title="Copy Faculty ID">
                                                 <i class="bi bi-copy text-muted me-1"></i>${prof.formattedIdentifier}
@@ -3131,21 +3436,21 @@
                                                 style="font-size:0.92rem;">${student.fullName}</span>
                                             <span
                                                 class="badge bg-success-subtle text-success border rounded-pill px-2 py-0"
-                                                style="font-size:0.65rem;">STUDENT</span>
+                                                style="font-size:0.75rem;">STUDENT</span>
                                         </div>
                                         <div class="text-muted small text-truncate" style="font-size:0.78rem;">
                                             ${student.email}</div>
                                         <div class="mt-1 d-flex align-items-center gap-2">
                                             <button type="button"
                                                 class="btn btn-sm btn-light border rounded-pill px-2 py-0 fw-bold font-monospace"
-                                                style="font-size:0.7rem;" data-id="${student.formattedIdentifier}"
+                                                style="font-size:0.75rem;" data-id="${student.formattedIdentifier}"
                                                 onclick="copyDeanId(this.getAttribute('data-id'), this)"
                                                 title="Copy Student ID">
                                                 <i class="bi bi-copy text-muted me-1"></i>${student.formattedIdentifier}
                                             </button>
                                             <c:if test="${not empty student.major}">
                                                 <span class="badge bg-light text-muted border rounded-pill px-2 py-0"
-                                                    style="font-size:0.65rem;">${student.major}</span>
+                                                    style="font-size:0.75rem;">${student.major}</span>
                                             </c:if>
                                         </div>
                                     </div>
@@ -3174,25 +3479,25 @@
 
                     <!-- Executive Dean Digital Credential ID Card -->
                     <div class="dean-cred-card">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="dean-cred-head d-flex justify-content-between align-items-start mb-3">
                             <div class="d-flex align-items-center gap-2">
                                 <div
-                                    style="width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.25);">
+                                    style="width:34px; height:34px; border-radius:10px; flex-shrink:0; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.25);">
                                     <i class="bi bi-mortarboard-fill text-warning" style="font-size:1.1rem;"></i>
                                 </div>
                                 <div>
                                     <div class="fw-extrabold text-white text-uppercase"
-                                        style="font-size:0.72rem; letter-spacing:0.08em;">UniTRS University</div>
-                                    <div class="text-white text-opacity-70" style="font-size:0.65rem;">Office of
+                                        style="font-size:0.75rem; letter-spacing:0.08em;">UniTRS University</div>
+                                    <div class="text-white text-opacity-75" style="font-size:0.75rem;">Office of
                                         Academic Affairs</div>
                                 </div>
                             </div>
                             <span class="badge bg-warning text-dark fw-extrabold rounded-pill px-2 py-1"
-                                style="font-size:0.65rem; letter-spacing:0.04em;">EXECUTIVE DEAN</span>
+                                style="font-size:0.75rem; letter-spacing:0.04em;">EXECUTIVE DEAN</span>
                         </div>
 
                         <div class="mb-3">
-                            <div class="text-white text-opacity-70 small mb-0" style="font-size:0.72rem;">Dean of School
+                            <div class="text-white text-opacity-75 small mb-0" style="font-size:0.75rem;">Dean of School
                             </div>
                             <div class="fw-bold text-white text-truncate mb-2" style="font-size:0.95rem;">
                                 ${deanSchool.schoolName}</div>
@@ -3201,10 +3506,10 @@
                         </div>
 
                         <div
-                            class="d-flex justify-content-between align-items-end pt-3 border-top border-white border-opacity-20">
+                            class="dean-cred-foot d-flex justify-content-between align-items-end pt-3 border-top border-white border-opacity-25">
                             <div>
-                                <div class="text-white text-opacity-70"
-                                    style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.05em;">Dean ID
+                                <div class="text-white text-opacity-75"
+                                    style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">Dean ID
                                     / Barcode</div>
                                 <div class="d-flex align-items-center gap-2 mt-1">
                                     <button type="button"
@@ -3219,7 +3524,7 @@
 
                             <div class="d-flex align-items-center gap-2">
                                 <span
-                                    class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-25 rounded-pill px-3 py-1 font-monospace"
+                                    class="badge dean-glass-badge text-white border border-white border-opacity-25 rounded-pill px-3 py-1 font-monospace"
                                     style="font-size:0.75rem;">
                                     <i class="bi bi-shield-check me-1 text-warning"></i>VERIFIED DEAN
                                 </span>
@@ -3234,7 +3539,7 @@
                                 <div class="kpi-icon-box emerald mb-0"><i class="bi bi-building-fill"></i></div>
                                 <div>
                                     <div class="fw-bold text-dark small">Campus Facilities & Rooms</div>
-                                    <div class="text-muted" style="font-size:0.72rem;">${rooms.size()} classrooms
+                                    <div class="text-muted" style="font-size:0.75rem;">${rooms.size()} classrooms
                                         registered</div>
                                 </div>
                             </div>
@@ -3287,13 +3592,13 @@
                                 <div class="kpi-icon-box blue mb-0"><i class="bi bi-shield-lock-fill"></i></div>
                                 <div>
                                     <div class="fw-bold text-dark small">Two-Factor Authentication</div>
-                                    <div class="text-muted" style="font-size:0.72rem;">Enhance account login security
+                                    <div class="text-muted" style="font-size:0.75rem;">Enhance account login security
                                     </div>
                                 </div>
                             </div>
                             <span
                                 class="badge ${user.twoFactorEnabled ? 'bg-success' : 'bg-warning text-dark'} rounded-pill px-2 py-1"
-                                style="font-size:0.68rem; font-weight:700;">
+                                style="font-size:0.75rem; font-weight:700;">
                                 ${user.twoFactorEnabled ? 'Enabled' : 'Disabled'}
                             </span>
                         </div>
@@ -3351,7 +3656,7 @@
                         <c:if test="${not empty pendingTermRequests}">
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                style="font-size:0.58rem; transform: translate(-75%, 20%) !important;">
+                                style="font-size:0.75rem; transform: translate(-75%, 20%) !important;">
                                 ${pendingTermRequests.size()}
                             </span>
                         </c:if>
@@ -3369,12 +3674,6 @@
                         <span>Profile</span>
                     </button>
                 </nav>
-
-                <!-- Floating Toast Notification -->
-                <div id="deanMobileToast" class="mobile-toast" role="status" aria-live="polite">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                    <span id="deanMobileToastText">Copied to clipboard!</span>
-                </div>
 
             </div>
 
@@ -3397,18 +3696,18 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Course Code</label>
-                                            <input type="text" class="form-control" name="courseCode"
+                                            <label class="form-label fw-semibold" for="f_addCourseModal_courseCode">Course Code</label>
+                                            <input id="f_addCourseModal_courseCode" type="text" class="form-control" name="courseCode"
                                                 placeholder="e.g. CS 301" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Course Title</label>
-                                            <input type="text" class="form-control" name="courseTitle"
+                                            <label class="form-label fw-semibold" for="f_addCourseModal_courseTitle">Course Title</label>
+                                            <input id="f_addCourseModal_courseTitle" type="text" class="form-control" name="courseTitle"
                                                 placeholder="e.g. Distributed Systems" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Credits</label>
-                                            <input type="number" class="form-control" name="credits" value="3" required
+                                            <label class="form-label fw-semibold" for="f_addCourseModal_credits">Credits</label>
+                                            <input id="f_addCourseModal_credits" type="number" class="form-control" name="credits" value="3" required
                                                 min="1" max="10">
                                         </div>
                                     </div>
@@ -3440,18 +3739,18 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label class="form-label fw-semibold">Course Code</label>
-                                                <input type="text" class="form-control" name="courseCode"
+                                                <label class="form-label fw-semibold" for="f_editCourseModal${course.id}_courseCode">Course Code</label>
+                                                <input id="f_editCourseModal${course.id}_courseCode" type="text" class="form-control" name="courseCode"
                                                     value="${course.courseCode}" required>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label fw-semibold">Course Title</label>
-                                                <input type="text" class="form-control" name="courseTitle"
+                                                <label class="form-label fw-semibold" for="f_editCourseModal${course.id}_courseTitle">Course Title</label>
+                                                <input id="f_editCourseModal${course.id}_courseTitle" type="text" class="form-control" name="courseTitle"
                                                     value="${course.courseTitle}" required>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label fw-semibold">Credits</label>
-                                                <input type="number" class="form-control" name="credits"
+                                                <label class="form-label fw-semibold" for="f_editCourseModal${course.id}_credits">Credits</label>
+                                                <input id="f_editCourseModal${course.id}_credits" type="number" class="form-control" name="credits"
                                                     value="${course.credits}" required min="1" max="10">
                                             </div>
                                         </div>
@@ -3481,13 +3780,13 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Term Sequence Number</label>
-                                            <input type="number" class="form-control" name="termNumber"
+                                            <label class="form-label fw-semibold" for="f_addTermModal_termNumber">Term Sequence Number</label>
+                                            <input id="f_addTermModal_termNumber" type="number" class="form-control" name="termNumber"
                                                 placeholder="e.g. 5" required min="1">
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Term Name</label>
-                                            <input type="text" class="form-control" name="termName"
+                                            <label class="form-label fw-semibold" for="f_addTermModal_termName">Term Name</label>
+                                            <input id="f_addTermModal_termName" type="text" class="form-control" name="termName"
                                                 placeholder="e.g. Term 5 (Fall 2026)" required>
                                         </div>
                                     </div>
@@ -3518,13 +3817,13 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label class="form-label fw-semibold">Term Number (e.g. 1, 2, 3)</label>
-                                                <input type="number" class="form-control" name="termNumber"
+                                                <label class="form-label fw-semibold" for="f_editTermModal${term.id}_termNumber">Term Number (e.g. 1, 2, 3)</label>
+                                                <input id="f_editTermModal${term.id}_termNumber" type="number" class="form-control" name="termNumber"
                                                     value="${term.termNumber}" required min="1">
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label fw-semibold">Term Name</label>
-                                                <input type="text" class="form-control" name="termName"
+                                                <label class="form-label fw-semibold" for="f_editTermModal${term.id}_termName">Term Name</label>
+                                                <input id="f_editTermModal${term.id}_termName" type="text" class="form-control" name="termName"
                                                     value="${term.termName}" required>
                                             </div>
                                         </div>
@@ -3558,9 +3857,9 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label class="form-label fw-semibold">Select Course from Master
+                                                <label class="form-label fw-semibold" for="f_bundleModal${term.id}_courseId">Select Course from Master
                                                     Catalog</label>
-                                                <select name="courseId" class="form-select" required>
+                                                <select id="f_bundleModal${term.id}_courseId" name="courseId" class="form-select" required>
                                                     <option value="">-- Choose a Course --</option>
                                                     <c:forEach var="c" items="${courses}">
                                                         <c:set var="isAssigned" value="false" />
@@ -3604,69 +3903,68 @@
                                     <div class="modal-body">
                                         <div class="row g-3">
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Term</label>
+                                                <label class="form-label fw-semibold" for="termSelect">Term</label>
                                                 <select name="termId" class="form-select" id="termSelect" required>
                                                     <option value="">-- Choose Term --</option>
                                                     <c:forEach var="entry" items="${curriculumMap}">
                                                         <c:if test="${not empty entry.value}">
-                                                            <option value="${entry.key.id}">${entry.key.termName}
+                                                            <option value="${entry.key.id}" data-window="<c:out value='${termWindowLabels[entry.key.id]}'/>">${entry.key.termName}
                                                             </option>
                                                         </c:if>
                                                     </c:forEach>
                                                 </select>
+<small class="d-block mt-1 text-muted" id="scheduleTermWindow" style="font-size: 0.78rem;" aria-live="polite"></small>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Course (Assigned to Term)</label>
+                                                <label class="form-label fw-semibold" for="courseSelect">Course (Assigned to Term)</label>
                                                 <select name="courseId" class="form-select" id="courseSelect" required>
                                                     <option value="">-- First choose a term above --</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-12">
-                                                <label class="form-label fw-semibold">Assign Professor</label>
-                                                <select name="professorId" class="form-select" required>
-                                                    <option value="">-- Choose Professor --</option>
-                                                    <c:forEach var="prof" items="${professors}">
-                                                        <option value="${prof.id}">${prof.fullName} (${prof.email})
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label fw-semibold">Shift</label>
-                                                <select name="sessionShift" class="form-select" required>
-                                                    <option value="MORNING">Morning (08:00 - 11:30)</option>
-                                                    <option value="AFTERNOON">Afternoon (13:30 - 17:00)</option>
-                                                    <option value="EVENING">Evening (17:30 - 20:30)</option>
-                                                    <option value="WEEKEND">Weekend (Saturday/Sunday)</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label fw-semibold">Physical Room</label>
-                                                <select name="roomId" class="form-select" required>
-                                                    <option value="">-- Choose Room --</option>
-                                                    <c:forEach var="room" items="${rooms}">
-                                                        <option value="${room.id}">${room.roomNumber} (Cap:
-                                                            ${room.capacity})</option>
-                                                    </c:forEach>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label fw-semibold">Days of Week</label>
-                                                <select name="daysOfWeek" class="form-select" required>
-                                                    <option value="Mon-Fri">Mon-Fri (Weekday)</option>
-                                                    <option value="Sat-Sun">Sat-Sun (Weekend)</option>
-                                                </select>
-                                                <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">Exact
-                                                    timetable will calculate automatically</small>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label class="form-label fw-semibold">Academic Year</label>
-                                                <input type="text" class="form-control" name="academicYear"
-                                                    placeholder="e.g. 2026-2027" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
+                                            <div class="col-md-6">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_sessionShift">Shift</label>
+<select id="f_scheduleClassModal_sessionShift" name="sessionShift" class="form-select" required onchange="onScheduleShiftChange()">
+<option value="MORNING">Morning (08:00 AM - 11:15 AM)</option>
+<option value="AFTERNOON">Afternoon (02:00 PM - 05:15 PM)</option>
+<option value="EVENING">Evening (05:45 PM - 08:45 PM)</option>
+<option value="WEEKEND">Weekend (Sat - Sun)</option>
+</select>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_daysOfWeek">Days of Week</label>
+<select id="f_scheduleClassModal_daysOfWeek" name="daysOfWeek" class="form-select" required>
+<option value="Mon-Fri">Mon-Fri (Weekday)</option>
+<option value="Sat-Sun">Sat-Sun (Weekend)</option>
+</select>
+<small class="text-muted d-block mt-1" style="font-size: 0.75rem;">Exact timetable will calculate automatically</small>
+</div>
+<div class="col-md-12">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_professorId">Assign Professor</label>
+<select id="f_scheduleClassModal_professorId" name="professorId" class="form-select" required>
+<option value="">-- Choose Professor --</option>
+<c:forEach var="prof" items="${professors}">
+<option value="${prof.id}" data-shifts="<c:forEach var='sh' items='${professorShiftsMap[prof.id]}' varStatus='st'>${sh}<c:if test='${!st.last}'>,</c:if></c:forEach>">${prof.fullName} (${prof.email})</option>
+</c:forEach>
+</select>
+<small class="d-block mt-1" id="scheduleProfessorHint" style="font-size: 0.78rem;" aria-live="polite"></small>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_roomId">Physical Room</label>
+<select id="f_scheduleClassModal_roomId" name="roomId" class="form-select" required>
+<option value="">-- Choose Room --</option>
+<c:forEach var="room" items="${rooms}">
+<option value="${room.id}">${room.roomNumber} (Cap: ${room.capacity})</option>
+</c:forEach>
+</select>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_academicYear">Academic Year</label>
+<input id="f_scheduleClassModal_academicYear" type="text" class="form-control" name="academicYear" value="${currentAcademicYear}" readonly aria-describedby="scheduleAcademicYearHelp">
+<small class="text-muted d-block mt-1" id="scheduleAcademicYearHelp" style="font-size: 0.75rem;">Set automatically to the current academic year</small>
+</div>
+</div>
+</div>
+<div class="modal-footer">
                                         <button type="button" class="btn btn-light rounded-pill px-3"
                                             data-bs-dismiss="modal">Cancel</button>
                                         <button type="submit" class="btn btn-primary rounded-pill px-4">Schedule
@@ -3691,18 +3989,18 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Room Number</label>
-                                            <input type="text" class="form-control" name="roomNumber"
+                                            <label class="form-label fw-semibold" for="f_addRoomModal_roomNumber">Room Number</label>
+                                            <input id="f_addRoomModal_roomNumber" type="text" class="form-control" name="roomNumber"
                                                 placeholder="e.g. Room 402" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Floor Number</label>
-                                            <input type="number" class="form-control" name="floorNumber" min="1"
+                                            <label class="form-label fw-semibold" for="f_addRoomModal_floorNumber">Floor Number</label>
+                                            <input id="f_addRoomModal_floorNumber" type="number" class="form-control" name="floorNumber" min="1"
                                                 max="15" placeholder="e.g. 4" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Maximum Seating Capacity</label>
-                                            <input type="number" class="form-control" name="capacity" min="1"
+                                            <label class="form-label fw-semibold" for="f_addRoomModal_capacity">Maximum Seating Capacity</label>
+                                            <input id="f_addRoomModal_capacity" type="number" class="form-control" name="capacity" min="1"
                                                 placeholder="e.g. 45" required>
                                         </div>
                                     </div>
@@ -3735,18 +4033,18 @@
                                             rooms for a specific floor.
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Floor Number</label>
-                                            <input type="number" class="form-control" name="floorNumber" min="1"
+                                            <label class="form-label fw-semibold" for="f_batchRoomModal_floorNumber">Floor Number</label>
+                                            <input id="f_batchRoomModal_floorNumber" type="number" class="form-control" name="floorNumber" min="1"
                                                 max="15" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Number of Rooms to Generate</label>
-                                            <input type="number" class="form-control" name="numberOfRooms" min="1"
+                                            <label class="form-label fw-semibold" for="f_batchRoomModal_numberOfRooms">Number of Rooms to Generate</label>
+                                            <input id="f_batchRoomModal_numberOfRooms" type="number" class="form-control" name="numberOfRooms" min="1"
                                                 max="50" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-semibold">Seating Capacity (Per Room)</label>
-                                            <input type="number" class="form-control" name="capacityPerRoom" min="1"
+                                            <label class="form-label fw-semibold" for="f_batchRoomModal_capacityPerRoom">Seating Capacity (Per Room)</label>
+                                            <input id="f_batchRoomModal_capacityPerRoom" type="number" class="form-control" name="capacityPerRoom" min="1"
                                                 required>
                                         </div>
                                     </div>
@@ -3763,9 +4061,9 @@
                         <c:forEach var="section" items="${sections}">
                             <div class="modal fade" id="sectionStudentsModal${section.id}" tabindex="-1"
                                 aria-labelledby="sectionStudentsModalLabel${section.id}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content rounded-4 border-0 shadow">
-                                        <div class="modal-header border-bottom pb-3">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
                                             <div>
                                                 <h5 class="modal-title fw-bold text-dark"
                                                     id="sectionStudentsModalLabel${section.id}">
@@ -3777,7 +4075,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
-                                        <div class="modal-body p-3">
+                                        <div class="modal-body">
                                             <c:set var="secStudents" value="${sectionStudentsMap[section.id]}" />
                                             <c:choose>
                                                 <c:when test="${empty secStudents}">
@@ -3821,8 +4119,8 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
-                                        <div class="modal-footer border-top py-2">
-                                            <button type="button" class="btn btn-sm btn-light rounded-pill px-4"
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-light rounded-pill px-3"
                                                 data-bs-dismiss="modal">Close</button>
                                         </div>
                                     </div>
@@ -3865,8 +4163,153 @@
                                 window.history.replaceState(null, null, '?tab=' + tabName);
                             }
 
+                            // Generic input -> table row filter (used by request search)
+                            function filterTable(inputId, tableId) {
+                                var input = document.getElementById(inputId);
+                                var table = document.getElementById(tableId);
+                                if (!input || !table) return;
+                                var q = input.value.trim().toLowerCase();
+                                table.querySelectorAll('tbody tr.searchable-row').forEach(function (row) {
+                                    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+                                });
+                            }
+
                             // Search filtering across active tab's table
-                            function filterActiveDeanTable(query) {
+                            function filterSchedulesByTerm(term) {
+    var rows = document.querySelectorAll('#schedulesTable tbody tr.schedule-row');
+    rows.forEach(function (row) {
+        row.classList.toggle('term-hidden', term !== 'all' && row.getAttribute('data-term') !== term);
+    });
+}
+function filterMobileSchedulesByTerm(term) {
+    var items = document.querySelectorAll('.mobile-dean-section-item');
+    var visible = 0;
+    items.forEach(function (item) {
+        var hide = term !== 'all' && item.getAttribute('data-term') !== term;
+        item.classList.toggle('term-hidden', hide);
+        if (!hide) visible++;
+    });
+    var empty = document.getElementById('mobileDeanSchedulesEmpty');
+    if (empty) empty.style.display = (visible === 0 && items.length > 0) ? 'block' : 'none';
+}
+function populateReportCategories() {
+    [['reportCategoryFilter', '#reportsTable tbody tr.report-row'], ['mobileReportCategoryFilter', '.mobile-report-item']].forEach(function (p) {
+        var sel = document.getElementById(p[0]);
+        if (!sel) return;
+        var seen = {};
+        document.querySelectorAll(p[1]).forEach(function (el) {
+            var c = el.getAttribute('data-category');
+            if (c && !seen[c]) {
+                seen[c] = true;
+                var o = document.createElement('option');
+                o.value = c; o.textContent = c;
+                sel.appendChild(o);
+            }
+        });
+    });
+}
+document.addEventListener('DOMContentLoaded', populateReportCategories);
+function filterReportsByCategory() {
+    var sel = document.getElementById('reportCategoryFilter');
+    var cat = sel ? sel.value : 'all';
+    var rows = document.querySelectorAll('#reportsTable tbody tr.report-row');
+    var visible = 0;
+    rows.forEach(function (row) {
+        var hide = cat !== 'all' && row.getAttribute('data-category') !== cat;
+        row.classList.toggle('term-hidden', hide);
+        if (!hide) visible++;
+    });
+    var nm = document.getElementById('reportsNoMatchRow');
+    if (nm) nm.style.display = (rows.length > 0 && visible === 0) ? '' : 'none';
+}
+function filterMobileReports() {
+    var inp = document.getElementById('mobileReportSearch');
+    var sel = document.getElementById('mobileReportCategoryFilter');
+    var q = ((inp && inp.value) || '').toLowerCase().trim();
+    var cat = sel ? sel.value : 'all';
+    var items = document.querySelectorAll('.mobile-report-item');
+    var visible = 0;
+    items.forEach(function (item) {
+        var match = (cat === 'all' || item.getAttribute('data-category') === cat)
+            && (item.textContent || '').toLowerCase().indexOf(q) !== -1;
+        item.style.display = match ? '' : 'none';
+        if (match) visible++;
+    });
+    var empty = document.getElementById('mobileReportsEmpty');
+    if (empty) empty.style.display = (visible === 0 && items.length > 0) ? 'block' : 'none';
+}
+function updateScheduleTermWindow() {
+    var sel = document.getElementById('termSelect');
+    var out = document.getElementById('scheduleTermWindow');
+    if (!sel || !out) return;
+    var opt = sel.options[sel.selectedIndex];
+    var win = opt ? opt.getAttribute('data-window') : '';
+    if (win) {
+        out.className = 'd-block mt-1 text-success';
+        out.innerHTML = '<i class="bi bi-calendar-check me-1"></i>Fixed term dates: ' + win + ' (fits all 15 sessions)';
+    } else {
+        out.className = 'd-block mt-1 text-muted';
+        out.textContent = '';
+    }
+}
+document.addEventListener('DOMContentLoaded', function () {
+    var ts = document.getElementById('termSelect');
+    if (ts) ts.addEventListener('change', updateScheduleTermWindow);
+    var m = document.getElementById('scheduleClassModal');
+    if (m) m.addEventListener('show.bs.modal', updateScheduleTermWindow);
+});
+function onScheduleShiftChange() {
+    var shiftSel = document.getElementById('f_scheduleClassModal_sessionShift');
+    var daysSel = document.getElementById('f_scheduleClassModal_daysOfWeek');
+    if (shiftSel && daysSel) {
+        daysSel.value = shiftSel.value === 'WEEKEND' ? 'Sat-Sun' : 'Mon-Fri';
+    }
+    updateScheduleProfessorOptions();
+}
+var scheduleProfessorOptions = null;
+function updateScheduleProfessorOptions() {
+    var sel = document.getElementById('f_scheduleClassModal_professorId');
+    var shiftSel = document.getElementById('f_scheduleClassModal_sessionShift');
+    var hint = document.getElementById('scheduleProfessorHint');
+    if (!sel || !shiftSel) return;
+    if (scheduleProfessorOptions === null) {
+        scheduleProfessorOptions = Array.prototype.filter.call(sel.options, function (o) { return o.value; })
+            .map(function (o) { return { value: o.value, label: o.textContent, shifts: (o.getAttribute('data-shifts') || '').split(',') }; });
+    }
+    var shift = shiftSel.value;
+    var previous = sel.value;
+    var matches = scheduleProfessorOptions.filter(function (p) { return p.shifts.indexOf(shift) !== -1; });
+    sel.innerHTML = '';
+    var placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = matches.length ? '-- Choose Professor --' : '-- No professor available for this shift --';
+    sel.appendChild(placeholder);
+    matches.forEach(function (p) {
+        var opt = document.createElement('option');
+        opt.value = p.value;
+        opt.textContent = p.label;
+        if (p.value === previous) opt.selected = true;
+        sel.appendChild(opt);
+    });
+    var shiftLabel = shiftSel.options[shiftSel.selectedIndex].text.split(' (')[0];
+    if (hint) {
+        if (matches.length) {
+            hint.className = 'd-block mt-1 text-success';
+            hint.innerHTML = '<i class="bi bi-check-circle me-1"></i>' + matches.length + ' professor' + (matches.length > 1 ? 's' : '') + ' available for the ' + shiftLabel + ' shift';
+        } else {
+            hint.className = 'd-block mt-1 text-danger';
+            hint.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>No professor has marked themselves available for the ' + shiftLabel + ' shift. Ask professors to set their availability in Settings.';
+        }
+    }
+}
+document.addEventListener('DOMContentLoaded', function () {
+    var m = document.getElementById('scheduleClassModal');
+    if (m) {
+        m.addEventListener('show.bs.modal', onScheduleShiftChange);
+    }
+    onScheduleShiftChange();
+});
+function filterActiveDeanTable(query) {
                                 const activeSection = document.querySelector('.tab-section.active');
                                 if (!activeSection) return;
 
@@ -4117,16 +4560,7 @@
                                 }
 
                                 function onCopySuccess() {
-                                    var toast = document.getElementById('deanMobileToast');
-                                    var toastText = document.getElementById('deanMobileToastText');
-                                    if (toast) {
-                                        if (toastText) toastText.textContent = 'ID copied: ' + idText;
-                                        toast.classList.add('show');
-                                        clearTimeout(window._deanToastTimer);
-                                        window._deanToastTimer = setTimeout(function () {
-                                            toast.classList.remove('show');
-                                        }, 2500);
-                                    }
+                                    if (window.Sonner) Sonner.success('ID copied: ' + idText, 'Copied');
                                     if (btnEl) {
                                         var origHtml = btnEl.innerHTML;
                                         btnEl.innerHTML = '<i class="bi bi-check2 text-success"></i> <span>Copied!</span>';
@@ -4144,6 +4578,8 @@
                                             switchDeanMobileTab(tab);
                                         } else if (tab === 'holidays') {
                                             switchDeanTab('holidays', document.getElementById('tab-holidays'));
+                                        } else if (tab === 'reports') {
+                                            switchDeanTab('reports', document.getElementById('tab-reports'));
                                         }
                                     }
                                 } catch (e) { }
@@ -4173,7 +4609,7 @@
                         <div id="logoutConfirmModal"
                             style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);"
                             aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
-                            <div
+                            <div class="logout-modal-card"
                                 style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
                                 <div
                                     style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
@@ -4183,7 +4619,7 @@
                                     Sign Out?</h4>
                                 <p style="color:#64748b;font-size:1rem;margin-bottom:2rem;line-height:1.5;">Are you sure
                                     you want to log out of your account? Any unsaved changes will be lost.</p>
-                                <div style="display:flex;gap:1rem;justify-content:center;">
+                                <div class="logout-modal-actions" style="display:flex;gap:1rem;justify-content:center;">
                                     <button type="button"
                                         onclick="document.getElementById('logoutConfirmModal').style.display='none'"
                                         style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;"
@@ -4217,6 +4653,7 @@
                                 if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
                             });
                         </script>
+            <script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
         </body>
 
         </html>

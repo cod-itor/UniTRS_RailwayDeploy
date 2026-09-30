@@ -1,14 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Admin Portal - UniTRS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
     <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -142,7 +144,7 @@
             margin-left: auto;
             background: #f1f5f9;
             color: #64748b;
-            font-size: 0.72rem;
+            font-size:0.75rem;
             font-weight: 700;
             padding: 3px 8px;
             border-radius: 10px;
@@ -172,46 +174,6 @@
             color: #ffffff;
         }
 
-        .sidebar-promo {
-            background: linear-gradient(145deg, #eff6ff, #dbeafe);
-            border-radius: 22px;
-            padding: 20px 16px;
-            text-align: center;
-            margin-top: 20px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #bfdbfe;
-        }
-
-        .sidebar-promo .star-icon {
-            width: 44px;
-            height: 44px;
-            background: #2563eb;
-            color: white;
-            border-radius: 14px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
-            transform: rotate(-6deg);
-        }
-
-        .sidebar-promo h4 {
-            font-size: 0.92rem;
-            font-weight: 800;
-            color: var(--brand-dark);
-            margin-bottom: 4px;
-        }
-
-        .sidebar-promo p {
-            font-size: 0.72rem;
-            color: #475569;
-            margin-bottom: 12px;
-            line-height: 1.4;
-        }
-
         .desktop-main {
             flex: 1;
             display: flex;
@@ -225,13 +187,6 @@
             align-items: center;
             margin-bottom: 24px;
             padding: 6px 0;
-        }
-
-        .header-title {
-            font-size: 1.55rem;
-            font-weight: 800;
-            color: var(--brand-dark);
-            letter-spacing: -0.02em;
         }
 
         .header-actions {
@@ -318,7 +273,7 @@
         }
 
         .user-role {
-            font-size: 0.7rem;
+            font-size:0.75rem;
             color: #64748b;
         }
 
@@ -397,7 +352,7 @@
 
         .mc-title { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
         .mc-value { font-size: 1.6rem; font-weight: 800; color: var(--brand-dark); line-height: 1; margin-bottom: 2px; }
-        .mc-subtitle { font-size: 0.72rem; color: #94a3b8; }
+        .mc-subtitle { font-size:0.75rem; color: #94a3b8; }
 
         .table-card {
             background: #ffffff;
@@ -495,6 +450,16 @@
             color: #ffffff;
         }
 
+        .rpt-badge { display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; font-weight:700; padding:4px 12px; border-radius:999px; white-space:nowrap; }
+        .rpt-badge.student { background:#dbeafe; color:#1d4ed8; }
+        .rpt-badge.professor { background:#ede9fe; color:#6d28d9; }
+        .rpt-badge.cat { background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; }
+        .rpt-issue { max-width:420px; white-space:pre-wrap; overflow-wrap:anywhere; font-size:0.85rem; color:#0f172a; }
+        .rpt-sub { font-size:0.75rem; color:#64748b; overflow-wrap:anywhere; }
+        .rpt-empty { text-align:center; padding:40px 16px; color:#64748b; }
+        .rpt-empty i { font-size:2rem; display:block; margin-bottom:8px; }
+        .rpt-select { border-radius:999px; font-size:0.8rem; max-width:220px; }
+        @media (max-width: 767.98px) { .rpt-select { max-width:none; width:100%; } }
         .tab-section {
             display: none;
         }
@@ -635,7 +600,7 @@
                 background: transparent;
                 border: none;
                 color: #64748b;
-                font-size: 0.68rem;
+                font-size:0.75rem;
                 font-weight: 600;
                 letter-spacing: -0.01em;
                 flex: 1;
@@ -672,17 +637,178 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
+    <style>
+/* ===== Admin: reference-design alignment (mirrors dean/professor/student) ===== */
+:root { --dash-border: #e8edf3; }
+body { min-height: 100vh; min-height: 100dvh; }
+
+/* Utilities that Bootstrap 5.3 does not ship */
+.fw-800 { font-weight: 800; }
+.text-purple { color: #7e22ce; }
+.bg-purple { background-color: #7c3aed; }
+.hero-chip { background: rgba(255, 255, 255, 0.2); }
+.hero-sub { color: rgba(255, 255, 255, 0.8); }
+.hover-primary { transition: background-color .15s ease, transform .15s ease; }
+.hover-primary:hover { background-color: #eff6ff !important; }
+
+/* Focus visibility */
+.sidebar-nav button:focus-visible,
+.btn-filter-pill:focus-visible,
+.btn-header-pill:focus-visible,
+.dock-tab-btn:focus-visible,
+[role="button"][tabindex]:focus-visible,
+.user-profile:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+/* Desktop shell details */
+body .desktop-layout { min-height: 100vh; min-height: 100dvh; }
+body .desktop-sidebar { height: calc(100vh - 40px); height: calc(100dvh - 40px); }
+body .sidebar-nav button .nav-badge { font-size: 0.75rem; }
+.btn-header-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 42px; padding: 0 16px;
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 99px;
+    color: var(--brand-dark); font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+}
+.btn-header-pill:hover { background: #f8fafc; transform: translateY(-1px); }
+body .user-profile { background: #ffffff; }
+body .user-dropdown-menu { border: var(--dash-card-border) !important; }
+
+/* Hero banner */
+body .admin-hero-banner { border-radius: 20px; padding: 22px; margin-bottom: 20px; }
+.admin-hero-banner h2, .admin-hero-banner p { overflow-wrap: anywhere; }
+
+/* Metric cards: 4 across (shared css defaults to 3) */
+body .metrics-grid.metrics-grid-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1200px) {
+    body .metrics-grid.metrics-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+body .metric-card .mc-title { text-transform: none; letter-spacing: 0; }
+body .metric-card .mc-value { line-height: 1.1; }
+
+/* Cards, section headings, rows */
+body .table-card { border-color: var(--dash-border); }
+body .table-card.border-warning { border-color: #fbbf24; }
+body .tc-header { flex-wrap: wrap; gap: 12px; }
+body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; color: var(--brand-dark); }
+.admin-row { --bs-gutter-x: 20px; --bs-gutter-y: 20px; }
+.admin-row .table-card { margin-bottom: 0; }
+.section-head { margin-bottom: 16px; }
+.section-head h4 { font-size: 1.1rem; font-weight: 800; }
+.user-filter-box { width: 260px; max-width: 100%; }
+.tc-table { min-width: 640px; }
+.tc-table td.text-end { white-space: nowrap; }
+.tc-table th { white-space: nowrap; }
+.tc-table-wrap { -webkit-overflow-scrolling: touch; }
+
+/* ===== Mobile (<768px) ===== */
+@media (max-width: 767.98px) {
+    body { min-height: 100dvh; }
+    .mobile-app-container {
+        min-height: 100vh; min-height: 100dvh;
+        padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)) !important;
+        overflow-x: clip;
+    }
+    .admin-mobile-topbar { gap: 8px; }
+    .admin-mobile-topbar > .d-flex { min-width: 0; gap: 8px; }
+    .admin-mobile-topbar > .d-flex > .d-flex:first-child { min-width: 0; flex: 1 1 auto; }
+    .admin-mobile-topbar > .d-flex > .d-flex:first-child > div:last-child { min-width: 0; }
+    .admin-mobile-topbar .text-truncate { max-width: 100% !important; }
+    .admin-top-avatar { overflow: hidden; }
+    .top-icon-btn {
+        width: 44px; height: 44px; flex-shrink: 0;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    @media (max-width: 379.98px) {
+        .admin-mobile-topbar .badge { display: none; }
+    }
+    @media (max-width: 359.98px) {
+        .admin-top-avatar { display: none; }
+    }
+
+    .mobile-sub-view { overflow-wrap: anywhere; }
+    .mobile-sub-view > .d-flex.justify-content-between { gap: 12px; }
+    .mobile-sub-view > .d-flex.justify-content-between > :first-child { min-width: 0; }
+    .mobile-sub-view h4, .mobile-sub-view h5, .mobile-sub-view h6 { overflow-wrap: anywhere; }
+
+    body .admin-hero-banner { padding: 16px; margin-bottom: 16px; }
+    .admin-mobile-kpi-card { border-radius: 20px; padding: 16px; min-width: 0; }
+    .admin-mobile-kpi-card .mc-icon { width: 36px; height: 36px; }
+    .mobile-card-item { min-width: 0; }
+    .mobile-card-item .badge { white-space: normal; text-align: left; }
+    .mobile-card-item .d-flex > div { min-width: 0; }
+    .mobile-user-card > .d-flex:first-child > .d-flex { min-width: 0; flex: 1 1 auto; }
+    .mobile-user-card > .d-flex:first-child > .badge { flex-shrink: 0; }
+    .mobile-user-card > .d-flex.border-top { flex-wrap: wrap; gap: 8px; }
+
+    /* Tap targets and inputs */
+    .mobile-app-container .btn,
+    .mobile-app-container .btn-sm { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+    .mobile-app-container .form-control,
+    .mobile-app-container .form-select,
+    .mobile-app-container .form-control-sm,
+    .mobile-app-container .form-select-sm { font-size: 16px !important; min-height: 46px; }
+    .mobile-app-container .form-label { font-size: 0.75rem !important; }
+    .mobile-app-container [role="button"][tabindex] { min-height: 44px; }
+    #mobileRoleFilterContainer { gap: 8px !important; padding-bottom: 8px !important; -webkit-overflow-scrolling: touch; }
+    .btn-filter-pill { min-height: 44px; padding: 0 16px; display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; }
+
+    /* Dock */
+    .dock-tab-btn { font-size: 0.75rem; min-width: 0; }
+    .dock-tab-btn > span:not(.badge) { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .mobile-bottom-dock { max-width: 480px; }
+
+    /* Holidays view embedded in the tab */
+    #mobile-view-holidays .holiday-container-wrap { padding-left: 0; padding-right: 0; }
+
+    /* Sonner toasts: keep clear of notches on phones */
+    .sonner-toaster { top: calc(env(safe-area-inset-top, 0px) + 1rem); }
+
+    /* Modals (Bootstrap holidays modal) */
+    .modal { --bs-modal-margin: 16px; }
+    .modal-dialog { margin: var(--bs-modal-margin) auto; width: calc(100% - 32px); }
+    .modal-content { border-radius: 20px !important; }
+    .modal-header { padding: 16px; gap: 12px; }
+    .modal-body { padding: 16px; overflow-wrap: anywhere; }
+    .modal-footer { padding: 12px 16px; gap: 8px; }
+    .modal-footer > * { margin: 0; }
+    .modal-footer .btn { flex: 1 1 0; min-height: 44px; }
+    .modal-body .btn { min-height: 44px; }
+    .modal-title { font-size: 1rem; overflow-wrap: anywhere; }
+    .modal .btn-close { padding: 12px; flex-shrink: 0; }
+    .modal .form-control, .modal .form-select, .modal .form-control-sm { font-size: 16px; min-height: 46px; }
+
+    /* Logout confirm (inline-styled overlay) */
+    #logoutConfirmModal { padding: 16px; box-sizing: border-box; overflow-y: auto; }
+    #logoutConfirmModal .logout-modal-card {
+        padding: 24px 20px !important; width: 100% !important; max-width: 400px !important;
+        box-sizing: border-box; border-radius: 20px !important;
+    }
+    #logoutConfirmModal .logout-modal-card p { font-size: 0.95rem !important; margin-bottom: 20px !important; }
+    #logoutConfirmModal .logout-modal-actions { flex-direction: column-reverse; gap: 8px !important; }
+    #logoutConfirmModal .logout-modal-actions > * { min-height: 48px; box-sizing: border-box; }
+}
+    </style>
 </head>
 <body>
 
+    <%-- Sonner flash triggers (single set; desktop and mobile share them) --%>
+    <c:if test="${param.twoFactorUpdated == 'true'}">
+        <div class="sonner-flash-trigger d-none" data-type="success" data-title="Two-Factor Authentication" data-message="Two-factor authentication is now enabled."></div>
+    </c:if>
+    <c:if test="${param.twoFactorUpdated == 'false'}">
+        <div class="sonner-flash-trigger d-none" data-type="info" data-title="Two-Factor Authentication" data-message="Two-factor authentication has been disabled."></div>
+    </c:if>
     <c:if test="${not empty successMessage}">
-        <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 99999;">
-            <div class="alert alert-success alert-dismissible fade show shadow-lg rounded-4 d-flex align-items-center gap-2 mb-0 py-2.5 px-4" role="alert" style="border: 1px solid #86efac; background: #f0fdf4; color: #166534;">
-                <i class="bi bi-check-circle-fill text-success fs-5"></i>
-                <div class="fw-bold small">${successMessage}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 1rem;"></button>
-            </div>
-        </div>
+        <div class="sonner-flash-trigger d-none" data-type="success" data-title="Success" data-message="<c:out value='${successMessage}' />"></div>
+    </c:if>
+    <c:if test="${not empty errorMessage}">
+        <div class="sonner-flash-trigger d-none" data-type="error" data-title="Action Failed" data-message="<c:out value='${errorMessage}' />"></div>
     </c:if>
 
     <div class="desktop-layout">
@@ -690,11 +816,11 @@
             <div class="sidebar-logo">
                 <i class="bi bi-shield-lock-fill"></i>
                 <span>UniTRS</span>
-                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill ms-auto" style="font-size:0.65rem; padding: 4px 8px;">Admin</span>
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill ms-auto" style="font-size:0.75rem; padding: 4px 8px;">Admin</span>
             </div>
 
             <div class="sidebar-search">
-                <i class="bi bi-search"></i>
+                <i class="bi bi-search" aria-hidden="true"></i>
                 <input type="text" id="adminSearchInput" placeholder="Search directory..." aria-label="Search records" onkeyup="filterActiveAdminTable(this.value)">
             </div>
 
@@ -712,6 +838,10 @@
                     <i class="bi bi-building-fill"></i> Dean Leadership
                     <span class="nav-badge">${schools.size()}</span>
                 </button>
+                <button role="tab" id="tab-reports" aria-selected="${currentTab == 'reports' ? 'true' : 'false'}" class="${currentTab == 'reports' ? 'active' : ''}" onclick="switchDesktopTab('reports', this)">
+                    <i class="bi bi-flag-fill"></i> Reports
+                    <span class="nav-badge">${reports.size()}</span>
+                </button>
                 <button role="tab" id="tab-holidays" aria-selected="${currentTab == 'holidays' ? 'true' : 'false'}" class="${currentTab == 'holidays' ? 'active' : ''}" onclick="switchDesktopTab('holidays', this)">
                     <i class="bi bi-calendar-heart"></i> School Holidays
                 </button>
@@ -719,39 +849,18 @@
                     <i class="bi bi-shield-check"></i> Security &amp; Profile
                 </button>
             </nav>
-
-            <div class="sidebar-promo">
-                <div class="star-icon">
-                    <i class="bi bi-cpu-fill"></i>
-                </div>
-                <h4>Platform Status</h4>
-                <p>Central identity management, faculty leadership &amp; campus controls.</p>
-                <div class="mt-2">
-                    <span class="badge bg-white text-dark rounded-pill px-3 py-1.5 small fw-bold shadow-sm">
-                        <i class="bi bi-check-circle-fill text-success me-1"></i>Healthy 99.98%
-                    </span>
-                </div>
-            </div>
         </aside>
 
         <main class="desktop-main" role="main">
             <header class="desktop-header">
-                <div>
-                    <h1 class="header-title mb-0">Administrative Center</h1>
-                    <div class="text-muted small mt-1 fw-medium">
-                        <i class="bi bi-shield-check text-primary me-1"></i>
-                        University Central Governance &bull; Master Operations
-                    </div>
-                </div>
-
                 <div class="header-actions">
-                    <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
+                    <button type="button" class="btn-header-pill" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays" aria-label="View School Holidays">
                         <i class="bi bi-calendar-heart text-danger"></i>
-                        <span class="small">Holidays</span>
+                        <span>Holidays</span>
                     </button>
 
                     <div class="dropdown">
-                        <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="adminProfileDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                        <button class="user-profile dropdown-toggle border-0 text-start" type="button" id="adminProfileDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Account menu">
                             <div class="user-avatar">
                                 <c:choose>
                                     <c:when test="${sessionScope.user.gender == 'FEMALE'}">
@@ -764,7 +873,7 @@
                             </div>
                             <div class="user-info-text pe-2">
                                 <span class="user-name">${sessionScope.user.fullName}</span>
-                                <span class="user-role">System Central <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill ms-1 px-2 py-0" style="font-size: 0.65rem; font-weight: 700;">ADMIN</span> <i class="bi bi-chevron-down ms-1" style="font-size:0.65rem;"></i></span>
+                                <span class="user-role">System Central <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill ms-1 px-2 py-0" style="font-size:0.75rem; font-weight: 700;">ADMIN</span> <i class="bi bi-chevron-down ms-1" style="font-size:0.75rem;"></i></span>
                             </div>
                         </button>
 
@@ -782,9 +891,9 @@
                                         </c:choose>
                                     </div>
                                     <div class="overflow-hidden">
-                                        <div class="text-muted small text-uppercase fw-semibold" style="font-size: 0.68rem; letter-spacing: 0.5px;">Master Administrator</div>
+                                        <div class="text-muted small text-uppercase fw-semibold" style="font-size:0.75rem; letter-spacing: 0.5px;">Master Administrator</div>
                                         <div class="fw-semibold text-dark text-truncate" style="font-size: 0.85rem;">${sessionScope.user.email}</div>
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill mt-1" style="font-size: 0.68rem; font-weight: 700;">
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill mt-1" style="font-size:0.75rem; font-weight: 700;">
                                             <i class="bi bi-shield-lock-fill me-1"></i>SYSTEM ADMIN
                                         </span>
                                     </div>
@@ -816,7 +925,7 @@
                                         <span class="text-muted d-flex align-items-center gap-2">
                                             <i class="bi bi-shield-lock text-primary"></i> 2FA Security
                                         </span>
-                                        <select name="twoFactorEnabled" class="form-select form-select-sm py-0 border-0 bg-light fw-bold" style="font-size: 0.8rem; width: auto;" onchange="this.form.submit()">
+                                        <select name="twoFactorEnabled" aria-label="Two-factor authentication" class="form-select form-select-sm py-0 border-0 bg-light fw-bold" style="font-size: 0.8rem; width: auto;" onchange="this.form.submit()">
                                             <option value="false" ${!sessionScope.user.twoFactorEnabled ? 'selected' : ''}>Disabled</option>
                                             <option value="true" ${sessionScope.user.twoFactorEnabled ? 'selected' : ''}>Enabled</option>
                                         </select>
@@ -839,32 +948,32 @@
                     <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between gap-3">
                         <div>
                             <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-1 font-monospace" style="font-size:0.75rem; font-weight:700;">
+                                <span class="badge hero-chip text-white rounded-pill px-3 py-1 font-monospace" style="font-size:0.75rem; font-weight:700;">
                                     <i class="bi bi-shield-check me-1 text-warning"></i>UniTRS Master Control
                                 </span>
-                                <span class="badge bg-success text-white rounded-pill px-2.5 py-1" style="font-size:0.72rem; font-weight:700;">
+                                <span class="badge bg-success text-white rounded-pill px-2 py-1" style="font-size:0.75rem; font-weight:700;">
                                     <i class="bi bi-activity me-1"></i>Live Server
                                 </span>
                             </div>
-                            <h2 class="fw-extrabold text-white mb-1" style="font-size:1.55rem; letter-spacing:-0.02em;">University Administration Dashboard</h2>
-                            <p class="text-white text-opacity-80 small mb-0">Total system governance: manage users, verify prospective students & professors, and designate school deans.</p>
+                            <h2 class="fw-bold fw-800 text-white mb-1" style="font-size:1.55rem; letter-spacing:-0.02em;">University Administration Dashboard</h2>
+                            <p class="hero-sub small mb-0">Total system governance: manage users, verify prospective students &amp; professors, and designate school deans.</p>
                         </div>
                         <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-light rounded-pill px-3.5 py-2 fw-bold small text-dark d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('users', document.getElementById('tab-users'))">
+                            <button type="button" class="btn btn-light rounded-pill px-3 py-2 fw-bold small text-dark d-inline-flex align-items-center gap-2 shadow-sm" onclick="switchDesktopTab('users', document.getElementById('tab-users'))">
                                 <i class="bi bi-person-check-fill text-primary"></i> Review Users
                             </button>
-                            <button type="button" class="btn btn-outline-light rounded-pill px-3.5 py-2 fw-bold small d-inline-flex align-items-center gap-2" onclick="switchDesktopTab('deans', document.getElementById('tab-deans'))">
+                            <button type="button" class="btn btn-outline-light rounded-pill px-3 py-2 fw-bold small d-inline-flex align-items-center gap-2" onclick="switchDesktopTab('deans', document.getElementById('tab-deans'))">
                                 <i class="bi bi-building"></i> Deans
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="metrics-grid">
+                <div class="metrics-grid metrics-grid-4">
                     <div class="metric-card" role="button" tabindex="0" onclick="switchDesktopTab('users', document.getElementById('tab-users'))">
                         <div class="mc-icon-wrap">
                             <div class="mc-icon blue"><i class="bi bi-people-fill"></i></div>
-                            <div class="mc-title">TOTAL USERS</div>
+                            <div class="mc-title">Total Users</div>
                         </div>
                         <div class="mc-value">${totalUsers}</div>
                         <div class="mc-subtitle">Registered accounts</div>
@@ -872,7 +981,7 @@
                     <div class="metric-card" role="button" tabindex="0" onclick="switchDesktopTab('users', document.getElementById('tab-users'))">
                         <div class="mc-icon-wrap">
                             <div class="mc-icon amber"><i class="bi bi-hourglass-split"></i></div>
-                            <div class="mc-title">PENDING VERIFICATION</div>
+                            <div class="mc-title">Pending Verification</div>
                         </div>
                         <div class="mc-value text-warning">${pendingVerifications}</div>
                         <div class="mc-subtitle">Awaiting confirmation</div>
@@ -880,7 +989,7 @@
                     <div class="metric-card" role="button" tabindex="0" onclick="switchDesktopTab('users', document.getElementById('tab-users'))">
                         <div class="mc-icon-wrap">
                             <div class="mc-icon green"><i class="bi bi-mortarboard-fill"></i></div>
-                            <div class="mc-title">STUDENTS</div>
+                            <div class="mc-title">Students</div>
                         </div>
                         <div class="mc-value text-success">${studentCount}</div>
                         <div class="mc-subtitle">Active student body</div>
@@ -888,7 +997,7 @@
                     <div class="metric-card" role="button" tabindex="0" onclick="switchDesktopTab('deans', document.getElementById('tab-deans'))">
                         <div class="mc-icon-wrap">
                             <div class="mc-icon purple"><i class="bi bi-building-fill"></i></div>
-                            <div class="mc-title">FACULTY &amp; STAFF</div>
+                            <div class="mc-title">Faculty &amp; Staff</div>
                         </div>
                         <div class="mc-value text-purple">${staffCount}</div>
                         <div class="mc-subtitle">Professors &amp; Deans</div>
@@ -896,7 +1005,7 @@
                 </div>
 
                 <c:if test="${not empty unverifiedStudents}">
-                    <div class="table-card border-warning mb-4">
+                    <div class="table-card border-warning">
                         <div class="tc-header">
                             <div>
                                 <h3 class="d-flex align-items-center gap-2">
@@ -905,7 +1014,7 @@
                                 </h3>
                                 <div class="text-muted small mt-1">Review new registrations and confirm authorizations</div>
                             </div>
-                            <button type="button" class="btn btn-sm btn-dark rounded-pill px-3 py-1.5 fw-bold" onclick="switchDesktopTab('users', document.getElementById('tab-users'))">
+                            <button type="button" class="btn btn-sm btn-dark rounded-pill px-3 py-1 fw-bold" onclick="switchDesktopTab('users', document.getElementById('tab-users'))">
                                 Open All in Users Tab <i class="bi bi-arrow-right ms-1"></i>
                             </button>
                         </div>
@@ -928,24 +1037,24 @@
                                             <td><div class="fw-bold text-dark">${u.fullName}</div></td>
                                             <td><span class="text-muted">${u.email}</span></td>
                                             <td>
-                                                <span class="badge ${u.role == 'PROFESSOR' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle'} rounded-pill px-2.5 py-1">
+                                                <span class="badge ${u.role == 'PROFESSOR' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle'} rounded-pill px-2 py-1">
                                                     ${u.role}
                                                 </span>
                                             </td>
                                             <td><span class="text-secondary">${not empty u.major ? u.major : 'General'}</span></td>
                                             <td class="text-end">
-                                                <form action="${pageContext.request.contextPath}/admin/users/verify" method="POST" class="d-inline-flex align-items-center gap-1.5">
+                                                <form action="${pageContext.request.contextPath}/admin/users/verify" method="POST" class="d-inline-flex align-items-center gap-1">
                                                     <input type="hidden" name="userId" value="${u.id}">
-                                                    <select name="role" class="form-select form-select-sm rounded-pill py-1 px-2 border" style="width: auto; font-size: 0.78rem;">
+                                                    <select name="role" class="form-select form-select-sm rounded-pill py-1 px-2 border" style="width: auto; font-size: 0.78rem;" aria-label="Assign role">
                                                         <option value="STUDENT" ${u.role == 'STUDENT' ? 'selected' : ''}>Student</option>
                                                         <option value="PROFESSOR" ${u.role == 'PROFESSOR' ? 'selected' : ''}>Professor</option>
                                                         <option value="DEAN" ${u.role == 'DEAN' ? 'selected' : ''}>Dean</option>
                                                         <option value="ADMIN" ${u.role == 'ADMIN' ? 'selected' : ''}>Admin</option>
                                                     </select>
-                                                    <button type="submit" name="action" value="approve" class="btn btn-sm btn-success rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.75rem;">
+                                                    <button type="submit" name="action" value="approve" class="btn btn-sm btn-success rounded-pill px-2 py-1 fw-bold" style="font-size:0.75rem;">
                                                         <i class="bi bi-check2"></i> Approve
                                                     </button>
-                                                    <button type="submit" name="action" value="reject" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1 fw-semibold" style="font-size:0.75rem;">
+                                                    <button type="submit" name="action" value="reject" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1 fw-semibold" style="font-size:0.75rem;" aria-label="Reject registration" title="Reject">
                                                         <i class="bi bi-x"></i>
                                                     </button>
                                                 </form>
@@ -958,7 +1067,7 @@
                     </div>
                 </c:if>
 
-                <div class="row g-4">
+                <div class="row g-3 admin-row">
                     <div class="col-lg-6">
                         <div class="table-card h-100">
                             <div class="tc-header">
@@ -1002,10 +1111,10 @@
                                     <i class="bi bi-lightning-charge-fill text-warning"></i> Quick Management Hub
                                 </h3>
                             </div>
-                            <div class="d-flex flex-column gap-2.5 pt-2">
+                            <div class="d-flex flex-column gap-2 pt-2">
                                 <a href="javascript:void(0)" onclick="switchDesktopTab('users', document.getElementById('tab-users'))" class="p-3 bg-light rounded-3 text-decoration-none d-flex align-items-center justify-content-between hover-primary">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="p-2.5 bg-primary bg-opacity-10 text-primary rounded-3"><i class="bi bi-person-lines-fill fs-5"></i></div>
+                                        <div class="p-2 bg-primary bg-opacity-10 text-primary rounded-3"><i class="bi bi-person-lines-fill fs-5"></i></div>
                                         <div>
                                             <div class="fw-bold text-dark small">Manage All Users</div>
                                             <div class="text-muted" style="font-size:0.75rem;">View accounts, activate, or deactivate users</div>
@@ -1016,7 +1125,7 @@
 
                                 <a href="javascript:void(0)" onclick="switchDesktopTab('deans', document.getElementById('tab-deans'))" class="p-3 bg-light rounded-3 text-decoration-none d-flex align-items-center justify-content-between hover-primary">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="p-2.5 bg-success bg-opacity-10 text-success rounded-3"><i class="bi bi-building-check fs-5"></i></div>
+                                        <div class="p-2 bg-success bg-opacity-10 text-success rounded-3"><i class="bi bi-building-check fs-5"></i></div>
                                         <div>
                                             <div class="fw-bold text-dark small">Assign School Deans</div>
                                             <div class="text-muted" style="font-size:0.75rem;">Delegate faculty leadership to university schools</div>
@@ -1027,7 +1136,7 @@
 
                                 <a href="javascript:void(0)" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" class="p-3 bg-light rounded-3 text-decoration-none d-flex align-items-center justify-content-between hover-primary">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="p-2.5 bg-danger bg-opacity-10 text-danger rounded-3"><i class="bi bi-calendar-heart fs-5"></i></div>
+                                        <div class="p-2 bg-danger bg-opacity-10 text-danger rounded-3"><i class="bi bi-calendar-heart fs-5"></i></div>
                                         <div>
                                             <div class="fw-bold text-dark small">University Holidays Calendar</div>
                                             <div class="text-muted" style="font-size:0.75rem;">View national and institutional holidays for 2026</div>
@@ -1042,16 +1151,16 @@
             </section>
 
             <section id="admin-tab-users" class="tab-section ${currentTab == 'users' ? 'active' : ''}">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="section-head d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <div>
                         <h4 class="fw-bold text-dark mb-1">User Management &amp; Access Control</h4>
                         <div class="text-muted small">Verify incoming registrations and manage user statuses across all roles</div>
                     </div>
-                    <span class="badge bg-primary text-white rounded-pill px-3 py-1.5 fw-bold font-monospace">${users.size()} Accounts</span>
+                    <span class="badge bg-primary text-white rounded-pill px-3 py-1 fw-bold font-monospace">${users.size()} Accounts</span>
                 </div>
 
                 <c:if test="${not empty unverifiedStudents}">
-                    <div class="table-card border-warning mb-4">
+                    <div class="table-card border-warning">
                         <div class="tc-header">
                             <div>
                                 <h3 class="d-flex align-items-center gap-2">
@@ -1080,15 +1189,15 @@
                                             <td><div class="fw-bold text-dark">${student.fullName}</div></td>
                                             <td><span class="text-muted">${student.email}</span></td>
                                             <td>
-                                                <span class="badge ${student.role == 'PROFESSOR' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle'} rounded-pill px-2.5 py-1">
+                                                <span class="badge ${student.role == 'PROFESSOR' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle'} rounded-pill px-2 py-1">
                                                     ${student.role}
                                                 </span>
                                             </td>
                                             <td><span class="text-secondary">${not empty student.major ? student.major : '—'}</span></td>
                                             <td class="text-end">
-                                                <form action="${pageContext.request.contextPath}/admin/users/verify" method="POST" class="d-inline-flex align-items-center gap-1.5">
+                                                <form action="${pageContext.request.contextPath}/admin/users/verify" method="POST" class="d-inline-flex align-items-center gap-1">
                                                     <input type="hidden" name="userId" value="${student.id}">
-                                                    <select name="role" class="form-select form-select-sm rounded-pill py-1 px-2 border" style="width: auto; font-size: 0.78rem;">
+                                                    <select name="role" class="form-select form-select-sm rounded-pill py-1 px-2 border" style="width: auto; font-size: 0.78rem;" aria-label="Assign role">
                                                         <option value="STUDENT" ${student.role == 'STUDENT' ? 'selected' : ''}>Student</option>
                                                         <option value="PROFESSOR" ${student.role == 'PROFESSOR' ? 'selected' : ''}>Professor</option>
                                                         <option value="DEAN" ${student.role == 'DEAN' ? 'selected' : ''}>Dean</option>
@@ -1119,8 +1228,8 @@
                             <button type="button" class="btn-filter-pill" onclick="filterDesktopRole('DEAN', this)">Deans</button>
                             <button type="button" class="btn-filter-pill" onclick="filterDesktopRole('ADMIN', this)">Admins</button>
                         </div>
-                        <div style="width: 260px;">
-                            <input type="text" class="form-control form-control-sm rounded-pill border" id="desktopUserFilterInput" placeholder="Filter by name or email..." oninput="filterDesktopUsersTable(this.value)">
+                        <div class="user-filter-box">
+                            <input type="text" class="form-control form-control-sm rounded-pill border" id="desktopUserFilterInput" aria-label="Filter users by name or email" placeholder="Filter by name or email..." oninput="filterDesktopUsersTable(this.value)">
                         </div>
                     </div>
                     <div class="tc-table-wrap">
@@ -1153,22 +1262,22 @@
                                         <td><span class="text-muted small">${u.email}</span></td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${u.role == 'ADMIN'}"><span class="badge bg-danger text-white rounded-pill px-2.5 py-1">ADMIN</span></c:when>
-                                                <c:when test="${u.role == 'DEAN'}"><span class="badge bg-purple text-white rounded-pill px-2.5 py-1" style="background:#7c3aed;">DEAN</span></c:when>
-                                                <c:when test="${u.role == 'PROFESSOR'}"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1">PROFESSOR</span></c:when>
-                                                <c:otherwise><span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1">STUDENT</span></c:otherwise>
+                                                <c:when test="${u.role == 'ADMIN'}"><span class="badge bg-danger text-white rounded-pill px-2 py-1">ADMIN</span></c:when>
+                                                <c:when test="${u.role == 'DEAN'}"><span class="badge bg-purple text-white rounded-pill px-2 py-1" style="background:#7c3aed;">DEAN</span></c:when>
+                                                <c:when test="${u.role == 'PROFESSOR'}"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1">PROFESSOR</span></c:when>
+                                                <c:otherwise><span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1">STUDENT</span></c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${u.verified}"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0.5"><i class="bi bi-check-circle-fill me-1"></i>Verified</span></c:when>
-                                                <c:otherwise><span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-0.5"><i class="bi bi-clock-fill me-1"></i>Pending</span></c:otherwise>
+                                                <c:when test="${u.verified}"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0"><i class="bi bi-check-circle-fill me-1"></i>Verified</span></c:when>
+                                                <c:otherwise><span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-0"><i class="bi bi-clock-fill me-1"></i>Pending</span></c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${u.active}"><span class="badge bg-success rounded-pill px-2.5 py-1">Active</span></c:when>
-                                                <c:otherwise><span class="badge bg-secondary rounded-pill px-2.5 py-1">Inactive</span></c:otherwise>
+                                                <c:when test="${u.active}"><span class="badge bg-success rounded-pill px-2 py-1">Active</span></c:when>
+                                                <c:otherwise><span class="badge bg-secondary rounded-pill px-2 py-1">Inactive</span></c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td class="text-end">
@@ -1178,13 +1287,13 @@
                                                     <c:choose>
                                                         <c:when test="${u.active}">
                                                             <input type="hidden" name="action" value="deactivate">
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2.5 py-1 fw-semibold" style="font-size:0.75rem;">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1 fw-semibold" style="font-size:0.75rem;">
                                                                 <i class="bi bi-person-slash me-1"></i>Deactivate
                                                             </button>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <input type="hidden" name="action" value="activate">
-                                                            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2.5 py-1 fw-semibold" style="font-size:0.75rem;">
+                                                            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1 fw-semibold" style="font-size:0.75rem;">
                                                                 <i class="bi bi-person-check me-1"></i>Activate
                                                             </button>
                                                         </c:otherwise>
@@ -1201,12 +1310,12 @@
             </section>
 
             <section id="admin-tab-deans" class="tab-section ${currentTab == 'deans' ? 'active' : ''}">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="section-head d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <div>
                         <h4 class="fw-bold text-dark mb-1">Faculty &amp; School Dean Leadership</h4>
                         <div class="text-muted small">Designate professors as academic deans to supervise faculties and courses</div>
                     </div>
-                    <span class="badge bg-primary text-white rounded-pill px-3 py-1.5 fw-bold font-monospace">${schools.size()} Schools</span>
+                    <span class="badge bg-primary text-white rounded-pill px-3 py-1 fw-bold font-monospace">${schools.size()} Schools</span>
                 </div>
 
                 <div class="table-card">
@@ -1243,12 +1352,12 @@
                                                         </div>
                                                         <div>
                                                             <div class="fw-bold text-dark small">${currentDean.fullName}</div>
-                                                            <div class="text-muted" style="font-size:0.72rem;">${currentDean.email}</div>
+                                                            <div class="text-muted" style="font-size:0.75rem;">${currentDean.email}</div>
                                                         </div>
                                                     </div>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-2.5 py-1">
+                                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-2 py-1">
                                                         <i class="bi bi-exclamation-circle me-1"></i>Unassigned
                                                     </span>
                                                 </c:otherwise>
@@ -1257,7 +1366,7 @@
                                         <td>
                                             <form action="${pageContext.request.contextPath}/admin/deans/assign" method="post" class="d-flex align-items-center gap-2 m-0">
                                                 <input type="hidden" name="schoolId" value="${school.id}">
-                                                <select name="professorId" class="form-select form-select-sm rounded-pill border" style="max-width: 280px; font-size: 0.8rem;">
+                                                <select name="professorId" class="form-select form-select-sm rounded-pill border" style="max-width: 280px; font-size: 0.8rem;" aria-label="Select dean for ${school.schoolName}">
                                                     <option value="">-- Unassign Dean --</option>
                                                     <c:forEach var="prof" items="${professors}">
                                                         <option value="${prof.id}" ${not empty currentDean && currentDean.id == prof.id ? 'selected' : ''}>
@@ -1265,7 +1374,7 @@
                                                         </option>
                                                     </c:forEach>
                                                 </select>
-                                                <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3 py-1 fw-bold shadow-xs" style="font-size: 0.78rem;">
+                                                <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3 py-1 fw-bold shadow-sm" style="font-size: 0.78rem;">
                                                     <i class="bi bi-save me-1"></i>Save
                                                 </button>
                                             </form>
@@ -1278,21 +1387,87 @@
                 </div>
             </section>
 
+            <section id="admin-tab-reports" class="tab-section ${currentTab == 'reports' ? 'active' : ''}">
+                <div class="section-head d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1">User Reports</h4>
+                        <div class="text-muted small">Issues submitted by students and professors</div>
+                    </div>
+                    <span class="badge bg-primary text-white rounded-pill px-3 py-1 fw-bold font-monospace">${reports.size()} Reports</span>
+                </div>
+
+                <div class="table-card">
+                    <div class="tc-header flex-wrap gap-2">
+                        <h3 class="d-flex align-items-center gap-2">
+                            <i class="bi bi-flag-fill text-primary"></i> All Reports
+                        </h3>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <select id="desktopReportRoleFilter" class="form-select form-select-sm rpt-select" aria-label="Filter reports by role" onchange="applyReportFilters()">
+                                <option value="">All roles</option>
+                                <option value="STUDENT">Students</option>
+                                <option value="PROFESSOR">Professors</option>
+                            </select>
+                            <select id="desktopReportCategoryFilter" class="form-select form-select-sm rpt-select" aria-label="Filter reports by category" onchange="applyReportFilters()">
+                                <option value="">All categories</option>
+                            </select>
+                        </div>
+                    </div>
+                    <c:choose>
+                    <c:when test="${empty reports}">
+                        <div class="rpt-empty"><i class="bi bi-inbox"></i>No reports have been submitted yet.</div>
+                    </c:when>
+                    <c:otherwise>
+                    <div class="tc-table-wrap">
+                        <table class="tc-table" id="desktopReportsTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Reporter</th>
+                                    <th>Role</th>
+                                    <th>Category</th>
+                                    <th>Issue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="r" items="${reports}">
+                                    <tr class="report-row" data-role="<c:out value='${r.reporterRole}'/>" data-category="<c:out value='${r.category}'/>">
+                                        <td class="text-nowrap"><span class="small">${r.createdAtLabel}</span></td>
+                                        <td>
+                                            <div class="fw-bold text-dark small"><c:out value="${r.reporterName}"/></div>
+                                            <div class="rpt-sub"><c:out value="${empty r.reporterIdentifier ? r.reporterEmail : r.reporterIdentifier}"/></div>
+                                            <c:if test="${not empty r.schoolId}">
+                                                <c:forEach var="sch" items="${schools}"><c:if test="${sch.id == r.schoolId}"><div class="rpt-sub"><c:out value="${sch.schoolName}"/></div></c:if></c:forEach>
+                                            </c:if>
+                                        </td>
+                                        <td><span class="rpt-badge ${r.reporterRole == 'PROFESSOR' ? 'professor' : 'student'}"><c:out value="${r.reporterRole == 'PROFESSOR' ? 'Professor' : 'Student'}"/></span></td>
+                                        <td><span class="rpt-badge cat"><c:out value="${r.category}"/></span></td>
+                                        <td><div class="rpt-issue"><c:out value="${r.issue}"/></div><c:if test="${not empty r.details}"><div class="small text-muted mt-1" style="white-space:pre-wrap; overflow-wrap:anywhere; font-weight:400;"><c:out value="${r.details}"/></div></c:if></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="desktopReportsNoMatch" class="rpt-empty" style="display:none;"><i class="bi bi-search"></i>No reports match the current filters.</div>
+                    </c:otherwise>
+                    </c:choose>
+                </div>
+            </section>
+
             <section id="admin-tab-holidays" class="tab-section ${currentTab == 'holidays' ? 'active' : ''}">
                 <jsp:include page="/WEB-INF/views/common/school_holidays_view.jsp" />
             </section>
 
             <section id="admin-tab-profile" class="tab-section ${currentTab == 'profile' ? 'active' : ''}">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="section-head d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <div>
                         <h4 class="fw-bold text-dark mb-1">Administrative Profile &amp; Platform Security</h4>
                         <div class="text-muted small">Manage account authentication, multi-factor verification, and system telemetry</div>
                     </div>
                 </div>
 
-                <div class="row g-4">
+                <div class="row g-3 admin-row">
                     <div class="col-lg-5">
-                        <div class="table-card text-center p-4">
+                        <div class="table-card text-center">
                             <div class="mx-auto mb-3" style="width: 84px; height: 84px; border-radius: 28px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 800; border: 3px solid #dbeafe; box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);">
                                 <c:choose>
                                     <c:when test="${sessionScope.user.gender == 'FEMALE'}">
@@ -1307,14 +1482,14 @@
                             <div class="text-muted small mb-2">${sessionScope.user.email}</div>
                             <div class="d-flex justify-content-center gap-2 mb-3">
                                 <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1 font-monospace fw-bold">ADMINISTRATOR</span>
-                                <span class="badge bg-light text-dark border font-monospace px-2.5 py-1">${sessionScope.user.formattedIdentifier}</span>
+                                <span class="badge bg-light text-dark border font-monospace px-2 py-1">${sessionScope.user.formattedIdentifier}</span>
                             </div>
                             <div class="p-3 bg-light rounded-3 text-start small">
-                                <div class="d-flex justify-content-between mb-1.5">
+                                <div class="d-flex justify-content-between mb-1">
                                     <span class="text-muted">Account Status:</span>
                                     <span class="fw-bold text-success"><i class="bi bi-shield-check me-1"></i>Active</span>
                                 </div>
-                                <div class="d-flex justify-content-between mb-1.5">
+                                <div class="d-flex justify-content-between mb-1">
                                     <span class="text-muted">System Level:</span>
                                     <span class="fw-bold text-dark">Central Master</span>
                                 </div>
@@ -1326,8 +1501,8 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-7">
-                        <div class="table-card p-4 mb-4">
+                    <div class="col-lg-7 d-flex flex-column" style="gap:20px;">
+                        <div class="table-card">
                             <h3 class="mb-3 d-flex align-items-center gap-2">
                                 <i class="bi bi-shield-lock-fill text-primary"></i> Two-Factor Authentication (2FA)
                             </h3>
@@ -1342,13 +1517,13 @@
                                         <div class="text-muted" style="font-size:0.75rem;">Require verification code on every web portal sign-in</div>
                                     </div>
                                     <div class="form-check form-switch m-0 fs-5">
-                                        <input class="form-check-input" type="checkbox" name="twoFactorEnabled" value="true" ${sessionScope.user.twoFactorEnabled ? 'checked' : ''} onchange="this.form.submit()">
+                                        <input class="form-check-input" type="checkbox" role="switch" aria-label="Login OTP verification" name="twoFactorEnabled" value="true" ${sessionScope.user.twoFactorEnabled ? 'checked' : ''} onchange="this.form.submit()">
                                     </div>
                                 </div>
                             </form>
                         </div>
 
-                        <div class="table-card p-4">
+                        <div class="table-card">
                             <h3 class="mb-3 d-flex align-items-center gap-2">
                                 <i class="bi bi-hdd-network-fill text-success"></i> Central Telemetry &amp; System Health
                             </h3>
@@ -1367,8 +1542,8 @@
                                 </div>
                             </div>
                             <div class="pt-3 mt-3 border-top">
-                                <button type="button" class="btn btn-outline-danger rounded-pill px-4 py-2 fw-bold w-100 shadow-xs" onclick="document.getElementById('logoutConfirmModal').style.display='flex'">
-                                    <i class="bi bi-box-arrow-right me-1.5"></i> Sign Out of Admin Account
+                                <button type="button" class="btn btn-outline-danger rounded-pill px-4 py-2 fw-bold w-100 shadow-sm" onclick="document.getElementById('logoutConfirmModal').style.display='flex'">
+                                    <i class="bi bi-box-arrow-right me-1"></i> Sign Out of Admin Account
                                 </button>
                             </div>
                         </div>
@@ -1394,19 +1569,19 @@
                     </div>
                     <div>
                         <div class="d-flex align-items-center gap-2">
-                            <span class="fw-extrabold text-dark" style="font-size: 1.05rem; letter-spacing: -0.02em;">Admin Portal</span>
-                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-0" style="font-size:0.65rem; font-weight:700;">ADMIN</span>
+                            <span class="fw-bold fw-800 text-dark" style="font-size: 1.05rem; letter-spacing: -0.02em;">Admin Portal</span>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-0" style="font-size:0.75rem; font-weight:700;">ADMIN</span>
                         </div>
                         <div class="text-muted small fw-medium text-truncate" style="max-width: 170px; font-size: 0.75rem;">${sessionScope.user.fullName}</div>
                     </div>
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
-                    <button type="button" class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center shadow-xs" style="width: 38px; height: 38px; border: 1px solid rgba(226,232,240,0.8);" data-bs-toggle="modal" data-bs-target="#schoolHolidaysModal" aria-label="School Holidays">
-                        <i class="bi bi-calendar-heart text-danger" style="font-size: 1rem;"></i>
+                    <button type="button" class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center top-icon-btn" data-bs-toggle="modal" data-bs-target="#schoolHolidaysModal" aria-label="School Holidays">
+                        <i class="bi bi-calendar-heart text-danger" style="font-size: 1rem;" aria-hidden="true"></i>
                     </button>
-                    <button type="button" class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center shadow-xs" style="width: 38px; height: 38px; border: 1px solid rgba(226,232,240,0.8);" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" aria-label="Sign out">
-                        <i class="bi bi-box-arrow-right text-danger" style="font-size: 1rem;"></i>
+                    <button type="button" class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center top-icon-btn" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" aria-label="Sign out">
+                        <i class="bi bi-box-arrow-right text-danger" style="font-size: 1rem;" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -1415,48 +1590,48 @@
         <section id="mobile-view-home" class="mobile-sub-view active" role="tabpanel" aria-labelledby="dock-tab-home">
             <div class="admin-hero-banner py-3 px-3 mb-3">
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                    <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-2.5 py-0.5 font-monospace" style="font-size:0.7rem;">
+                    <span class="badge hero-chip text-white rounded-pill px-2 py-0 font-monospace" style="font-size:0.75rem;">
                         <i class="bi bi-shield-lock-fill me-1 text-warning"></i>UniTRS Core
                     </span>
-                    <span class="badge bg-success text-white rounded-pill px-2 py-0.5" style="font-size:0.68rem;">Live</span>
+                    <span class="badge bg-success text-white rounded-pill px-2 py-0" style="font-size:0.75rem;">Live</span>
                 </div>
-                <h4 class="fw-extrabold text-white mb-1" style="font-size:1.15rem;">Admin Overview</h4>
-                <p class="text-white text-opacity-80 small mb-0" style="font-size:0.78rem;">System accounts, verifications &amp; deans</p>
+                <h4 class="fw-bold fw-800 text-white mb-1" style="font-size:1.15rem;">Admin Overview</h4>
+                <p class="hero-sub small mb-0" style="font-size:0.78rem;">System accounts, verifications &amp; deans</p>
             </div>
 
             <c:if test="${pendingVerifications > 0}">
-                <div class="alert alert-warning d-flex align-items-center justify-content-between p-3 mb-3 rounded-4 border-warning shadow-xs" onclick="switchAdminMobileTab('users')" role="button" tabindex="0">
+                <div class="alert alert-warning d-flex align-items-center justify-content-between p-3 mb-3 rounded-4 border-warning shadow-sm" onclick="switchAdminMobileTab('users')" role="button" tabindex="0">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
                         <div>
                             <div class="fw-bold small text-dark">${pendingVerifications} Pending Verifications</div>
-                            <div class="text-muted" style="font-size:0.72rem;">Tap to review and approve users</div>
+                            <div class="text-muted" style="font-size:0.75rem;">Tap to review and approve users</div>
                         </div>
                     </div>
-                    <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1" style="font-size:0.7rem;">Review</span>
+                    <span class="badge bg-warning text-dark rounded-pill px-2 py-1" style="font-size:0.75rem;">Review</span>
                 </div>
             </c:if>
 
             <div class="admin-mobile-kpi-grid">
                 <div class="admin-mobile-kpi-card" onclick="switchAdminMobileTab('users')" role="button" tabindex="0">
                     <div class="mc-icon blue mb-2"><i class="bi bi-people-fill"></i></div>
-                    <div class="fw-extrabold fs-4 text-dark mb-0">${totalUsers}</div>
-                    <div class="text-muted small" style="font-size:0.72rem;">Total Accounts</div>
+                    <div class="fw-bold fw-800 fs-4 text-dark mb-0">${totalUsers}</div>
+                    <div class="text-muted small" style="font-size:0.75rem;">Total Accounts</div>
                 </div>
                 <div class="admin-mobile-kpi-card" onclick="switchAdminMobileTab('users')" role="button" tabindex="0">
                     <div class="mc-icon amber mb-2"><i class="bi bi-hourglass-split"></i></div>
-                    <div class="fw-extrabold fs-4 text-warning mb-0">${pendingVerifications}</div>
-                    <div class="text-muted small" style="font-size:0.72rem;">Pending Review</div>
+                    <div class="fw-bold fw-800 fs-4 text-warning mb-0">${pendingVerifications}</div>
+                    <div class="text-muted small" style="font-size:0.75rem;">Pending Review</div>
                 </div>
                 <div class="admin-mobile-kpi-card" onclick="switchAdminMobileTab('users')" role="button" tabindex="0">
                     <div class="mc-icon green mb-2"><i class="bi bi-mortarboard-fill"></i></div>
-                    <div class="fw-extrabold fs-4 text-success mb-0">${studentCount}</div>
-                    <div class="text-muted small" style="font-size:0.72rem;">Students</div>
+                    <div class="fw-bold fw-800 fs-4 text-success mb-0">${studentCount}</div>
+                    <div class="text-muted small" style="font-size:0.75rem;">Students</div>
                 </div>
                 <div class="admin-mobile-kpi-card" onclick="switchAdminMobileTab('deans')" role="button" tabindex="0">
                     <div class="mc-icon purple mb-2"><i class="bi bi-building-fill"></i></div>
-                    <div class="fw-extrabold fs-4 text-purple mb-0">${schools.size()}</div>
-                    <div class="text-muted small" style="font-size:0.72rem;">Schools</div>
+                    <div class="fw-bold fw-800 fs-4 text-purple mb-0">${schools.size()}</div>
+                    <div class="text-muted small" style="font-size:0.75rem;">Schools</div>
                 </div>
             </div>
 
@@ -1466,27 +1641,42 @@
                         <div class="p-2 rounded-3 bg-danger bg-opacity-10 text-danger"><i class="bi bi-calendar-heart fs-5"></i></div>
                         <div>
                             <div class="fw-bold text-dark small">School Holidays 2026</div>
-                            <div class="text-muted" style="font-size:0.72rem;">View upcoming Cambodian national holidays</div>
+                            <div class="text-muted" style="font-size:0.75rem;">View upcoming Cambodian national holidays</div>
                         </div>
                     </div>
                     <i class="bi bi-chevron-right text-muted"></i>
                 </div>
             </div>
+            <div class="mobile-card-item p-3 mb-3" onclick="switchAdminMobileTab('reports')" role="button" tabindex="0" style="cursor:pointer;">
+                <div class="d-flex align-items-center justify-content-between gap-2">
+                    <div class="d-flex align-items-center gap-2" style="min-width:0;">
+                        <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary"><i class="bi bi-flag-fill fs-5"></i></div>
+                        <div style="min-width:0;">
+                            <div class="fw-bold text-dark small">User Reports</div>
+                            <div class="text-muted" style="font-size:0.75rem;">Issues from students &amp; professors</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                        <span class="badge bg-primary text-white rounded-pill px-2 py-1 font-monospace">${reports.size()}</span>
+                        <i class="bi bi-chevron-right text-muted"></i>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="mobile-view-users" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-users">
-            <div class="d-flex justify-content-between align-items-center mb-2.5">
+            <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="fw-bold text-dark mb-0">User Directory &amp; Verification</h6>
-                <span class="badge bg-primary text-white rounded-pill px-2.5 py-1 font-monospace">${users.size()}</span>
+                <span class="badge bg-primary text-white rounded-pill px-2 py-1 font-monospace">${users.size()}</span>
             </div>
 
             <c:if test="${not empty unverifiedStudents}">
                 <div class="mb-3">
-                    <div class="small fw-bold text-warning text-uppercase mb-2" style="font-size:0.72rem; letter-spacing:0.04em;">
+                    <div class="small fw-bold text-warning text-uppercase mb-2" style="font-size:0.75rem; letter-spacing:0.04em;">
                         <i class="bi bi-exclamation-triangle-fill me-1"></i>Action Required (${unverifiedStudents.size()})
                     </div>
                     <c:forEach var="student" items="${unverifiedStudents}">
-                        <div class="mobile-card-item p-3 border-warning mb-2.5">
+                        <div class="mobile-card-item p-3 border-warning mb-2">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
                                     <div class="fw-bold text-dark">${student.fullName}</div>
@@ -1497,8 +1687,8 @@
                             <form action="${pageContext.request.contextPath}/admin/users/verify" method="POST" class="pt-2 border-top">
                                 <input type="hidden" name="userId" value="${student.id}">
                                 <div class="mb-2">
-                                    <label class="form-label text-muted small mb-1" style="font-size:0.72rem;">Assign System Role</label>
-                                    <select name="role" class="form-select form-select-sm rounded-pill" required>
+                                    <label class="form-label text-muted small mb-1" style="font-size:0.75rem;" for="mRole-${student.id}">Assign System Role</label>
+                                    <select name="role" id="mRole-${student.id}" class="form-select form-select-sm rounded-pill" required>
                                         <option value="STUDENT" ${student.role == 'STUDENT' ? 'selected' : ''}>Student</option>
                                         <option value="PROFESSOR" ${student.role == 'PROFESSOR' ? 'selected' : ''}>Professor</option>
                                         <option value="DEAN" ${student.role == 'DEAN' ? 'selected' : ''}>Dean</option>
@@ -1516,8 +1706,8 @@
             </c:if>
 
             <div class="mb-3">
-                <input type="text" class="form-control form-control-sm rounded-pill border mb-2" id="mobileUserFilterInput" placeholder="Search users..." oninput="filterMobileUsersList(this.value)">
-                <div class="d-flex gap-1.5 overflow-x-auto pb-1" style="scrollbar-width:none;" id="mobileRoleFilterContainer">
+                <input type="text" class="form-control form-control-sm rounded-pill border mb-2" id="mobileUserFilterInput" aria-label="Search users" placeholder="Search users..." oninput="filterMobileUsersList(this.value)">
+                <div class="d-flex gap-1 overflow-x-auto pb-1" style="scrollbar-width:none;" id="mobileRoleFilterContainer">
                     <button type="button" class="btn-filter-pill active" onclick="filterMobileRole('all', this)">All</button>
                     <button type="button" class="btn-filter-pill" onclick="filterMobileRole('STUDENT', this)">Students</button>
                     <button type="button" class="btn-filter-pill" onclick="filterMobileRole('PROFESSOR', this)">Professors</button>
@@ -1536,17 +1726,17 @@
                                 </div>
                                 <div>
                                     <div class="fw-bold text-dark small">${u.fullName}</div>
-                                    <div class="text-muted" style="font-size:0.72rem;">${u.email}</div>
+                                    <div class="text-muted" style="font-size:0.75rem;">${u.email}</div>
                                 </div>
                             </div>
-                            <span class="badge ${u.active ? 'bg-success' : 'bg-secondary'} rounded-pill" style="font-size:0.65rem;">
+                            <span class="badge ${u.active ? 'bg-success' : 'bg-secondary'} rounded-pill" style="font-size:0.75rem;">
                                 ${u.active ? 'Active' : 'Inactive'}
                             </span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                            <div class="d-flex align-items-center gap-1.5">
-                                <span class="badge bg-light text-dark border font-monospace" style="font-size:0.68rem;">${u.formattedIdentifier}</span>
-                                <span class="badge bg-secondary-subtle text-secondary" style="font-size:0.68rem;">${u.role}</span>
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="badge bg-light text-dark border font-monospace" style="font-size:0.75rem;">${u.formattedIdentifier}</span>
+                                <span class="badge bg-secondary-subtle text-secondary" style="font-size:0.75rem;">${u.role}</span>
                             </div>
                             <c:if test="${u.id != sessionScope.user.id}">
                                 <form action="${pageContext.request.contextPath}/admin/users/status" method="POST" class="m-0">
@@ -1554,11 +1744,11 @@
                                     <c:choose>
                                         <c:when test="${u.active}">
                                             <input type="hidden" name="action" value="deactivate">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2.5 py-0" style="font-size:0.72rem; min-height:26px;">Deactivate</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0">Deactivate</button>
                                         </c:when>
                                         <c:otherwise>
                                             <input type="hidden" name="action" value="activate">
-                                            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2.5 py-0" style="font-size:0.72rem; min-height:26px;">Activate</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2 py-0">Activate</button>
                                         </c:otherwise>
                                     </c:choose>
                                 </form>
@@ -1569,10 +1759,53 @@
             </div>
         </section>
 
+        <section id="mobile-view-reports" class="mobile-sub-view" role="tabpanel" aria-label="User Reports">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-light border rounded-pill px-3" onclick="switchAdminMobileTab('home')" aria-label="Back to overview"><i class="bi bi-chevron-left"></i></button>
+                    <h6 class="fw-bold text-dark mb-0">User Reports</h6>
+                </div>
+                <span class="badge bg-primary text-white rounded-pill px-2 py-1 font-monospace">${reports.size()}</span>
+            </div>
+            <div class="d-flex flex-column gap-2 mb-3">
+                <select id="mobileReportRoleFilter" class="form-select rpt-select" aria-label="Filter reports by role" onchange="applyReportFilters()">
+                    <option value="">All roles</option>
+                    <option value="STUDENT">Students</option>
+                    <option value="PROFESSOR">Professors</option>
+                </select>
+                <select id="mobileReportCategoryFilter" class="form-select rpt-select" aria-label="Filter reports by category" onchange="applyReportFilters()">
+                    <option value="">All categories</option>
+                </select>
+            </div>
+            <c:if test="${empty reports}">
+                <div class="mobile-card-item rpt-empty"><i class="bi bi-inbox"></i>No reports have been submitted yet.</div>
+            </c:if>
+            <div id="mobileReportsList">
+                <c:forEach var="r" items="${reports}">
+                    <div class="mobile-card-item p-3 mb-2 mobile-report-card" data-role="<c:out value='${r.reporterRole}'/>" data-category="<c:out value='${r.category}'/>">
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                            <div style="min-width:0;">
+                                <div class="fw-bold text-dark small" style="overflow-wrap:anywhere;"><c:out value="${r.reporterName}"/></div>
+                                <div class="rpt-sub"><c:out value="${empty r.reporterIdentifier ? r.reporterEmail : r.reporterIdentifier}"/></div>
+                                <c:if test="${not empty r.schoolId}">
+                                    <c:forEach var="sch" items="${schools}"><c:if test="${sch.id == r.schoolId}"><div class="rpt-sub"><c:out value="${sch.schoolName}"/></div></c:if></c:forEach>
+                                </c:if>
+                            </div>
+                            <span class="rpt-badge flex-shrink-0 ${r.reporterRole == 'PROFESSOR' ? 'professor' : 'student'}"><c:out value="${r.reporterRole == 'PROFESSOR' ? 'Professor' : 'Student'}"/></span>
+                        </div>
+                        <div class="mb-2"><span class="rpt-badge cat"><c:out value="${r.category}"/></span></div>
+                        <div class="rpt-issue mb-2" style="max-width:none;"><c:out value="${r.issue}"/></div><c:if test="${not empty r.details}"><div class="small text-muted mt-1" style="white-space:pre-wrap; overflow-wrap:anywhere; font-weight:400;"><c:out value="${r.details}"/></div></c:if>
+                        <div class="rpt-sub"><i class="bi bi-clock me-1"></i>${r.createdAtLabel}</div>
+                    </div>
+                </c:forEach>
+            </div>
+            <div id="mobileReportsNoMatch" class="mobile-card-item rpt-empty" style="display:none;"><i class="bi bi-search"></i>No reports match the current filters.</div>
+        </section>
+
         <section id="mobile-view-deans" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-deans">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h6 class="fw-bold text-dark mb-0">Dean Leadership Assignments</h6>
-                <span class="badge bg-primary text-white rounded-pill px-2.5 py-1 font-monospace">${schools.size()} Schools</span>
+                <span class="badge bg-primary text-white rounded-pill px-2 py-1 font-monospace">${schools.size()} Schools</span>
             </div>
 
             <c:forEach var="school" items="${schools}">
@@ -1581,35 +1814,35 @@
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
                             <div class="fw-bold text-dark">${school.schoolName}</div>
-                            <div class="text-muted small" style="font-size:0.72rem;">Division Code: SCH-${school.id}</div>
+                            <div class="text-muted small" style="font-size:0.75rem;">Division Code: SCH-${school.id}</div>
                         </div>
                         <c:choose>
                             <c:when test="${not empty currentDean}">
-                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill" style="font-size:0.68rem;">Dean Assigned</span>
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill" style="font-size:0.75rem;">Dean Assigned</span>
                             </c:when>
                             <c:otherwise>
-                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill" style="font-size:0.68rem;">Unassigned</span>
+                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill" style="font-size:0.75rem;">Unassigned</span>
                             </c:otherwise>
                         </c:choose>
                     </div>
 
                     <c:if test="${not empty currentDean}">
-                        <div class="p-2.5 bg-light rounded-3 d-flex align-items-center gap-2 mb-3">
+                        <div class="p-2 bg-light rounded-3 d-flex align-items-center gap-2 mb-3">
                             <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.8rem;">
                                 <i class="bi bi-person-badge-fill"></i>
                             </div>
                             <div>
                                 <div class="fw-bold text-dark small">${currentDean.fullName}</div>
-                                <div class="text-muted" style="font-size:0.7rem;">${currentDean.email}</div>
+                                <div class="text-muted" style="font-size:0.75rem;">${currentDean.email}</div>
                             </div>
                         </div>
                     </c:if>
 
                     <form action="${pageContext.request.contextPath}/admin/deans/assign" method="post" class="pt-2 border-top">
                         <input type="hidden" name="schoolId" value="${school.id}">
-                        <label class="form-label text-muted small mb-1" style="font-size:0.72rem;">Designate Dean</label>
+                        <label class="form-label text-muted small mb-1" style="font-size:0.75rem;" for="mDean-${school.id}">Designate Dean</label>
                         <div class="d-flex gap-2">
-                            <select name="professorId" class="form-select form-select-sm rounded-pill" style="font-size:0.78rem;">
+                            <select name="professorId" id="mDean-${school.id}" class="form-select form-select-sm rounded-pill" style="font-size:0.78rem;">
                                 <option value="">-- Unassign Dean --</option>
                                 <c:forEach var="prof" items="${professors}">
                                     <option value="${prof.id}" ${not empty currentDean && currentDean.id == prof.id ? 'selected' : ''}>
@@ -1673,7 +1906,7 @@
                 <i class="bi bi-people"></i>
                 <span>Users</span>
                 <c:if test="${pendingVerifications > 0}">
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.58rem; transform: translate(-75%, 20%) !important;">
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.75rem; transform: translate(-75%, 20%) !important;">
                         ${pendingVerifications}
                     </span>
                 </c:if>
@@ -1696,13 +1929,13 @@
     <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
 
     <div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
-        <div style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+        <div class="logout-modal-card" style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
             <div style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
                 <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
             </div>
             <h4 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.75rem;">Sign Out?</h4>
             <p style="color:#64748b;font-size:1rem;margin-bottom:2rem;line-height:1.5;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
-            <div style="display:flex;gap:1rem;justify-content:center;">
+            <div class="logout-modal-actions" style="display:flex;gap:1rem;justify-content:center;">
                 <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
                 <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:none;background:#b91c1c;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(185,28,28,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
             </div>
@@ -1875,6 +2108,25 @@
             });
         }
 
+        function applyReportFilters() {
+            function val(id) { var e = document.getElementById(id); return e ? e.value : ''; }
+            var q = (val('adminSearchInput') || '').toLowerCase().trim();
+            function run(sel, roleId, catId, noMatchId, useSearch) {
+                var role = val(roleId), cat = val(catId), shown = 0, total = 0;
+                document.querySelectorAll(sel).forEach(function(el) {
+                    total++;
+                    var ok = (!role || el.getAttribute('data-role') === role) && (!cat || el.getAttribute('data-category') === cat)
+                        && (!useSearch || !q || (el.textContent || '').toLowerCase().indexOf(q) !== -1);
+                    el.style.display = ok ? '' : 'none';
+                    if (ok) shown++;
+                });
+                var nm = document.getElementById(noMatchId);
+                if (nm) nm.style.display = (total > 0 && shown === 0) ? '' : 'none';
+            }
+            run('#desktopReportsTable tbody tr.report-row', 'desktopReportRoleFilter', 'desktopReportCategoryFilter', 'desktopReportsNoMatch', true);
+            run('#mobileReportsList .mobile-report-card', 'mobileReportRoleFilter', 'mobileReportCategoryFilter', 'mobileReportsNoMatch', false);
+        }
+
         function filterActiveAdminTable(query) {
             query = (query || '').toLowerCase().trim();
             var activeTab = document.querySelector('.tab-section.active');
@@ -1892,6 +2144,8 @@
                 return;
             }
 
+            if (activeTab.id === 'admin-tab-reports') { applyReportFilters(); return; }
+
             var rows = activeTab.querySelectorAll('.tc-table tbody tr');
             rows.forEach(function(row) {
                 var text = (row.textContent || '').toLowerCase();
@@ -1904,12 +2158,34 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            var seen = {}, cats = [];
+            document.querySelectorAll('[data-category]').forEach(function(el) {
+                var c = el.getAttribute('data-category');
+                if (c && !seen[c]) { seen[c] = true; cats.push(c); }
+            });
+            cats.sort();
+            ['desktopReportCategoryFilter', 'mobileReportCategoryFilter'].forEach(function(id) {
+                var sel = document.getElementById(id);
+                if (!sel) return;
+                cats.forEach(function(c) {
+                    var o = document.createElement('option');
+                    o.value = c; o.textContent = c;
+                    sel.appendChild(o);
+                });
+            });
             var params = new URLSearchParams(window.location.search);
             var initialTab = params.get('tab');
             if (initialTab) {
                 var dtBtn = document.getElementById('tab-' + initialTab);
                 if (dtBtn) switchDesktopTab(initialTab, dtBtn);
                 switchAdminMobileTab(initialTab);
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.matches && e.target.matches('[role="button"][tabindex]')) {
+                e.preventDefault();
+                e.target.click();
             }
         });
 
@@ -1920,5 +2196,6 @@
             if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
         });
     </script>
+    <script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
 </body>
 </html>

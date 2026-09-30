@@ -126,6 +126,7 @@ public class AdminController extends HttpServlet {
         request.setAttribute("schools", schools);
         request.setAttribute("professors", professors);
         request.setAttribute("currentDeans", currentDeans);
+        request.setAttribute("reports", new com.unitrs.repository.ReportRepository().findAll());
 
         String tab = request.getParameter("tab");
         request.setAttribute("currentTab", tab != null ? tab : "overview");
@@ -139,6 +140,11 @@ public class AdminController extends HttpServlet {
             } else if ("assigned".equals(success)) {
                 request.setAttribute("successMessage", "Dean assignment successfully updated!");
             }
+        }
+
+        String error = request.getParameter("error");
+        if (error != null && !error.trim().isEmpty()) {
+            request.setAttribute("errorMessage", error);
         }
 
         request.getRequestDispatcher("/WEB-INF/views/admin/dashboard.jsp").forward(request, response);

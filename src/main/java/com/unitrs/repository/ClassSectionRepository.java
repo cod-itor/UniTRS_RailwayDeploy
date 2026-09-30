@@ -49,8 +49,8 @@ public class ClassSectionRepository extends BaseRepository {
     }
 
     public boolean save(ClassSection section) {
-        String sql = "INSERT INTO class_sections (term_id, course_id, professor_id, room_id, session_shift, days_of_week, academic_year) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO class_sections (term_id, course_id, professor_id, room_id, session_shift, days_of_week, academic_year, start_date, end_date) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return executeUpdate(sql,
                 section.getTermId(),
                 section.getCourseId(),
@@ -58,7 +58,9 @@ public class ClassSectionRepository extends BaseRepository {
                 section.getRoomId(),
                 section.getSessionShift().name(),
                 section.getDaysOfWeek(),
-                section.getAcademicYear()) > 0;
+                section.getAcademicYear(),
+                section.getStartDate(),
+                section.getEndDate()) > 0;
     }
 
     public boolean delete(int id) {
@@ -77,6 +79,8 @@ public class ClassSectionRepository extends BaseRepository {
         section.setSessionShift(SessionShift.valueOf(rs.getString("session_shift")));
         section.setDaysOfWeek(rs.getString("days_of_week"));
         section.setAcademicYear(rs.getString("academic_year"));
+        section.setStartDate(rs.getDate("start_date"));
+        section.setEndDate(rs.getDate("end_date"));
 
         section.setCourseCode(rs.getString("course_code"));
         section.setCourseTitle(rs.getString("course_title"));

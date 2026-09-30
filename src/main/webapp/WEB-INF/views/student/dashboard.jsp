@@ -6,7 +6,7 @@
 
         <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
             <title>Student Dashboard - UniTRS</title>
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +16,7 @@
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
                 rel="stylesheet">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
             <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
             <style>
                 body {
@@ -77,6 +78,210 @@
                         background-color: #f8fafc;
                     }
 
+                    /* Course Detail Bottom Sheet Modal */
+                    .course-modal-overlay {
+                        position: fixed;
+                        inset: 0;
+                        background: rgba(15, 23, 42, 0.6);
+                        z-index: 1050;
+                        display: none;
+                        align-items: flex-end;
+                        justify-content: center;
+                        backdrop-filter: blur(6px);
+                        -webkit-backdrop-filter: blur(6px);
+                        animation: modalFadeIn 0.2s ease;
+                    }
+
+                    @keyframes modalFadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+
+                    .course-modal-overlay.open {
+                        display: flex;
+                    }
+
+                    .course-modal-sheet {
+                        background: #ffffff;
+                        border-radius: 28px 28px 0 0;
+                        width: 100%;
+                        max-width: 500px;
+                        max-height: 88vh;
+                        max-height: 88dvh;
+                        overflow-y: auto;
+                        overscroll-behavior: contain;
+                        -webkit-overflow-scrolling: touch;
+                        padding: 0 0 calc(28px + env(safe-area-inset-bottom, 16px));
+                        animation: springSlideUp 0.32s cubic-bezier(0.34, 1.2, 0.64, 1);
+                        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+                    }
+
+                    @keyframes springSlideUp {
+                        from { transform: translateY(100%); }
+                        to { transform: translateY(0); }
+                    }
+
+                    .sheet-drag-handle {
+                        width: 44px;
+                        height: 5px;
+                        background: #cbd5e1;
+                        border-radius: 99px;
+                        margin: 12px auto 6px;
+                    }
+
+                    .sheet-header {
+                        padding: 14px 20px 14px;
+                        border-bottom: 1px solid #f1f5f9;
+                    }
+
+                    .sheet-header-code {
+                        font-size: 0.78rem;
+                        font-weight: 800;
+                        color: #4f46e5;
+                        background: #eef2ff;
+                        padding: 3px 10px;
+                        border-radius: 10px;
+                        display: inline-block;
+                        margin-bottom: 6px;
+                    }
+
+                    .sheet-header-title {
+                        font-size: 1.05rem;
+                        font-weight: 800;
+                        color: #0f172a;
+                        line-height: 1.3;
+                        margin-bottom: 8px;
+                        overflow-wrap: anywhere;
+                    }
+
+                    .sheet-header-meta {
+                        font-size: 0.75rem;
+                        color: #64748b;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 4px 12px;
+                        overflow-wrap: anywhere;
+                    }
+
+                    .sheet-body {
+                        padding: 18px 20px;
+                    }
+
+                    .sheet-section-label {
+                        font-size:0.75rem;
+                        font-weight: 800;
+                        text-transform: uppercase;
+                        letter-spacing: 0.6px;
+                        color: #64748b;
+                        margin-bottom: 10px;
+                        margin-top: 14px;
+                    }
+
+                    .score-grid {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 10px;
+                        margin-bottom: 4px;
+                    }
+
+                    .score-tile {
+                        background: #f8fafc;
+                        border-radius: 16px;
+                        padding: 14px;
+                        border: 1px solid #e2e8f0;
+                    }
+
+                    .score-tile-label {
+                        font-size:0.75rem;
+                        font-weight: 700;
+                        color: #64748b;
+                        text-transform: uppercase;
+                        letter-spacing: 0.4px;
+                        margin-bottom: 4px;
+                    }
+
+                    .score-tile-val {
+                        font-size: 1.4rem;
+                        font-weight: 900;
+                        color: #0f172a;
+                        line-height: 1;
+                    }
+
+                    .score-tile-val.pending {
+                        font-size: 0.85rem;
+                        color: #94a3b8;
+                        font-weight: 600;
+                    }
+
+                    .score-tile.highlight {
+                        background: linear-gradient(135deg, #eef2ff, #f0fdf4);
+                        border-color: #c7d2fe;
+                    }
+
+                    .score-tile.highlight .score-tile-val {
+                        color: #4338ca;
+                    }
+
+                    .attendance-list {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+                    }
+
+                    .att-row {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 8px;
+                        padding: 12px 16px;
+                        background: #f8fafc;
+                        border-radius: 14px;
+                        border: 1px solid #f1f5f9;
+                    }
+
+                    .att-date {
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        color: #334155;
+                    }
+
+                    .att-badge {
+                        font-size:0.75rem;
+                        font-weight: 800;
+                        padding: 3px 10px;
+                        border-radius: 99px;
+                    }
+
+                    .att-PRESENT { background: #dcfce7; color: #15803d; }
+                    .att-ABSENT { background: #fee2e2; color: #b91c1c; }
+                    .att-LATE { background: #fef3c7; color: #b45309; }
+                    .att-EXCUSED { background: #e0f2fe; color: #0369a1; }
+
+                    .att-empty {
+                        font-size: 0.82rem;
+                        color: #94a3b8;
+                        text-align: center;
+                        padding: 20px 0;
+                    }
+
+                    .att-summary {
+                        display: flex;
+                        gap: 8px;
+                        flex-wrap: wrap;
+                        margin-bottom: 12px;
+                    }
+
+                    .att-sum-chip {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 5px;
+                        font-size:0.75rem;
+                        font-weight: 700;
+                        padding: 4px 11px;
+                        border-radius: 99px;
+                    }
+
+
                 @media (max-width: 767.98px) {
                     body {
                         background: #f8fafc;
@@ -113,12 +318,20 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
+                        gap: 8px;
                     }
 
                     .mobile-user-info {
                         display: flex;
                         align-items: center;
                         gap: 12px;
+                        flex: 1 1 auto;
+                        min-width: 0;
+                        margin-right: auto;
+                    }
+
+                    .mobile-user-info > div:last-child {
+                        min-width: 0;
                     }
 
                     .mobile-avatar-frame {
@@ -146,6 +359,11 @@
                         margin-bottom: 2px;
                         line-height: 1.25;
                         letter-spacing: -0.02em;
+                        overflow-wrap: anywhere;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
                     }
 
                     .mobile-badge-pill {
@@ -154,11 +372,14 @@
                         gap: 5px;
                         background: #f1f5f9;
                         color: #475569;
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         padding: 3px 10px;
-                        border-radius: 20px;
+                        border-radius: 12px;
                         border: 1px solid #e2e8f0;
+                        max-width: 100%;
+                        line-height: 1.3;
+                        overflow-wrap: anywhere;
                     }
 
                     .mobile-top-action-btn {
@@ -175,6 +396,8 @@
                         font-size: 1.2rem;
                         cursor: pointer;
                         position: relative;
+                        flex-shrink: 0;
+                        margin: 0 !important;
                         transition: transform 0.15s ease, background 0.15s ease;
                     }
 
@@ -196,7 +419,7 @@
 
                     /* 7-Day Interactive Date Strip */
                     .date-strip-section {
-                        margin-bottom: 22px;
+                        margin-bottom: 20px;
                     }
 
                     .mobile-date-strip {
@@ -251,7 +474,7 @@
                     }
 
                     .ds-day {
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         text-transform: uppercase;
                         letter-spacing: 0.4px;
@@ -291,14 +514,14 @@
                     /* Next Class Hero Card */
                     .mobile-hero-banner {
                         background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 18px 20px;
                         color: #fff;
                         box-shadow: 0 12px 30px -6px rgba(15, 23, 42, 0.25);
                         display: flex;
                         align-items: center;
                         gap: 16px;
-                        margin-bottom: 22px;
+                        margin-bottom: 20px;
                         position: relative;
                         overflow: hidden;
                         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -339,7 +562,7 @@
                     }
 
                     .hero-label {
-                        font-size: 0.65rem;
+                        font-size:0.75rem;
                         font-weight: 800;
                         letter-spacing: 0.8px;
                         color: #94a3b8;
@@ -371,11 +594,12 @@
                     }
 
                     .hero-meta-row {
-                        font-size: 0.76rem;
+                        font-size: 0.78rem;
                         color: #cbd5e1;
                         display: flex;
+                        flex-wrap: wrap;
                         align-items: center;
-                        gap: 8px;
+                        gap: 2px 8px;
                         margin-bottom: 3px;
                     }
 
@@ -392,11 +616,13 @@
                         gap: 4px;
                         background: rgba(255, 255, 255, 0.12);
                         color: #f1f5f9;
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         padding: 3px 9px;
                         border-radius: 12px;
                         backdrop-filter: blur(6px);
+                        max-width: 100%;
+                        overflow-wrap: anywhere;
                     }
 
                     /* Academic Progress Swipeable Cards */
@@ -404,7 +630,14 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        margin-top: 8px;
                         margin-bottom: 12px;
+                    }
+
+                    .mobile-hero-banner + .section-header-wrap {
+                        margin-top: 0;
                     }
 
                     .mobile-section-heading {
@@ -416,7 +649,7 @@
                     }
 
                     .mobile-section-badge {
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         padding: 3px 10px;
                         border-radius: 20px;
@@ -427,7 +660,7 @@
 
                     .progress-swiper-wrap {
                         position: relative;
-                        margin-bottom: 22px;
+                        margin-bottom: 0;
                     }
 
                     .progress-swiper {
@@ -450,7 +683,7 @@
                         min-width: 270px;
                         scroll-snap-align: start;
                         background: #ffffff;
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 18px;
                         box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
                         border: 1px solid #e2e8f0;
@@ -481,7 +714,7 @@
                     }
 
                     .pc-gpa-label {
-                        font-size: 0.65rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         color: #64748b;
                         text-transform: uppercase;
@@ -513,7 +746,7 @@
                     }
 
                     .pc-score-label {
-                        font-size: 0.7rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         color: #64748b;
                         width: 88px;
@@ -535,7 +768,7 @@
                     }
 
                     .pc-score-val {
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 800;
                         color: #0f172a;
                         min-width: 28px;
@@ -563,7 +796,7 @@
                     .grade-na { color: #94a3b8; }
 
                     .pc-credits {
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         color: #64748b;
                         text-align: right;
                     }
@@ -580,7 +813,7 @@
                         justify-content: center;
                         gap: 6px;
                         margin-top: 4px;
-                        margin-bottom: 20px;
+                        margin-bottom: 0;
                     }
 
                     .swipe-dot {
@@ -628,8 +861,9 @@
                         font-size: 0.95rem;
                         font-weight: 800;
                         color: #0f172a;
-                        margin-bottom: 6px;
+                        margin-bottom: 8px;
                         line-height: 1.3;
+                        overflow-wrap: anywhere;
                     }
 
                     .mobile-card-meta {
@@ -642,8 +876,11 @@
 
                     .mobile-card-meta-row {
                         display: flex;
+                        flex-wrap: wrap;
                         align-items: center;
-                        gap: 6px;
+                        gap: 2px 6px;
+                        min-width: 0;
+                        overflow-wrap: anywhere;
                     }
 
                     .mobile-card-footer {
@@ -651,8 +888,10 @@
                         padding-top: 10px;
                         border-top: 1px solid #f1f5f9;
                         display: flex;
+                        flex-wrap: wrap;
                         justify-content: space-between;
                         align-items: center;
+                        gap: 8px;
                     }
 
                     /* Schedule Sub-View Day Pill Strip */
@@ -671,8 +910,8 @@
 
                     .schedule-filter-pill {
                         flex: 0 0 auto;
-                        min-height: 38px;
-                        padding: 0 14px;
+                        min-height: 44px;
+                        padding: 0 16px;
                         border-radius: 99px;
                         border: 1px solid #e2e8f0;
                         background: #fff;
@@ -683,6 +922,7 @@
                         align-items: center;
                         justify-content: center;
                         cursor: pointer;
+                        white-space: nowrap;
                         transition: all 0.18s ease;
                     }
 
@@ -715,7 +955,7 @@
                     /* Grades Hero & Metric Cards */
                     .grades-hero-card {
                         background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 20px;
                         color: #fff;
                         box-shadow: 0 12px 28px -6px rgba(5, 150, 105, 0.35);
@@ -743,7 +983,7 @@
                         background: rgba(255, 255, 255, 0.2);
                         padding: 4px 10px;
                         border-radius: 12px;
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         backdrop-filter: blur(4px);
                     }
@@ -751,7 +991,7 @@
                     /* Digital Student ID Card */
                     .student-id-card {
                         background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%);
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 22px;
                         color: #fff;
                         box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.45);
@@ -773,13 +1013,15 @@
 
                     .id-card-top {
                         display: flex;
+                        flex-wrap: wrap;
                         justify-content: space-between;
                         align-items: center;
+                        gap: 8px;
                         margin-bottom: 16px;
                     }
 
                     .id-card-univ-title {
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 800;
                         letter-spacing: 1px;
                         text-transform: uppercase;
@@ -821,6 +1063,7 @@
                         color: #ffffff;
                         line-height: 1.25;
                         margin-bottom: 4px;
+                        overflow-wrap: anywhere;
                     }
 
                     .id-number-pill {
@@ -835,6 +1078,8 @@
                         font-weight: 700;
                         color: #93c5fd;
                         cursor: pointer;
+                        min-height: 44px;
+                        max-width: 100%;
                         transition: background 0.15s;
                     }
 
@@ -847,8 +1092,10 @@
                         border-radius: 14px;
                         padding: 10px 14px;
                         display: flex;
+                        flex-wrap: wrap;
                         align-items: center;
                         justify-content: space-between;
+                        gap: 8px;
                         border: 1px solid rgba(255, 255, 255, 0.08);
                     }
 
@@ -894,13 +1141,15 @@
                         background: transparent;
                         border: none;
                         color: #64748b;
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 600;
                         letter-spacing: -0.01em;
                         flex: 1;
                         max-width: 84px;
-                        min-height: 46px;
-                        padding: 5px 4px;
+                        min-height: 48px;
+                        padding: 5px 2px;
+                        min-width: 0;
+                        white-space: nowrap;
                         border-radius: 18px;
                         cursor: pointer;
                         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -953,229 +1202,117 @@
                         }
                     }
 
-                    /* Course Detail Bottom Sheet Modal */
-                    .course-modal-overlay {
-                        position: fixed;
-                        inset: 0;
-                        background: rgba(15, 23, 42, 0.6);
-                        z-index: 1050;
-                        display: none;
-                        align-items: flex-end;
-                        justify-content: center;
-                        backdrop-filter: blur(6px);
-                        -webkit-backdrop-filter: blur(6px);
-                        animation: modalFadeIn 0.2s ease;
-                    }
+                    /* Sonner toasts: keep clear of notches on phones */
+                    .sonner-toaster { top: calc(env(safe-area-inset-top, 0px) + 1rem); }
 
-                    @keyframes modalFadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
+                    /* ---- Mobile polish / consistency overrides ---- */
 
-                    .course-modal-overlay.open {
-                        display: flex;
-                    }
+                    /* Bootstrap has no bg-opacity-15/20 or these .5 spacing steps; without them the
+                       grade badges render solid (invisible text) and gaps collapse. */
+                    .bg-opacity-15 { --bs-bg-opacity: 0.15; }
+                    .bg-opacity-20 { --bs-bg-opacity: 0.2; }
+                    .gap-1\.5 { gap: 0.375rem !important; }
+                    .me-1\.5 { margin-right: 0.375rem !important; }
+                    .mb-1\.5 { margin-bottom: 0.375rem !important; }
+                    .px-2\.5 { padding-left: 0.625rem !important; padding-right: 0.625rem !important; }
 
-                    .course-modal-sheet {
-                        background: #ffffff;
-                        border-radius: 28px 28px 0 0;
-                        width: 100%;
-                        max-width: 500px;
-                        max-height: 88vh;
-                        overflow-y: auto;
-                        padding: 0 0 calc(28px + env(safe-area-inset-bottom, 16px));
-                        animation: springSlideUp 0.32s cubic-bezier(0.34, 1.2, 0.64, 1);
-                        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
-                    }
-
-                    @keyframes springSlideUp {
-                        from { transform: translateY(100%); }
-                        to { transform: translateY(0); }
-                    }
-
-                    .sheet-drag-handle {
-                        width: 44px;
-                        height: 5px;
-                        background: #cbd5e1;
-                        border-radius: 99px;
-                        margin: 12px auto 6px;
-                    }
-
-                    .sheet-header {
-                        padding: 14px 20px 14px;
-                        border-bottom: 1px solid #f1f5f9;
-                    }
-
-                    .sheet-header-code {
-                        font-size: 0.78rem;
-                        font-weight: 800;
-                        color: #4f46e5;
-                        background: #eef2ff;
-                        padding: 3px 10px;
-                        border-radius: 10px;
-                        display: inline-block;
-                        margin-bottom: 6px;
-                    }
-
-                    .sheet-header-title {
-                        font-size: 1.05rem;
-                        font-weight: 800;
-                        color: #0f172a;
-                        line-height: 1.3;
-                        margin-bottom: 4px;
-                    }
-
-                    .sheet-header-meta {
-                        font-size: 0.75rem;
-                        color: #64748b;
-                        display: flex;
-                        flex-wrap: wrap;
-                        gap: 12px;
-                    }
-
-                    .sheet-body {
-                        padding: 18px 20px;
-                    }
-
-                    .sheet-section-label {
-                        font-size: 0.72rem;
-                        font-weight: 800;
-                        text-transform: uppercase;
-                        letter-spacing: 0.6px;
-                        color: #64748b;
-                        margin-bottom: 10px;
-                        margin-top: 14px;
-                    }
-
-                    .score-grid {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        gap: 10px;
-                        margin-bottom: 4px;
-                    }
-
-                    .score-tile {
-                        background: #f8fafc;
-                        border-radius: 16px;
-                        padding: 14px;
-                        border: 1px solid #e2e8f0;
-                    }
-
-                    .score-tile-label {
-                        font-size: 0.68rem;
-                        font-weight: 700;
-                        color: #64748b;
-                        text-transform: uppercase;
-                        letter-spacing: 0.4px;
-                        margin-bottom: 4px;
-                    }
-
-                    .score-tile-val {
-                        font-size: 1.4rem;
-                        font-weight: 900;
-                        color: #0f172a;
-                        line-height: 1;
-                    }
-
-                    .score-tile-val.pending {
-                        font-size: 0.85rem;
-                        color: #94a3b8;
-                        font-weight: 600;
-                    }
-
-                    .score-tile.highlight {
-                        background: linear-gradient(135deg, #eef2ff, #f0fdf4);
-                        border-color: #c7d2fe;
-                    }
-
-                    .score-tile.highlight .score-tile-val {
-                        color: #4338ca;
-                    }
-
-                    .attendance-list {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 8px;
-                    }
-
-                    .att-row {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        padding: 10px 14px;
-                        background: #f8fafc;
-                        border-radius: 14px;
-                        border: 1px solid #f1f5f9;
-                    }
-
-                    .att-date {
-                        font-size: 0.75rem;
-                        font-weight: 600;
-                        color: #334155;
-                    }
-
-                    .att-badge {
-                        font-size: 0.68rem;
-                        font-weight: 800;
-                        padding: 3px 10px;
-                        border-radius: 99px;
-                    }
-
-                    .att-PRESENT { background: #dcfce7; color: #15803d; }
-                    .att-ABSENT { background: #fee2e2; color: #b91c1c; }
-                    .att-LATE { background: #fef3c7; color: #b45309; }
-                    .att-EXCUSED { background: #e0f2fe; color: #0369a1; }
-
-                    .att-empty {
-                        font-size: 0.82rem;
-                        color: #94a3b8;
-                        text-align: center;
-                        padding: 20px 0;
-                    }
-
-                    .att-summary {
-                        display: flex;
-                        gap: 8px;
-                        flex-wrap: wrap;
-                        margin-bottom: 12px;
-                    }
-
-                    .att-sum-chip {
+                    /* Consistent card radius and 44px tap targets */
+                    .mobile-app-container .rounded-4 { border-radius: 20px !important; }
+                    .mobile-app-container .btn,
+                    #enrollConfirmModal .btn,
+                    #dropConfirmModal .btn,
+                    #profileCompletionModal .btn,
+                    .course-modal-sheet .btn {
+                        min-height: 44px !important;
                         display: inline-flex;
                         align-items: center;
-                        gap: 5px;
-                        font-size: 0.72rem;
-                        font-weight: 700;
-                        padding: 4px 11px;
-                        border-radius: 99px;
+                        justify-content: center;
                     }
+                    .mobile-app-container .btn.w-100,
+                    #profileCompletionModal .btn.w-100 { display: flex; }
+                    .mobile-app-container .alert-dismissible .btn-close {
+                        top: 50%;
+                        transform: translateY(-50%);
+                        padding: 14px !important;
+                    }
+                    #enrollConfirmModal .btn-close,
+                    #dropConfirmModal .btn-close { padding: 14px; box-sizing: content-box; }
+                    .mobile-app-container .form-control,
+                    .mobile-app-container .form-select { min-height: 44px; font-size: 1rem; }
 
-                    /* Toast Notification for ID copy */
-                    .mobile-toast {
-                        position: fixed;
-                        bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
-                        left: 50%;
-                        transform: translateX(-50%) translateY(20px);
-                        background: #0f172a;
-                        color: #ffffff;
-                        padding: 9px 18px;
-                        border-radius: 99px;
-                        font-size: 0.8rem;
-                        font-weight: 700;
-                        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
-                        z-index: 1060;
-                        opacity: 0;
-                        pointer-events: none;
-                        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-                        display: flex;
-                        align-items: center;
+                    .mobile-app-container .badge { font-size: 0.75rem; }
+
+                    /* Long term names must wrap instead of overflowing */
+                    .mobile-app-container .badge.text-uppercase { white-space: normal; max-width: 100%; }
+
+                    /* Sub-view title rows: allow wrapping at 320px */
+                    .mobile-sub-view > .d-flex.justify-content-between.align-items-center.mb-3 {
+                        flex-wrap: wrap;
                         gap: 8px;
                     }
+                    .mobile-sub-view .mobile-section-heading { overflow-wrap: anywhere; }
 
-                    .mobile-toast.show {
-                        opacity: 1;
-                        transform: translateX(-50%) translateY(0);
+                    /* Registration: nested card padding and badge/meta rows */
+                    .mobile-app-container .premium-registration-card {
+                        padding: 16px;
+                        gap: 16px;
+                        max-width: none;
+                        background: #ffffff;
+                        box-shadow: none;
+                        border: 1px solid #e2e8f0;
                     }
+                    .mobile-app-container .premium-registration-card:hover {
+                        transform: none;
+                        box-shadow: none;
+                    }
+                    .mobile-app-container .reg-term-box { padding: 16px !important; }
+                    .mobile-app-container .reg-meta-list { padding: 0; }
+                    #mobile-view-courses .term-details { min-width: 0; overflow-wrap: anywhere; }
+                    #mobile-view-courses .border.rounded-3 > .d-flex.justify-content-between,
+                    #mobile-view-courses .border.rounded-3 > .small.d-flex {
+                        flex-wrap: wrap;
+                        gap: 4px 8px;
+                    }
+                    #mobile-view-courses .border.rounded-3 { overflow-wrap: anywhere; }
+                    #mobile-view-courses .border.rounded-3 > .d-flex .badge { white-space: nowrap; }
+
+                    /* Profile rows: long school/major/email values wrap and stay right aligned */
+                    #mobile-view-profile .d-flex.justify-content-between { gap: 12px; }
+                    #mobile-view-profile .d-flex.justify-content-between.py-2 > span:first-child { flex-shrink: 0; }
+                    #mobile-view-profile .d-flex.justify-content-between.py-2 > span:last-child {
+                        min-width: 0;
+                        text-align: right;
+                        overflow-wrap: anywhere;
+                    }
+                    #mobile-view-profile .d-flex.justify-content-between.align-items-center > div:first-child { min-width: 0; }
+
+                    #mobile-view-courses .alert.mx-1 { margin-left: 0 !important; margin-right: 0 !important; }
+                    #mobile-view-schedule .mobile-course-card.mb-2 { margin-bottom: 12px !important; }
+
+                    /* Course detail sheet / confirm modals */
+                    .course-modal-sheet .btn { width: 100%; }
+                    #enrollConfirmModal .modal-dialog,
+                    #dropConfirmModal .modal-dialog,
+                    #profileCompletionModal .modal-dialog { width: calc(100% - 32px); max-width: 420px; margin-left: auto; margin-right: auto; }
+                    #enrollConfirmModal .modal-body,
+                    #dropConfirmModal .modal-body { overflow-wrap: anywhere; }
+
+                    /* Logout confirm (shared inline-styled dialog) */
+                    #logoutConfirmModal > div {
+                        padding: 24px 20px !important;
+                        width: calc(100% - 32px) !important;
+                        border-radius: 20px !important;
+                    }
+                    #logoutConfirmModal > div > div[style*="display:flex"] { gap: 12px !important; }
+                    #logoutConfirmModal button,
+                    #logoutConfirmModal a {
+                        padding: 12px 8px !important;
+                        min-height: 44px;
+                        font-size: 0.95rem !important;
+                        white-space: nowrap;
+                    }
+                    #logoutConfirmModal h4 { font-size: 1.25rem; }
+                    #logoutConfirmModal p { font-size: 0.95rem !important; margin-bottom: 20px !important; }
                 }
             
 
@@ -2419,9 +2556,65 @@
             transform: none;
         }
     </style>
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
+            <style>
+                /* Round 2 desktop/mobile consistency fixes (layout only) */
+                .px-2\.5 { padding-left: .625rem; padding-right: .625rem; }
+                .py-0\.5 { padding-top: .125rem; padding-bottom: .125rem; }
+                .py-1\.5 { padding-top: .375rem; padding-bottom: .375rem; }
+                .py-2\.5 { padding-top: .625rem; padding-bottom: .625rem; }
+                .me-1\.5 { margin-right: .375rem; }
+                .mb-1\.5 { margin-bottom: .375rem; }
+                .gap-1\.5 { gap: .375rem; }
+                body .badge.bg-warning-subtle.text-warning { color: #92400e !important; }
+                body .badge.bg-info-subtle.text-info { color: #055160 !important; }
+                body .desktop-app-container :is(button, a, [role="button"], [tabindex="0"]):focus-visible {
+                    outline: 2px solid #2563eb; outline-offset: 2px;
+                }
+                body .desktop-main .tab-panel > .mb-4:first-child { margin-bottom: 20px !important; }
+                body .desktop-main .grades-hero-card {
+                    border-radius: var(--dash-card-radius); padding: 24px; margin-bottom: 20px;
+                }
+                body .desktop-main .timetable-card {
+                    border-radius: var(--dash-card-radius); padding: var(--dash-card-pad);
+                    border: var(--dash-card-border); box-shadow: var(--dash-card-shadow); margin-bottom: 20px;
+                }
+                body .desktop-main .tt-stat-chip { border-color: #e8edf3; }
+                body .desktop-main #dt-registration > .card {
+                    border: var(--dash-card-border) !important; border-radius: var(--dash-card-radius) !important;
+                    box-shadow: var(--dash-card-shadow) !important; margin-bottom: 20px !important;
+                }
+                body .desktop-main .tc-table td { overflow-wrap: anywhere; }
+                body .desktop-main .table-card form.bg-light { border-color: #e8edf3 !important; }
+                #profileCompletionModal .modal-content { border-radius: 20px !important; }
+                #profileCompletionModal .modal-dialog { max-height: 100dvh; }
+                #profileCompletionModal .validation-message { line-height: 1.4; }
+                /* Course detail sheet: centered dialog on desktop (was hidden by d-md-none) */
+                @media (min-width: 768px) {
+                    .course-modal-overlay { align-items: center; }
+                    .course-modal-sheet { border-radius: 20px; max-width: 520px; padding-bottom: 28px; }
+                    .sheet-drag-handle { display: none; }
+                }
+            </style>
+
         </head>
 
         <body>
+                <%-- Sonner flash triggers (single set; desktop and mobile share them) --%>
+                <c:if test="${param.twoFactorUpdated == 'true'}">
+                    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Two-Factor Authentication" data-message="Two-factor authentication is now enabled."></div>
+                </c:if>
+                <c:if test="${param.twoFactorUpdated == 'false'}">
+                    <div class="sonner-flash-trigger d-none" data-type="info" data-title="Two-Factor Authentication" data-message="Two-factor authentication has been disabled."></div>
+                </c:if>
+                <c:if test="${not empty successMessage}">
+                    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Success" data-message="<c:out value='${successMessage}' />"></div>
+                </c:if>
+                <c:if test="${not empty errorMessage}">
+                    <div class="sonner-flash-trigger d-none" data-type="error" data-title="Action Failed" data-message="<c:out value='${errorMessage}' />"></div>
+                </c:if>
+                <c:set var="needStudentId" value="${empty user.userIdentifier or user.userIdentifier.startsWith('9')}" />
+                <c:set var="needCurrentTerm" value="${empty user.currentTermId or user.currentTermId le 0}" />
 
                 <c:set var="earnedCredits" value="0" />
                 <c:forEach var="gradeItem" items="${grades}">
@@ -2464,34 +2657,19 @@
                                                             <i class="bi bi-gear"></i> Settings
                                                         </button>
                                                     </nav>
-
-                                                    <div class="sidebar-promo">
-                                                        <div class="star-icon"><i class="bi bi-star-fill"></i></div>
-                                                        <h4>Dean's List Honors</h4>
-                                                        <p>Maintain a term GPA of 3.8+ to achieve Dean's List honors this term.</p>
-                                                        <div class="mt-2">
-                                                            <span class="badge bg-white text-dark rounded-pill px-3 py-1.5 small fw-bold shadow-sm">
-                                                                <i class="bi bi-award-fill text-warning me-1"></i>Min GPA 3.80
-                                                            </span>
-                                                        </div>
-                                                    </div>
                                                 </aside>
 
                                                     <main class="desktop-main">
                                                             <header class="desktop-header">
-                                                                <div>
-                                                                    <div class="header-title">Student Overview</div>
-                                                                    <c:if test="${not empty studentSchool}">
-                                                                        <div class="text-muted small mt-1 fw-medium"><i
-                                                                                class="bi bi-building me-1"></i>
-                                                                            ${studentSchool.schoolName}</div>
-                                                                    </c:if>
-                                                                </div>
-
-                                                                <div class="header-actions">
+<div class="header-actions">
                                                                     <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
                                                                         <i class="bi bi-calendar-heart text-danger"></i>
                                                                         <span class="small">Holidays</span>
+                                                                    </button>
+
+                                                                    <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="openReportModal()" title="Report an Issue">
+                                                                        <i class="bi bi-flag text-danger"></i>
+                                                                        <span class="small">Report</span>
                                                                     </button>
 
                                                                     <div class="dropdown">
@@ -2508,7 +2686,7 @@
                                                                             </div>
                                                                             <div class="user-info-text pe-2">
                                                                                 <span class="user-name">${user.fullName}</span>
-                                                                                <span class="user-role">${user.formattedIdentifier} <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-1 px-2 py-0" style="font-size: 0.65rem; font-weight: 700;">${user.role}</span> <i class="bi bi-chevron-down ms-1" style="font-size:0.65rem;"></i></span>
+                                                                                <span class="user-role">${user.formattedIdentifier} <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-1 px-2 py-0" style="font-size: 0.7rem; font-weight: 700;">${user.role}</span> <i class="bi bi-chevron-down ms-1" style="font-size:0.7rem;"></i></span>
                                                                             </div>
                                                                         </button>
 
@@ -2572,39 +2750,6 @@
                                                                 </div>
                                                             </header>
 
-                                                            <%-- ALERTS --%>
-                                                                <c:if test="${param.twoFactorUpdated == 'true'}">
-                                                                    <div
-                                                                        class="alert alert-success alert-dismissible fade show rounded-4">
-                                                                        <i class="bi bi-shield-check me-2"></i>2FA is
-                                                                        now <strong>enabled</strong>.<button
-                                                                            type="button" class="btn-close"
-                                                                            data-bs-dismiss="alert"></button></div>
-                                                                </c:if>
-                                                                <c:if test="${param.twoFactorUpdated == 'false'}">
-                                                                    <div
-                                                                        class="alert alert-info alert-dismissible fade show rounded-4">
-                                                                        <i class="bi bi-shield-slash me-2"></i>2FA has
-                                                                        been <strong>disabled</strong>.<button
-                                                                            type="button" class="btn-close"
-                                                                            data-bs-dismiss="alert"></button></div>
-                                                                </c:if>
-                                                                <c:if test="${not empty successMessage}">
-                                                                    <div
-                                                                        class="alert alert-success alert-dismissible fade show rounded-4">
-                                                                        <i
-                                                                            class="bi bi-check-circle-fill me-2"></i>${successMessage}<button
-                                                                            type="button" class="btn-close"
-                                                                            data-bs-dismiss="alert"></button></div>
-                                                                </c:if>
-                                                                <c:if test="${not empty errorMessage}">
-                                                                    <div
-                                                                        class="alert alert-danger alert-dismissible fade show rounded-4">
-                                                                        <i
-                                                                            class="bi bi-exclamation-triangle-fill me-2"></i>${errorMessage}<button
-                                                                            type="button" class="btn-close"
-                                                                            data-bs-dismiss="alert"></button></div>
-                                                                </c:if>
 
                                                                 <c:choose>
                                                                     <c:when test="${empty user.studentSchoolId}">
@@ -2667,15 +2812,6 @@
                                                                                             <div class="mc-subtitle">
                                                                                                 Academic Year 2026-2027
                                                                                             </div>
-                                                                                            <div class="mc-footer">
-                                                                                                <div
-                                                                                                    class="mc-trend positive">
-                                                                                                    <i
-                                                                                                        class="bi bi-arrow-up-right"></i>
-                                                                                                    Top 10%</div>
-                                                                                                <div class="mc-extra">
-                                                                                                    Excellent</div>
-                                                                                            </div>
                                                                                         </div>
 
                                                                                         <div class="metric-card">
@@ -2698,15 +2834,6 @@
                                                                                             <div class="mc-subtitle">
                                                                                                 Total Accumulated
                                                                                                 Credits</div>
-                                                                                            <div class="mc-footer">
-                                                                                                <div
-                                                                                                    class="mc-trend neutral">
-                                                                                                    <i
-                                                                                                        class="bi bi-dash"></i>
-                                                                                                    On Track</div>
-                                                                                                <div class="mc-extra">
-                                                                                                    120 Required</div>
-                                                                                            </div>
                                                                                         </div>
 
                                                                                         <div class="metric-card">
@@ -2730,12 +2857,7 @@
                                                                                                 Current Term Schedule
                                                                                             </div>
                                                                                             <div class="mc-footer">
-                                                                                                <div
-                                                                                                    class="mc-trend positive">
-                                                                                                    <i
-                                                                                                        class="bi bi-check-circle-fill"></i>
-                                                                                                    Active</div>
-                                                                                                <div class="mc-extra" role="button" tabindex="0" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))" style="cursor: pointer;" title="Open Weekly Schedule">
+<div class="mc-extra" role="button" tabindex="0" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))" style="cursor: pointer;" title="Open Weekly Schedule">
                                                                       View Schedule <i class="bi bi-arrow-right"></i>
                                                                   </div>
                                                                                             </div>
@@ -2890,7 +3012,7 @@
                                                                                 <div id="dt-registration"
                                                                                     class="tab-panel">
                                                                                     <c:if test="${latestTermRequest != null and latestTermRequest.status == 'REJECTED'}">
-                                                                                        <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mx-3 mb-4 rounded-3 border-danger shadow-xs text-start">
+                                                                                        <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mb-3 rounded-4 border-danger shadow-xs text-start">
                                                                                             <i class="bi bi-x-circle-fill text-danger fs-3"></i>
                                                                                             <div>
                                                                                                 <div class="fw-bold text-danger">Term Registration Request Rejected</div>
@@ -2998,7 +3120,7 @@
                                                                                                                                 </div>
                                                                                                                                 <div class="fw-bold text-dark mb-2 fs-6 lh-sm">${clazz.courseTitle}</div>
                                                                                                                             </div>
-                                                                                                                            <div class="pt-2 border-top border-light-subtle d-flex align-items-center justify-content-between text-muted small" style="font-size:0.8rem;">
+                                                                                                                            <div class="pt-2 border-top border-light-subtle d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted small" style="font-size:0.8rem;">
                                                                                                                                 <span class="d-inline-flex align-items-center"><i class="bi bi-person-badge text-primary me-1.5"></i>${clazz.professorName}</span>
                                                                                                                                 <c:if test="${not empty clazz.roomName}">
                                                                                                                                     <span class="d-inline-flex align-items-center"><i class="bi bi-geo-alt text-secondary me-1"></i>${clazz.roomName}</span>
@@ -3127,9 +3249,6 @@
                                                                     <p class="text-muted small mb-0">Overview of your enrolled courses, lecture shifts, and classroom locations</p>
                                                                 </div>
                                                                 <div class="d-flex align-items-center gap-3">
-                                                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
-                                                                        <i class="bi bi-calendar-heart me-1"></i> School Holidays
-                                                                    </button>
                                                                     <div class="view-toggle-group" role="group" aria-label="Schedule View Switcher">
                                                                         <button type="button" class="view-toggle-btn active" id="btnStudentViewTimetable" onclick="setStudentScheduleView('grid')">
                                                                             <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i> Timetable Grid
@@ -3196,7 +3315,7 @@
                                                                 </div>
 
                                                                 <!-- VIEW 1: TIMETABLE GRID -->
-                                                                <div id="studentTimetableView" class="timetable-card mb-4">
+                                                                <div id="studentTimetableView" class="timetable-card">
                                                                     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                                                                         <div class="d-flex align-items-center gap-2">
                                                                             <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill small fw-semibold">
@@ -3245,7 +3364,7 @@
                                                                                             </td>
                                                                                             <td><span class="tc-badge info"><i class="bi bi-geo-alt-fill me-1"></i>${enrollment.room}</span></td>
                                                                                             <td><span class="tc-badge success">Enrolled</span></td>
-                                                                                            <td class="text-end">
+                                                                                            <td class="text-end text-nowrap">
                                                                                                 <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 py-1 fw-semibold me-1" style="font-size:0.75rem;" onclick="openStudentCourseSessions('${enrollment.id}')">
                                                                                                     <i class="bi bi-calendar3-range me-1"></i>15 Sessions
                                                                                                 </button>
@@ -3270,7 +3389,7 @@
         <p class="text-muted small mb-0">View your cumulative grades and degree progress</p>
     </div>
 
-    <div class="grades-hero-card mb-4" role="region" aria-label="GPA and Degree Progress Summary">
+    <div class="grades-hero-card" role="region" aria-label="GPA and Degree Progress Summary">
         <div class="d-flex justify-content-between align-items-start mb-4">
             <div>
                 <div class="small text-white-50 text-uppercase fw-bold" style="letter-spacing:0.5px;">Cumulative GPA</div>
@@ -3405,7 +3524,7 @@
 
     <div class="row g-4">
         <div class="col-lg-6">
-            <div class="table-card mb-4">
+            <div class="table-card mb-0 h-100">
                 <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-person-badge text-primary me-2"></i>Profile Information</h3>
                 <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
                     <div class="user-avatar" style="width:64px; height:64px; border-radius:20px;">
@@ -3426,14 +3545,23 @@
 
                 <form action="${pageContext.request.contextPath}/student" method="POST" class="p-3 bg-light rounded-4 border">
                     <input type="hidden" name="action" value="updateProfile">
-                    <div class="mb-3">
+                    <c:choose><c:when test="${needStudentId}">
+<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Student ID</label>
-                        <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                        <input type="text" class="form-control" name="studentId" value="" placeholder="e.g. 60240512" maxlength="8" inputmode="numeric" autocomplete="off" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" data-student-id-input>
+<div class="validation-message small mt-1 text-muted" data-student-id-msg>8-digit Student ID (numbers only, e.g. 60240512).</div>
                     </div>
-                    <div class="mb-3">
+</c:when><c:otherwise>
+<div class="mb-3">
+    <label class="form-label fw-bold small text-muted">Student ID</label>
+    <div class="fw-semibold text-dark font-monospace">${fn:escapeXml(user.userIdentifier)}</div>
+</div>
+</c:otherwise></c:choose>
+                    <c:choose><c:when test="${needCurrentTerm}">
+<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Current Term</label>
-                        <select class="form-select" name="currentTermId" required ${user.currentTermId != null and user.currentTermId > 0 ? 'style="pointer-events: none; background-color: #e9ecef;" tabindex="-1"' : ''}>
-                            <c:if test="${empty user.currentTermId}">
+                        <select class="form-select" name="currentTermId" required>
+                            <c:if test="${needCurrentTerm}">
                                 <option value="" disabled selected>-- Select Term --</option>
                             </c:if>
                             <c:forEach var="term" items="${allTerms}">
@@ -3441,13 +3569,21 @@
                             </c:forEach>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">Update Profile</button>
+</c:when><c:otherwise>
+<div class="mb-3">
+    <label class="form-label fw-bold small text-muted">Current Term</label>
+    <div class="fw-semibold text-dark">${studentTerm.termName}</div>
+</div>
+</c:otherwise></c:choose>
+                    <c:if test="${needStudentId or needCurrentTerm}">
+<button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">Update Profile</button>
+</c:if>
                 </form>
             </div>
         </div>
 
         <div class="col-lg-6">
-            <div class="table-card mb-4">
+            <div class="table-card mb-0 h-100">
                 <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-shield-lock text-primary me-2"></i>Security & Authentication</h3>
                 
                 <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="p-3 bg-light rounded-4 border mb-4">
@@ -3511,30 +3647,6 @@
                                                 <%--==================================================================--%>
                                                     <div class="d-block d-md-none mobile-app-container">
 
-                                                        <c:if test="${param.twoFactorUpdated == 'true'}">
-                                                            <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
-                                                                <i class="bi bi-shield-check me-1"></i>2FA <strong>enabled</strong>.
-                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            </div>
-                                                        </c:if>
-                                                        <c:if test="${param.twoFactorUpdated == 'false'}">
-                                                            <div class="alert alert-info alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
-                                                                <i class="bi bi-shield-slash me-1"></i>2FA <strong>disabled</strong>.
-                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            </div>
-                                                        </c:if>
-                                                        <c:if test="${not empty successMessage}">
-                                                            <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
-                                                                <i class="bi bi-check-circle-fill me-1"></i>${successMessage}
-                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            </div>
-                                                        </c:if>
-                                                        <c:if test="${not empty errorMessage}">
-                                                            <div class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
-                                                                <i class="bi bi-exclamation-triangle-fill me-1"></i>${errorMessage}
-                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            </div>
-                                                        </c:if>
 
                                                         <c:choose>
                                                             <c:when test="${empty user.studentSchoolId}">
@@ -3576,7 +3688,7 @@
                                                                         <div>
                                                                             <div class="mobile-user-greeting">Hello, ${user.fullName}</div>
                                                                             <span class="mobile-badge-pill">
-                                                                                <i class="bi bi-mortarboard-fill text-primary" style="font-size:0.68rem;"></i>
+                                                                                <i class="bi bi-mortarboard-fill text-primary" style="font-size:0.75rem;"></i>
                                                                                 ${not empty studentSchool ? studentSchool.schoolName : 'UniTRS Student'}
                                                                             </span>
                                                                         </div>
@@ -3597,10 +3709,10 @@
                                                                     <%-- 7-Day Interactive Date Strip --%>
                                                                     <div class="date-strip-section">
                                                                         <div class="d-flex justify-content-between align-items-center mb-2 px-1">
-                                                                            <span class="small fw-bold text-muted text-uppercase" style="letter-spacing:0.6px;font-size:0.7rem;">
+                                                                            <span class="small fw-bold text-muted text-uppercase" style="letter-spacing:0.6px;font-size:0.75rem;">
                                                                                 <i class="bi bi-calendar2-week me-1 text-primary"></i>Weekly Schedule
                                                                             </span>
-                                                                            <span class="small text-muted" style="font-size:0.7rem;">Select day</span>
+                                                                            <span class="small text-muted" style="font-size:0.75rem;">Select day</span>
                                                                         </div>
                                                                         <div class="mobile-date-strip" id="mobileDateStrip" role="tablist" aria-label="Select day of week">
                                                                             <!-- Populated by JS -->
@@ -3685,8 +3797,8 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="mobile-card-footer">
-                                                                                            <span class="small text-muted" style="font-size:0.72rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for scores &amp; attendance</span>
-                                                                                            <span class="badge bg-light border text-secondary rounded-pill" style="font-size:0.7rem;">${enrollment.credits} Credits</span>
+                                                                                            <span class="small text-muted" style="font-size:0.75rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for scores &amp; attendance</span>
+                                                                                            <span class="badge bg-light border text-secondary rounded-pill" style="font-size:0.75rem;">${enrollment.credits} Credits</span>
                                                                                         </div>
                                                                                     </div>
                                                                                 </c:forEach>
@@ -3828,10 +3940,10 @@
                                                                                 </div>
                                                                                 <div>
                                                                                     <div class="fw-bold text-dark" style="font-size:0.85rem;">School Holidays Calendar</div>
-                                                                                    <div class="small text-muted" style="font-size:0.72rem;">View upcoming breaks & observances</div>
+                                                                                    <div class="small text-muted" style="font-size:0.75rem;">View upcoming breaks & observances</div>
                                                                                 </div>
                                                                             </div>
-                                                                            <span class="badge bg-danger text-white rounded-pill px-2.5 py-1" style="font-size:0.68rem;">View</span>
+                                                                            <span class="badge bg-danger text-white rounded-pill px-2.5 py-1" style="font-size:0.75rem;">View</span>
                                                                         </div>
                                                                     </div>
 
@@ -3868,10 +3980,10 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="mobile-card-footer d-flex justify-content-between align-items-center">
-                                                                                            <span class="small text-primary fw-semibold" style="font-size:0.72rem;"><i class="bi bi-calendar3-range me-1"></i>Tap for 15-Week Schedule</span>
+                                                                                            <span class="small text-primary fw-semibold" style="font-size:0.75rem;"><i class="bi bi-calendar3-range me-1"></i>Tap for 15-Week Schedule</span>
                                                                                             <div class="d-flex align-items-center gap-2">
-                                                                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.7rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
-                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:26px;" data-section-id="${enrollment.classSectionId}" data-course-code="${enrollment.courseCode}" data-course-title="${fn:escapeXml(enrollment.courseTitle)}" onclick="event.stopPropagation(); handleDropCourseBtn(this)">
+                                                                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.75rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
+                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.75rem; min-height:26px;" data-section-id="${enrollment.classSectionId}" data-course-code="${enrollment.courseCode}" data-course-title="${fn:escapeXml(enrollment.courseTitle)}" onclick="event.stopPropagation(); handleDropCourseBtn(this)">
                                                                                                     <i class="bi bi-x me-1"></i>Drop
                                                                                                 </button>
                                                                                             </div>
@@ -3919,36 +4031,36 @@
                                                                                 <div class="bg-primary text-white text-center py-4 px-3 position-relative" style="background: linear-gradient(135deg, #0f172a 0%, #1e40af 60%, #2563eb 100%);">
                                                                                     <div class="position-absolute top-0 start-0 w-100 h-100" style="background: radial-gradient(circle at top right, rgba(255,255,255,0.18) 0%, transparent 60%); pointer-events: none;"></div>
                                                                                     <div class="position-relative">
-                                                                                        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-2.5 py-1 mb-2 text-uppercase fw-bold" style="letter-spacing: 0.05em; font-size: 0.7rem;">
+                                                                                        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-2.5 py-1 mb-2 text-uppercase fw-bold" style="letter-spacing: 0.05em; font-size:0.75rem;">
                                                                                             <i class="bi bi-calendar3 me-1"></i>${studentTerm.termName}
                                                                                         </span>
                                                                                         <h4 class="fw-bolder mb-1 text-white">Course Registration</h4>
                                                                                         <p class="text-white-50 small mb-2 mx-auto" style="max-width: 280px;">Standard course curriculum bundle for this term.</p>
                                                                                         <div class="d-inline-flex flex-wrap align-items-center justify-content-center gap-1.5 mt-1">
-                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.72rem;">
+                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
                                                                                                 <i class="bi bi-journal-code me-1"></i>${termCourseCount} Courses
                                                                                             </span>
-                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.72rem;">
+                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
                                                                                                 <i class="bi bi-award me-1"></i>${termTotalCredits} Credits
                                                                                             </span>
                                                                                             <c:choose>
                                                                                                 <c:when test="${isTermEnrolled}">
-                                                                                                    <span class="badge bg-success text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.72rem;">
+                                                                                                    <span class="badge bg-success text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.75rem;">
                                                                                                         <i class="bi bi-check-circle-fill me-1"></i>Enrolled
                                                                                                     </span>
                                                                                                 </c:when>
                                                                                                 <c:when test="${hasPendingTermRequest}">
-                                                                                                    <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.72rem;">
+                                                                                                    <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.75rem;">
                                                                                                         <i class="bi bi-hourglass-split me-1"></i>Pending Dean
                                                                                                     </span>
                                                                                                 </c:when>
                                                                                                 <c:when test="${isTermRegistered}">
-                                                                                                    <span class="badge bg-info text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.72rem;">
+                                                                                                    <span class="badge bg-info text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.75rem;">
                                                                                                         <i class="bi bi-patch-check-fill me-1"></i>Approved
                                                                                                     </span>
                                                                                                 </c:when>
                                                                                                 <c:otherwise>
-                                                                                                    <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.72rem;">
+                                                                                                    <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
                                                                                                         <i class="bi bi-door-open me-1"></i>Open
                                                                                                     </span>
                                                                                                 </c:otherwise>
@@ -3967,29 +4079,29 @@
                                                                                         <c:forEach var="clazz" items="${termCourses}">
                                                                                             <div class="border rounded-3 p-3 position-relative overflow-hidden shadow-xs" style="background-color: #ffffff; border-left: 4px solid ${enrolledCourseCodes.contains(clazz.courseCode) ? '#10b981' : (hasPendingTermRequest ? '#f59e0b' : '#3b82f6')} !important;">
                                                                                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                                                                                    <span class="badge bg-primary text-white rounded-pill px-2 py-0.5" style="font-size:0.7rem;">${clazz.courseCode}</span>
+                                                                                                    <span class="badge bg-primary text-white rounded-pill px-2 py-0.5" style="font-size:0.75rem;">${clazz.courseCode}</span>
                                                                                                     <div class="d-flex align-items-center gap-1">
-                                                                                                        <span class="badge bg-light text-dark border px-2 py-0.5 rounded-pill" style="font-size:0.68rem;">
+                                                                                                        <span class="badge bg-light text-dark border px-2 py-0.5 rounded-pill" style="font-size:0.75rem;">
                                                                                                             <i class="bi bi-award me-1 text-warning"></i>${clazz.credits} Cr
                                                                                                         </span>
                                                                                                         <c:choose>
                                                                                                             <c:when test="${enrolledCourseCodes.contains(clazz.courseCode)}">
-                                                                                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0.5" style="font-size:0.75rem;">
                                                                                                                     <i class="bi bi-check2 me-1"></i>Enrolled
                                                                                                                 </span>
                                                                                                             </c:when>
                                                                                                             <c:when test="${hasPendingTermRequest}">
-                                                                                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-0.5" style="font-size:0.75rem;">
                                                                                                                     <i class="bi bi-hourglass-split me-1"></i>Pending
                                                                                                                 </span>
                                                                                                             </c:when>
                                                                                                             <c:when test="${isTermRegistered}">
-                                                                                                                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-0.5" style="font-size:0.75rem;">
                                                                                                                     <i class="bi bi-check2 me-1"></i>Approved
                                                                                                                 </span>
                                                                                                             </c:when>
                                                                                                             <c:otherwise>
-                                                                                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-0.5" style="font-size:0.75rem;">
                                                                                                                     <i class="bi bi-circle me-1"></i>Required
                                                                                                                 </span>
                                                                                                             </c:otherwise>
@@ -4038,7 +4150,7 @@
                                                                                                     </div>
                                                                                                     <div>
                                                                                                         <div class="fw-bold text-dark" style="font-size: 0.88rem;">Registration Pending Verification</div>
-                                                                                                        <span class="badge bg-warning text-dark rounded-pill px-2 py-0.5" style="font-size: 0.68rem;">Awaiting Dean</span>
+                                                                                                        <span class="badge bg-warning text-dark rounded-pill px-2 py-0.5" style="font-size:0.75rem;">Awaiting Dean</span>
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div class="text-muted" style="font-size: 0.78rem;">Please visit the Dean's Office to sign and complete payment for ${studentTerm.termName}.</div>
@@ -4073,7 +4185,7 @@
                                                                                                         <div class="sparkles" style="font-size: 12px; top:-5px; right:-5px;">✨</div>
                                                                                                     </div>
                                                                                                     <div class="term-details text-start">
-                                                                                                        <div class="text-uppercase fw-bold text-primary mb-1" style="font-size:0.65rem; letter-spacing:1px;">Current Term</div>
+                                                                                                        <div class="text-uppercase fw-bold text-primary mb-1" style="font-size:0.75rem; letter-spacing:1px;">Current Term</div>
                                                                                                         <h4 class="fw-bolder text-dark mb-1" style="font-size:1.1rem;">${studentTerm.termName}</h4>
                                                                                                     </div>
                                                                                                 </div>
@@ -4110,10 +4222,6 @@
                                                                 <section id="mobile-view-grades" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-grades">
                                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                                         <h2 class="mobile-section-heading mb-0">Academic Transcript</h2>
-                                                                        <div class="bg-white border rounded-pill px-3 py-1 shadow-sm">
-                                                                            <span class="small text-muted me-1">Term GPA:</span>
-                                                                            <span class="fw-bold text-success">${termGpa}</span>
-                                                                        </div>
                                                                     </div>
 
                                                                     <%-- GPA Summary Hero Card --%>
@@ -4173,7 +4281,7 @@
                                                                                         <span>Score: <strong class="text-dark">${grade.totalScore > 0 ? grade.totalScore : '&mdash;'}</strong></span>
                                                                                         <span>GPA: <strong class="text-success">${grade.letterGrade != 'N/A' ? grade.gpaPoint : '&mdash;'}</strong></span>
                                                                                     </div>
-                                                                                    <div class="mt-2 d-flex align-items-center gap-1" style="font-size:0.68rem;color:#94a3b8;">
+                                                                                    <div class="mt-2 d-flex align-items-center gap-1" style="font-size:0.75rem;color:#94a3b8;">
                                                                                         <i class="bi bi-chevron-right text-primary"></i> Tap to view scores &amp; attendance
                                                                                     </div>
                                                                                 </div>
@@ -4199,7 +4307,7 @@
                                                                             <div class="id-card-univ-title">
                                                                                 <i class="bi bi-shield-fill-check me-1 text-primary"></i> UniTRS ACADEMIC ID
                                                                             </div>
-                                                                            <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2 py-1" style="font-size:0.68rem;">ACTIVE 2024-25</span>
+                                                                            <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2 py-1" style="font-size:0.75rem;">ACTIVE 2024-25</span>
                                                                         </div>
                                                                         <div class="id-card-body">
                                                                             <div class="id-photo-box" aria-hidden="true">
@@ -4216,11 +4324,11 @@
                                                                         </div>
                                                                         <div class="id-card-barcode-row">
                                                                             <div class="d-flex align-items-center gap-2">
-                                                                                <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2.5 py-1" style="font-size:0.7rem;">
+                                                                                <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
                                                                                     <i class="bi bi-patch-check-fill text-success me-1"></i> OFFICIAL DIGITAL ID
                                                                                 </span>
                                                                             </div>
-                                                                            <div class="text-white-50 small" style="font-size:0.7rem;font-family:monospace;">
+                                                                            <div class="text-white-50 small" style="font-size:0.75rem;font-family:monospace;">
                                                                                 <i class="bi bi-shield-check me-1"></i>UniTRS SECURE
                                                                             </div>
                                                                         </div>
@@ -4255,14 +4363,23 @@
                                                                         </div>
                                                                         <form action="${pageContext.request.contextPath}/student" method="POST">
                                                                             <input type="hidden" name="action" value="updateProfile">
-                                                                            <div class="mb-3">
-                                                                                <label class="form-label fw-bold small">Student ID</label>
-                                                                                <input type="text" class="form-control" name="studentId" value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                                                                            <c:choose><c:when test="${needStudentId}">
+<div class="mb-3">
+                                                                                <label class="form-label fw-bold small text-muted">Student ID</label>
+                                                                                <input type="text" class="form-control" name="studentId" value="" placeholder="e.g. 60240512" maxlength="8" inputmode="numeric" autocomplete="off" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" data-student-id-input>
+<div class="validation-message small mt-1 text-muted" data-student-id-msg>8-digit Student ID (numbers only, e.g. 60240512).</div>
                                                                             </div>
-                                                                            <div class="mb-3">
-                                                                                <label class="form-label fw-bold small">Current Term</label>
-                                                                                <select class="form-select" name="currentTermId" required ${user.currentTermId != null and user.currentTermId > 0 ? 'style="pointer-events: none; background-color: #e9ecef;" tabindex="-1"' : ''}>
-                                                                                    <c:if test="${empty user.currentTermId}">
+</c:when><c:otherwise>
+<div class="mb-3">
+    <label class="form-label fw-bold small text-muted">Student ID</label>
+    <div class="fw-semibold text-dark font-monospace">${fn:escapeXml(user.userIdentifier)}</div>
+</div>
+</c:otherwise></c:choose>
+                                                                            <c:choose><c:when test="${needCurrentTerm}">
+<div class="mb-3">
+                                                                                <label class="form-label fw-bold small text-muted">Current Term</label>
+                                                                                <select class="form-select" name="currentTermId" required>
+                                                                                    <c:if test="${needCurrentTerm}">
                                                                                         <option value="" disabled selected>-- Select Term --</option>
                                                                                     </c:if>
                                                                                     <c:forEach var="term" items="${allTerms}">
@@ -4270,7 +4387,15 @@
                                                                                     </c:forEach>
                                                                                 </select>
                                                                             </div>
-                                                                            <button type="submit" class="btn btn-primary w-100 fw-bold rounded-3">Update Profile</button>
+</c:when><c:otherwise>
+<div class="mb-3">
+    <label class="form-label fw-bold small text-muted">Current Term</label>
+    <div class="fw-semibold text-dark">${studentTerm.termName}</div>
+</div>
+</c:otherwise></c:choose>
+                                                                            <c:if test="${needStudentId or needCurrentTerm}">
+<button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill">Update Profile</button>
+</c:if>
                                                                         </form>
                                                                     </div>
 
@@ -4280,7 +4405,7 @@
                                                                                 <div class="fw-bold small text-dark">
                                                                                     <i class="bi bi-shield-lock me-2 text-primary"></i>Two-Factor Authentication
                                                                                 </div>
-                                                                                <div class="text-muted" style="font-size:0.72rem;">Email OTP security verification on login</div>
+                                                                                <div class="text-muted" style="font-size:0.75rem;">Email OTP security verification on login</div>
                                                                             </div>
                                                                             <span class="badge ${user.twoFactorEnabled ? 'bg-success' : 'bg-secondary'} rounded-pill">${user.twoFactorEnabled ? 'Enabled' : 'Disabled'}</span>
                                                                         </div>
@@ -4300,6 +4425,10 @@
                                                                             </form>
                                                                         </div>
                                                                     </div>
+
+                                                                    <button type="button" onclick="openReportModal()" class="btn btn-outline-secondary w-100 rounded-3 py-2 fw-semibold mb-3" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
+                                                                        <i class="bi bi-flag me-2"></i>Report an Issue
+                                                                    </button>
 
                                                                     <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
                                                                         <i class="bi bi-box-arrow-right me-2"></i>Sign Out
@@ -4330,12 +4459,6 @@
                                                                     </button>
                                                                 </nav>
 
-                                                                <%-- Toast Notification for Clipboard --%>
-                                                                <div id="mobileToast" class="mobile-toast" role="status" aria-live="polite">
-                                                                    <i class="bi bi-check2-circle text-success fs-6"></i>
-                                                                    <span id="mobileToastText">Copied to clipboard!</span>
-                                                                </div>
-
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </div>
@@ -4344,7 +4467,7 @@
                                                     <%--==================================================================--%>
                                                         <%-- COURSE DETAIL MODAL SHEET (shared, filled via JS) --%>
                                                             <%--==================================================================--%>
-                                                                <div class="course-modal-overlay d-md-none"
+                                                                <div class="course-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="sheetCourseTitle"
                                                                     id="courseModalOverlay"
                                                                     onclick="closeCourseModalOnOverlay(event)">
                                                                     <div class="course-modal-sheet"
@@ -4680,16 +4803,7 @@
                                                                             }
 
                                                                             function onCopySuccess() {
-                                                                                var toast = document.getElementById('mobileToast');
-                                                                                var toastText = document.getElementById('mobileToastText');
-                                                                                if (toast) {
-                                                                                    if (toastText) toastText.textContent = 'Student ID copied: ' + idText;
-                                                                                    toast.classList.add('show');
-                                                                                    clearTimeout(window._mobileToastTimer);
-                                                                                    window._mobileToastTimer = setTimeout(function () {
-                                                                                        toast.classList.remove('show');
-                                                                                    }, 2500);
-                                                                                }
+                                                                                if (window.Sonner) Sonner.success('Student ID copied: ' + idText, 'Copied');
                                                                                 if (btnEl) {
                                                                                     var origHtml = btnEl.innerHTML;
                                                                                     btnEl.innerHTML = '<i class="bi bi-check2 text-success"></i> <span>Copied!</span>';
@@ -5192,26 +5306,34 @@
                                                                     <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
         
 <c:if test="${missingProfileInfo}">
-    <div class="modal fade show d-block" id="profileCompletionModal" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal fade show d-block" id="profileCompletionModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="profileCompletionTitle" style="background: rgba(0,0,0,0.5);">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold">Complete Your Profile</h5>
+                    <h5 class="modal-title fw-bold" id="profileCompletionTitle">Complete Your Profile</h5>
                 </div>
                 <div class="modal-body p-4">
-                    <p class="text-muted mb-4">Please provide your valid 8-digit Student ID and your current Academic Term to continue.</p>
+                    <p class="text-muted mb-4">
+                        <c:choose>
+                            <c:when test="${needStudentId and needCurrentTerm}">Please provide your valid 8-digit Student ID and your current Academic Term to continue.</c:when>
+                            <c:when test="${needStudentId}">Please provide your valid 8-digit Student ID to continue.</c:when>
+                            <c:otherwise>Please select your current Academic Term to continue.</c:otherwise>
+                        </c:choose>
+                    </p>
                     <form action="${pageContext.request.contextPath}/student" method="POST" id="profileCompletionForm">
                         <input type="hidden" name="action" value="updateProfile">
-                        <div class="mb-3">
+                        <c:choose><c:when test="${needStudentId}">
+<div class="mb-3">
                             <label class="form-label fw-bold">Student ID <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-lg" name="studentId" 
-                                value="${user.userIdentifier.startsWith('9') ? '' : fn:escapeXml(user.userIdentifier)}" 
-                                placeholder="e.g. 60240512" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" ${not user.userIdentifier.startsWith('9') ? 'readonly style="background-color: #e9ecef; cursor: not-allowed;"' : ''}>
+                            <input type="text" class="form-control form-control-lg" name="studentId" value="" placeholder="e.g. 60240512" maxlength="8" inputmode="numeric" autocomplete="off" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" data-student-id-input>
+<div class="validation-message small mt-1 text-muted" data-student-id-msg>8-digit Student ID (numbers only, e.g. 60240512).</div>
                         </div>
-                        <div class="mb-4">
+</c:when></c:choose>
+                        <c:choose><c:when test="${needCurrentTerm}">
+<div class="mb-4">
                             <label class="form-label fw-bold">Current Term <span class="text-danger">*</span></label>
-                            <select class="form-select form-select-lg" name="currentTermId" required ${user.currentTermId != null and user.currentTermId > 0 ? 'style="pointer-events: none; background-color: #e9ecef;" tabindex="-1"' : ''}>
-                                <c:if test="${empty user.currentTermId}">
+                            <select class="form-select form-select-lg" name="currentTermId" required>
+                                <c:if test="${needCurrentTerm}">
                                     <option value="" disabled selected>-- Select Term --</option>
                                 </c:if>
                                 <c:forEach var="term" items="${allTerms}">
@@ -5219,8 +5341,9 @@
                                 </c:forEach>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-3 mb-2" onclick="sessionStorage.removeItem('dismissProfileModal');">Save Profile</button>
-                        <button type="button" class="btn btn-light btn-lg w-100 fw-bold rounded-3" onclick="dismissProfileModal()">Do it later</button>
+</c:when></c:choose>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-pill mb-2" onclick="sessionStorage.removeItem('dismissProfileModal');">Save Profile</button>
+                        <button type="button" class="btn btn-light btn-lg w-100 fw-bold rounded-pill border" onclick="dismissProfileModal()">Do it later</button>
                     </form>
                 </div>
             </div>
@@ -5255,16 +5378,18 @@
     </script>
 </c:if>
 
+<jsp:include page="/WEB-INF/views/common/report_modal.jsp"><jsp:param name="formAction" value="${pageContext.request.contextPath}/student"/><jsp:param name="hiddenAction" value="submitReport"/><jsp:param name="returnTab" value="home"/></jsp:include>
+
 <div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
-        <div style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+        <div style="background:#fff; border-radius:20px; padding:2rem 1.5rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
             <div style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
                 <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
             </div>
             <h4 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.75rem;">Sign Out?</h4>
             <p style="color:#64748b;font-size:1rem;margin-bottom:2rem;line-height:1.5;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
-            <div style="display:flex;gap:1rem;justify-content:center;">
-                <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
-                <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:none;background:#b91c1c;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(185,28,28,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
+            <div style="display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center;">
+                <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1 1 140px;min-height:44px;padding:0.75rem 1rem;border-radius:50px;border:1px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
+                <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1 1 140px;min-height:44px;padding:0.75rem 1rem;border-radius:50px;border:none;background:#b91c1c;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(185,28,28,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
             </div>
         </div>
     </div>
@@ -5282,6 +5407,26 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
 });
 </script>
+<script>
+(function () {
+    var msgs = {
+        muted: '8-digit Student ID (numbers only, e.g. 60240512).'
+    };
+    document.querySelectorAll('[data-student-id-input]').forEach(function (input) {
+        var box = input.parentElement.querySelector('[data-student-id-msg]');
+        function show(cls, html) { box.className = 'validation-message small mt-1 ' + cls; box.innerHTML = html; }
+        input.addEventListener('input', function () {
+            var v = input.value.trim();
+            if (!v) show('text-muted', msgs.muted);
+            else if (!/^\d+$/.test(v)) show('text-danger', '<i class="bi bi-x-circle"></i> Numbers only! Letters and symbols are not allowed.');
+            else if (v.charAt(0) === '9') show('text-danger', '<i class="bi bi-x-circle"></i> Student ID cannot start with 9 (reserved for temporary applicant IDs).');
+            else if (v.length < 8) show('text-warning-emphasis', '<i class="bi bi-info-circle"></i> Student ID must be 8 digits (' + v.length + '/8)');
+            else show('text-success', '<i class="bi bi-check-circle"></i> Valid 8-digit Student ID');
+        });
+    });
+})();
+</script>
+<script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
 </body>
 
         </html>
