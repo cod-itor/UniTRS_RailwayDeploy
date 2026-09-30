@@ -2139,6 +2139,19 @@
             color: #ffffff;
             border-color: #0f172a;
         }
+
+        /* Round 2: shared inner-surface helpers (replace heavy inline styles) */
+        .prof-inner-row { background:#f8fafc; border:1px solid #e8edf3; border-radius:16px; }
+        .prof-tool-btn { background:#fff; border:1px solid #e8edf3; border-radius:16px; min-height:44px; transition: background .15s, border-color .15s; }
+        .prof-tool-btn:hover { background:#f8fafc; border-color:#cbd5e1; }
+        .prof-tool-icon { width:42px; height:42px; flex:0 0 42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.25rem; }
+        .prof-tool-icon.sky { background:#e0f2fe; color:#0369a1; }
+        .prof-tool-icon.mint { background:#dcfce7; color:#166534; }
+        .prof-tool-title { font-size:0.9rem; font-weight:700; color:#0f172a; }
+        .prof-tool-desc { font-size:0.8rem; color:#64748b; }
+        .desktop-main .table-card, .desktop-main .chart-card, .desktop-main .seg-card { min-width:0; }
+        .desktop-main .tc-table td { overflow-wrap:anywhere; }
+        .logout-modal-card button:focus-visible, .logout-modal-card a:focus-visible { outline:3px solid #2563eb; outline-offset:2px; }
     </style>
 
     <!-- Accessible Skip to Content Link -->
@@ -2183,9 +2196,9 @@
         <header class="desktop-header">
 
             <div class="header-actions">
-                <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
-                    <i class="bi bi-calendar-heart text-danger"></i>
-                    <span class="small">Holidays</span>
+                <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-2 fw-bold d-inline-flex align-items-center gap-2" style="font-size: 0.85rem;" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
+                    <i class="bi bi-calendar-heart text-danger" aria-hidden="true"></i>
+                    <span>Holidays</span>
                 </button>
                 <c:if test="${sessionScope.user.deanSchoolId != null}">
                     <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2" style="font-size: 0.85rem;">
@@ -2371,22 +2384,22 @@
                         <c:forEach var="entry" items="${sectionStudentsMap}">
                             <c:set var="section" value="${entry.key}" />
                             <c:set var="students" value="${entry.value}" />
-                            <div class="p-3 bg-light rounded-4 d-flex justify-content-between align-items-center border">
+                            <div class="p-3 prof-inner-row d-flex flex-wrap justify-content-between align-items-center gap-2">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="tc-course-icon" style="width:48px; height:48px; border-radius:16px; background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center; font-size:1.4rem;">
+                                    <div class="prof-tool-icon sky" style="width:48px; height:48px; flex-basis:48px; border-radius:16px; font-size:1.4rem;">
                                         <i class="bi bi-book-half" aria-hidden="true"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold text-dark fs-6">${section.courseCode} - ${section.courseTitle}</div>
-                                        <div class="text-muted small mt-1">
-                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle me-2"><i class="bi bi-clock me-1" aria-hidden="true"></i>${section.sessionShift}</span>
-                                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle me-2"><i class="bi bi-calendar-event me-1" aria-hidden="true"></i>${section.daysOfWeek}</span>
+                                        <div class="text-muted small mt-1 d-flex flex-wrap align-items-center gap-2">
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle"><i class="bi bi-clock me-1" aria-hidden="true"></i>${section.sessionShift}</span>
+                                            <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle"><i class="bi bi-calendar-event me-1" aria-hidden="true"></i>${section.daysOfWeek}</span>
                                             <span><i class="bi bi-door-open me-1" aria-hidden="true"></i>Room ${section.roomName}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
-                                    <button type="button" class="btn btn-sm btn-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}">
+                                    <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-semibold shadow-none" data-bs-toggle="modal" data-bs-target="#attendanceModal${section.id}">
                                         <i class="bi bi-clipboard-check me-1" aria-hidden="true"></i> Take Attendance
                                     </button>
                                 </div>
@@ -2399,47 +2412,34 @@
                     <div class="seg-header">
                         <h3><i class="bi bi-tools text-primary me-2" aria-hidden="true"></i>Faculty Quick Tools</h3>
                     </div>
-                    <div class="d-flex flex-column gap-3 p-1">
-                        <button type="button" class="btn btn-light border w-100 p-3 rounded-4 text-start d-flex align-items-center justify-content-between shadow-none" onclick="openClassQrModal()">
+                    <div class="d-flex flex-column gap-3">
+                        <button type="button" class="prof-tool-btn w-100 p-3 text-start d-flex align-items-center justify-content-between gap-2" onclick="openClassQrModal()">
                             <div class="d-flex align-items-center gap-3">
-                                <div style="width: 42px; height: 42px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                                    <i class="bi bi-qr-code-scan"></i>
+                                <div class="prof-tool-icon sky">
+                                    <i class="bi bi-qr-code-scan" aria-hidden="true"></i>
                                 </div>
                                 <div>
-                                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">Class Link QR Hub</div>
-                                    <div class="text-muted" style="font-size: 0.76rem;">Generate presentation QR for Telegram, Classroom & links</div>
+                                    <div class="prof-tool-title">Class Link QR Hub</div>
+                                    <div class="prof-tool-desc">Generate presentation QR for Telegram, Classroom & links</div>
                                 </div>
                             </div>
-                            <i class="bi bi-chevron-right text-muted small"></i>
+                            <i class="bi bi-chevron-right text-muted small" aria-hidden="true"></i>
                         </button>
 
                         <c:if test="${not empty sectionStudentsMap}">
-                            <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-light border w-100 p-3 rounded-4 text-start d-flex align-items-center justify-content-between text-decoration-none shadow-none">
+                            <a href="${pageContext.request.contextPath}/professor/attendance/export" class="prof-tool-btn w-100 p-3 text-start d-flex align-items-center justify-content-between gap-2 text-decoration-none">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div style="width: 42px; height: 42px; border-radius: 12px; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                                        <i class="bi bi-file-earmark-excel-fill"></i>
+                                    <div class="prof-tool-icon mint">
+                                        <i class="bi bi-file-earmark-excel-fill" aria-hidden="true"></i>
                                     </div>
                                     <div>
-                                        <div class="fw-bold text-dark" style="font-size: 0.9rem;">Export Attendance Register</div>
-                                        <div class="text-muted" style="font-size: 0.76rem;">Download master spreadsheet (.xlsx) across all sections</div>
+                                        <div class="prof-tool-title">Export Attendance Register</div>
+                                        <div class="prof-tool-desc">Download master spreadsheet (.xlsx) across all sections</div>
                                     </div>
                                 </div>
-                                <i class="bi bi-download text-muted small"></i>
+                                <i class="bi bi-download text-muted small" aria-hidden="true"></i>
                             </a>
                         </c:if>
-
-                        <button type="button" class="btn btn-light border w-100 p-3 rounded-4 text-start d-flex align-items-center justify-content-between shadow-none" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))">
-                            <div class="d-flex align-items-center gap-3">
-                                <div style="width: 42px; height: 42px; border-radius: 12px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                                    <i class="bi bi-calendar-week-fill"></i>
-                                </div>
-                                <div>
-                                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">Term Timetable</div>
-                                    <div class="text-muted" style="font-size: 0.76rem;">View weekly room schedules and timetable breakdown</div>
-                                </div>
-                            </div>
-                            <i class="bi bi-chevron-right text-muted small"></i>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -2486,7 +2486,7 @@
                                         <div class="fw-semibold text-dark">${section.daysOfWeek}</div>
                                         <div class="text-muted small">${section.sessionShift}</div>
                                     </td>
-                                    <td><span class="badge bg-light text-dark border"><i class="bi bi-door-open me-1" aria-hidden="true"></i>${section.roomName}</span></td>
+                                    <td><span class="badge bg-light text-dark border fw-semibold"><i class="bi bi-door-open me-1" aria-hidden="true"></i>${section.roomName}</span></td>
                                     <td><span class="tc-badge success"><i class="bi bi-people-fill me-1" aria-hidden="true"></i>${students.size()} Students</span></td>
                                     <td class="text-end pe-3">
                                         <div class="d-inline-flex align-items-center gap-1">
@@ -2495,8 +2495,8 @@
                                                 <span>Attendance</span>
                                             </button>
                                             <div class="dropdown d-inline-block">
-                                                <button type="button" class="btn btn-sm btn-light border rounded-pill px-2 py-1 text-secondary shadow-none" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="body" title="More Actions">
-                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                <button type="button" class="btn btn-sm btn-light border rounded-pill px-2 py-1 text-secondary-emphasis shadow-none" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="body" title="More Actions" aria-label="More actions for ${section.courseCode}">
+                                                    <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border rounded-3 py-1" style="font-size: 0.85rem;">
                                                     <li>
@@ -2536,7 +2536,7 @@
         <%-- TAB: MY CLASSES                                                    --%>
         <%-- ================================================================== --%>
         <div id="dt-classes" class="tab-panel" role="tabpanel" aria-labelledby="tab-classes" tabindex="0">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
                     <h2 class="h4 fw-bold text-dark mb-1">Assigned Classes & Student Rosters</h2>
                     <p class="text-muted small mb-0">Review student enrollment, record session attendance, and submit academic grades</p>
@@ -2567,12 +2567,12 @@
                 <c:set var="section" value="${entry.key}" />
                 <c:set var="students" value="${entry.value}" />
 
-                <section class="table-card mb-4 desktop-class-card" data-course-code="${section.courseCode.toLowerCase()}" data-course-title="${section.courseTitle.toLowerCase()}" aria-labelledby="section-heading-${section.id}">
+                <section class="table-card desktop-class-card" data-course-code="${section.courseCode.toLowerCase()}" data-course-title="${section.courseTitle.toLowerCase()}" aria-labelledby="section-heading-${section.id}">
                     <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-3 gap-3">
                         <div>
                             <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="badge bg-primary fs-6 px-3 py-1 rounded-pill">${section.courseCode}</span>
-                                <span class="badge bg-light text-dark border px-3 py-1 rounded-pill">${section.termName}</span>
+                                <span class="badge bg-primary px-3 py-2 rounded-pill" style="font-size:0.85rem;">${section.courseCode}</span>
+                                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill" style="font-size:0.8rem;">${section.termName}</span>
                             </div>
                             <h3 class="h5 fw-bold text-dark mb-1" id="section-heading-${section.id}">${section.courseTitle}</h3>
                             <div class="text-muted small d-flex flex-wrap align-items-center gap-3">
@@ -2631,7 +2631,7 @@
                             <tbody>
                                 <c:forEach var="student" items="${students}">
                                     <tr>
-                                        <td><span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace">${student.formattedIdentifier}</span></td>
+                                        <td><span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace fw-semibold">${student.formattedIdentifier}</span></td>
                                         <td><strong class="text-dark">${student.fullName}</strong></td>
                                         <td class="text-muted">${student.email}</td>
                                         <td><span class="tc-badge info">${student.major}</span></td>
@@ -2656,9 +2656,6 @@
                     <p class="text-muted small mb-0">Overview of classroom allocations, schedule shifts, and lecture sessions</p>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
-                        <i class="bi bi-calendar-heart me-1"></i> School Holidays
-                    </button>
                     <div class="view-toggle-group" role="group" aria-label="Schedule View Switcher">
                         <button type="button" class="view-toggle-btn active" id="btnViewTimetable" onclick="setScheduleView('grid')">
                             <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i> Timetable Grid
@@ -2681,7 +2678,7 @@
                 <div class="timetable-stats-bar">
                     <div class="tt-stat-chip">
                         <div class="tt-stat-icon" style="background:#eff6ff; color:#2563eb;">
-                            <i class="bi bi-journal-bookmark-fill"></i>
+                            <i class="bi bi-journal-bookmark-fill" aria-hidden="true"></i>
                         </div>
                         <div class="tt-stat-info">
                             <span class="tt-stat-label">Assigned Sections</span>
@@ -2690,7 +2687,7 @@
                     </div>
                     <div class="tt-stat-chip">
                         <div class="tt-stat-icon" style="background:#f0fdf4; color:#16a34a;">
-                            <i class="bi bi-people-fill"></i>
+                            <i class="bi bi-people-fill" aria-hidden="true"></i>
                         </div>
                         <div class="tt-stat-info">
                             <span class="tt-stat-label">Total Students</span>
@@ -2705,7 +2702,7 @@
                     </div>
                     <div class="tt-stat-chip">
                         <div class="tt-stat-icon" style="background:#fdf4ff; color:#a855f7;">
-                            <i class="bi bi-clock-history"></i>
+                            <i class="bi bi-clock-history" aria-hidden="true"></i>
                         </div>
                         <div class="tt-stat-info">
                             <span class="tt-stat-label">Academic Year</span>
@@ -2739,33 +2736,33 @@
                         <c:set var="section" value="${entry.key}" />
                         <c:set var="students" value="${entry.value}" />
                         <div class="col-md-6 col-xl-4">
-                            <div class="table-card h-100 mb-0 d-flex flex-column justify-content-between" onclick="openProfCourseSessions('${section.id}')" role="button" tabindex="0" style="cursor:pointer;" title="View 15-Week Sessions">
+                            <div class="table-card h-100 mb-0 d-flex flex-column justify-content-between" onclick="openProfCourseSessions('${section.id}')" onkeydown="if((event.key==='Enter'||event.key===' ')&&event.target===this){event.preventDefault();openProfCourseSessions('${section.id}');}" role="button" tabindex="0" style="cursor:pointer;" title="View 15-Week Sessions">
                                 <div>
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill fw-bold">${section.courseCode}</span>
                                         <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill"><i class="bi bi-people me-1" aria-hidden="true"></i>${students.size()} Students</span>
                                     </div>
                                     <h3 class="h6 fw-bold text-dark mb-3">${section.courseTitle}</h3>
-                                    <div class="p-3 bg-light rounded-4 mb-3">
+                                    <div class="p-3 prof-inner-row mb-3">
                                         <div class="d-flex align-items-center mb-2">
                                             <i class="bi bi-calendar3 text-primary me-2 fs-5" aria-hidden="true"></i>
                                             <div>
                                                 <div class="small fw-bold text-dark">${section.daysOfWeek}</div>
-                                                <div class="text-muted" style="font-size:0.75rem;">Session Days</div>
+                                                <div class="text-muted" style="font-size:0.8rem;">Session Days</div>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center mb-2">
                                             <i class="bi bi-clock text-primary me-2 fs-5" aria-hidden="true"></i>
                                             <div>
                                                 <div class="small fw-bold text-dark">${section.sessionShift}</div>
-                                                <div class="text-muted" style="font-size:0.75rem;">Shift Time</div>
+                                                <div class="text-muted" style="font-size:0.8rem;">Shift Time</div>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <i class="bi bi-door-open text-primary me-2 fs-5" aria-hidden="true"></i>
                                             <div>
                                                 <div class="small fw-bold text-dark">Room ${section.roomName}</div>
-                                                <div class="text-muted" style="font-size:0.75rem;">Assigned Classroom</div>
+                                                <div class="text-muted" style="font-size:0.8rem;">Assigned Classroom</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2801,7 +2798,7 @@
                         <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-person-badge text-primary me-2" aria-hidden="true"></i>Faculty Profile</h3>
                         <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
                             <div class="user-avatar" style="width:64px; height:64px; border-radius:20px;">
-                                <img src="${pageContext.request.contextPath}/static/images/default_male.svg" alt="" aria-hidden="true" onerror="this.src='https://ui-avatars.com/api/?name=${sessionScope.user.fullName}&background=e2e8f0&color=475569'">
+                                <img src="${pageContext.request.contextPath}/static/images/${sessionScope.user.gender == 'FEMALE' ? 'default_female' : 'default_male'}.svg" alt="" aria-hidden="true" onerror="this.src='https://ui-avatars.com/api/?name=${sessionScope.user.fullName}&background=e2e8f0&color=475569'">
                             </div>
                             <div>
                                 <h4 class="h6 fw-bold text-dark mb-1">${sessionScope.user.fullName}</h4>
@@ -2810,9 +2807,9 @@
                             </div>
                         </div>
                         <div class="small">
-                            <div class="d-flex justify-content-between py-2 border-bottom">
+                            <div class="d-flex justify-content-between align-items-start py-2 border-bottom">
                                 <span class="text-muted">Email Address</span>
-                                <span class="fw-semibold text-dark">${sessionScope.user.email}</span>
+                                <span class="fw-semibold text-dark text-end text-break ms-3">${sessionScope.user.email}</span>
                             </div>
                             <div class="d-flex justify-content-between py-2 border-bottom">
                                 <span class="text-muted">Account Role</span>
@@ -2831,11 +2828,11 @@
                     <div class="table-card mb-4">
                         <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-shield-lock text-primary me-2" aria-hidden="true"></i>Security & Authentication</h3>
                         
-                        <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="p-3 bg-light rounded-4 border mb-4">
+                        <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="p-3 prof-inner-row mb-4">
                             <input type="hidden" name="redirect" value="/professor/dashboard?tab=settings">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center gap-3">
                                 <div>
-                                    <label for="desktopTwoFactorSwitch" class="fw-bold text-dark mb-0 cursor-pointer">Two-Factor Authentication (2FA)</label>
+                                    <label for="desktopTwoFactorSwitch" class="fw-bold text-dark mb-0" style="cursor:pointer;">Two-Factor Authentication (2FA)</label>
                                     <p class="small text-muted mb-0 mt-1" id="twoFactorHelp">Receive an OTP security code via email each time you log in.</p>
                                 </div>
                                 <div class="form-check form-switch fs-4 mb-0">
@@ -2847,7 +2844,7 @@
                         <div class="border-top pt-3">
                             <h4 class="h6 fw-bold text-dark mb-2">Session Termination</h4>
                             <p class="small text-muted mb-3">Safely sign out of your faculty account on this browser.</p>
-                            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger rounded-pill px-4 fw-bold">
+                            <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger rounded-pill px-4 py-2 fw-bold">
                                 <i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i> Sign Out
                             </button>
                         </div>
@@ -2950,10 +2947,11 @@
                             </div>
                         </c:if>
                         <c:if test="${not empty records}">
+                            <div class="table-responsive">
                             <table class="table mb-0 align-middle" aria-label="Attendance history records for ${section.courseCode}">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" class="ps-4">Date (Click to View Breakdown)</th>
+                                        <th scope="col" class="ps-4">Date <span class="text-muted fw-normal small">(select to expand)</span></th>
                                         <th scope="col">Present</th>
                                         <th scope="col">Absent</th>
                                         <th scope="col">Late/Excused</th>
@@ -2971,7 +2969,7 @@
                                             <td><span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill">${record.presentCount} Present</span></td>
                                             <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill">${record.absentCount} Absent</span></td>
                                             <td>
-                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill">${record.lateCount + record.excusedCount} Other</span>
+                                                <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle px-2 py-1 rounded-pill">${record.lateCount + record.excusedCount} Other</span>
                                                 <c:if test="${record.cancelled}">
                                                     <span class="badge bg-dark ms-1 rounded-pill">CANCELLED</span>
                                                 </c:if>
@@ -2989,16 +2987,15 @@
                                                             <c:choose>
                                                                 <c:when test="${record.cancelled}">
                                                                     <input type="hidden" name="cancelAction" value="restore">
-                                                                    <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2 py-0" style="font-size:0.75rem;"><i class="bi bi-arrow-counterclockwise"></i> Restore Session</button>
+                                                                    <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size:0.8rem;"><i class="bi bi-arrow-counterclockwise"></i> Restore Session</button>
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <input type="hidden" name="cancelAction" value="cancel">
-                                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0" style="font-size:0.75rem;" onclick="return confirm('Are you sure you want to cancel this session? It will not count towards student attendance.');"><i class="bi bi-x-circle"></i> Cancel Session</button>
+                                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1" style="font-size:0.8rem;" onclick="return confirm('Are you sure you want to cancel this session? It will not count towards student attendance.');"><i class="bi bi-x-circle"></i> Cancel Session</button>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </form>
                                                     </div>
-                                                    <div class="small fw-semibold text-muted mb-2">Student Statuses for ${record.sessionDate}:</div>
                                                     <div class="row row-cols-1 row-cols-md-2 g-2">
                                                         <c:forEach var="entry" items="${record.entries}">
                                                             <div class="col">
@@ -3026,10 +3023,11 @@
                                     </c:forEach>
                                 </tbody>
                             </table>
+                            </div>
                         </c:if>
                     </div>
                     <div class="modal-footer border-0 bg-light py-3 rounded-bottom-4">
-                        <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -3151,7 +3149,7 @@
                     <div class="row g-4">
                         <div class="col-lg-7">
                             <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark mb-1">Target Class Section</label>
+                                <label for="qrCourseSelect" class="form-label small fw-bold text-dark mb-1">Target Class Section</label>
                                 <select id="qrCourseSelect" class="form-select rounded-3 shadow-none border" onchange="onQrCourseChanged()">
                                     <option value="" data-code="Class Link" data-title="General Class Link">General / Custom Class Link</option>
                                     <c:forEach var="entry" items="${sectionStudentsMap}">
@@ -3185,7 +3183,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark mb-1 d-flex justify-content-between align-items-center">
+                                <label for="qrUrlInput" class="form-label small fw-bold text-dark mb-1 d-flex justify-content-between align-items-center">
                                     <span>Paste or Enter Link <span class="text-danger">*</span></span>
                                     <button type="button" class="btn btn-link p-0 text-primary small text-decoration-none" onclick="pasteQrUrl()">
                                         <i class="bi bi-clipboard me-1"></i>Paste from Clipboard
@@ -3199,12 +3197,12 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark mb-1">Slide Display Title</label>
+                                <label for="qrTitleInput" class="form-label small fw-bold text-dark mb-1">Slide Display Title</label>
                                 <input type="text" id="qrTitleInput" class="form-control rounded-3 shadow-none border" placeholder="e.g. Join Class Telegram Group" oninput="updateQrCode()" maxlength="60">
                             </div>
 
                             <div>
-                                <label class="form-label small fw-bold text-dark mb-1">Slide Note / Instruction (Optional)</label>
+                                <label for="qrNoteInput" class="form-label small fw-bold text-dark mb-1">Slide Note / Instruction (Optional)</label>
                                 <input type="text" id="qrNoteInput" class="form-control rounded-3 shadow-none border" placeholder="e.g. Scan with your phone camera to join" oninput="updateQrCode()" maxlength="80">
                             </div>
                         </div>
@@ -3214,7 +3212,7 @@
                                 <div id="qrEmptyState" class="py-5 text-muted">
                                     <i class="bi bi-qr-code fs-1 d-block mb-2 text-secondary opacity-50"></i>
                                     <div class="fw-semibold small">No Link Entered</div>
-                                    <div class="small text-muted" style="font-size:0.75rem;">Paste a link on the left to generate QR code</div>
+                                    <div class="small text-muted" style="font-size:0.8rem;">Paste a link on the left to generate QR code</div>
                                 </div>
                                 <div id="qrPreviewWrap" style="display:none;" class="w-100 d-flex flex-column align-items-center">
                                     <div class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-1 mb-2 fw-semibold" id="qrPreviewBadge" style="font-size:0.75rem;">
@@ -3225,7 +3223,7 @@
                                     </div>
                                     <div class="small fw-bold text-dark text-truncate w-100 px-2" id="qrPreviewTitle"></div>
                                     <div class="small text-muted text-truncate w-100 px-2" id="qrPreviewUrl" style="font-size:0.72rem;"></div>
-                                    <div class="mt-2 text-primary small fw-semibold" style="cursor:pointer;" onclick="expandToSlideQr()">
+                                    <div class="mt-2 text-primary small fw-semibold" style="cursor:pointer;" role="button" tabindex="0" onclick="expandToSlideQr()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();expandToSlideQr();}">
                                         <i class="bi bi-arrows-fullscreen me-1"></i>Click to expand for presentation
                                     </div>
                                 </div>
@@ -3233,7 +3231,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer bg-light py-3 border-0 d-flex justify-content-between align-items-center">
+                <div class="modal-footer bg-light py-3 border-0 d-flex flex-wrap justify-content-between align-items-center gap-2">
                     <div class="d-flex align-items-center gap-2">
                         <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2 fw-semibold" id="qrCopyLinkBtn" onclick="copyQrLink()" disabled>
                             <i class="bi bi-link-45deg me-1"></i>Copy Link

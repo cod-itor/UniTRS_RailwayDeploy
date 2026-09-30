@@ -77,6 +77,210 @@
                         background-color: #f8fafc;
                     }
 
+                    /* Course Detail Bottom Sheet Modal */
+                    .course-modal-overlay {
+                        position: fixed;
+                        inset: 0;
+                        background: rgba(15, 23, 42, 0.6);
+                        z-index: 1050;
+                        display: none;
+                        align-items: flex-end;
+                        justify-content: center;
+                        backdrop-filter: blur(6px);
+                        -webkit-backdrop-filter: blur(6px);
+                        animation: modalFadeIn 0.2s ease;
+                    }
+
+                    @keyframes modalFadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+
+                    .course-modal-overlay.open {
+                        display: flex;
+                    }
+
+                    .course-modal-sheet {
+                        background: #ffffff;
+                        border-radius: 28px 28px 0 0;
+                        width: 100%;
+                        max-width: 500px;
+                        max-height: 88vh;
+                        max-height: 88dvh;
+                        overflow-y: auto;
+                        overscroll-behavior: contain;
+                        -webkit-overflow-scrolling: touch;
+                        padding: 0 0 calc(28px + env(safe-area-inset-bottom, 16px));
+                        animation: springSlideUp 0.32s cubic-bezier(0.34, 1.2, 0.64, 1);
+                        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+                    }
+
+                    @keyframes springSlideUp {
+                        from { transform: translateY(100%); }
+                        to { transform: translateY(0); }
+                    }
+
+                    .sheet-drag-handle {
+                        width: 44px;
+                        height: 5px;
+                        background: #cbd5e1;
+                        border-radius: 99px;
+                        margin: 12px auto 6px;
+                    }
+
+                    .sheet-header {
+                        padding: 14px 20px 14px;
+                        border-bottom: 1px solid #f1f5f9;
+                    }
+
+                    .sheet-header-code {
+                        font-size: 0.78rem;
+                        font-weight: 800;
+                        color: #4f46e5;
+                        background: #eef2ff;
+                        padding: 3px 10px;
+                        border-radius: 10px;
+                        display: inline-block;
+                        margin-bottom: 6px;
+                    }
+
+                    .sheet-header-title {
+                        font-size: 1.05rem;
+                        font-weight: 800;
+                        color: #0f172a;
+                        line-height: 1.3;
+                        margin-bottom: 8px;
+                        overflow-wrap: anywhere;
+                    }
+
+                    .sheet-header-meta {
+                        font-size: 0.75rem;
+                        color: #64748b;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 4px 12px;
+                        overflow-wrap: anywhere;
+                    }
+
+                    .sheet-body {
+                        padding: 18px 20px;
+                    }
+
+                    .sheet-section-label {
+                        font-size:0.75rem;
+                        font-weight: 800;
+                        text-transform: uppercase;
+                        letter-spacing: 0.6px;
+                        color: #64748b;
+                        margin-bottom: 10px;
+                        margin-top: 14px;
+                    }
+
+                    .score-grid {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 10px;
+                        margin-bottom: 4px;
+                    }
+
+                    .score-tile {
+                        background: #f8fafc;
+                        border-radius: 16px;
+                        padding: 14px;
+                        border: 1px solid #e2e8f0;
+                    }
+
+                    .score-tile-label {
+                        font-size:0.75rem;
+                        font-weight: 700;
+                        color: #64748b;
+                        text-transform: uppercase;
+                        letter-spacing: 0.4px;
+                        margin-bottom: 4px;
+                    }
+
+                    .score-tile-val {
+                        font-size: 1.4rem;
+                        font-weight: 900;
+                        color: #0f172a;
+                        line-height: 1;
+                    }
+
+                    .score-tile-val.pending {
+                        font-size: 0.85rem;
+                        color: #94a3b8;
+                        font-weight: 600;
+                    }
+
+                    .score-tile.highlight {
+                        background: linear-gradient(135deg, #eef2ff, #f0fdf4);
+                        border-color: #c7d2fe;
+                    }
+
+                    .score-tile.highlight .score-tile-val {
+                        color: #4338ca;
+                    }
+
+                    .attendance-list {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+                    }
+
+                    .att-row {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 8px;
+                        padding: 12px 16px;
+                        background: #f8fafc;
+                        border-radius: 14px;
+                        border: 1px solid #f1f5f9;
+                    }
+
+                    .att-date {
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        color: #334155;
+                    }
+
+                    .att-badge {
+                        font-size:0.75rem;
+                        font-weight: 800;
+                        padding: 3px 10px;
+                        border-radius: 99px;
+                    }
+
+                    .att-PRESENT { background: #dcfce7; color: #15803d; }
+                    .att-ABSENT { background: #fee2e2; color: #b91c1c; }
+                    .att-LATE { background: #fef3c7; color: #b45309; }
+                    .att-EXCUSED { background: #e0f2fe; color: #0369a1; }
+
+                    .att-empty {
+                        font-size: 0.82rem;
+                        color: #94a3b8;
+                        text-align: center;
+                        padding: 20px 0;
+                    }
+
+                    .att-summary {
+                        display: flex;
+                        gap: 8px;
+                        flex-wrap: wrap;
+                        margin-bottom: 12px;
+                    }
+
+                    .att-sum-chip {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 5px;
+                        font-size:0.75rem;
+                        font-weight: 700;
+                        padding: 4px 11px;
+                        border-radius: 99px;
+                    }
+
+
                 @media (max-width: 767.98px) {
                     body {
                         background: #f8fafc;
@@ -995,209 +1199,6 @@
                             opacity: 1;
                             transform: translateY(0);
                         }
-                    }
-
-                    /* Course Detail Bottom Sheet Modal */
-                    .course-modal-overlay {
-                        position: fixed;
-                        inset: 0;
-                        background: rgba(15, 23, 42, 0.6);
-                        z-index: 1050;
-                        display: none;
-                        align-items: flex-end;
-                        justify-content: center;
-                        backdrop-filter: blur(6px);
-                        -webkit-backdrop-filter: blur(6px);
-                        animation: modalFadeIn 0.2s ease;
-                    }
-
-                    @keyframes modalFadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
-
-                    .course-modal-overlay.open {
-                        display: flex;
-                    }
-
-                    .course-modal-sheet {
-                        background: #ffffff;
-                        border-radius: 28px 28px 0 0;
-                        width: 100%;
-                        max-width: 500px;
-                        max-height: 88vh;
-                        max-height: 88dvh;
-                        overflow-y: auto;
-                        overscroll-behavior: contain;
-                        -webkit-overflow-scrolling: touch;
-                        padding: 0 0 calc(28px + env(safe-area-inset-bottom, 16px));
-                        animation: springSlideUp 0.32s cubic-bezier(0.34, 1.2, 0.64, 1);
-                        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
-                    }
-
-                    @keyframes springSlideUp {
-                        from { transform: translateY(100%); }
-                        to { transform: translateY(0); }
-                    }
-
-                    .sheet-drag-handle {
-                        width: 44px;
-                        height: 5px;
-                        background: #cbd5e1;
-                        border-radius: 99px;
-                        margin: 12px auto 6px;
-                    }
-
-                    .sheet-header {
-                        padding: 14px 20px 14px;
-                        border-bottom: 1px solid #f1f5f9;
-                    }
-
-                    .sheet-header-code {
-                        font-size: 0.78rem;
-                        font-weight: 800;
-                        color: #4f46e5;
-                        background: #eef2ff;
-                        padding: 3px 10px;
-                        border-radius: 10px;
-                        display: inline-block;
-                        margin-bottom: 6px;
-                    }
-
-                    .sheet-header-title {
-                        font-size: 1.05rem;
-                        font-weight: 800;
-                        color: #0f172a;
-                        line-height: 1.3;
-                        margin-bottom: 8px;
-                        overflow-wrap: anywhere;
-                    }
-
-                    .sheet-header-meta {
-                        font-size: 0.75rem;
-                        color: #64748b;
-                        display: flex;
-                        flex-wrap: wrap;
-                        gap: 4px 12px;
-                        overflow-wrap: anywhere;
-                    }
-
-                    .sheet-body {
-                        padding: 18px 20px;
-                    }
-
-                    .sheet-section-label {
-                        font-size:0.75rem;
-                        font-weight: 800;
-                        text-transform: uppercase;
-                        letter-spacing: 0.6px;
-                        color: #64748b;
-                        margin-bottom: 10px;
-                        margin-top: 14px;
-                    }
-
-                    .score-grid {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        gap: 10px;
-                        margin-bottom: 4px;
-                    }
-
-                    .score-tile {
-                        background: #f8fafc;
-                        border-radius: 16px;
-                        padding: 14px;
-                        border: 1px solid #e2e8f0;
-                    }
-
-                    .score-tile-label {
-                        font-size:0.75rem;
-                        font-weight: 700;
-                        color: #64748b;
-                        text-transform: uppercase;
-                        letter-spacing: 0.4px;
-                        margin-bottom: 4px;
-                    }
-
-                    .score-tile-val {
-                        font-size: 1.4rem;
-                        font-weight: 900;
-                        color: #0f172a;
-                        line-height: 1;
-                    }
-
-                    .score-tile-val.pending {
-                        font-size: 0.85rem;
-                        color: #94a3b8;
-                        font-weight: 600;
-                    }
-
-                    .score-tile.highlight {
-                        background: linear-gradient(135deg, #eef2ff, #f0fdf4);
-                        border-color: #c7d2fe;
-                    }
-
-                    .score-tile.highlight .score-tile-val {
-                        color: #4338ca;
-                    }
-
-                    .attendance-list {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 8px;
-                    }
-
-                    .att-row {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        gap: 8px;
-                        padding: 12px 16px;
-                        background: #f8fafc;
-                        border-radius: 14px;
-                        border: 1px solid #f1f5f9;
-                    }
-
-                    .att-date {
-                        font-size: 0.75rem;
-                        font-weight: 600;
-                        color: #334155;
-                    }
-
-                    .att-badge {
-                        font-size:0.75rem;
-                        font-weight: 800;
-                        padding: 3px 10px;
-                        border-radius: 99px;
-                    }
-
-                    .att-PRESENT { background: #dcfce7; color: #15803d; }
-                    .att-ABSENT { background: #fee2e2; color: #b91c1c; }
-                    .att-LATE { background: #fef3c7; color: #b45309; }
-                    .att-EXCUSED { background: #e0f2fe; color: #0369a1; }
-
-                    .att-empty {
-                        font-size: 0.82rem;
-                        color: #94a3b8;
-                        text-align: center;
-                        padding: 20px 0;
-                    }
-
-                    .att-summary {
-                        display: flex;
-                        gap: 8px;
-                        flex-wrap: wrap;
-                        margin-bottom: 12px;
-                    }
-
-                    .att-sum-chip {
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 5px;
-                        font-size:0.75rem;
-                        font-weight: 700;
-                        padding: 4px 11px;
-                        border-radius: 99px;
                     }
 
                     /* Toast Notification for ID copy */
@@ -2580,6 +2581,46 @@
         }
     </style>
             <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
+            <style>
+                /* Round 2 desktop/mobile consistency fixes (layout only) */
+                .px-2\.5 { padding-left: .625rem; padding-right: .625rem; }
+                .py-0\.5 { padding-top: .125rem; padding-bottom: .125rem; }
+                .py-1\.5 { padding-top: .375rem; padding-bottom: .375rem; }
+                .py-2\.5 { padding-top: .625rem; padding-bottom: .625rem; }
+                .me-1\.5 { margin-right: .375rem; }
+                .mb-1\.5 { margin-bottom: .375rem; }
+                .gap-1\.5 { gap: .375rem; }
+                body .badge.bg-warning-subtle.text-warning { color: #92400e !important; }
+                body .badge.bg-info-subtle.text-info { color: #055160 !important; }
+                body .desktop-app-container :is(button, a, [role="button"], [tabindex="0"]):focus-visible {
+                    outline: 2px solid #2563eb; outline-offset: 2px;
+                }
+                body .desktop-main .tab-panel > .mb-4:first-child { margin-bottom: 20px !important; }
+                body .desktop-main .grades-hero-card {
+                    border-radius: var(--dash-card-radius); padding: 24px; margin-bottom: 20px;
+                }
+                body .desktop-main .timetable-card {
+                    border-radius: var(--dash-card-radius); padding: var(--dash-card-pad);
+                    border: var(--dash-card-border); box-shadow: var(--dash-card-shadow); margin-bottom: 20px;
+                }
+                body .desktop-main .tt-stat-chip { border-color: #e8edf3; }
+                body .desktop-main #dt-registration > .card {
+                    border: var(--dash-card-border) !important; border-radius: var(--dash-card-radius) !important;
+                    box-shadow: var(--dash-card-shadow) !important; margin-bottom: 20px !important;
+                }
+                body .desktop-main .tc-table td { overflow-wrap: anywhere; }
+                body .desktop-main .table-card form.bg-light { border-color: #e8edf3 !important; }
+                #profileCompletionModal .modal-content { border-radius: 20px !important; }
+                #profileCompletionModal .modal-dialog { max-height: 100dvh; }
+                #profileCompletionModal .validation-message { line-height: 1.4; }
+                /* Course detail sheet: centered dialog on desktop (was hidden by d-md-none) */
+                @media (min-width: 768px) {
+                    .course-modal-overlay { align-items: center; }
+                    .course-modal-sheet { border-radius: 20px; max-width: 520px; padding-bottom: 28px; }
+                    .sheet-drag-handle { display: none; }
+                }
+            </style>
+
         </head>
 
         <body>
@@ -2651,7 +2692,7 @@
                                                                             </div>
                                                                             <div class="user-info-text pe-2">
                                                                                 <span class="user-name">${user.fullName}</span>
-                                                                                <span class="user-role">${user.formattedIdentifier} <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-1 px-2 py-0" style="font-size: 0.65rem; font-weight: 700;">${user.role}</span> <i class="bi bi-chevron-down ms-1" style="font-size:0.65rem;"></i></span>
+                                                                                <span class="user-role">${user.formattedIdentifier} <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-1 px-2 py-0" style="font-size: 0.7rem; font-weight: 700;">${user.role}</span> <i class="bi bi-chevron-down ms-1" style="font-size:0.7rem;"></i></span>
                                                                             </div>
                                                                         </button>
 
@@ -3010,7 +3051,7 @@
                                                                                 <div id="dt-registration"
                                                                                     class="tab-panel">
                                                                                     <c:if test="${latestTermRequest != null and latestTermRequest.status == 'REJECTED'}">
-                                                                                        <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mx-3 mb-4 rounded-3 border-danger shadow-xs text-start">
+                                                                                        <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mb-3 rounded-4 border-danger shadow-xs text-start">
                                                                                             <i class="bi bi-x-circle-fill text-danger fs-3"></i>
                                                                                             <div>
                                                                                                 <div class="fw-bold text-danger">Term Registration Request Rejected</div>
@@ -3118,7 +3159,7 @@
                                                                                                                                 </div>
                                                                                                                                 <div class="fw-bold text-dark mb-2 fs-6 lh-sm">${clazz.courseTitle}</div>
                                                                                                                             </div>
-                                                                                                                            <div class="pt-2 border-top border-light-subtle d-flex align-items-center justify-content-between text-muted small" style="font-size:0.8rem;">
+                                                                                                                            <div class="pt-2 border-top border-light-subtle d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted small" style="font-size:0.8rem;">
                                                                                                                                 <span class="d-inline-flex align-items-center"><i class="bi bi-person-badge text-primary me-1.5"></i>${clazz.professorName}</span>
                                                                                                                                 <c:if test="${not empty clazz.roomName}">
                                                                                                                                     <span class="d-inline-flex align-items-center"><i class="bi bi-geo-alt text-secondary me-1"></i>${clazz.roomName}</span>
@@ -3247,9 +3288,6 @@
                                                                     <p class="text-muted small mb-0">Overview of your enrolled courses, lecture shifts, and classroom locations</p>
                                                                 </div>
                                                                 <div class="d-flex align-items-center gap-3">
-                                                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
-                                                                        <i class="bi bi-calendar-heart me-1"></i> School Holidays
-                                                                    </button>
                                                                     <div class="view-toggle-group" role="group" aria-label="Schedule View Switcher">
                                                                         <button type="button" class="view-toggle-btn active" id="btnStudentViewTimetable" onclick="setStudentScheduleView('grid')">
                                                                             <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i> Timetable Grid
@@ -3316,7 +3354,7 @@
                                                                 </div>
 
                                                                 <!-- VIEW 1: TIMETABLE GRID -->
-                                                                <div id="studentTimetableView" class="timetable-card mb-4">
+                                                                <div id="studentTimetableView" class="timetable-card">
                                                                     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                                                                         <div class="d-flex align-items-center gap-2">
                                                                             <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill small fw-semibold">
@@ -3365,7 +3403,7 @@
                                                                                             </td>
                                                                                             <td><span class="tc-badge info"><i class="bi bi-geo-alt-fill me-1"></i>${enrollment.room}</span></td>
                                                                                             <td><span class="tc-badge success">Enrolled</span></td>
-                                                                                            <td class="text-end">
+                                                                                            <td class="text-end text-nowrap">
                                                                                                 <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 py-1 fw-semibold me-1" style="font-size:0.75rem;" onclick="openStudentCourseSessions('${enrollment.id}')">
                                                                                                     <i class="bi bi-calendar3-range me-1"></i>15 Sessions
                                                                                                 </button>
@@ -3390,7 +3428,7 @@
         <p class="text-muted small mb-0">View your cumulative grades and degree progress</p>
     </div>
 
-    <div class="grades-hero-card mb-4" role="region" aria-label="GPA and Degree Progress Summary">
+    <div class="grades-hero-card" role="region" aria-label="GPA and Degree Progress Summary">
         <div class="d-flex justify-content-between align-items-start mb-4">
             <div>
                 <div class="small text-white-50 text-uppercase fw-bold" style="letter-spacing:0.5px;">Cumulative GPA</div>
@@ -3525,7 +3563,7 @@
 
     <div class="row g-4">
         <div class="col-lg-6">
-            <div class="table-card mb-4">
+            <div class="table-card mb-0 h-100">
                 <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-person-badge text-primary me-2"></i>Profile Information</h3>
                 <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
                     <div class="user-avatar" style="width:64px; height:64px; border-radius:20px;">
@@ -3584,7 +3622,7 @@
         </div>
 
         <div class="col-lg-6">
-            <div class="table-card mb-4">
+            <div class="table-card mb-0 h-100">
                 <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-shield-lock text-primary me-2"></i>Security & Authentication</h3>
                 
                 <form action="${pageContext.request.contextPath}/auth/update-2fa" method="POST" class="p-3 bg-light rounded-4 border mb-4">
@@ -4390,7 +4428,7 @@
                                                                             <input type="hidden" name="action" value="updateProfile">
                                                                             <c:choose><c:when test="${needStudentId}">
 <div class="mb-3">
-                                                                                <label class="form-label fw-bold small">Student ID</label>
+                                                                                <label class="form-label fw-bold small text-muted">Student ID</label>
                                                                                 <input type="text" class="form-control" name="studentId" value="" placeholder="e.g. 60240512" maxlength="8" inputmode="numeric" autocomplete="off" required pattern="[0-8][0-9]{7}" title="8-digit Student ID (numbers only, cannot start with 9)" data-student-id-input>
 <div class="validation-message small mt-1 text-muted" data-student-id-msg>8-digit Student ID (numbers only, e.g. 60240512).</div>
                                                                             </div>
@@ -4402,7 +4440,7 @@
 </c:otherwise></c:choose>
                                                                             <c:choose><c:when test="${needCurrentTerm}">
 <div class="mb-3">
-                                                                                <label class="form-label fw-bold small">Current Term</label>
+                                                                                <label class="form-label fw-bold small text-muted">Current Term</label>
                                                                                 <select class="form-select" name="currentTermId" required>
                                                                                     <c:if test="${needCurrentTerm}">
                                                                                         <option value="" disabled selected>-- Select Term --</option>
@@ -4419,7 +4457,7 @@
 </div>
 </c:otherwise></c:choose>
                                                                             <c:if test="${needStudentId or needCurrentTerm}">
-<button type="submit" class="btn btn-primary w-100 fw-bold rounded-3">Update Profile</button>
+<button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill">Update Profile</button>
 </c:if>
                                                                         </form>
                                                                     </div>
@@ -4494,7 +4532,7 @@
                                                     <%--==================================================================--%>
                                                         <%-- COURSE DETAIL MODAL SHEET (shared, filled via JS) --%>
                                                             <%--==================================================================--%>
-                                                                <div class="course-modal-overlay d-md-none" role="dialog" aria-modal="true" aria-labelledby="sheetCourseTitle"
+                                                                <div class="course-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="sheetCourseTitle"
                                                                     id="courseModalOverlay"
                                                                     onclick="closeCourseModalOnOverlay(event)">
                                                                     <div class="course-modal-sheet"
@@ -5342,11 +5380,11 @@
                                                                     <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
         
 <c:if test="${missingProfileInfo}">
-    <div class="modal fade show d-block" id="profileCompletionModal" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal fade show d-block" id="profileCompletionModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="profileCompletionTitle" style="background: rgba(0,0,0,0.5);">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold">Complete Your Profile</h5>
+                    <h5 class="modal-title fw-bold" id="profileCompletionTitle">Complete Your Profile</h5>
                 </div>
                 <div class="modal-body p-4">
                     <p class="text-muted mb-4">
@@ -5378,8 +5416,8 @@
                             </select>
                         </div>
 </c:when></c:choose>
-                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-3 mb-2" onclick="sessionStorage.removeItem('dismissProfileModal');">Save Profile</button>
-                        <button type="button" class="btn btn-light btn-lg w-100 fw-bold rounded-3" onclick="dismissProfileModal()">Do it later</button>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-pill mb-2" onclick="sessionStorage.removeItem('dismissProfileModal');">Save Profile</button>
+                        <button type="button" class="btn btn-light btn-lg w-100 fw-bold rounded-pill border" onclick="dismissProfileModal()">Do it later</button>
                     </form>
                 </div>
             </div>
@@ -5415,15 +5453,15 @@
 </c:if>
 
 <div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
-        <div style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+        <div style="background:#fff; border-radius:20px; padding:2rem 1.5rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
             <div style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
                 <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
             </div>
             <h4 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.75rem;">Sign Out?</h4>
             <p style="color:#64748b;font-size:1rem;margin-bottom:2rem;line-height:1.5;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
-            <div style="display:flex;gap:1rem;justify-content:center;">
-                <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
-                <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:none;background:#b91c1c;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(185,28,28,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
+            <div style="display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center;">
+                <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1 1 140px;min-height:44px;padding:0.75rem 1rem;border-radius:50px;border:1px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
+                <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1 1 140px;min-height:44px;padding:0.75rem 1rem;border-radius:50px;border:none;background:#b91c1c;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(185,28,28,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
             </div>
         </div>
     </div>
@@ -5454,7 +5492,7 @@ document.addEventListener('keydown', function(e) {
             if (!v) show('text-muted', msgs.muted);
             else if (!/^\d+$/.test(v)) show('text-danger', '<i class="bi bi-x-circle"></i> Numbers only! Letters and symbols are not allowed.');
             else if (v.charAt(0) === '9') show('text-danger', '<i class="bi bi-x-circle"></i> Student ID cannot start with 9 (reserved for temporary applicant IDs).');
-            else if (v.length < 8) show('text-warning', '<i class="bi bi-info-circle"></i> Student ID must be 8 digits (' + v.length + '/8)');
+            else if (v.length < 8) show('text-warning-emphasis', '<i class="bi bi-info-circle"></i> Student ID must be 8 digits (' + v.length + '/8)');
             else show('text-success', '<i class="bi bi-check-circle"></i> Valid 8-digit Student ID');
         });
     });
