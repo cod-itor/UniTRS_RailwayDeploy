@@ -18,4 +18,11 @@ public class TermRegistrationRequest {
     private String studentIdentifier;
     private String termName;
     private int termNumber;
+
+    private static final java.time.format.DateTimeFormatter LABEL_FORMAT =
+            java.time.format.DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm", java.util.Locale.ENGLISH);
+
+    public String getCreatedAtLabel() {
+        return createdAt == null ? "" : createdAt.toLocalDateTime().format(LABEL_FORMAT);
+    }
 }

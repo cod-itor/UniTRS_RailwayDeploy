@@ -88,6 +88,16 @@ public class DeanController extends HttpServlet {
         request.setAttribute("terms", terms);
         request.setAttribute("curriculumMap", curriculumMap);
         request.setAttribute("professors", professors);
+        java.util.Map<Integer, String> termWindowLabels = new java.util.HashMap<>();
+        java.time.format.DateTimeFormatter windowFormat = java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy", java.util.Locale.ENGLISH);
+        for (Term t : terms) {
+            com.unitrs.utils.TermCalendar.Window w = com.unitrs.utils.TermCalendar.window(com.unitrs.utils.ScheduleUtils.currentAcademicYear(), t.getTermNumber());
+            termWindowLabels.put(t.getId(), w.getStart().format(windowFormat) + " - " + w.getEnd().format(windowFormat));
+        }
+        request.setAttribute("termWindowLabels", termWindowLabels);
+        request.setAttribute("reports", new com.unitrs.repository.ReportRepository().findBySchool(deanSchoolId));
+        request.setAttribute("professorShiftsMap", userRepo.findAllProfessorAvailability());
+        request.setAttribute("currentAcademicYear", com.unitrs.utils.ScheduleUtils.currentAcademicYear());
         request.setAttribute("students", students);
         request.setAttribute("sections", sections);
         request.setAttribute("rooms", rooms);
@@ -186,7 +196,7 @@ public class DeanController extends HttpServlet {
                 int roomId = Integer.parseInt(request.getParameter("roomId"));
                 String sessionShift = request.getParameter("sessionShift");
                 String daysOfWeek = request.getParameter("daysOfWeek");
-                String academicYear = request.getParameter("academicYear");
+                String academicYear = com.unitrs.utils.ScheduleUtils.currentAcademicYear();
 
                 deanService.addClassSection(termId, courseId, professorId, roomId, sessionShift, daysOfWeek, academicYear, deanSchoolId);
                 successMessage = "Class Section successfully scheduled.";
@@ -236,6 +246,9 @@ public class DeanController extends HttpServlet {
                     
                     com.unitrs.repository.UserRepository userRepo = new com.unitrs.repository.UserRepository();
                     userRepo.updateCurrentTerm(req.getStudentId(), req.getTermId());
+                    
+                    com.unitrs.repository.EnrollmentRepository enrollmentRepo = new com.unitrs.repository.EnrollmentRepository();
+                    enrollmentRepo.enrollStudentInTerm(req.getStudentId(), req.getTermId());
                     
                     successMessage = "Registration request approved and student's term updated.";
                 } else {

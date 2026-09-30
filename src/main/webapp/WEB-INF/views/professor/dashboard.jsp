@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
     <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -719,32 +721,6 @@
                 to { opacity: 1; transform: translateY(0); }
             }
 
-            /* Floating Toast */
-            .mobile-toast {
-                position: fixed;
-                bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
-                left: 50%;
-                transform: translateX(-50%) translateY(20px);
-                background: #0f172a;
-                color: #ffffff;
-                padding: 9px 18px;
-                border-radius: 99px;
-                font-size: 0.8rem;
-                font-weight: 700;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
-                z-index: 1060;
-                opacity: 0;
-                pointer-events: none;
-                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            }
-
-            .mobile-toast.show {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
 
             
             /* Action Sheets */
@@ -906,7 +882,6 @@
             .mobile-app-container .alert { font-size: 0.875rem; overflow-wrap: anywhere; }
             .mobile-app-container .alert-dismissible { padding-right: 48px !important; }
 
-            .mobile-toast { max-width: calc(100% - 32px); width: max-content; line-height: 1.3; overflow-wrap: anywhere; }
 
             /* Faculty ID card */
             .id-card-top { flex-wrap: wrap; gap: 8px; }
@@ -979,6 +954,19 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
 </head>
 <body>
+<%-- Sonner flash notification triggers (single copy; serves both desktop and mobile layouts) --%>
+<c:if test="${param.twoFactorUpdated == 'true'}">
+    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Two-Factor Authentication" data-message="Two-Factor Authentication (2FA) is now enabled for your account."></div>
+</c:if>
+<c:if test="${param.twoFactorUpdated == 'false'}">
+    <div class="sonner-flash-trigger d-none" data-type="info" data-title="Two-Factor Authentication" data-message="Two-Factor Authentication (2FA) has been disabled for your account."></div>
+</c:if>
+<c:if test="${not empty successMessage}">
+    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Success" data-message="<c:out value='${successMessage}' />"></div>
+</c:if>
+<c:if test="${not empty errorMessage}">
+    <div class="sonner-flash-trigger d-none" data-type="error" data-title="Action Failed" data-message="<c:out value='${errorMessage}' />"></div>
+</c:if>
 <div class="d-none d-md-flex desktop-app-container">
     <style>
         body.modal-open {
@@ -2127,17 +2115,43 @@
         .slide-qr-overlay.light-theme .slide-qr-canvas-card {
             box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15), 0 0 0 1px #e2e8f0;
         }
-        .qr-preset-btn {
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 4px 12px;
-            transition: all 0.15s ease;
-        }
-        .qr-preset-btn.active {
-            background-color: #0f172a;
-            color: #ffffff;
-            border-color: #0f172a;
+        /* ---- Class Link QR generator ---- */
+        #classQrModal .modal-content { border: 0; border-radius: 20px; }
+        #classQrModal .modal-header { padding: 20px 24px; border-bottom: 1px solid #eef2f6; background: #fff; }
+        #classQrModal .modal-body { padding: 24px; }
+        #classQrModal .modal-footer { padding: 16px 24px; border-top: 1px solid #eef2f6; background: #f8fafc; gap: 12px; }
+        #classQrModal .qr-head-icon { width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #2563eb; display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+        #classQrModal .qr-section + .qr-section { margin-top: 24px; padding-top: 24px; border-top: 1px solid #eef2f6; }
+        #classQrModal .qr-section-title { font-size: 0.75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #64748b; margin-bottom: 14px; }
+        #classQrModal .qr-field + .qr-field { margin-top: 16px; }
+        #classQrModal .form-label { font-size: 0.875rem; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+        #classQrModal .form-control, #classQrModal .form-select { min-height: 46px; border-radius: 12px; font-size: 1rem; box-shadow: none; }
+        #classQrModal .input-group .form-control { border-radius: 0 12px 12px 0; }
+        #classQrModal .input-group-text { border-radius: 12px 0 0 12px; background: #fff; color: #64748b; }
+        #classQrModal .qr-label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+        #classQrModal .qr-label-row .form-label { margin-bottom: 0; }
+        #classQrModal .qr-inline-btn { min-height: 32px; padding: 0 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+        #classQrModal .qr-help { font-size: 0.8rem; color: #64748b; margin-top: 6px; }
+        #classQrModal .qr-counter { font-size: 0.75rem; color: #94a3b8; font-weight: 600; }
+        .qr-preset-row { display: flex; flex-wrap: wrap; gap: 8px; }
+        .qr-preset-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 14px; border-radius: 999px; font-size: 0.875rem; font-weight: 600; background: #fff; border: 1px solid #dbe2ea; color: #334155; transition: background .15s, border-color .15s, color .15s; }
+        .qr-preset-btn:hover { background: #f8fafc; border-color: #b6c2d0; color: #0f172a; }
+        .qr-preset-btn.active, .qr-preset-btn.active:hover { background-color: #0f172a; color: #ffffff; border-color: #0f172a; }
+        .qr-preset-btn.active i { color: #ffffff !important; }
+        .qr-preview-card { position: sticky; top: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 380px; padding: 24px; border-radius: 20px; background: #f8fafc; border: 1px solid #e8edf3; text-align: center; }
+        .qr-empty-icon { width: 72px; height: 72px; border-radius: 50%; background: #eef2f6; color: #94a3b8; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 14px; }
+        .qr-canvas-frame { padding: 12px; background: #fff; border-radius: 16px; border: 1px solid #e8edf3; box-shadow: 0 8px 24px -8px rgba(15, 23, 42, .12); cursor: pointer; margin-bottom: 16px; }
+        .qr-canvas-frame canvas { display: block; width: 100%; max-width: 232px; height: auto; }
+        .qr-expand-btn { min-height: 40px; margin-top: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+        #classQrModal .modal-footer .btn { min-height: 44px; font-weight: 600; }
+        @media (max-width: 767.98px) {
+            #classQrModal .modal-dialog { margin: 12px; }
+            #classQrModal .modal-header, #classQrModal .modal-body, #classQrModal .modal-footer { padding-left: 16px; padding-right: 16px; }
+            .qr-preview-card { position: static; min-height: 0; }
+            #classQrModal .modal-footer { flex-direction: column-reverse; align-items: stretch; }
+            #classQrModal .modal-footer .qr-footer-group { width: 100%; align-items: stretch; gap: 8px; }
+            #classQrModal .modal-footer .qr-footer-group .btn { flex: 1 1 0; justify-content: center; padding-left: 8px; padding-right: 8px; }
+            #classQrModal .modal-footer .qr-close-btn { display: none; }
         }
 
         /* Round 2: shared inner-surface helpers (replace heavy inline styles) */
@@ -2199,6 +2213,10 @@
                 <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-2 fw-bold d-inline-flex align-items-center gap-2" style="font-size: 0.85rem;" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
                     <i class="bi bi-calendar-heart text-danger" aria-hidden="true"></i>
                     <span>Holidays</span>
+                </button>
+                <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-2 fw-bold d-inline-flex align-items-center gap-2" style="font-size: 0.85rem;" onclick="openReportModal()" title="Report an Issue">
+                    <i class="bi bi-flag text-danger" aria-hidden="true"></i>
+                    <span>Report</span>
                 </button>
                 <c:if test="${sessionScope.user.deanSchoolId != null}">
                     <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2" style="font-size: 0.85rem;">
@@ -2282,35 +2300,15 @@
             </div>
         </header>
 
-        <%-- ALERTS --%>
-        <div aria-live="polite">
-            <c:if test="${param.twoFactorUpdated == 'true'}">
-                <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                    <i class="bi bi-shield-check me-2" aria-hidden="true"></i>Two-Factor Authentication (2FA) is now <strong>enabled</strong> for your account.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-            <c:if test="${param.twoFactorUpdated == 'false'}">
-                <div class="alert alert-info alert-dismissible fade show rounded-4" role="alert">
-                    <i class="bi bi-shield-slash me-2" aria-hidden="true"></i>Two-Factor Authentication (2FA) has been <strong>disabled</strong> for your account.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-            <c:if test="${not empty successMessage}">
-                <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                    <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>${successMessage}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-            <c:if test="${not empty errorMessage}">
-                <div class="alert alert-danger alert-dismissible fade show rounded-4" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>${errorMessage}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-        </div>
 
-        <%-- Calculate total enrolled students --%>
+        <c:if test="${empty availableShifts}">
+        <div class="alert alert-warning rounded-4 d-flex align-items-center justify-content-between gap-3 flex-wrap" role="alert">
+            <div><i class="bi bi-clock-history me-2" aria-hidden="true"></i><strong>Set your teaching availability.</strong> Deans can't assign you to classes until you choose the shifts you are free.</div>
+            <button type="button" class="btn btn-sm btn-warning rounded-pill px-3 fw-semibold" onclick="switchDesktopTab('settings', document.getElementById('tab-settings'))">Set availability</button>
+        </div>
+    </c:if>
+
+    <%-- Calculate total enrolled students --%>
         <c:set var="totalEnrolledCount" value="0" />
         <c:forEach var="entry" items="${sectionStudentsMap}">
             <c:set var="totalEnrolledCount" value="${totalEnrolledCount + entry.value.size()}" />
@@ -2485,7 +2483,10 @@
                                     <td>
                                         <div class="fw-semibold text-dark">${section.daysOfWeek}</div>
                                         <div class="text-muted small">${section.sessionShift}</div>
-                                    </td>
+                                    <c:if test="${not empty section.startDate}">
+                            <div class="text-muted small mt-1"><i class="bi bi-flag me-1" aria-hidden="true"></i>Starts ${section.startDateLabel}</div>
+                        </c:if>
+                    </td>
                                     <td><span class="badge bg-light text-dark border fw-semibold"><i class="bi bi-door-open me-1" aria-hidden="true"></i>${section.roomName}</span></td>
                                     <td><span class="tc-badge success"><i class="bi bi-people-fill me-1" aria-hidden="true"></i>${students.size()} Students</span></td>
                                     <td class="text-end pe-3">
@@ -2791,6 +2792,15 @@
                 <p class="text-muted small mb-0">Manage security settings, two-factor authentication, and academic roles</p>
             </div>
 
+            <div class="table-card" style="margin-bottom: 20px;">
+                <h3 class="h5 fw-bold text-dark mb-1"><i class="bi bi-clock-history text-primary me-2" aria-hidden="true"></i>Teaching Availability</h3>
+                <p class="text-muted small mb-3">Tell the dean which shifts you are free to teach. Deans can only assign you to classes in the shifts you confirm here.</p>
+                <jsp:include page="/WEB-INF/views/common/professor_availability_form.jsp">
+                    <jsp:param name="idPrefix" value="deskAvail" />
+                    <jsp:param name="returnTab" value="settings" />
+                </jsp:include>
+            </div>
+
             <div class="row g-4">
                 <div class="col-lg-6">
                     <!-- Profile Card -->
@@ -2817,7 +2827,7 @@
                             </div>
                             <div class="d-flex justify-content-between py-2">
                                 <span class="text-muted">Academic Term</span>
-                                <span class="fw-semibold text-dark">AY 2026-2027</span>
+                                <span class="fw-semibold text-dark">AY ${currentAcademicYear}</span>
                             </div>
                         </div>
                     </div>
@@ -3131,120 +3141,131 @@
     </c:forEach>
 
     <div class="modal fade" id="classQrModal" tabindex="-1" aria-labelledby="classQrModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
-                <div class="modal-header bg-light py-3 border-0">
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
-                            <i class="bi bi-qr-code-scan fs-5"></i>
-                        </div>
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="qr-head-icon"><i class="bi bi-qr-code-scan" aria-hidden="true"></i></span>
                         <div>
-                            <h5 class="modal-title h6 fw-bold mb-0 text-dark" id="classQrModalLabel">Class Link QR Generator</h5>
-                            <p class="text-muted small mb-0">Generate a scannable QR code for student groups, slides, or classroom materials</p>
+                            <h5 class="modal-title fw-bold text-dark mb-0" id="classQrModalLabel">Class Link QR</h5>
+                            <p class="text-muted small mb-0">Create a scannable code for your student group, slides or materials.</p>
                         </div>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4">
+
+                <div class="modal-body">
                     <div class="row g-4">
                         <div class="col-lg-7">
-                            <div class="mb-3">
-                                <label for="qrCourseSelect" class="form-label small fw-bold text-dark mb-1">Target Class Section</label>
-                                <select id="qrCourseSelect" class="form-select rounded-3 shadow-none border" onchange="onQrCourseChanged()">
-                                    <option value="" data-code="Class Link" data-title="General Class Link">General / Custom Class Link</option>
-                                    <c:forEach var="entry" items="${sectionStudentsMap}">
-                                        <c:set var="sec" value="${entry.key}" />
-                                        <option value="${sec.id}" data-code="<c:out value="${sec.courseCode}"/>" data-title="<c:out value="${sec.courseTitle}"/>">
-                                            <c:out value="${sec.courseCode}"/> — <c:out value="${sec.courseTitle}"/> (<c:out value="${sec.sessionShift}"/>)
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark mb-1">Link Category</label>
-                                <div class="d-flex flex-wrap gap-2">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn active" data-type="telegram" onclick="applyQrPreset('telegram')">
-                                        <i class="bi bi-telegram text-primary me-1"></i> Telegram
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="classroom" onclick="applyQrPreset('classroom')">
-                                        <i class="bi bi-google text-success me-1"></i> Classroom
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="drive" onclick="applyQrPreset('drive')">
-                                        <i class="bi bi-folder2-open text-warning me-1"></i> Drive / Slides
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="whatsapp" onclick="applyQrPreset('whatsapp')">
-                                        <i class="bi bi-whatsapp text-success me-1"></i> WhatsApp
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 qr-preset-btn" data-type="custom" onclick="applyQrPreset('custom')">
-                                        <i class="bi bi-link-45deg me-1"></i> Custom
-                                    </button>
+                            <div class="qr-section">
+                                <div class="qr-section-title">Class</div>
+                                <div class="qr-field">
+                                    <label for="qrCourseSelect" class="form-label">Target class section</label>
+                                    <select id="qrCourseSelect" class="form-select" onchange="onQrCourseChanged()">
+                                        <option value="" data-code="Class Link" data-title="General Class Link">General / Custom Class Link</option>
+                                        <c:forEach var="entry" items="${sectionStudentsMap}">
+                                            <c:set var="sec" value="${entry.key}" />
+                                            <option value="${sec.id}" data-code="<c:out value="${sec.courseCode}"/>" data-title="<c:out value="${sec.courseTitle}"/>">
+                                                <c:out value="${sec.courseCode}"/> — <c:out value="${sec.courseTitle}"/> (<c:out value="${sec.sessionShift}"/>)
+                                            </option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="qrUrlInput" class="form-label small fw-bold text-dark mb-1 d-flex justify-content-between align-items-center">
-                                    <span>Paste or Enter Link <span class="text-danger">*</span></span>
-                                    <button type="button" class="btn btn-link p-0 text-primary small text-decoration-none" onclick="pasteQrUrl()">
-                                        <i class="bi bi-clipboard me-1"></i>Paste from Clipboard
-                                    </button>
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-link-45deg"></i></span>
-                                    <input type="url" id="qrUrlInput" class="form-control border-start-0 ps-0 shadow-none" placeholder="https://t.me/+AbCdEf... or https://classroom.google.com/..." oninput="updateQrCode()" autocomplete="off">
+                            <div class="qr-section">
+                                <div class="qr-section-title">Link</div>
+                                <div class="qr-field">
+                                    <div class="form-label" id="qrPresetLabel">Link type</div>
+                                    <div class="qr-preset-row" role="group" aria-labelledby="qrPresetLabel">
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn active" data-type="telegram" aria-pressed="true" onclick="applyQrPreset('telegram')">
+                                            <i class="bi bi-telegram text-primary" aria-hidden="true"></i> Telegram
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn" data-type="classroom" aria-pressed="false" onclick="applyQrPreset('classroom')">
+                                            <i class="bi bi-google text-success" aria-hidden="true"></i> Classroom
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn" data-type="drive" aria-pressed="false" onclick="applyQrPreset('drive')">
+                                            <i class="bi bi-folder2-open text-warning" aria-hidden="true"></i> Drive / Slides
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn" data-type="whatsapp" aria-pressed="false" onclick="applyQrPreset('whatsapp')">
+                                            <i class="bi bi-whatsapp text-success" aria-hidden="true"></i> WhatsApp
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary qr-preset-btn" data-type="custom" aria-pressed="false" onclick="applyQrPreset('custom')">
+                                            <i class="bi bi-link-45deg" aria-hidden="true"></i> Custom
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="form-text small text-muted" id="qrUrlHelper">Students will be redirected to this link when they scan the QR code.</div>
+                                <div class="qr-field">
+                                    <div class="qr-label-row">
+                                        <label for="qrUrlInput" class="form-label">Link <span class="text-danger">*</span></label>
+                                        <button type="button" class="btn btn-link qr-inline-btn" onclick="pasteQrUrl()">
+                                            <i class="bi bi-clipboard me-1" aria-hidden="true"></i>Paste
+                                        </button>
+                                    </div>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-link-45deg" aria-hidden="true"></i></span>
+                                        <input type="url" id="qrUrlInput" class="form-control" placeholder="https://t.me/+AbCdEf... or https://classroom.google.com/..." oninput="updateQrCode()" autocomplete="off" aria-describedby="qrUrlHelper">
+                                    </div>
+                                    <div class="qr-help" id="qrUrlHelper">Students are sent to this link when they scan the code.</div>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="qrTitleInput" class="form-label small fw-bold text-dark mb-1">Slide Display Title</label>
-                                <input type="text" id="qrTitleInput" class="form-control rounded-3 shadow-none border" placeholder="e.g. Join Class Telegram Group" oninput="updateQrCode()" maxlength="60">
-                            </div>
-
-                            <div>
-                                <label for="qrNoteInput" class="form-label small fw-bold text-dark mb-1">Slide Note / Instruction (Optional)</label>
-                                <input type="text" id="qrNoteInput" class="form-control rounded-3 shadow-none border" placeholder="e.g. Scan with your phone camera to join" oninput="updateQrCode()" maxlength="80">
+                            <div class="qr-section">
+                                <div class="qr-section-title">Slide text</div>
+                                <div class="qr-field">
+                                    <div class="qr-label-row">
+                                        <label for="qrTitleInput" class="form-label">Title</label>
+                                        <span class="qr-counter" id="qrTitleCount" aria-hidden="true">0/60</span>
+                                    </div>
+                                    <input type="text" id="qrTitleInput" class="form-control" placeholder="e.g. Join Class Telegram Group" oninput="updateQrCode()" maxlength="60">
+                                </div>
+                                <div class="qr-field">
+                                    <div class="qr-label-row">
+                                        <label for="qrNoteInput" class="form-label">Instruction <span class="text-muted fw-normal">(optional)</span></label>
+                                        <span class="qr-counter" id="qrNoteCount" aria-hidden="true">0/80</span>
+                                    </div>
+                                    <input type="text" id="qrNoteInput" class="form-control" placeholder="e.g. Scan with your phone camera to join" oninput="updateQrCode()" maxlength="80">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
-                            <div class="w-100 p-3 bg-light rounded-4 border text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 340px;">
-                                <div id="qrEmptyState" class="py-5 text-muted">
-                                    <i class="bi bi-qr-code fs-1 d-block mb-2 text-secondary opacity-50"></i>
-                                    <div class="fw-semibold small">No Link Entered</div>
-                                    <div class="small text-muted" style="font-size:0.8rem;">Paste a link on the left to generate QR code</div>
+                        <div class="col-lg-5">
+                            <div class="qr-preview-card">
+                                <div id="qrEmptyState" class="text-muted">
+                                    <span class="qr-empty-icon"><i class="bi bi-qr-code" aria-hidden="true"></i></span>
+                                    <div class="fw-bold text-dark">No link yet</div>
+                                    <div class="small mt-1">Enter a link and your QR code appears here.</div>
                                 </div>
                                 <div id="qrPreviewWrap" style="display:none;" class="w-100 d-flex flex-column align-items-center">
-                                    <div class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-1 mb-2 fw-semibold" id="qrPreviewBadge" style="font-size:0.75rem;">
-                                        Class Link
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 mb-3 fw-semibold" id="qrPreviewBadge" style="font-size:0.8rem;">Class Link</span>
+                                    <div class="qr-canvas-frame" onclick="expandToSlideQr()" title="Click to view the large presentation slide">
+                                        <canvas id="qrCanvasPreview" aria-label="QR code preview"></canvas>
                                     </div>
-                                    <div class="p-2 bg-white rounded-3 border shadow-sm mb-2" style="cursor: pointer;" onclick="expandToSlideQr()" title="Click to view large presentation slide">
-                                        <canvas id="qrCanvasPreview" style="display:block; max-width: 220px; max-height: 220px; width: 100%; height: auto;"></canvas>
-                                    </div>
-                                    <div class="small fw-bold text-dark text-truncate w-100 px-2" id="qrPreviewTitle"></div>
-                                    <div class="small text-muted text-truncate w-100 px-2" id="qrPreviewUrl" style="font-size:0.72rem;"></div>
-                                    <div class="mt-2 text-primary small fw-semibold" style="cursor:pointer;" role="button" tabindex="0" onclick="expandToSlideQr()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();expandToSlideQr();}">
-                                        <i class="bi bi-arrows-fullscreen me-1"></i>Click to expand for presentation
-                                    </div>
+                                    <div class="fw-bold text-dark text-truncate w-100 px-2" id="qrPreviewTitle"></div>
+                                    <div class="small text-muted text-truncate w-100 px-2 mt-1" id="qrPreviewUrl"></div>
+                                    <button type="button" class="btn btn-link qr-expand-btn" onclick="expandToSlideQr()">
+                                        <i class="bi bi-arrows-fullscreen me-1" aria-hidden="true"></i>Expand for presentation
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer bg-light py-3 border-0 d-flex flex-wrap justify-content-between align-items-center gap-2">
-                    <div class="d-flex align-items-center gap-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2 fw-semibold" id="qrCopyLinkBtn" onclick="copyQrLink()" disabled>
-                            <i class="bi bi-link-45deg me-1"></i>Copy Link
+
+                <div class="modal-footer d-flex flex-wrap justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2 qr-footer-group">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-3 d-inline-flex align-items-center gap-2" id="qrCopyLinkBtn" onclick="copyQrLink()" disabled>
+                            <i class="bi bi-link-45deg" aria-hidden="true"></i>Copy link
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3 py-2 fw-semibold" id="qrDownloadBtn" onclick="downloadQrImage()" disabled>
-                            <i class="bi bi-download me-1"></i>Download PNG
+                        <button type="button" class="btn btn-outline-success rounded-pill px-3 d-inline-flex align-items-center gap-2" id="qrDownloadBtn" onclick="downloadQrImage()" disabled>
+                            <i class="bi bi-download" aria-hidden="true"></i>Download PNG
                         </button>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <button type="button" class="btn btn-sm btn-light rounded-pill px-3 py-2" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm d-inline-flex align-items-center gap-2" id="qrPresentBtn" onclick="expandToSlideQr()" disabled>
-                            <i class="bi bi-easel-fill"></i>
-                            <span>Present on Slide (Big QR)</span>
+                    <div class="d-flex align-items-center gap-2 qr-footer-group">
+                        <button type="button" class="btn btn-light rounded-pill px-3 qr-close-btn" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary rounded-pill px-4 d-inline-flex align-items-center gap-2 shadow-sm" id="qrPresentBtn" onclick="expandToSlideQr()" disabled>
+                            <i class="bi bi-easel-fill" aria-hidden="true"></i>
+                            <span>Present on slide</span>
                         </button>
                     </div>
                 </div>
@@ -3391,9 +3412,11 @@
                 if (btn.getAttribute('data-type') === type) {
                     btn.classList.add('active', 'btn-primary', 'text-white');
                     btn.classList.remove('btn-outline-secondary');
+                    btn.setAttribute('aria-pressed', 'true');
                 } else {
                     btn.classList.remove('active', 'btn-primary', 'text-white');
                     btn.classList.add('btn-outline-secondary');
+                    btn.setAttribute('aria-pressed', 'false');
                 }
             });
 
@@ -3450,7 +3473,15 @@
             updateQrCode();
         }
 
+        function updateQrCounters() {
+            var t = document.getElementById('qrTitleInput'), n = document.getElementById('qrNoteInput');
+            var tc = document.getElementById('qrTitleCount'), nc = document.getElementById('qrNoteCount');
+            if (t && tc) tc.textContent = t.value.length + '/' + (t.maxLength > 0 ? t.maxLength : 60);
+            if (n && nc) nc.textContent = n.value.length + '/' + (n.maxLength > 0 ? n.maxLength : 80);
+        }
+
         function updateQrCode() {
+            updateQrCounters();
             var urlInput = document.getElementById('qrUrlInput');
             var rawUrl = urlInput ? urlInput.value.trim() : '';
             var emptyState = document.getElementById('qrEmptyState');
@@ -3618,6 +3649,7 @@
         }
 
         function showCopiedFeedback() {
+            if (window.Sonner) Sonner.success('Link copied to clipboard.', 'Copied');
             var btn = document.getElementById('qrCopyLinkBtn');
             if (btn) {
                 var origHtml = btn.innerHTML;
@@ -3862,26 +3894,6 @@
 
 <div class="d-block d-md-none mobile-app-container">
 
-    <c:if test="${param.twoFactorUpdated == 'true'}">
-        <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
-            <i class="bi bi-shield-check me-1"></i>2FA <strong>enabled</strong>.<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </c:if>
-    <c:if test="${param.twoFactorUpdated == 'false'}">
-        <div class="alert alert-info alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
-            <i class="bi bi-shield-slash me-1"></i>2FA <strong>disabled</strong>.<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </c:if>
-    <c:if test="${not empty successMessage}">
-        <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
-            <i class="bi bi-check-circle-fill me-1"></i>${successMessage}<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </c:if>
-    <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-1"></i>${errorMessage}<button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </c:if>
     
     <header class="mobile-top-bar" role="banner">
         <div class="mobile-user-info">
@@ -4238,6 +4250,15 @@
         </div>
 
         <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
+            <div class="fw-bold small text-dark mb-1"><i class="bi bi-clock-history me-2 text-primary"></i>Teaching Availability</div>
+            <div class="text-muted mb-3" style="font-size:0.75rem;">Deans can only assign you to classes in the shifts you confirm.</div>
+            <jsp:include page="/WEB-INF/views/common/professor_availability_form.jsp">
+                <jsp:param name="idPrefix" value="mobAvail" />
+                <jsp:param name="returnTab" value="profile" />
+            </jsp:include>
+        </div>
+
+        <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <div>
                     <div class="fw-bold small text-dark"><i class="bi bi-shield-lock me-2 text-primary"></i>Two-Factor Authentication</div>
@@ -4257,6 +4278,10 @@
                 </div>
             </form>
         </div>
+
+        <button type="button" class="btn btn-outline-secondary w-100 rounded-3 py-2 fw-semibold mb-3 d-flex align-items-center justify-content-center gap-2" style="min-height:44px;" onclick="openReportModal()">
+            <i class="bi bi-flag text-danger" aria-hidden="true"></i>Report an Issue
+        </button>
 
         <c:if test="${sessionScope.user.deanSchoolId != null}">
             <a href="${pageContext.request.contextPath}/dean/dashboard" class="btn btn-dark w-100 rounded-pill py-3 fw-bold mb-3 d-flex align-items-center justify-content-center gap-2 shadow-sm text-white text-decoration-none" style="min-height:48px;">
@@ -4288,11 +4313,6 @@
         </button>
     </nav>
 
-    <!-- Toast Notification for Clipboard -->
-    <div id="mobileToast" class="mobile-toast" role="status" aria-live="polite">
-        <i class="bi bi-check2-circle text-success fs-6"></i>
-        <span id="mobileToastText">Copied to clipboard!</span>
-    </div>
 </div>
 
 <!-- Mobile Security / Notifications Modal -->
@@ -4772,16 +4792,7 @@
         }
 
         function onCopySuccess() {
-            var toast = document.getElementById('mobileToast');
-            var toastText = document.getElementById('mobileToastText');
-            if (toast) {
-                if (toastText) toastText.textContent = 'Faculty ID copied: ' + idText;
-                toast.classList.add('show');
-                clearTimeout(window._profToastTimer);
-                window._profToastTimer = setTimeout(function () {
-                    toast.classList.remove('show');
-                }, 2500);
-            }
+            if (window.Sonner) Sonner.success('Faculty ID copied: ' + idText, 'Copied');
             if (btnEl) {
                 var origHtml = btnEl.innerHTML;
                 btnEl.innerHTML = '<i class="bi bi-check2 text-success"></i> <span>Copied!</span>';
@@ -5133,6 +5144,10 @@
                 updated++;
             }
         });
+        if (window.Sonner) {
+            if (updated > 0) Sonner.success('Attendance scores calculated for ' + updated + (updated === 1 ? ' student.' : ' students.'), 'Attendance Calculated');
+            else Sonner.info('No session roll-call data available to calculate.', 'Nothing to Calculate');
+        }
         if (btn) {
             var origHtml = btn.innerHTML;
             btn.innerHTML = '<i class="bi bi-check2 text-success me-1"></i> Calculated!';
@@ -5175,6 +5190,10 @@
 </script>
 
 <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
+<jsp:include page="/WEB-INF/views/common/report_modal.jsp">
+    <jsp:param name="formAction" value="${pageContext.request.contextPath}/professor/report"/>
+    <jsp:param name="returnTab" value="dashboard"/>
+</jsp:include>
 <div id="logoutConfirmModal" class="logout-modal-overlay" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
         <div class="logout-modal-card" style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
             <div style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
@@ -5202,5 +5221,6 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
 });
 </script>
+<script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
 </body>
 </html>

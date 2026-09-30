@@ -33,6 +33,7 @@ import com.unitrs.model.entity.TermRegistrationRequest;
 import com.unitrs.repository.TermRegistrationRepository;
 import com.unitrs.model.entity.Term;
 import com.unitrs.repository.TermRepository;
+import com.unitrs.repository.ReportRepository;
 import com.unitrs.utils.GradeCalculator;
 import com.unitrs.utils.ScheduleUtils;
 
@@ -47,6 +48,7 @@ public class StudentController extends HttpServlet {
     private ClassSectionRepository classSectionRepository;
     private TermRegistrationRepository termRegistrationRepository;
     private TermRepository termRepository;
+    private ReportRepository reportRepository = new ReportRepository();
 
     @Override
     public void init() throws ServletException {
@@ -221,12 +223,15 @@ public class StudentController extends HttpServlet {
                 request.setAttribute("successMessage", "Enrolled in course successfully!");
             } else if ("dropped".equals(success)) {
                 request.setAttribute("successMessage", "Course dropped successfully.");
+            } else if ("report_submitted".equals(success)) {
+                request.setAttribute("successMessage", "Your report has been sent to your dean and the administrators.");
             } else if (success != null) {
                 request.setAttribute("successMessage", "Operation completed successfully!");
             }
             if (request.getParameter("error") != null) {
                 request.setAttribute("errorMessage", request.getParameter("error"));
             }
+            request.setAttribute("reportCatalog", com.unitrs.utils.ReportCatalog.getCatalog());
 
             request.getRequestDispatcher("/WEB-INF/views/student/dashboard.jsp").forward(request, response);
         } else {
@@ -289,6 +294,12 @@ public class StudentController extends HttpServlet {
                     request.getSession().setAttribute("user", user);
                 }
                 response.sendRedirect(request.getContextPath() + "/student/dashboard?success=profile_updated");
+            } else if ("submitReport".equals(action)) {
+                reportRepository.submit(user, "STUDENT", user.getStudentSchoolId(),
+                        request.getParameter("reporterName"), request.getParameter("issue"), request.getParameter("details"));
+                String tab = request.getParameter("tab");
+                String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + java.net.URLEncoder.encode(tab.trim(), java.nio.charset.StandardCharsets.UTF_8) : "";
+                response.sendRedirect(request.getContextPath() + "/student/dashboard?success=report_submitted" + tabParam);
             } else if ("enroll".equals(action)) {
                 int classSectionId = Integer.parseInt(request.getParameter("classSectionId"));
                 ClassSection targetSection = classSectionRepository.findById(classSectionId);

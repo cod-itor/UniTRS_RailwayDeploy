@@ -29,6 +29,12 @@ public class EnrollmentRepository extends BaseRepository {
         return executeQuery(sql, this::mapResultSetToEnrollment, studentId);
     }
 
+
+    public boolean enrollStudentInTerm(int studentId, int termId) {
+        String sql = "INSERT IGNORE INTO enrollments (student_id, class_section_id) " +
+                     "SELECT ?, id FROM class_sections WHERE term_id = ?";
+        return executeUpdate(sql, studentId, termId) >= 0;
+    }
     public boolean enrollStudent(int studentId, int classSectionId) {
         String sql = "INSERT INTO enrollments (student_id, class_section_id) " +
                      "SELECT ?, ? FROM class_sections cs " +

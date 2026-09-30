@@ -11,6 +11,13 @@ public class ScheduleUtils {
 
     private ScheduleUtils() {}
 
+    /** Academic year runs August to July, e.g. "2026-2027" for any date from Aug 2026 to Jul 2027. */
+    public static String currentAcademicYear() {
+        java.time.LocalDate today = java.time.LocalDate.now();
+        int startYear = today.getMonthValue() >= 8 ? today.getYear() : today.getYear() - 1;
+        return startYear + "-" + (startYear + 1);
+    }
+
     public static Set<String> parseDays(String daysStr) {
         Set<String> result = new HashSet<>();
         if (daysStr == null || daysStr.trim().isEmpty()) {

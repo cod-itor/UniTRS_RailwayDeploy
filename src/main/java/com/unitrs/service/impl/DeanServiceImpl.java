@@ -266,6 +266,10 @@ public class DeanServiceImpl implements DeanService {
             throw new ValidationException("Cannot schedule: This course is not bundled into the selected term for your school.");
         }
 
+        if (!userRepository.findAvailableShifts(professorId).contains(sessionShift)) {
+            throw new ValidationException("This professor has not marked themselves available for the " + String.valueOf(sessionShift).toLowerCase() + " shift.");
+        }
+
         String exactDays = daysOfWeek.trim();
         List<ClassSection> allSections = classSectionRepository.findAllSections();
 
@@ -314,6 +318,19 @@ public class DeanServiceImpl implements DeanService {
         section.setSessionShift(SessionShift.valueOf(sessionShift));
         section.setDaysOfWeek(exactDays);
         section.setAcademicYear(academicYear.trim());
+
+        com.unitrs.model.entity.Term term = termRepository.findById(termId);
+        if (term == null) {
+            throw new ValidationException("Term not found.");
+        }
+        com.unitrs.utils.TermCalendar.Window window = com.unitrs.utils.TermCalendar.window(academicYear.trim(), term.getTermNumber());
+        java.time.LocalDate first = com.unitrs.utils.TermCalendar.firstSession(exactDays, window.getStart());
+        java.time.LocalDate last = com.unitrs.utils.TermCalendar.sessionDate(exactDays, window.getStart(), com.unitrs.utils.TermCalendar.SESSIONS_PER_TERM);
+        if (last.isAfter(window.getEnd())) {
+            throw new ValidationException("The 15 class sessions do not fit inside the term window (" + window.getStart() + " to " + window.getEnd() + ").");
+        }
+        section.setStartDate(java.sql.Date.valueOf(first));
+        section.setEndDate(java.sql.Date.valueOf(last));
 
         if (!classSectionRepository.save(section)) {
             throw new RuntimeException("Failed to save class section.");

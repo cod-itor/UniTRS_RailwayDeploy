@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
     <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -448,6 +450,16 @@
             color: #ffffff;
         }
 
+        .rpt-badge { display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; font-weight:700; padding:4px 12px; border-radius:999px; white-space:nowrap; }
+        .rpt-badge.student { background:#dbeafe; color:#1d4ed8; }
+        .rpt-badge.professor { background:#ede9fe; color:#6d28d9; }
+        .rpt-badge.cat { background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; }
+        .rpt-issue { max-width:420px; white-space:pre-wrap; overflow-wrap:anywhere; font-size:0.85rem; color:#0f172a; }
+        .rpt-sub { font-size:0.75rem; color:#64748b; overflow-wrap:anywhere; }
+        .rpt-empty { text-align:center; padding:40px 16px; color:#64748b; }
+        .rpt-empty i { font-size:2rem; display:block; margin-bottom:8px; }
+        .rpt-select { border-radius:999px; font-size:0.8rem; max-width:220px; }
+        @media (max-width: 767.98px) { .rpt-select { max-width:none; width:100%; } }
         .tab-section {
             display: none;
         }
@@ -754,8 +766,8 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
     /* Holidays view embedded in the tab */
     #mobile-view-holidays .holiday-container-wrap { padding-left: 0; padding-right: 0; }
 
-    /* Toast */
-    .position-fixed.top-0.start-50 { width: calc(100% - 16px); max-width: 480px; padding-top: calc(12px + env(safe-area-inset-top, 0px)) !important; }
+    /* Sonner toasts: keep clear of notches on phones */
+    .sonner-toaster { top: calc(env(safe-area-inset-top, 0px) + 1rem); }
 
     /* Modals (Bootstrap holidays modal) */
     .modal { --bs-modal-margin: 16px; }
@@ -785,14 +797,18 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
 </head>
 <body>
 
+    <%-- Sonner flash triggers (single set; desktop and mobile share them) --%>
+    <c:if test="${param.twoFactorUpdated == 'true'}">
+        <div class="sonner-flash-trigger d-none" data-type="success" data-title="Two-Factor Authentication" data-message="Two-factor authentication is now enabled."></div>
+    </c:if>
+    <c:if test="${param.twoFactorUpdated == 'false'}">
+        <div class="sonner-flash-trigger d-none" data-type="info" data-title="Two-Factor Authentication" data-message="Two-factor authentication has been disabled."></div>
+    </c:if>
     <c:if test="${not empty successMessage}">
-        <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 99999;">
-            <div class="alert alert-success alert-dismissible fade show shadow-lg rounded-4 d-flex align-items-center gap-2 mb-0 py-2 px-4" role="alert" style="border: 1px solid #86efac; background: #f0fdf4; color: #166534;">
-                <i class="bi bi-check-circle-fill text-success fs-5"></i>
-                <div class="fw-bold small">${successMessage}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
-            </div>
-        </div>
+        <div class="sonner-flash-trigger d-none" data-type="success" data-title="Success" data-message="<c:out value='${successMessage}' />"></div>
+    </c:if>
+    <c:if test="${not empty errorMessage}">
+        <div class="sonner-flash-trigger d-none" data-type="error" data-title="Action Failed" data-message="<c:out value='${errorMessage}' />"></div>
     </c:if>
 
     <div class="desktop-layout">
@@ -821,6 +837,10 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
                 <button role="tab" id="tab-deans" aria-selected="${currentTab == 'deans' ? 'true' : 'false'}" class="${currentTab == 'deans' ? 'active' : ''}" onclick="switchDesktopTab('deans', this)">
                     <i class="bi bi-building-fill"></i> Dean Leadership
                     <span class="nav-badge">${schools.size()}</span>
+                </button>
+                <button role="tab" id="tab-reports" aria-selected="${currentTab == 'reports' ? 'true' : 'false'}" class="${currentTab == 'reports' ? 'active' : ''}" onclick="switchDesktopTab('reports', this)">
+                    <i class="bi bi-flag-fill"></i> Reports
+                    <span class="nav-badge">${reports.size()}</span>
                 </button>
                 <button role="tab" id="tab-holidays" aria-selected="${currentTab == 'holidays' ? 'true' : 'false'}" class="${currentTab == 'holidays' ? 'active' : ''}" onclick="switchDesktopTab('holidays', this)">
                     <i class="bi bi-calendar-heart"></i> School Holidays
@@ -1367,6 +1387,72 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
                 </div>
             </section>
 
+            <section id="admin-tab-reports" class="tab-section ${currentTab == 'reports' ? 'active' : ''}">
+                <div class="section-head d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1">User Reports</h4>
+                        <div class="text-muted small">Issues submitted by students and professors</div>
+                    </div>
+                    <span class="badge bg-primary text-white rounded-pill px-3 py-1 fw-bold font-monospace">${reports.size()} Reports</span>
+                </div>
+
+                <div class="table-card">
+                    <div class="tc-header flex-wrap gap-2">
+                        <h3 class="d-flex align-items-center gap-2">
+                            <i class="bi bi-flag-fill text-primary"></i> All Reports
+                        </h3>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <select id="desktopReportRoleFilter" class="form-select form-select-sm rpt-select" aria-label="Filter reports by role" onchange="applyReportFilters()">
+                                <option value="">All roles</option>
+                                <option value="STUDENT">Students</option>
+                                <option value="PROFESSOR">Professors</option>
+                            </select>
+                            <select id="desktopReportCategoryFilter" class="form-select form-select-sm rpt-select" aria-label="Filter reports by category" onchange="applyReportFilters()">
+                                <option value="">All categories</option>
+                            </select>
+                        </div>
+                    </div>
+                    <c:choose>
+                    <c:when test="${empty reports}">
+                        <div class="rpt-empty"><i class="bi bi-inbox"></i>No reports have been submitted yet.</div>
+                    </c:when>
+                    <c:otherwise>
+                    <div class="tc-table-wrap">
+                        <table class="tc-table" id="desktopReportsTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Reporter</th>
+                                    <th>Role</th>
+                                    <th>Category</th>
+                                    <th>Issue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="r" items="${reports}">
+                                    <tr class="report-row" data-role="<c:out value='${r.reporterRole}'/>" data-category="<c:out value='${r.category}'/>">
+                                        <td class="text-nowrap"><span class="small">${r.createdAtLabel}</span></td>
+                                        <td>
+                                            <div class="fw-bold text-dark small"><c:out value="${r.reporterName}"/></div>
+                                            <div class="rpt-sub"><c:out value="${empty r.reporterIdentifier ? r.reporterEmail : r.reporterIdentifier}"/></div>
+                                            <c:if test="${not empty r.schoolId}">
+                                                <c:forEach var="sch" items="${schools}"><c:if test="${sch.id == r.schoolId}"><div class="rpt-sub"><c:out value="${sch.schoolName}"/></div></c:if></c:forEach>
+                                            </c:if>
+                                        </td>
+                                        <td><span class="rpt-badge ${r.reporterRole == 'PROFESSOR' ? 'professor' : 'student'}"><c:out value="${r.reporterRole == 'PROFESSOR' ? 'Professor' : 'Student'}"/></span></td>
+                                        <td><span class="rpt-badge cat"><c:out value="${r.category}"/></span></td>
+                                        <td><div class="rpt-issue"><c:out value="${r.issue}"/></div><c:if test="${not empty r.details}"><div class="small text-muted mt-1" style="white-space:pre-wrap; overflow-wrap:anywhere; font-weight:400;"><c:out value="${r.details}"/></div></c:if></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="desktopReportsNoMatch" class="rpt-empty" style="display:none;"><i class="bi bi-search"></i>No reports match the current filters.</div>
+                    </c:otherwise>
+                    </c:choose>
+                </div>
+            </section>
+
             <section id="admin-tab-holidays" class="tab-section ${currentTab == 'holidays' ? 'active' : ''}">
                 <jsp:include page="/WEB-INF/views/common/school_holidays_view.jsp" />
             </section>
@@ -1561,6 +1647,21 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
                     <i class="bi bi-chevron-right text-muted"></i>
                 </div>
             </div>
+            <div class="mobile-card-item p-3 mb-3" onclick="switchAdminMobileTab('reports')" role="button" tabindex="0" style="cursor:pointer;">
+                <div class="d-flex align-items-center justify-content-between gap-2">
+                    <div class="d-flex align-items-center gap-2" style="min-width:0;">
+                        <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary"><i class="bi bi-flag-fill fs-5"></i></div>
+                        <div style="min-width:0;">
+                            <div class="fw-bold text-dark small">User Reports</div>
+                            <div class="text-muted" style="font-size:0.75rem;">Issues from students &amp; professors</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                        <span class="badge bg-primary text-white rounded-pill px-2 py-1 font-monospace">${reports.size()}</span>
+                        <i class="bi bi-chevron-right text-muted"></i>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="mobile-view-users" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-users">
@@ -1656,6 +1757,49 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
                     </div>
                 </c:forEach>
             </div>
+        </section>
+
+        <section id="mobile-view-reports" class="mobile-sub-view" role="tabpanel" aria-label="User Reports">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-light border rounded-pill px-3" onclick="switchAdminMobileTab('home')" aria-label="Back to overview"><i class="bi bi-chevron-left"></i></button>
+                    <h6 class="fw-bold text-dark mb-0">User Reports</h6>
+                </div>
+                <span class="badge bg-primary text-white rounded-pill px-2 py-1 font-monospace">${reports.size()}</span>
+            </div>
+            <div class="d-flex flex-column gap-2 mb-3">
+                <select id="mobileReportRoleFilter" class="form-select rpt-select" aria-label="Filter reports by role" onchange="applyReportFilters()">
+                    <option value="">All roles</option>
+                    <option value="STUDENT">Students</option>
+                    <option value="PROFESSOR">Professors</option>
+                </select>
+                <select id="mobileReportCategoryFilter" class="form-select rpt-select" aria-label="Filter reports by category" onchange="applyReportFilters()">
+                    <option value="">All categories</option>
+                </select>
+            </div>
+            <c:if test="${empty reports}">
+                <div class="mobile-card-item rpt-empty"><i class="bi bi-inbox"></i>No reports have been submitted yet.</div>
+            </c:if>
+            <div id="mobileReportsList">
+                <c:forEach var="r" items="${reports}">
+                    <div class="mobile-card-item p-3 mb-2 mobile-report-card" data-role="<c:out value='${r.reporterRole}'/>" data-category="<c:out value='${r.category}'/>">
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                            <div style="min-width:0;">
+                                <div class="fw-bold text-dark small" style="overflow-wrap:anywhere;"><c:out value="${r.reporterName}"/></div>
+                                <div class="rpt-sub"><c:out value="${empty r.reporterIdentifier ? r.reporterEmail : r.reporterIdentifier}"/></div>
+                                <c:if test="${not empty r.schoolId}">
+                                    <c:forEach var="sch" items="${schools}"><c:if test="${sch.id == r.schoolId}"><div class="rpt-sub"><c:out value="${sch.schoolName}"/></div></c:if></c:forEach>
+                                </c:if>
+                            </div>
+                            <span class="rpt-badge flex-shrink-0 ${r.reporterRole == 'PROFESSOR' ? 'professor' : 'student'}"><c:out value="${r.reporterRole == 'PROFESSOR' ? 'Professor' : 'Student'}"/></span>
+                        </div>
+                        <div class="mb-2"><span class="rpt-badge cat"><c:out value="${r.category}"/></span></div>
+                        <div class="rpt-issue mb-2" style="max-width:none;"><c:out value="${r.issue}"/></div><c:if test="${not empty r.details}"><div class="small text-muted mt-1" style="white-space:pre-wrap; overflow-wrap:anywhere; font-weight:400;"><c:out value="${r.details}"/></div></c:if>
+                        <div class="rpt-sub"><i class="bi bi-clock me-1"></i>${r.createdAtLabel}</div>
+                    </div>
+                </c:forEach>
+            </div>
+            <div id="mobileReportsNoMatch" class="mobile-card-item rpt-empty" style="display:none;"><i class="bi bi-search"></i>No reports match the current filters.</div>
         </section>
 
         <section id="mobile-view-deans" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-deans">
@@ -1964,6 +2108,25 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
             });
         }
 
+        function applyReportFilters() {
+            function val(id) { var e = document.getElementById(id); return e ? e.value : ''; }
+            var q = (val('adminSearchInput') || '').toLowerCase().trim();
+            function run(sel, roleId, catId, noMatchId, useSearch) {
+                var role = val(roleId), cat = val(catId), shown = 0, total = 0;
+                document.querySelectorAll(sel).forEach(function(el) {
+                    total++;
+                    var ok = (!role || el.getAttribute('data-role') === role) && (!cat || el.getAttribute('data-category') === cat)
+                        && (!useSearch || !q || (el.textContent || '').toLowerCase().indexOf(q) !== -1);
+                    el.style.display = ok ? '' : 'none';
+                    if (ok) shown++;
+                });
+                var nm = document.getElementById(noMatchId);
+                if (nm) nm.style.display = (total > 0 && shown === 0) ? '' : 'none';
+            }
+            run('#desktopReportsTable tbody tr.report-row', 'desktopReportRoleFilter', 'desktopReportCategoryFilter', 'desktopReportsNoMatch', true);
+            run('#mobileReportsList .mobile-report-card', 'mobileReportRoleFilter', 'mobileReportCategoryFilter', 'mobileReportsNoMatch', false);
+        }
+
         function filterActiveAdminTable(query) {
             query = (query || '').toLowerCase().trim();
             var activeTab = document.querySelector('.tab-section.active');
@@ -1981,6 +2144,8 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
                 return;
             }
 
+            if (activeTab.id === 'admin-tab-reports') { applyReportFilters(); return; }
+
             var rows = activeTab.querySelectorAll('.tc-table tbody tr');
             rows.forEach(function(row) {
                 var text = (row.textContent || '').toLowerCase();
@@ -1993,6 +2158,21 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            var seen = {}, cats = [];
+            document.querySelectorAll('[data-category]').forEach(function(el) {
+                var c = el.getAttribute('data-category');
+                if (c && !seen[c]) { seen[c] = true; cats.push(c); }
+            });
+            cats.sort();
+            ['desktopReportCategoryFilter', 'mobileReportCategoryFilter'].forEach(function(id) {
+                var sel = document.getElementById(id);
+                if (!sel) return;
+                cats.forEach(function(c) {
+                    var o = document.createElement('option');
+                    o.value = c; o.textContent = c;
+                    sel.appendChild(o);
+                });
+            });
             var params = new URLSearchParams(window.location.search);
             var initialTab = params.get('tab');
             if (initialTab) {
@@ -2016,5 +2196,6 @@ body .table-card > h3 { font-size: 1rem; font-weight: 800; margin: 0 0 16px; col
             if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
         });
     </script>
+    <script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
 </body>
 </html>

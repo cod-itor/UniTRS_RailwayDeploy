@@ -16,6 +16,7 @@
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
                 rel="stylesheet">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
             <jsp:include page="/WEB-INF/views/common/pwa_head.jsp" />
             <style>
                 body {
@@ -1201,33 +1202,8 @@
                         }
                     }
 
-                    /* Toast Notification for ID copy */
-                    .mobile-toast {
-                        position: fixed;
-                        bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
-                        left: 50%;
-                        transform: translateX(-50%) translateY(20px);
-                        background: #0f172a;
-                        color: #ffffff;
-                        padding: 9px 18px;
-                        border-radius: 99px;
-                        font-size: 0.8rem;
-                        font-weight: 700;
-                        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
-                        z-index: 1060;
-                        max-width: calc(100% - 32px);
-                        opacity: 0;
-                        pointer-events: none;
-                        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                    }
-
-                    .mobile-toast.show {
-                        opacity: 1;
-                        transform: translateX(-50%) translateY(0);
-                    }
+                    /* Sonner toasts: keep clear of notches on phones */
+                    .sonner-toaster { top: calc(env(safe-area-inset-top, 0px) + 1rem); }
 
                     /* ---- Mobile polish / consistency overrides ---- */
 
@@ -2624,6 +2600,19 @@
         </head>
 
         <body>
+                <%-- Sonner flash triggers (single set; desktop and mobile share them) --%>
+                <c:if test="${param.twoFactorUpdated == 'true'}">
+                    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Two-Factor Authentication" data-message="Two-factor authentication is now enabled."></div>
+                </c:if>
+                <c:if test="${param.twoFactorUpdated == 'false'}">
+                    <div class="sonner-flash-trigger d-none" data-type="info" data-title="Two-Factor Authentication" data-message="Two-factor authentication has been disabled."></div>
+                </c:if>
+                <c:if test="${not empty successMessage}">
+                    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Success" data-message="<c:out value='${successMessage}' />"></div>
+                </c:if>
+                <c:if test="${not empty errorMessage}">
+                    <div class="sonner-flash-trigger d-none" data-type="error" data-title="Action Failed" data-message="<c:out value='${errorMessage}' />"></div>
+                </c:if>
                 <c:set var="needStudentId" value="${empty user.userIdentifier or user.userIdentifier.startsWith('9')}" />
                 <c:set var="needCurrentTerm" value="${empty user.currentTermId or user.currentTermId le 0}" />
 
@@ -2676,6 +2665,11 @@
                                                                     <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
                                                                         <i class="bi bi-calendar-heart text-danger"></i>
                                                                         <span class="small">Holidays</span>
+                                                                    </button>
+
+                                                                    <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="openReportModal()" title="Report an Issue">
+                                                                        <i class="bi bi-flag text-danger"></i>
+                                                                        <span class="small">Report</span>
                                                                     </button>
 
                                                                     <div class="dropdown">
@@ -2756,39 +2750,6 @@
                                                                 </div>
                                                             </header>
 
-                                                            <%-- ALERTS --%>
-                                                                <c:if test="${param.twoFactorUpdated == 'true'}">
-                                                                    <div
-                                                                        class="alert alert-success alert-dismissible fade show rounded-4">
-                                                                        <i class="bi bi-shield-check me-2"></i>2FA is
-                                                                        now <strong>enabled</strong>.<button
-                                                                            type="button" class="btn-close"
-                                                                            data-bs-dismiss="alert"></button></div>
-                                                                </c:if>
-                                                                <c:if test="${param.twoFactorUpdated == 'false'}">
-                                                                    <div
-                                                                        class="alert alert-info alert-dismissible fade show rounded-4">
-                                                                        <i class="bi bi-shield-slash me-2"></i>2FA has
-                                                                        been <strong>disabled</strong>.<button
-                                                                            type="button" class="btn-close"
-                                                                            data-bs-dismiss="alert"></button></div>
-                                                                </c:if>
-                                                                <c:if test="${not empty successMessage}">
-                                                                    <div
-                                                                        class="alert alert-success alert-dismissible fade show rounded-4">
-                                                                        <i
-                                                                            class="bi bi-check-circle-fill me-2"></i>${successMessage}<button
-                                                                            type="button" class="btn-close"
-                                                                            data-bs-dismiss="alert"></button></div>
-                                                                </c:if>
-                                                                <c:if test="${not empty errorMessage}">
-                                                                    <div
-                                                                        class="alert alert-danger alert-dismissible fade show rounded-4">
-                                                                        <i
-                                                                            class="bi bi-exclamation-triangle-fill me-2"></i>${errorMessage}<button
-                                                                            type="button" class="btn-close"
-                                                                            data-bs-dismiss="alert"></button></div>
-                                                                </c:if>
 
                                                                 <c:choose>
                                                                     <c:when test="${empty user.studentSchoolId}">
@@ -3686,30 +3647,6 @@
                                                 <%--==================================================================--%>
                                                     <div class="d-block d-md-none mobile-app-container">
 
-                                                        <c:if test="${param.twoFactorUpdated == 'true'}">
-                                                            <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
-                                                                <i class="bi bi-shield-check me-1"></i>2FA <strong>enabled</strong>.
-                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            </div>
-                                                        </c:if>
-                                                        <c:if test="${param.twoFactorUpdated == 'false'}">
-                                                            <div class="alert alert-info alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
-                                                                <i class="bi bi-shield-slash me-1"></i>2FA <strong>disabled</strong>.
-                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            </div>
-                                                        </c:if>
-                                                        <c:if test="${not empty successMessage}">
-                                                            <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
-                                                                <i class="bi bi-check-circle-fill me-1"></i>${successMessage}
-                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            </div>
-                                                        </c:if>
-                                                        <c:if test="${not empty errorMessage}">
-                                                            <div class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 mb-3 small shadow-sm">
-                                                                <i class="bi bi-exclamation-triangle-fill me-1"></i>${errorMessage}
-                                                                <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            </div>
-                                                        </c:if>
 
                                                         <c:choose>
                                                             <c:when test="${empty user.studentSchoolId}">
@@ -4489,6 +4426,10 @@
                                                                         </div>
                                                                     </div>
 
+                                                                    <button type="button" onclick="openReportModal()" class="btn btn-outline-secondary w-100 rounded-3 py-2 fw-semibold mb-3" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
+                                                                        <i class="bi bi-flag me-2"></i>Report an Issue
+                                                                    </button>
+
                                                                     <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='flex'" class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" style="min-height:44px;display:flex;align-items:center;justify-content:center;">
                                                                         <i class="bi bi-box-arrow-right me-2"></i>Sign Out
                                                                     </button>
@@ -4517,12 +4458,6 @@
                                                                         <span>Profile</span>
                                                                     </button>
                                                                 </nav>
-
-                                                                <%-- Toast Notification for Clipboard --%>
-                                                                <div id="mobileToast" class="mobile-toast" role="status" aria-live="polite">
-                                                                    <i class="bi bi-check2-circle text-success fs-6"></i>
-                                                                    <span id="mobileToastText">Copied to clipboard!</span>
-                                                                </div>
 
                                                             </c:otherwise>
                                                         </c:choose>
@@ -4868,16 +4803,7 @@
                                                                             }
 
                                                                             function onCopySuccess() {
-                                                                                var toast = document.getElementById('mobileToast');
-                                                                                var toastText = document.getElementById('mobileToastText');
-                                                                                if (toast) {
-                                                                                    if (toastText) toastText.textContent = 'Student ID copied: ' + idText;
-                                                                                    toast.classList.add('show');
-                                                                                    clearTimeout(window._mobileToastTimer);
-                                                                                    window._mobileToastTimer = setTimeout(function () {
-                                                                                        toast.classList.remove('show');
-                                                                                    }, 2500);
-                                                                                }
+                                                                                if (window.Sonner) Sonner.success('Student ID copied: ' + idText, 'Copied');
                                                                                 if (btnEl) {
                                                                                     var origHtml = btnEl.innerHTML;
                                                                                     btnEl.innerHTML = '<i class="bi bi-check2 text-success"></i> <span>Copied!</span>';
@@ -5452,6 +5378,8 @@
     </script>
 </c:if>
 
+<jsp:include page="/WEB-INF/views/common/report_modal.jsp"><jsp:param name="formAction" value="${pageContext.request.contextPath}/student"/><jsp:param name="hiddenAction" value="submitReport"/><jsp:param name="returnTab" value="home"/></jsp:include>
+
 <div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
         <div style="background:#fff; border-radius:20px; padding:2rem 1.5rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
             <div style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
@@ -5498,6 +5426,7 @@ document.addEventListener('keydown', function(e) {
     });
 })();
 </script>
+<script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
 </body>
 
         </html>

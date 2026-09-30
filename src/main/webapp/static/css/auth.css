@@ -291,3 +291,31 @@ body.auth-page {
     color: var(--primary-cyan);
     flex-shrink: 0;
 }
+
+/* Modern 6-Digit OTP UI */
+.otp-box-container {
+    direction: ltr;
+}
+.otp-box {
+    width: 48px !important;
+    height: 56px !important;
+    text-align: center !important;
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--primary-cyan) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.otp-box:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--primary-cyan) !important;
+    box-shadow: 0 0 0 4px rgba(0, 242, 254, 0.15) !important;
+    transform: translateY(-2px);
+}
+.otp-box:valid {
+    border-color: rgba(16, 185, 129, 0.5) !important;
+    background: rgba(16, 185, 129, 0.05) !important;
+    color: var(--bs-white) !important;
+}

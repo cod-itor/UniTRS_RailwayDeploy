@@ -1192,34 +1192,10 @@
                         color: #2563eb;
                     }
 
-                    /* Mobile Toast */
-                    .mobile-toast {
-                        position: fixed;
-                        bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
-                        max-width: calc(100% - 32px);
-                        white-space: nowrap;
-                        left: 50%;
-                        transform: translateX(-50%) translateY(20px);
-                        background: #0f172a;
-                        color: #ffffff;
-                        padding: 9px 18px;
-                        border-radius: 99px;
-                        font-size: 0.8rem;
-                        font-weight: 700;
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
-                        z-index: 1060;
-                        opacity: 0;
-                        pointer-events: none;
-                        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-                    }
-
-                    .mobile-toast.show {
-                        opacity: 1;
-                        transform: translateX(-50%) translateY(0);
-                        pointer-events: auto;
+                    /* Sonner toaster: respect notch on phones (keeps toasts above dock/modals via z-index 10000) */
+                    .sonner-toaster { top: calc(env(safe-area-inset-top, 0px) + 1rem); }
+                    @media (max-width: 576px) {
+                        .sonner-toaster { top: calc(env(safe-area-inset-top, 0px) + 0.75rem); left: 12px; right: 12px; }
                     }
 
                     /* Filter chip strip */
@@ -1554,8 +1530,10 @@
                     min-height: 40px;
                     white-space: nowrap;
                 }
+            .term-hidden { display: none !important; }
             </style>
             <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/sonner.css">
         </head>
 
         <body>
@@ -1628,6 +1606,13 @@
                                     <span
                                         class="nav-badge bg-danger text-white border-danger">${pendingTermRequests.size()}</span>
                                 </c:if>
+                            </button>
+                            <button role="tab" id="tab-reports" aria-controls="dt-reports"
+                                aria-selected="${activeTab == 'reports' ? 'true' : 'false'}"
+                                class="${activeTab == 'reports' ? 'active' : ''}"
+                                onclick="switchDeanTab('reports', this)">
+                                <i class="bi bi-flag-fill"></i> Reports
+                                <span class="nav-badge">${reports.size()}</span>
                             </button>
                             <button role="tab" id="tab-holidays" aria-controls="dt-holidays"
                                 aria-selected="${activeTab == 'holidays' ? 'true' : 'false'}"
@@ -1780,37 +1765,19 @@
                             </div>
                         </header>
 
-                        <%-- ALERTS --%>
-                            <div aria-live="polite">
+                        <%-- FLASH MESSAGES (shown once as Sonner toasts) --%>
+                            <div class="d-none" aria-hidden="true">
                                 <c:if test="${param.twoFactorUpdated == 'true'}">
-                                    <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                                        <i class="bi bi-shield-check me-2"></i>Two-Factor Authentication (2FA) is now
-                                        <strong>enabled</strong> for your account.
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
+                                    <div class="sonner-flash-trigger d-none" data-type="success" data-title="2FA Enabled" data-message="Two-Factor Authentication (2FA) is now enabled for your account."></div>
                                 </c:if>
                                 <c:if test="${param.twoFactorUpdated == 'false'}">
-                                    <div class="alert alert-info alert-dismissible fade show rounded-4" role="alert">
-                                        <i class="bi bi-shield-slash me-2"></i>Two-Factor Authentication (2FA) has been
-                                        <strong>disabled</strong> for your account.
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
+                                    <div class="sonner-flash-trigger d-none" data-type="info" data-title="2FA Disabled" data-message="Two-Factor Authentication (2FA) has been disabled for your account."></div>
                                 </c:if>
                                 <c:if test="${not empty successMessage}">
-                                    <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                                        <i class="bi bi-check-circle-fill me-2"></i>${successMessage}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
+                                    <div class="sonner-flash-trigger d-none" data-type="success" data-title="Success" data-message="<c:out value='${successMessage}' />"></div>
                                 </c:if>
                                 <c:if test="${not empty errorMessage}">
-                                    <div class="alert alert-danger alert-dismissible fade show rounded-4" role="alert">
-                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>${errorMessage}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
+                                    <div class="sonner-flash-trigger d-none" data-type="error" data-title="Action Failed" data-message="<c:out value='${errorMessage}' />"></div>
                                 </c:if>
                             </div>
 
@@ -2274,6 +2241,12 @@
                                                                                             </div>
                                                                                             <div
                                                                                                 class="d-flex align-items-center gap-2">
+<select id="scheduleTermFilter" class="form-select rounded-pill" style="min-width:180px;" aria-label="Filter class schedules by term" onchange="filterSchedulesByTerm(this.value)">
+<option value="all">All Terms</option>
+<c:forEach var="term" items="${terms}">
+<option value="<c:out value='${term.termName}'/>"><c:out value="${term.termName}"/></option>
+</c:forEach>
+</select>
                                                                                                 <button type="button"
                                                                                                     class="btn btn-outline-danger rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2 shadow-xs"
                                                                                                     onclick="switchDeanTab('holidays', document.getElementById('tab-holidays'))"
@@ -2294,7 +2267,7 @@
                                                                                         </div>
 
                                                                                         <div class="tc-table-wrap">
-                                                                                            <table class="tc-table">
+                                                                                            <table class="tc-table" id="schedulesTable">
                                                                                                 <thead>
                                                                                                     <tr>
                                                                                                         <th>Term &
@@ -2318,8 +2291,7 @@
                                                                                                     <c:forEach
                                                                                                         var="section"
                                                                                                         items="${sections}">
-                                                                                                        <tr
-                                                                                                            class="searchable-row">
+                                                                                                        <tr class="searchable-row schedule-row" data-term="<c:out value='${section.termName}'/>">
                                                                                                             <td>
                                                                                                                 <span
                                                                                                                     class="badge bg-info-subtle text-info-emphasis border px-2 py-1 rounded-pill">${section.termName}</span>
@@ -2356,6 +2328,10 @@
                                                                                                                     <i
                                                                                                                         class="bi bi-calendar-event me-1"></i>${section.daysOfWeek}
                                                                                                                 </div>
+<c:if test="${not empty section.startDate}">
+<div class="small text-muted mt-1"><i class="bi bi-flag me-1"></i>Starts ${section.startDateLabel}</div>
+<div class="small text-muted"><i class="bi bi-flag-fill me-1"></i>15th session ${section.endDateLabel}</div>
+</c:if>
                                                                                                             </td>
                                                                                                             <td>
                                                                                                                 <div
@@ -2615,8 +2591,7 @@
                                                 <c:forEach var="req" items="${pendingTermRequests}">
                                                     <tr class="searchable-row">
                                                         <td>
-                                                            <fmt:formatDate value="${req.createdAt}"
-                                                                pattern="MMM dd, yyyy HH:mm" />
+                                                            ${req.createdAtLabel}
                                                         </td>
                                                         <td class="fw-bold text-dark">${req.studentName}</td>
                                                         <td><span
@@ -2680,6 +2655,68 @@
                                                                                                 <jsp:include
                                                                                                     page="/WEB-INF/views/common/school_holidays_view.jsp" />
                                                                                             </section>
+
+<section id="dt-reports" class="tab-section ${activeTab == 'reports' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-reports">
+    <div class="table-card">
+        <div class="tc-header">
+            <div>
+                <h3>Reports <span class="badge bg-secondary-subtle text-secondary-emphasis border rounded-pill ms-1" id="reportsTotalBadge"><c:out value="${reports.size()}"/></span></h3>
+                <p class="text-muted small mb-0 mt-1">Issues submitted by students and professors.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <select id="reportCategoryFilter" class="form-select rounded-pill" style="min-width:180px;" aria-label="Filter reports by category" onchange="filterReportsByCategory()">
+                    <option value="all">All Categories</option>
+                </select>
+            </div>
+        </div>
+        <div class="tc-table-wrap">
+            <table class="tc-table" id="reportsTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Reporter</th>
+                        <th>Role</th>
+                        <th>Category</th>
+                        <th>Issue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="r" items="${reports}">
+                        <tr class="searchable-row report-row" data-category="<c:out value='${r.category}'/>">
+                            <td class="text-nowrap small">${r.createdAtLabel}</td>
+                            <td>
+                                <div class="fw-semibold"><c:out value="${r.reporterName}"/></div>
+                                <div class="small text-muted"><c:out value="${r.reporterIdentifier}"/><c:if test="${not empty r.reporterEmail}"> &middot; <c:out value="${r.reporterEmail}"/></c:if></div>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${r.reporterRole == 'PROFESSOR'}"><span class="badge rounded-pill px-2 py-1" style="background:rgba(111,66,193,.12);color:#6f42c1;border:1px solid rgba(111,66,193,.3);">Professor</span></c:when>
+                                    <c:otherwise><span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1">Student</span></c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td><span class="badge bg-light text-dark border rounded-pill px-2 py-1"><c:out value="${r.category}"/></span></td>
+                            <td style="min-width:240px; white-space:normal; overflow-wrap:anywhere;"><c:out value="${r.issue}"/><c:if test="${not empty r.details}"><div class="small text-muted mt-1" style="white-space:pre-wrap; overflow-wrap:anywhere; font-weight:400;"><c:out value="${r.details}"/></div></c:if></td>
+                        </tr>
+                    </c:forEach>
+                    <c:if test="${empty reports}">
+                        <tr>
+                            <td colspan="5" class="tc-empty">
+                                <i class="bi bi-flag fs-1 d-block mb-2 opacity-50" aria-hidden="true"></i>
+                                <div class="fw-bold text-dark">No reports yet</div>
+                                <p class="mb-0 small">Reports from students and professors will appear here.</p>
+                            </td>
+                        </tr>
+                    </c:if>
+                    <tr id="reportsNoMatchRow" style="display:none;">
+                        <td colspan="5" class="tc-empty">
+                            <div class="fw-bold text-dark">No reports in this category</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
                     </main>
             </div>
@@ -2808,6 +2845,19 @@
                         </div>
                     </div>
 
+                    <div class="mobile-course-card d-flex align-items-center justify-content-between gap-2 mb-3" id="deanHomeReportsCard"
+                        onclick="switchDeanMobileTab('reports')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchDeanMobileTab('reports');}"
+                        role="button" tabindex="0" style="min-height:44px; cursor:pointer;">
+                        <div class="d-flex align-items-center gap-2 min-w-0">
+                            <div class="p-2 rounded-3 bg-danger bg-opacity-10 text-danger"><i class="bi bi-flag-fill" aria-hidden="true"></i></div>
+                            <div>
+                                <div class="fw-bold text-dark" style="font-size:0.9rem;">Reports</div>
+                                <div class="text-muted" style="font-size:0.75rem;">Issues from students &amp; professors</div>
+                            </div>
+                        </div>
+                        <span class="badge bg-danger rounded-pill px-3 py-1" style="font-size:0.75rem;"><c:out value="${reports.size()}"/></span>
+                    </div>
+
                     <!-- Quick Action Horizontal Strip -->
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="fw-bold text-dark small">Administrative Quick Actions</span>
@@ -2867,6 +2917,9 @@
                                     ${section.roomName}</div>
                                 <div class="mc-meta-item"><i
                                         class="bi bi-calendar3 text-primary"></i>${section.daysOfWeek}</div>
+<c:if test="${not empty section.startDate}">
+<div class="mc-meta-item"><i class="bi bi-flag text-primary"></i>Starts ${section.startDateLabel}</div>
+</c:if>
                             </div>
                             <div class="pt-2 border-top">
                                 <div class="d-flex justify-content-between align-items-center text-muted"
@@ -3099,7 +3152,13 @@
                             aria-label="Search schedules" oninput="filterMobileDeanSchedules(this.value)">
                     </div>
 
-                    <div class="filter-chip-strip" id="deanScheduleFilterStrip">
+                    <select id="mobileScheduleTermFilter" class="form-select rounded-pill mb-2" aria-label="Filter class schedules by term" onchange="filterMobileSchedulesByTerm(this.value)">
+<option value="all">All Terms</option>
+<c:forEach var="term" items="${terms}">
+<option value="<c:out value='${term.termName}'/>"><c:out value="${term.termName}"/></option>
+</c:forEach>
+</select>
+<div class="filter-chip-strip" id="deanScheduleFilterStrip">
                         <button type="button" class="filter-chip active"
                             onclick="filterDeanScheduleShift('all', this)">All</button>
                         <button type="button" class="filter-chip"
@@ -3116,7 +3175,7 @@
                     <div id="mobileDeanSchedulesContainer">
                         <c:forEach var="section" items="${sections}">
                             <div class="mobile-course-card mobile-dean-section-item"
-                                data-shift="${section.sessionShift}" data-days="${section.daysOfWeek}">
+                                data-term="<c:out value='${section.termName}'/>" data-shift="${section.sessionShift}" data-days="${section.daysOfWeek}">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <div>
                                         <span class="mc-code me-1">${section.courseCode}</span>
@@ -3211,7 +3270,7 @@
 
                             <div class="d-flex align-items-center text-muted small mb-3">
                                 <i class="bi bi-clock me-1 text-primary"></i>
-                                <fmt:formatDate value="${req.createdAt}" pattern="MMM dd, yyyy HH:mm" />
+                                ${req.createdAtLabel}
                             </div>
 
                             <div class="d-flex gap-2 pt-2 border-top">
@@ -3247,6 +3306,55 @@
                                 processed.</p>
                         </div>
                     </c:if>
+                </section>
+
+                <section id="mobile-view-reports" class="mobile-sub-view" role="tabpanel" aria-label="Reports">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <button type="button" class="btn btn-light border rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0"
+                            style="width:44px;height:44px;" onclick="switchDeanMobileTab('home')" aria-label="Back to home">
+                            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                        </button>
+                        <div style="min-width:0;">
+                            <h2 class="fw-extrabold text-dark mb-0" style="font-size:1.25rem;">Reports</h2>
+                            <span class="text-muted" style="font-size:0.75rem;"><c:out value="${reports.size()}"/> submitted</span>
+                        </div>
+                    </div>
+
+                    <div class="mobile-search-bar">
+                        <i class="bi bi-search"></i>
+                        <input type="text" id="mobileReportSearch" placeholder="Search reports..."
+                            aria-label="Search reports" oninput="filterMobileReports()">
+                    </div>
+                    <select id="mobileReportCategoryFilter" class="form-select rounded-pill mb-2" style="min-height:44px;" aria-label="Filter reports by category" onchange="filterMobileReports()">
+                        <option value="all">All Categories</option>
+                    </select>
+
+                    <c:forEach var="r" items="${reports}">
+                        <div class="mobile-course-card mb-3 p-3 mobile-report-item" data-category="<c:out value='${r.category}'/>">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <div style="min-width:0;">
+                                    <div class="fw-bold text-dark" style="font-size:0.95rem; overflow-wrap:anywhere;"><c:out value="${r.reporterName}"/></div>
+                                    <div class="text-muted" style="font-size:0.75rem; overflow-wrap:anywhere;"><c:out value="${r.reporterIdentifier}"/></div>
+                                </div>
+                                <c:choose>
+                                    <c:when test="${r.reporterRole == 'PROFESSOR'}"><span class="badge rounded-pill px-2 py-1 flex-shrink-0" style="font-size:0.75rem;background:rgba(111,66,193,.12);color:#6f42c1;border:1px solid rgba(111,66,193,.3);">Professor</span></c:when>
+                                    <c:otherwise><span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 flex-shrink-0" style="font-size:0.75rem;">Student</span></c:otherwise>
+                                </c:choose>
+                            </div>
+                            <span class="badge bg-light text-dark border rounded-pill px-2 py-1 mb-2" style="font-size:0.75rem;"><c:out value="${r.category}"/></span>
+                            <div class="text-dark mb-2" style="font-size:0.85rem; overflow-wrap:anywhere;"><c:out value="${r.issue}"/></div><c:if test="${not empty r.details}"><div class="small text-muted mt-1" style="white-space:pre-wrap; overflow-wrap:anywhere; font-weight:400;"><c:out value="${r.details}"/></div></c:if>
+                            <div class="text-muted d-flex align-items-center" style="font-size:0.75rem;">
+                                <i class="bi bi-clock me-1 text-primary"></i>
+                                ${r.createdAtLabel}
+                            </div>
+                        </div>
+                    </c:forEach>
+
+                    <div id="mobileReportsEmpty" class="mobile-course-card text-center py-4 my-3" style="${empty reports ? '' : 'display:none;'}">
+                        <i class="bi bi-flag text-muted opacity-50 fs-1 mb-2 d-block"></i>
+                        <h5 class="fw-bold text-dark mb-1"><c:choose><c:when test="${empty reports}">No reports yet</c:when><c:otherwise>No matching reports</c:otherwise></c:choose></h5>
+                        <p class="text-muted small mb-0"><c:choose><c:when test="${empty reports}">Reports from students and professors will appear here.</c:when><c:otherwise>Try clearing search or filters</c:otherwise></c:choose></p>
+                    </div>
                 </section>
 
                 <!-- ===== TAB 4: PEOPLE DIRECTORY ===== -->
@@ -3567,12 +3675,6 @@
                     </button>
                 </nav>
 
-                <!-- Floating Toast Notification -->
-                <div id="deanMobileToast" class="mobile-toast" role="status" aria-live="polite">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                    <span id="deanMobileToastText">Copied to clipboard!</span>
-                </div>
-
             </div>
 
             <%--=============================================================--%>
@@ -3806,11 +3908,12 @@
                                                     <option value="">-- Choose Term --</option>
                                                     <c:forEach var="entry" items="${curriculumMap}">
                                                         <c:if test="${not empty entry.value}">
-                                                            <option value="${entry.key.id}">${entry.key.termName}
+                                                            <option value="${entry.key.id}" data-window="<c:out value='${termWindowLabels[entry.key.id]}'/>">${entry.key.termName}
                                                             </option>
                                                         </c:if>
                                                     </c:forEach>
                                                 </select>
+<small class="d-block mt-1 text-muted" id="scheduleTermWindow" style="font-size: 0.78rem;" aria-live="polite"></small>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold" for="courseSelect">Course (Assigned to Term)</label>
@@ -3818,52 +3921,50 @@
                                                     <option value="">-- First choose a term above --</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-12">
-                                                <label class="form-label fw-semibold" for="f_scheduleClassModal_professorId">Assign Professor</label>
-                                                <select id="f_scheduleClassModal_professorId" name="professorId" class="form-select" required>
-                                                    <option value="">-- Choose Professor --</option>
-                                                    <c:forEach var="prof" items="${professors}">
-                                                        <option value="${prof.id}">${prof.fullName} (${prof.email})
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label fw-semibold" for="f_scheduleClassModal_sessionShift">Shift</label>
-                                                <select id="f_scheduleClassModal_sessionShift" name="sessionShift" class="form-select" required>
-                                                    <option value="MORNING">Morning (08:00 - 11:30)</option>
-                                                    <option value="AFTERNOON">Afternoon (13:30 - 17:00)</option>
-                                                    <option value="EVENING">Evening (17:30 - 20:30)</option>
-                                                    <option value="WEEKEND">Weekend (Saturday/Sunday)</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label fw-semibold" for="f_scheduleClassModal_roomId">Physical Room</label>
-                                                <select id="f_scheduleClassModal_roomId" name="roomId" class="form-select" required>
-                                                    <option value="">-- Choose Room --</option>
-                                                    <c:forEach var="room" items="${rooms}">
-                                                        <option value="${room.id}">${room.roomNumber} (Cap:
-                                                            ${room.capacity})</option>
-                                                    </c:forEach>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label fw-semibold" for="f_scheduleClassModal_daysOfWeek">Days of Week</label>
-                                                <select id="f_scheduleClassModal_daysOfWeek" name="daysOfWeek" class="form-select" required>
-                                                    <option value="Mon-Fri">Mon-Fri (Weekday)</option>
-                                                    <option value="Sat-Sun">Sat-Sun (Weekend)</option>
-                                                </select>
-                                                <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">Exact
-                                                    timetable will calculate automatically</small>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label class="form-label fw-semibold" for="f_scheduleClassModal_academicYear">Academic Year</label>
-                                                <input id="f_scheduleClassModal_academicYear" type="text" class="form-control" name="academicYear"
-                                                    placeholder="e.g. 2026-2027" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
+                                            <div class="col-md-6">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_sessionShift">Shift</label>
+<select id="f_scheduleClassModal_sessionShift" name="sessionShift" class="form-select" required onchange="onScheduleShiftChange()">
+<option value="MORNING">Morning (08:00 AM - 11:15 AM)</option>
+<option value="AFTERNOON">Afternoon (02:00 PM - 05:15 PM)</option>
+<option value="EVENING">Evening (05:45 PM - 08:45 PM)</option>
+<option value="WEEKEND">Weekend (Sat - Sun)</option>
+</select>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_daysOfWeek">Days of Week</label>
+<select id="f_scheduleClassModal_daysOfWeek" name="daysOfWeek" class="form-select" required>
+<option value="Mon-Fri">Mon-Fri (Weekday)</option>
+<option value="Sat-Sun">Sat-Sun (Weekend)</option>
+</select>
+<small class="text-muted d-block mt-1" style="font-size: 0.75rem;">Exact timetable will calculate automatically</small>
+</div>
+<div class="col-md-12">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_professorId">Assign Professor</label>
+<select id="f_scheduleClassModal_professorId" name="professorId" class="form-select" required>
+<option value="">-- Choose Professor --</option>
+<c:forEach var="prof" items="${professors}">
+<option value="${prof.id}" data-shifts="<c:forEach var='sh' items='${professorShiftsMap[prof.id]}' varStatus='st'>${sh}<c:if test='${!st.last}'>,</c:if></c:forEach>">${prof.fullName} (${prof.email})</option>
+</c:forEach>
+</select>
+<small class="d-block mt-1" id="scheduleProfessorHint" style="font-size: 0.78rem;" aria-live="polite"></small>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_roomId">Physical Room</label>
+<select id="f_scheduleClassModal_roomId" name="roomId" class="form-select" required>
+<option value="">-- Choose Room --</option>
+<c:forEach var="room" items="${rooms}">
+<option value="${room.id}">${room.roomNumber} (Cap: ${room.capacity})</option>
+</c:forEach>
+</select>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold" for="f_scheduleClassModal_academicYear">Academic Year</label>
+<input id="f_scheduleClassModal_academicYear" type="text" class="form-control" name="academicYear" value="${currentAcademicYear}" readonly aria-describedby="scheduleAcademicYearHelp">
+<small class="text-muted d-block mt-1" id="scheduleAcademicYearHelp" style="font-size: 0.75rem;">Set automatically to the current academic year</small>
+</div>
+</div>
+</div>
+<div class="modal-footer">
                                         <button type="button" class="btn btn-light rounded-pill px-3"
                                             data-bs-dismiss="modal">Cancel</button>
                                         <button type="submit" class="btn btn-primary rounded-pill px-4">Schedule
@@ -4074,7 +4175,141 @@
                             }
 
                             // Search filtering across active tab's table
-                            function filterActiveDeanTable(query) {
+                            function filterSchedulesByTerm(term) {
+    var rows = document.querySelectorAll('#schedulesTable tbody tr.schedule-row');
+    rows.forEach(function (row) {
+        row.classList.toggle('term-hidden', term !== 'all' && row.getAttribute('data-term') !== term);
+    });
+}
+function filterMobileSchedulesByTerm(term) {
+    var items = document.querySelectorAll('.mobile-dean-section-item');
+    var visible = 0;
+    items.forEach(function (item) {
+        var hide = term !== 'all' && item.getAttribute('data-term') !== term;
+        item.classList.toggle('term-hidden', hide);
+        if (!hide) visible++;
+    });
+    var empty = document.getElementById('mobileDeanSchedulesEmpty');
+    if (empty) empty.style.display = (visible === 0 && items.length > 0) ? 'block' : 'none';
+}
+function populateReportCategories() {
+    [['reportCategoryFilter', '#reportsTable tbody tr.report-row'], ['mobileReportCategoryFilter', '.mobile-report-item']].forEach(function (p) {
+        var sel = document.getElementById(p[0]);
+        if (!sel) return;
+        var seen = {};
+        document.querySelectorAll(p[1]).forEach(function (el) {
+            var c = el.getAttribute('data-category');
+            if (c && !seen[c]) {
+                seen[c] = true;
+                var o = document.createElement('option');
+                o.value = c; o.textContent = c;
+                sel.appendChild(o);
+            }
+        });
+    });
+}
+document.addEventListener('DOMContentLoaded', populateReportCategories);
+function filterReportsByCategory() {
+    var sel = document.getElementById('reportCategoryFilter');
+    var cat = sel ? sel.value : 'all';
+    var rows = document.querySelectorAll('#reportsTable tbody tr.report-row');
+    var visible = 0;
+    rows.forEach(function (row) {
+        var hide = cat !== 'all' && row.getAttribute('data-category') !== cat;
+        row.classList.toggle('term-hidden', hide);
+        if (!hide) visible++;
+    });
+    var nm = document.getElementById('reportsNoMatchRow');
+    if (nm) nm.style.display = (rows.length > 0 && visible === 0) ? '' : 'none';
+}
+function filterMobileReports() {
+    var inp = document.getElementById('mobileReportSearch');
+    var sel = document.getElementById('mobileReportCategoryFilter');
+    var q = ((inp && inp.value) || '').toLowerCase().trim();
+    var cat = sel ? sel.value : 'all';
+    var items = document.querySelectorAll('.mobile-report-item');
+    var visible = 0;
+    items.forEach(function (item) {
+        var match = (cat === 'all' || item.getAttribute('data-category') === cat)
+            && (item.textContent || '').toLowerCase().indexOf(q) !== -1;
+        item.style.display = match ? '' : 'none';
+        if (match) visible++;
+    });
+    var empty = document.getElementById('mobileReportsEmpty');
+    if (empty) empty.style.display = (visible === 0 && items.length > 0) ? 'block' : 'none';
+}
+function updateScheduleTermWindow() {
+    var sel = document.getElementById('termSelect');
+    var out = document.getElementById('scheduleTermWindow');
+    if (!sel || !out) return;
+    var opt = sel.options[sel.selectedIndex];
+    var win = opt ? opt.getAttribute('data-window') : '';
+    if (win) {
+        out.className = 'd-block mt-1 text-success';
+        out.innerHTML = '<i class="bi bi-calendar-check me-1"></i>Fixed term dates: ' + win + ' (fits all 15 sessions)';
+    } else {
+        out.className = 'd-block mt-1 text-muted';
+        out.textContent = '';
+    }
+}
+document.addEventListener('DOMContentLoaded', function () {
+    var ts = document.getElementById('termSelect');
+    if (ts) ts.addEventListener('change', updateScheduleTermWindow);
+    var m = document.getElementById('scheduleClassModal');
+    if (m) m.addEventListener('show.bs.modal', updateScheduleTermWindow);
+});
+function onScheduleShiftChange() {
+    var shiftSel = document.getElementById('f_scheduleClassModal_sessionShift');
+    var daysSel = document.getElementById('f_scheduleClassModal_daysOfWeek');
+    if (shiftSel && daysSel) {
+        daysSel.value = shiftSel.value === 'WEEKEND' ? 'Sat-Sun' : 'Mon-Fri';
+    }
+    updateScheduleProfessorOptions();
+}
+var scheduleProfessorOptions = null;
+function updateScheduleProfessorOptions() {
+    var sel = document.getElementById('f_scheduleClassModal_professorId');
+    var shiftSel = document.getElementById('f_scheduleClassModal_sessionShift');
+    var hint = document.getElementById('scheduleProfessorHint');
+    if (!sel || !shiftSel) return;
+    if (scheduleProfessorOptions === null) {
+        scheduleProfessorOptions = Array.prototype.filter.call(sel.options, function (o) { return o.value; })
+            .map(function (o) { return { value: o.value, label: o.textContent, shifts: (o.getAttribute('data-shifts') || '').split(',') }; });
+    }
+    var shift = shiftSel.value;
+    var previous = sel.value;
+    var matches = scheduleProfessorOptions.filter(function (p) { return p.shifts.indexOf(shift) !== -1; });
+    sel.innerHTML = '';
+    var placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = matches.length ? '-- Choose Professor --' : '-- No professor available for this shift --';
+    sel.appendChild(placeholder);
+    matches.forEach(function (p) {
+        var opt = document.createElement('option');
+        opt.value = p.value;
+        opt.textContent = p.label;
+        if (p.value === previous) opt.selected = true;
+        sel.appendChild(opt);
+    });
+    var shiftLabel = shiftSel.options[shiftSel.selectedIndex].text.split(' (')[0];
+    if (hint) {
+        if (matches.length) {
+            hint.className = 'd-block mt-1 text-success';
+            hint.innerHTML = '<i class="bi bi-check-circle me-1"></i>' + matches.length + ' professor' + (matches.length > 1 ? 's' : '') + ' available for the ' + shiftLabel + ' shift';
+        } else {
+            hint.className = 'd-block mt-1 text-danger';
+            hint.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>No professor has marked themselves available for the ' + shiftLabel + ' shift. Ask professors to set their availability in Settings.';
+        }
+    }
+}
+document.addEventListener('DOMContentLoaded', function () {
+    var m = document.getElementById('scheduleClassModal');
+    if (m) {
+        m.addEventListener('show.bs.modal', onScheduleShiftChange);
+    }
+    onScheduleShiftChange();
+});
+function filterActiveDeanTable(query) {
                                 const activeSection = document.querySelector('.tab-section.active');
                                 if (!activeSection) return;
 
@@ -4325,16 +4560,7 @@
                                 }
 
                                 function onCopySuccess() {
-                                    var toast = document.getElementById('deanMobileToast');
-                                    var toastText = document.getElementById('deanMobileToastText');
-                                    if (toast) {
-                                        if (toastText) toastText.textContent = 'ID copied: ' + idText;
-                                        toast.classList.add('show');
-                                        clearTimeout(window._deanToastTimer);
-                                        window._deanToastTimer = setTimeout(function () {
-                                            toast.classList.remove('show');
-                                        }, 2500);
-                                    }
+                                    if (window.Sonner) Sonner.success('ID copied: ' + idText, 'Copied');
                                     if (btnEl) {
                                         var origHtml = btnEl.innerHTML;
                                         btnEl.innerHTML = '<i class="bi bi-check2 text-success"></i> <span>Copied!</span>';
@@ -4352,6 +4578,8 @@
                                             switchDeanMobileTab(tab);
                                         } else if (tab === 'holidays') {
                                             switchDeanTab('holidays', document.getElementById('tab-holidays'));
+                                        } else if (tab === 'reports') {
+                                            switchDeanTab('reports', document.getElementById('tab-reports'));
                                         }
                                     }
                                 } catch (e) { }
@@ -4425,6 +4653,7 @@
                                 if (e.key === 'Escape') document.getElementById('logoutConfirmModal').style.display = 'none';
                             });
                         </script>
+            <script src="${pageContext.request.contextPath}/static/js/sonner.js"></script>
         </body>
 
         </html>

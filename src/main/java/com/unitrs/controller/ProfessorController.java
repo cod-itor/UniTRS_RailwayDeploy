@@ -15,6 +15,7 @@ import java.util.Set;
 
 import com.unitrs.model.entity.User;
 import com.unitrs.model.entity.Role;
+import com.unitrs.model.entity.SessionShift;
 import com.unitrs.model.entity.ClassSection;
 import com.unitrs.model.entity.AttendanceRecord;
 import com.unitrs.model.entity.Grade;
@@ -119,6 +120,9 @@ public class ProfessorController extends HttpServlet {
             }
             request.setAttribute("professorSchool", professorSchool);
             request.setAttribute("user", user);
+            request.setAttribute("reportCatalog", com.unitrs.utils.ReportCatalog.getCatalog());
+            request.setAttribute("availableShifts", userRepository.findAvailableShifts(user.getId()));
+            request.setAttribute("currentAcademicYear", com.unitrs.utils.ScheduleUtils.currentAcademicYear());
 
             String success = request.getParameter("success");
             if (success != null) {
@@ -130,6 +134,10 @@ public class ProfessorController extends HttpServlet {
                     request.setAttribute("successMessage", "Grades successfully saved!");
                 } else if ("session_cancelled".equals(success)) {
                     request.setAttribute("successMessage", "Session successfully cancelled!");
+                } else if ("report_submitted".equals(success)) {
+                    request.setAttribute("successMessage", "Your report has been sent to the dean and the administrators.");
+                } else if ("availability_saved".equals(success)) {
+                    request.setAttribute("successMessage", "Teaching availability updated. Deans can now assign you to classes in those shifts.");
                 } else if ("session_restored".equals(success)) {
                     request.setAttribute("successMessage", "Session successfully restored!");
                 } else {
@@ -155,6 +163,47 @@ public class ProfessorController extends HttpServlet {
 
         if (user == null || (user.getRole() != Role.PROFESSOR && user.getDeanSchoolId() == null)) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+
+        if (path != null && path.equals("/report")) {
+            String tab = request.getParameter("tab");
+            String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + URLEncoder.encode(tab.trim(), StandardCharsets.UTF_8) : "";
+            try {
+                new com.unitrs.repository.ReportRepository().submit(user, "PROFESSOR", user.getDeanSchoolId(),
+                        request.getParameter("reporterName"), request.getParameter("issue"), request.getParameter("details"));
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?success=report_submitted" + tabParam);
+            } catch (ValidationException ve) {
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode(ve.getMessage(), StandardCharsets.UTF_8) + tabParam);
+            }
+            return;
+        }
+
+        if (path != null && path.equals("/availability")) {
+            String tab = request.getParameter("tab");
+            String tabParam = (tab != null && !tab.trim().isEmpty()) ? "&tab=" + URLEncoder.encode(tab.trim(), StandardCharsets.UTF_8) : "&tab=settings";
+            try {
+                String[] submitted = request.getParameterValues("shifts");
+                java.util.Set<String> shifts = new java.util.LinkedHashSet<>();
+                if (submitted != null) {
+                    for (String value : submitted) {
+                        SessionShift shift = SessionShift.fromString(value);
+                        if (shift == null) {
+                            throw new ValidationException("Invalid shift selected.");
+                        }
+                        shifts.add(shift.name());
+                    }
+                }
+                if (shifts.isEmpty()) {
+                    throw new ValidationException("Please select at least one shift you are available to teach.");
+                }
+                if (!userRepository.replaceProfessorAvailability(user.getId(), shifts)) {
+                    throw new ValidationException("Could not save your availability. Please try again.");
+                }
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?success=availability_saved" + tabParam);
+            } catch (ValidationException ve) {
+                response.sendRedirect(request.getContextPath() + "/professor/dashboard?error=" + URLEncoder.encode(ve.getMessage(), StandardCharsets.UTF_8) + tabParam);
+            }
             return;
         }
 
