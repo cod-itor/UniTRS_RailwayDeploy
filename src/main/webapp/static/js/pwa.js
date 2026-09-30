@@ -1,14 +1,46 @@
 (function() {
     'use strict';
 
-    function isAppInstalled() {
+    const INSTALLED_KEY = 'unitrs_pwa_installed';
+    const DISMISSED_KEY = 'unitrs_pwa_banner_dismissed_at';
+    const DISMISS_DAYS = 7;
+
+    function storageGet(key) {
+        try { return window.localStorage.getItem(key); } catch (e) { return null; }
+    }
+
+    function storageSet(key, value) {
+        try { window.localStorage.setItem(key, value); } catch (e) { /* storage unavailable */ }
+    }
+
+    function isRunningStandalone() {
         return window.matchMedia('(display-mode: standalone)').matches ||
                window.navigator.standalone === true ||
                document.referrer.includes('android-app://');
     }
 
+    // Installed = opened from the home screen, or we already saw it get installed on this device.
+    function isAppInstalled() {
+        if (isRunningStandalone()) {
+            storageSet(INSTALLED_KEY, 'true');
+            return true;
+        }
+        return storageGet(INSTALLED_KEY) === 'true';
+    }
+
     const isIos = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase()) && !window.MSStream;
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    // Phone-sized screens only: desktops, laptops and tablets showing the desktop layout never see the prompt.
+    function isMobileScreen() {
+        return isMobile && window.matchMedia('(max-width: 767.98px)').matches;
+    }
+
+    function wasDismissedRecently() {
+        const at = parseInt(storageGet(DISMISSED_KEY) || '0', 10);
+        return at > 0 && (Date.now() - at) < DISMISS_DAYS * 24 * 60 * 60 * 1000;
+    }
+
     let deferredPrompt = null;
 
     function getContextPath() {
@@ -31,7 +63,7 @@
         window.deferredPwaPrompt = e;
 
         const installBtn = document.getElementById('pwaInstallBtn');
-        if (installBtn && !isAppInstalled()) {
+        if (installBtn && isMobileScreen() && !isAppInstalled()) {
             installBtn.style.display = 'inline-flex';
         }
 
@@ -44,6 +76,7 @@
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
                     console.log('UniTRS PWA installed successfully.');
+                    storageSet(INSTALLED_KEY, 'true');
                 }
                 deferredPrompt = null;
                 hideAllInstallUI();
@@ -60,7 +93,7 @@
     };
 
     window.dismissPwaBanner = function() {
-        sessionStorage.setItem('unitrs_pwa_banner_dismissed', 'true');
+        storageSet(DISMISSED_KEY, String(Date.now()));
         const banner = document.getElementById('unitrsPwaFloatingBanner');
         if (banner) {
             banner.style.opacity = '0';
@@ -80,6 +113,7 @@
 
     window.addEventListener('appinstalled', () => {
         console.log('UniTRS application was installed on the device.');
+        storageSet(INSTALLED_KEY, 'true');
         deferredPrompt = null;
         hideAllInstallUI();
     });
@@ -156,9 +190,12 @@
     }
 
     function renderFloatingBanner() {
-        if (!isMobile) return; // Feature: Only show on mobile devices, hide on desktop
-        if (isAppInstalled()) return;
-        if (sessionStorage.getItem('unitrs_pwa_banner_dismissed') === 'true') return;
+        if (!isMobileScreen()) return;      // phones only, never on desktop or wide screens
+        if (isAppInstalled()) return;       // already added to the home screen
+        if (wasDismissedRecently()) return; // user closed it recently
+        // Android/Chrome only fires beforeinstallprompt when the app can be installed and is not installed yet.
+        // iOS has no such event, so it relies on the standalone check above.
+        if (!isIos && !deferredPrompt) return;
         if (document.getElementById('unitrsPwaFloatingBanner')) return;
 
         const banner = document.createElement('div');
@@ -203,16 +240,24 @@
     window.addEventListener('load', () => {
         // Check if page has #pwaInstallBtn and make it visible if app not installed
         const installBtn = document.getElementById('pwaInstallBtn');
-        if (installBtn && !isAppInstalled()) {
+        if (installBtn && isMobileScreen() && !isAppInstalled()) {
             installBtn.style.display = 'inline-flex';
         }
 
-        // On mobile or iOS devices, render the floating banner if not already installed
-        if (!isAppInstalled()) {
-            setTimeout(() => {
-                renderFloatingBanner();
-            }, 800);
+        // Chrome on Android can tell us if the app is already installed for this site.
+        if (navigator.getInstalledRelatedApps) {
+            navigator.getInstalledRelatedApps().then((apps) => {
+                if (apps && apps.length > 0) {
+                    storageSet(INSTALLED_KEY, 'true');
+                    hideAllInstallUI();
+                }
+            }).catch(() => {});
         }
+
+        // The banner renders itself only on phone screens, when the app is not installed and not dismissed.
+        setTimeout(() => {
+            renderFloatingBanner();
+        }, 800);
 
         // Register Service Worker
         if ('serviceWorker' in navigator) {
