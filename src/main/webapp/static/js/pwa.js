@@ -8,6 +8,7 @@
     }
 
     const isIos = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase()) && !window.MSStream;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     let deferredPrompt = null;
 
     function getContextPath() {
@@ -48,9 +49,13 @@
                 hideAllInstallUI();
             });
         } else if (isIos) {
+            // iOS specifically strictly prevents automatic install prompts.
+            // A manual "how-to" is the only technical way to install a PWA on iOS.
             showIosModal();
         } else {
-            showGenericModal();
+            // For other browsers that didn't fire the prompt, we just silently fail or log it
+            // as the user requested not to see the "HOW TO DO IT" generic popup.
+            console.warn("Native install prompt is not available.");
         }
     };
 
@@ -151,6 +156,7 @@
     }
 
     function renderFloatingBanner() {
+        if (!isMobile) return; // Feature: Only show on mobile devices, hide on desktop
         if (isAppInstalled()) return;
         if (sessionStorage.getItem('unitrs_pwa_banner_dismissed') === 'true') return;
         if (document.getElementById('unitrsPwaFloatingBanner')) return;

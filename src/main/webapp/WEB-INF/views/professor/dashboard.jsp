@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Professor Dashboard - UniTRS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -107,7 +107,7 @@
                 gap: 4px;
                 background: #e0f2fe;
                 color: #0369a1;
-                font-size: 0.7rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 padding: 2px 10px;
                 border-radius: 20px;
@@ -194,7 +194,7 @@
             }
 
             .hero-label {
-                font-size: 0.65rem;
+                font-size: 0.75rem;
                 font-weight: 800;
                 letter-spacing: 0.8px;
                 color: rgba(255, 255, 255, 0.85);
@@ -228,7 +228,7 @@
                 gap: 5px;
                 background: rgba(255, 255, 255, 0.95);
                 color: #0369a1;
-                font-size: 0.68rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 padding: 3px 10px;
                 border-radius: 12px;
@@ -287,7 +287,7 @@
             }
 
             .ds-day {
-                font-size: 0.68rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 text-transform: uppercase;
                 margin-bottom: 4px;
@@ -455,7 +455,7 @@
             }
 
             .mc-badge {
-                font-size: 0.7rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 background: #f1f5f9;
                 color: #64748b;
@@ -544,7 +544,7 @@
             }
 
             .id-card-univ-title {
-                font-size: 0.72rem;
+                font-size: 0.75rem;
                 font-weight: 800;
                 letter-spacing: 1.2px;
                 color: #fbbf24;
@@ -664,7 +664,7 @@
                 background: transparent;
                 border: none;
                 color: #64748b;
-                font-size: 0.68rem;
+                font-size: 0.75rem;
                 font-weight: 600;
                 letter-spacing: -0.01em;
                 flex: 1;
@@ -819,7 +819,7 @@
                 line-height: 1.25;
             }
             .sheet-menu-desc {
-                font-size: 0.74rem;
+                font-size: 0.75rem;
                 font-weight: 500;
                 color: #64748b;
                 margin-top: 2px;
@@ -837,13 +837,13 @@
             .student-row { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 10px; }
             .student-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
             .student-name { font-size: 0.9rem; font-weight: 700; color: #0f172a; }
-            .student-id { font-size: 0.7rem; color: #64748b; font-family: monospace; }
+            .student-id { font-size: 0.75rem; color: #64748b; font-family: monospace; }
             
             /* Attendance Radio Chips */
             .radio-group { display: flex; gap: 6px; flex-wrap: wrap; }
             .radio-chip { flex: 1; min-width: 70px; }
             .radio-chip input { display: none; }
-            .radio-chip label { display: block; text-align: center; font-size: 0.7rem; font-weight: 700; padding: 8px 4px; border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; cursor: pointer; transition: all 0.15s; }
+            .radio-chip label { display: block; text-align: center; font-size: 0.75rem; font-weight: 700; padding: 8px 4px; border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; cursor: pointer; transition: all 0.15s; }
             .radio-chip input[value="PRESENT"]:checked + label { background: #16a34a; border-color: #16a34a; color: white; }
             .radio-chip input[value="ABSENT"]:checked + label { background: #dc2626; border-color: #dc2626; color: white; }
             .radio-chip input[value="LATE"]:checked + label { background: #d97706; border-color: #d97706; color: white; }
@@ -852,11 +852,131 @@
             /* Grading Inputs */
             .grade-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
             .grade-input-box { background: #f8fafc; border-radius: 10px; padding: 8px 10px; border: 1px solid #e2e8f0; }
-            .grade-input-label { font-size: 0.65rem; font-weight: 700; color: #64748b; margin-bottom: 4px; display: block; }
+            .grade-input-label { font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 4px; display: block; }
             .grade-input-box input { width: 100%; border: none; background: transparent; font-size: 1.1rem; font-weight: 800; color: #0f172a; outline: none; padding: 0; }
             .grade-input-box input:focus { color: #2563eb; }
+
+            /* ===== Mobile audit fixes ===== */
+            /* Desktop rules (.mc-header etc.) are unscoped and load later: re-assert mobile values with higher specificity */
+            .mobile-app-container .mc-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+            .mobile-app-container .mc-header > div { min-width: 0; }
+            .mobile-app-container .mc-title { font-size: 0.98rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; line-height: 1.3; overflow-wrap: anywhere; }
+            .mobile-app-container .mc-meta-item { min-width: 0; overflow-wrap: anywhere; }
+            .mobile-app-container .mc-code { display: inline-block; }
+
+            /* Any inline font-size below 12px is raised to 12px */
+            .mobile-app-container [style*="font-size:0.6"],
+            .mobile-app-container [style*="font-size:0.7"],
+            .mobile-app-container [style*="font-size: 0.6"],
+            .mobile-app-container [style*="font-size: 0.7"],
+            .action-sheet [style*="font-size:0.6"],
+            .action-sheet [style*="font-size:0.7"] { font-size: 0.75rem !important; }
+
+            /* Top bar: long names must ellipsize instead of pushing the action buttons out */
+            .mobile-user-info { flex: 1 1 auto; }
+            .mobile-user-info > div:last-child { min-width: 0; }
+            .mobile-top-bar > .d-flex { flex-shrink: 0; margin-left: 12px; }
+            .mobile-badge-pill { white-space: nowrap; }
+
+            /* Hero banner */
+            .hero-title { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+            .hero-meta-row { flex-wrap: wrap; row-gap: 2px; }
+            .hero-status-tag { white-space: nowrap; }
+
+            /* Strips: leave room for the lift/shadow of the active item so it is not clipped by overflow */
+            .mobile-date-strip { padding: 4px 0 12px; margin-bottom: 8px; }
+            .schedule-filter-pill { min-height: 44px; }
+
+            /* Stats carousel: consistent scroll snapping */
+            .stat-card-item > div:last-child { min-width: 0; }
+
+            /* Section headers wrap instead of overflowing at 320px */
+            .section-header { gap: 12px; }
+            .section-header .section-title { min-width: 0; overflow-wrap: anywhere; }
+            .mobile-app-container .section-title { line-height: 1.3; }
+
+            /* Cards: tidy internal rows */
+            .mobile-course-card .border-top { gap: 8px; }
+            .mobile-course-card .btn-xs { min-height: 40px !important; padding: 0 14px !important; font-size: 0.75rem !important; display: inline-flex; align-items: center; }
+            .mobile-class-item .btn { min-height: 44px !important; }
+            .mobile-app-container .form-select,
+            .mobile-app-container .form-control { font-size: 16px; min-height: 44px; }
+            #mobileClassSearchInput { min-width: 0; }
+            #clearMobileClassSearchBtn { min-width: 44px; }
+            .mobile-app-container .alert { font-size: 0.875rem; overflow-wrap: anywhere; }
+            .mobile-app-container .alert-dismissible { padding-right: 48px !important; }
+
+            .mobile-toast { max-width: calc(100% - 32px); width: max-content; line-height: 1.3; overflow-wrap: anywhere; }
+
+            /* Faculty ID card */
+            .id-card-top { flex-wrap: wrap; gap: 8px; }
+            .id-card-univ-title { min-width: 0; letter-spacing: 0.8px; }
+            .id-number-pill { max-width: 100%; min-height: 32px; }
+            .id-number-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .id-card-barcode-row { gap: 8px; }
+
+            /* Profile detail rows: long values wrap on the right instead of squashing labels */
+            .mobile-profile-row { gap: 16px; }
+            .mobile-profile-row > span:first-child { flex-shrink: 0; }
+            .mobile-profile-row > span:last-child { text-align: right; min-width: 0; overflow-wrap: anywhere; }
+
+            /* Dock: keep label above safe area and tap targets >= 44px */
+            .dock-tab-btn { min-height: 48px; }
+            .dock-tab-btn span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+            /* Sheets: dvh so the browser toolbar does not push content off screen; safe-area padding */
+            .action-sheet-overlay { overscroll-behavior: contain; }
+            .action-sheet { max-height: 85vh; max-height: 85dvh; overscroll-behavior: contain; }
+            .action-sheet > .sheet-body:last-child { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important; }
+            .sheet-header { gap: 12px; flex-wrap: wrap; padding: 16px 20px 12px; }
+            .sheet-header > div:first-child { min-width: 0; flex: 1 1 auto; }
+            .sheet-header .sheet-title, .sheet-header .small { overflow-wrap: anywhere; }
+            .sheet-header .btn { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .sheet-body { padding: 16px 20px; -webkit-overflow-scrolling: touch; }
+            .sheet-body .btn-sm, .sheet-body a.btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+            .sheet-footer { padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px)); }
+            .sheet-menu-btn { min-height: 64px; font-family: inherit; }
+            .sheet-menu-btn:hover { transform: none; }
+            .sheet-menu-title, .sheet-menu-desc { overflow-wrap: anywhere; }
+
+            /* Attendance / grades forms */
+            .student-info { gap: 12px; }
+            .student-name { min-width: 0; overflow-wrap: anywhere; }
+            .student-id { flex-shrink: 0; }
+            .radio-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+            .radio-chip { min-width: 0; }
+            .radio-chip label { padding: 13px 2px; min-height: 44px; }
+            .radio-chip input:focus-visible + label { outline: 2px solid #2563eb; outline-offset: 2px; }
+            .radio-chip { position: relative; }
+            .radio-chip input { display: block; position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; pointer-events: none; }
+            .grade-input-box { min-height: 56px; }
+            .grade-input-box input { font-size: 1.1rem; min-height: 28px; }
+            .grade-input-box:focus-within { border-color: #2563eb; background: #fff; }
+
+            /* Logout confirmation dialog (fixed-position, not a Bootstrap modal) */
+            .logout-modal-overlay { padding: 16px !important; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important; box-sizing: border-box; }
+            .logout-modal-card { padding: 28px 20px 20px !important; width: 100% !important; max-width: 400px !important; box-sizing: border-box; max-height: 100%; overflow-y: auto; }
+            .logout-modal-actions { gap: 12px !important; }
+            .logout-modal-actions > * { min-height: 48px; box-sizing: border-box; padding: 10px 12px !important; font-size: 0.95rem !important; white-space: nowrap; }
+
+            /* Bootstrap modals opened on mobile (notifications, holidays, sessions) */
+            .modal .btn-close { padding: 12px; }
+        }
+
+        @media (max-width: 359.98px) {
+            .mobile-app-container { padding-left: 12px !important; padding-right: 12px !important; }
+            .mobile-top-bar { margin-left: -12px; margin-right: -12px; padding-left: 12px; padding-right: 12px; }
+            .hero-avatar-box { width: 60px; height: 60px; font-size: 1.8rem; border-radius: 16px; }
+            .mobile-hero-banner { padding: 16px; gap: 12px; }
+            .mobile-user-greeting { font-size: 0.95rem; }
+            .dock-tab-btn { padding: 5px 2px; }
+        }
+
+        @media (max-width: 400px) {
+            .logout-modal-actions { flex-direction: column-reverse; }
         }
     </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
 </head>
 <body>
 <div class="d-none d-md-flex desktop-app-container">
@@ -2057,13 +2177,6 @@
                 <i class="bi bi-gear" aria-hidden="true"></i> Settings
             </button>
         </nav>
-
-        <div class="sidebar-promo">
-            <div class="star-icon"><i class="bi bi-person-workspace" aria-hidden="true"></i></div>
-            <h4>Faculty Portal</h4>
-            <p>Active Term 2026-2027. Record attendance and grade submissions on time.</p>
-            <button type="button" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))">View My Schedule</button>
-        </div>
     </aside>
 
     <main class="desktop-main" id="desktop-main-content" role="main" tabindex="-1">
@@ -2207,10 +2320,6 @@
                     </div>
                     <div class="mc-value">${sectionStudentsMap.size()}</div>
                     <div class="mc-subtitle">Active teaching sections this semester</div>
-                    <div class="mc-footer">
-                        <span class="mc-trend positive"><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Active</span>
-                        <span class="mc-extra">Term 2026-2027</span>
-                    </div>
                 </div>
 
                 <div class="metric-card">
@@ -2224,10 +2333,6 @@
                     </div>
                     <div class="mc-value">${totalEnrolledCount}</div>
                     <div class="mc-subtitle">Students currently enrolled in your classes</div>
-                    <div class="mc-footer">
-                        <span class="mc-trend positive"><i class="bi bi-person-check-fill" aria-hidden="true"></i> Enrolled</span>
-                        <span class="mc-extra">Across ${sectionStudentsMap.size()} Sections</span>
-                    </div>
                 </div>
 
                 <div class="metric-card">
@@ -2241,10 +2346,6 @@
                     </div>
                     <div class="mc-value">${sectionStudentsMap.size()}</div>
                     <div class="mc-subtitle">Classroom meeting blocks per week</div>
-                    <div class="mc-footer">
-                        <span class="mc-trend neutral"><i class="bi bi-clock-history" aria-hidden="true"></i> Midterm & Final</span>
-                        <span class="mc-extra">On Track</span>
-                    </div>
                 </div>
             </div>
 
@@ -3926,14 +4027,14 @@
 
     <!-- ===== CLASSES VIEW ===== -->
     <section id="mobile-view-classes" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-classes">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div class="me-auto" style="min-width:0;">
                 <h2 class="section-title mb-0">Assigned Classes</h2>
                 <span class="text-muted" style="font-size:0.75rem;">Sections, rosters, roll call & grades</span>
             </div>
             <div class="d-flex align-items-center gap-2">
                 <c:if test="${not empty sectionStudentsMap}">
-                    <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm" style="font-size:0.75rem;" title="Export all attendance">
+                    <a href="${pageContext.request.contextPath}/professor/attendance/export" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm" style="font-size:0.75rem;min-height:44px;" title="Export all attendance">
                         <i class="bi bi-file-earmark-excel-fill text-success"></i> Export All
                     </a>
                 </c:if>
@@ -3957,6 +4058,12 @@
             </div>
         </c:if>
         
+        <div id="profClassesTabEmpty" class="mobile-course-card text-center py-4" style="display:none;">
+            <i class="bi bi-search text-muted fs-2 mb-2 d-block"></i>
+            <div class="fw-bold small text-dark mb-1">No matching classes</div>
+            <div class="small text-muted">Try a different code or title.</div>
+        </div>
+
         <div id="mobileClassList">
             <c:forEach var="entry" items="${sectionStudentsMap}">
                 <c:set var="section" value="${entry.key}" />
@@ -4002,8 +4109,8 @@
     </section>
 
     <section id="mobile-view-schedule" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-schedule">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
+        <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+            <div style="min-width:0;">
                 <h2 class="section-title mb-0">Teaching Timetable</h2>
                 <span class="text-muted" style="font-size:0.75rem;">7-Day lecture & room breakdown</span>
             </div>
@@ -4114,19 +4221,19 @@
 
         <div class="mobile-course-card mb-3 p-3" style="cursor:default;">
             <div class="fw-bold small text-dark mb-3"><i class="bi bi-mortarboard me-2 text-primary"></i>Faculty Details</div>
-            <div class="d-flex justify-content-between py-2 border-bottom small">
+            <div class="d-flex justify-content-between mobile-profile-row py-2 border-bottom small">
                 <span class="text-muted">Role:</span>
                 <span class="fw-semibold text-dark">Professor / Faculty</span>
             </div>
-            <div class="d-flex justify-content-between py-2 border-bottom small">
+            <div class="d-flex justify-content-between mobile-profile-row py-2 border-bottom small">
                 <span class="text-muted">Department / School:</span>
                 <span class="fw-semibold text-dark">${not empty professorSchool ? professorSchool.schoolName : (not empty sessionScope.user.major ? sessionScope.user.major : 'Science & Technology')}</span>
             </div>
-            <div class="d-flex justify-content-between py-2 border-bottom small">
+            <div class="d-flex justify-content-between mobile-profile-row py-2 border-bottom small">
                 <span class="text-muted">Classes Assigned:</span>
                 <span class="fw-bold text-primary">${sectionStudentsMap.size()} Sections</span>
             </div>
-            <div class="d-flex justify-content-between py-2 small">
+            <div class="d-flex justify-content-between mobile-profile-row py-2 small">
                 <span class="text-muted">Account Status:</span>
                 <span class="badge bg-success bg-opacity-10 text-success fw-bold">Active Faculty</span>
             </div>
@@ -4144,7 +4251,7 @@
                 <input type="hidden" name="redirect" value="/professor/dashboard?tab=profile">
                 <div class="input-group">
                     <label class="input-group-text small bg-light" for="mobileTwoFactorSelectProf">Status</label>
-                    <select id="mobileTwoFactorSelectProf" name="twoFactorEnabled" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <select id="mobileTwoFactorSelectProf" name="twoFactorEnabled" class="form-select form-select-sm" style="min-width:0;" onchange="this.form.submit()">
                         <option value="false" ${!sessionScope.user.twoFactorEnabled ? 'selected' : ''}>Disabled</option>
                         <option value="true" ${sessionScope.user.twoFactorEnabled ? 'selected' : ''}>Enabled</option>
                     </select>
@@ -4196,7 +4303,7 @@
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-0 pb-0">
                 <h6 class="modal-title fw-bold" id="securityModalLabel"><i class="bi bi-bell me-2 text-primary"></i>Notifications</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="p-3 bg-light rounded-3 mb-3">
@@ -4227,7 +4334,7 @@
                 <div class="sheet-title" id="casCode">COURSE</div>
                 <div class="small text-muted fw-bold mt-1" id="casTitle">Title</div>
             </div>
-            <button class="btn btn-light rounded-circle" onclick="closeSheet('courseActionSheet')"><i class="bi bi-x fs-5"></i></button>
+            <button type="button" class="btn btn-light rounded-circle" aria-label="Close" onclick="closeSheet('courseActionSheet')"><i class="bi bi-x fs-5"></i></button>
         </div>
         <div class="sheet-body pb-4">
             <button class="sheet-menu-btn sheet-menu-btn-info" onclick="openSubSheet('rosterSheet')">
@@ -4323,18 +4430,18 @@
                     <div class="d-flex flex-column gap-2 py-2">
                         <c:forEach var="student" items="${students}">
                             <div class="d-flex align-items-center justify-content-between p-3 bg-white rounded-4 border shadow-sm">
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-3" style="min-width:0;flex:1 1 auto;">
                                     <div class="mobile-avatar-frame" style="width:44px;height:44px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
                                         <img src="https://ui-avatars.com/api/?name=${student.fullName}&background=0284c7&color=fff&bold=true" alt="${student.fullName}" style="width:100%;height:100%;object-fit:cover;">
                                     </div>
-                                    <div>
-                                        <div class="fw-bold text-dark text-truncate" style="max-width: 170px;">${student.fullName}</div>
+                                    <div style="min-width:0;">
+                                        <div class="fw-bold text-dark text-truncate">${student.fullName}</div>
                                         <div class="text-muted small" style="font-size:0.75rem;">
-                                            <span class="badge bg-light border text-secondary me-1">ID: ${student.formattedIdentifier}</span>
+                                            <span class="badge bg-light border text-secondary me-1 mw-100 text-truncate d-inline-block align-bottom">ID: ${student.formattedIdentifier}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-end">
+                                <div class="text-end flex-shrink-0 ms-2">
                                     <c:if test="${not empty student.email}">
                                         <a href="mailto:${student.email}" class="btn btn-sm btn-light border rounded-pill px-3 py-1 text-primary small fw-semibold" title="${student.email}">
                                             <i class="bi bi-envelope-fill me-1"></i>Email
@@ -4466,15 +4573,15 @@
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div class="fw-bold text-dark"><i class="bi bi-calendar3 me-2"></i>${record.sessionDate}</div>
                         </div>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex flex-wrap gap-2">
                             <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1"><i class="bi bi-check-circle-fill me-1"></i>${record.presentCount} Present</span>
                             <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1"><i class="bi bi-x-circle-fill me-1"></i>${record.absentCount} Absent</span>
                         </div>
                         <div class="mt-2 pt-2 border-top">
-                            <a class="text-decoration-none small fw-bold text-primary" data-bs-toggle="collapse" href="#mobRecordDetails_${section.id}_${record.id}">View Student Breakdown <i class="bi bi-chevron-down"></i></a>
+                            <a class="text-decoration-none small fw-bold text-primary d-inline-block py-2" data-bs-toggle="collapse" href="#mobRecordDetails_${section.id}_${record.id}">View Student Breakdown <i class="bi bi-chevron-down"></i></a>
                             <div class="collapse mt-2" id="mobRecordDetails_${section.id}_${record.id}">
                                 <c:forEach var="entry" items="${record.entries}">
-                                    <div class="d-flex justify-content-between border-bottom py-1 small">
+                                    <div class="d-flex justify-content-between gap-3 border-bottom py-1 small">
                                         <span>${entry.studentName}</span>
                                         <c:choose>
                                             <c:when test="${entry.status == 'PRESENT'}"><span class="text-success fw-bold">P</span></c:when>
@@ -4586,6 +4693,8 @@
             items[i].style.display = match ? '' : 'none';
             if (match) visibleCount++;
         }
+        var clearBtn = document.getElementById('clearMobileClassSearchBtn');
+        if (clearBtn) clearBtn.style.display = q ? '' : 'none';
         var emptyEl = document.getElementById('profClassesTabEmpty');
         if (emptyEl) {
             emptyEl.style.display = (visibleCount === 0 && items.length > 0) ? 'block' : 'none';
@@ -4593,13 +4702,13 @@
     }
 
     function clearMobileClassSearch() {
-        var inp = document.getElementById('mobileClassSearch');
+        var inp = document.getElementById('mobileClassSearchInput');
         if (inp) inp.value = '';
         filterMobileClasses('');
     }
 
     function filterProfScheduleTabView(dayShort, element) {
-        var strip = document.getElementById('profScheduleFilterStrip');
+        var strip = document.getElementById('profScheduleDayFilterStrip');
         if (strip) {
             var pills = strip.querySelectorAll('.schedule-filter-pill');
             pills.forEach(function (p) { p.classList.remove('active'); });
@@ -4685,7 +4794,7 @@
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            var openSheets = document.querySelectorAll('.course-action-sheet.open');
+            var openSheets = document.querySelectorAll('.action-sheet-overlay.open');
             openSheets.forEach(function(sh) { sh.classList.remove('open'); });
             document.body.style.overflow = '';
         }
@@ -5068,14 +5177,14 @@
 </script>
 
 <jsp:include page="/WEB-INF/views/common/school_holidays_modal.jsp" />
-<div id="logoutConfirmModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
-        <div style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
+<div id="logoutConfirmModal" class="logout-modal-overlay" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
+        <div class="logout-modal-card" style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
             <div style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
                 <i class="bi bi-box-arrow-right" style="font-size:1.75rem;color:#dc2626;"></i>
             </div>
             <h4 id="logoutModalTitle" style="font-weight:800;color:#0f172a;margin-bottom:0.75rem;">Sign Out?</h4>
             <p style="color:#64748b;font-size:1rem;margin-bottom:2rem;line-height:1.5;">Are you sure you want to log out of your account? Any unsaved changes will be lost.</p>
-            <div style="display:flex;gap:1rem;justify-content:center;">
+            <div class="logout-modal-actions" style="display:flex;gap:1rem;justify-content:center;">
                 <button type="button" onclick="document.getElementById('logoutConfirmModal').style.display='none'" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Cancel</button>
                 <a href="${pageContext.request.contextPath}/auth/logout" style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:none;background:#b91c1c;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;box-shadow:0 4px 14px rgba(185,28,28,0.35);transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</a>
             </div>

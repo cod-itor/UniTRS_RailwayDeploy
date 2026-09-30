@@ -1,11 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
         <!DOCTYPE html>
         <html lang="en">
 
         <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
             <title>Dean Dashboard - UniTRS</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
@@ -673,10 +674,12 @@
                         width: 100% !important;
                         max-width: 540px !important;
                         margin: 0 auto !important;
-                        padding: 0 16px calc(84px + env(safe-area-inset-bottom, 16px)) !important;
+                        padding: 0 16px calc(100px + env(safe-area-inset-bottom, 0px)) !important;
                         background: #f8fafc;
                         min-height: 100vh;
+                        min-height: 100dvh;
                         box-sizing: border-box !important;
+                        overflow-x: clip;
                     }
 
                     /* Sticky Safe-Area Aware Top Bar */
@@ -695,8 +698,8 @@
                     }
 
                     .dean-top-avatar {
-                        width: 42px;
-                        height: 42px;
+                        width: 44px;
+                        height: 44px;
                         border-radius: 14px;
                         overflow: hidden;
                         background: #eff6ff;
@@ -721,7 +724,9 @@
                         color: #1d4ed8;
                         text-decoration: none;
                         transition: all 0.2s ease;
-                        min-height: 36px;
+                        min-height: 44px;
+                        padding: 6px 14px;
+                        flex-shrink: 0;
                     }
 
                     .dean-prof-switch-pill:active {
@@ -757,7 +762,7 @@
                     /* Hero Banner */
                     .dean-hero-banner {
                         background: linear-gradient(135deg, #091e3a 0%, #1e3a8a 60%, #2563eb 100%);
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 20px;
                         color: #ffffff;
                         position: relative;
@@ -783,8 +788,8 @@
                     /* KPI 2x2 Grid */
                     .dean-kpi-grid {
                         display: grid;
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 10px;
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                        gap: 12px;
                         margin-bottom: 16px;
                         width: 100%;
                         box-sizing: border-box;
@@ -793,10 +798,12 @@
                     .dean-kpi-card {
                         background: #ffffff;
                         border-radius: 20px;
-                        padding: 14px 16px;
+                        padding: 16px;
                         border: 1px solid rgba(226, 232, 240, 0.75);
                         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
                         display: flex;
+                        min-width: 0;
+                        cursor: pointer;
                         flex-direction: column;
                         justify-content: space-between;
                         min-height: 94px;
@@ -858,11 +865,11 @@
                         display: flex;
                         gap: 8px;
                         overflow-x: auto;
-                        padding-bottom: 8px;
-                        margin-bottom: 16px;
+                        padding: 2px 16px 8px;
+                        margin: 0 -16px 16px;
                         -webkit-overflow-scrolling: touch;
                         scrollbar-width: none;
-                        width: 100%;
+                        width: auto;
                         box-sizing: border-box;
                     }
 
@@ -882,6 +889,7 @@
                         font-weight: 700;
                         color: #1e293b;
                         white-space: nowrap;
+                        flex-shrink: 0;
                         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
                         min-height: 44px;
                         cursor: pointer;
@@ -914,7 +922,9 @@
                         margin-bottom: 12px;
                         transition: transform 0.15s ease, box-shadow 0.15s ease;
                         width: 100%;
+                        min-width: 0;
                         box-sizing: border-box;
+                        overflow-wrap: anywhere;
                     }
 
                     .mobile-course-card:active {
@@ -943,7 +953,7 @@
                     .mc-meta {
                         display: flex;
                         flex-wrap: wrap;
-                        gap: 10px;
+                        gap: 8px 12px;
                         font-size: 0.78rem;
                         color: #64748b;
                         font-weight: 500;
@@ -953,6 +963,8 @@
                         display: inline-flex;
                         align-items: center;
                         gap: 5px;
+                        min-width: 0;
+                        max-width: 100%;
                     }
 
                     /* Capacity bar */
@@ -997,10 +1009,10 @@
                         border: 1px solid rgba(226, 232, 240, 0.85);
                         border-radius: 14px;
                         padding: 12px 14px 12px 42px;
-                        font-size: 0.88rem;
+                        font-size: 16px;
                         color: #0f172a;
                         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-                        min-height: 46px;
+                        min-height: 48px;
                     }
 
                     .mobile-search-bar input:focus {
@@ -1039,9 +1051,11 @@
                         border-radius: 12px;
                         font-size: 0.82rem;
                         font-weight: 700;
+                        line-height: 1.2;
                         color: #64748b;
                         transition: all 0.2s ease;
-                        min-height: 42px;
+                        min-width: 0;
+                        min-height: 44px;
                     }
 
                     .dean-seg-btn.active {
@@ -1053,9 +1067,10 @@
                     /* Executive Dean Digital Credential ID Card */
                     .dean-cred-card {
                         background: linear-gradient(135deg, #091e3a 0%, #172554 45%, #1e3a8a 100%);
-                        border-radius: 24px;
-                        padding: 22px;
+                        border-radius: 20px;
+                        padding: 20px;
                         color: #ffffff;
+                        overflow-wrap: anywhere;
                         position: relative;
                         overflow: hidden;
                         box-shadow: 0 16px 36px rgba(9, 30, 58, 0.3);
@@ -1112,7 +1127,7 @@
                     .mobile-dock,
                     .mobile-bottom-dock {
                         position: fixed;
-                        bottom: calc(12px + env(safe-area-inset-bottom, 8px));
+                        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
                         left: 50%;
                         transform: translateX(-50%);
                         width: calc(100% - 24px);
@@ -1125,7 +1140,7 @@
                         display: flex;
                         align-items: center;
                         justify-content: space-around;
-                        padding: 6px 8px;
+                        padding: 6px;
                         z-index: 1040;
                         box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
                     }
@@ -1138,13 +1153,14 @@
                         background: transparent;
                         border: none;
                         color: #64748b;
-                        font-size: 0.68rem;
+                        font-size: 0.75rem;
                         font-weight: 600;
-                        letter-spacing: -0.01em;
-                        flex: 1;
+                        letter-spacing: -0.02em;
+                        flex: 1 1 0;
+                        min-width: 0;
                         max-width: 84px;
-                        min-height: 46px;
-                        padding: 5px 4px;
+                        min-height: 48px;
+                        padding: 5px 2px;
                         border-radius: 18px;
                         cursor: pointer;
                         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1179,7 +1195,9 @@
                     /* Mobile Toast */
                     .mobile-toast {
                         position: fixed;
-                        bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
+                        bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
+                        max-width: calc(100% - 32px);
+                        white-space: nowrap;
                         left: 50%;
                         transform: translateX(-50%) translateY(20px);
                         background: #0f172a;
@@ -1207,13 +1225,13 @@
                     /* Filter chip strip */
                     .filter-chip-strip {
                         display: flex;
-                        gap: 6px;
+                        gap: 8px;
                         overflow-x: auto;
-                        padding-bottom: 6px;
-                        margin-bottom: 12px;
+                        padding: 4px 16px 8px;
+                        margin: 0 -16px 8px;
                         -webkit-overflow-scrolling: touch;
                         scrollbar-width: none;
-                        width: 100%;
+                        width: auto;
                         box-sizing: border-box;
                     }
 
@@ -1235,6 +1253,15 @@
                         min-height: 36px;
                         display: inline-flex;
                         align-items: center;
+                        flex-shrink: 0;
+                        position: relative;
+                    }
+
+                    /* enlarge hit area to 44px without growing the chip */
+                    .filter-chip::after {
+                        content: '';
+                        position: absolute;
+                        inset: -4px 0;
                     }
 
                     .filter-chip.active {
@@ -1243,6 +1270,145 @@
                         border-color: #2563eb;
                         font-weight: 700;
                     }
+
+                    /* ---------- Audit fixes ---------- */
+                    .fw-extrabold { font-weight: 800; }
+                    .text-indigo { color: #4f46e5; }
+
+                    .dean-glass-badge {
+                        background: rgba(255, 255, 255, 0.18);
+                        border: 1px solid rgba(255, 255, 255, 0.22);
+                    }
+
+                    /* Top bar */
+                    .dean-top-left { flex: 1 1 auto; min-width: 0; }
+                    .dean-top-text { min-width: 0; }
+                    .dean-top-text > .d-flex { min-width: 0; }
+                    .dean-top-right { flex-shrink: 0; }
+
+                    .dean-top-btn {
+                        width: 44px;
+                        height: 44px;
+                        flex-shrink: 0;
+                        border: 1px solid rgba(226, 232, 240, 0.8);
+                    }
+
+                    @media (max-width: 429.98px) {
+                        .dean-prof-switch-pill {
+                            width: 44px;
+                            padding: 0;
+                            justify-content: center;
+                            font-size: 1.05rem;
+                        }
+
+                        .dean-prof-switch-pill span { display: none; }
+                    }
+
+                    @media (max-width: 379.98px) {
+                        .dean-top-role { display: none !important; }
+                    }
+
+                    @media (max-width: 359.98px) {
+                        .dean-top-avatar { display: none; }
+                    }
+
+                    /* Section headers: let title shrink, keep action visible */
+                    .mobile-sub-view > .d-flex.justify-content-between { gap: 12px; }
+                    .mobile-sub-view > .d-flex.justify-content-between > div:first-child { min-width: 0; }
+                    .mobile-sub-view > .d-flex.justify-content-between > .btn { flex-shrink: 0; }
+                    .mobile-sub-view h2, .mobile-sub-view h3 { overflow-wrap: anywhere; }
+                    .mobile-sub-view > .d-flex.justify-content-between > .btn-link {
+                        min-height: 44px;
+                        padding: 0 4px !important;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 4px;
+                    }
+
+                    .dean-hero-top { flex-wrap: wrap; gap: 8px; }
+                    .dean-hero-top .badge { white-space: normal; text-align: left; }
+                    .dean-hero-banner h2 { overflow-wrap: anywhere; }
+
+                    /* Cards: header rows wrap instead of overflowing */
+                    .mobile-course-card > .d-flex.justify-content-between { flex-wrap: wrap; gap: 8px; }
+                    .mobile-course-card .badge { max-width: 100%; white-space: normal; text-align: left; }
+                    .mobile-course-card .list-group-item { gap: 8px; }
+                    .mobile-course-card .list-group-item:last-child { border-bottom: 0 !important; }
+                    .mobile-course-card .list-group-item > div:first-child { min-width: 0; }
+                    .mobile-course-card .list-group-item > form { flex-shrink: 0; }
+                    .mobile-course-card .list-group-item .btn {
+                        min-width: 44px;
+                        min-height: 44px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .mobile-course-card .btn:not([data-id]) {
+                        min-height: 44px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 4px;
+                    }
+
+                    /* small copy-ID chips: bigger hit area, same look */
+                    .mobile-course-card .btn[data-id] { position: relative; }
+                    .mobile-course-card .btn[data-id]::after { content: ''; position: absolute; inset: -10px -4px; }
+
+                    .mobile-course-card .flex-grow-1 > .d-flex > .badge { flex-shrink: 0; margin-left: 8px; }
+                    .min-w-0 { min-width: 0; }
+
+                    .dean-cred-head, .dean-cred-foot { flex-wrap: wrap; gap: 8px 12px; }
+                    .dean-cred-foot .btn { min-height: 44px; }
+
+                    .dock-tab-btn > span:not(.badge) {
+                        max-width: 100%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    @media (max-width: 374.98px) {
+                        .dock-tab-btn { font-size: 0.68rem; }
+                    }
+
+                    /* Modals (shared by mobile + desktop markup) */
+                    .modal { --bs-modal-margin: 16px; }
+
+                    .modal-dialog {
+                        margin: var(--bs-modal-margin) auto;
+                        width: calc(100% - 32px);
+                    }
+
+                    .modal-content { border-radius: 20px !important; }
+                    .modal-header { padding: 16px; gap: 12px; }
+                    .modal-body { padding: 16px; overflow-wrap: anywhere; }
+                    .modal-footer { padding: 12px 16px; gap: 8px; }
+                    .modal-footer > * { margin: 0; }
+                    .modal-footer .btn { flex: 1 1 0; min-height: 44px; }
+                    .modal-body .btn { min-height: 44px; }
+                    .modal-title { font-size: 1rem; overflow-wrap: anywhere; }
+                    .modal .btn-close { padding: 12px; flex-shrink: 0; }
+                    .modal .form-control,
+                    .modal .form-select,
+                    .modal .form-control-sm { font-size: 16px; min-height: 46px; }
+                    .modal-body .list-group-item { gap: 8px; }
+                    .modal-body .list-group-item > div:first-child { min-width: 0; }
+                    .modal-body .list-group-item > form { flex-shrink: 0; }
+
+                    /* Logout confirm (inline-styled overlay) */
+                    #logoutConfirmModal { padding: 16px; box-sizing: border-box; }
+                    #logoutConfirmModal .logout-modal-card {
+                        padding: 24px 20px !important;
+                        width: 100% !important;
+                        max-width: 400px !important;
+                        box-sizing: border-box;
+                        border-radius: 20px !important;
+                    }
+                    #logoutConfirmModal .logout-modal-card p { font-size: 0.95rem !important; margin-bottom: 20px !important; }
+                    #logoutConfirmModal .logout-modal-actions { flex-direction: column-reverse; gap: 8px !important; }
+                    #logoutConfirmModal .logout-modal-actions > * { min-height: 48px; box-sizing: border-box; }
                 }
 
                 @media (min-width: 768px) {
@@ -1251,6 +1417,7 @@
                     }
                 }
             </style>
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
         </head>
 
         <body>
@@ -1352,10 +1519,6 @@
                                     style="font-size: 0.85rem;">
                                     <i class="bi bi-person-workspace text-primary"></i> Switch to Professor View
                                 </a>
-
-                                <button type="button" class="action-btn" aria-label="Notifications">
-                                    <i class="bi bi-bell"></i>
-                                </button>
 
                                 <div class="dropdown">
                                     <button class="user-profile dropdown-toggle border-0 text-start" type="button"
@@ -1515,7 +1678,7 @@
                             </div>
 
                             <%-- TOP METRIC STATS CARDS --%>
-                                <div class="metrics-grid">
+                                <div class="metrics-grid metrics-grid-5">
                                     <div class="metric-card">
                                         <div class="mc-icon-wrap">
                                             <div class="mc-icon blue"><i class="bi bi-book-half"></i></div>
@@ -2492,8 +2655,8 @@
             <div class="mobile-app-container d-block d-md-none">
 
                 <header class="dean-mobile-topbar" role="banner">
-                    <div class="d-flex align-items-center justify-content-between w-100">
-                        <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center justify-content-between w-100 gap-2">
+                        <div class="dean-top-left d-flex align-items-center gap-2">
                             <div class="dean-top-avatar">
                                 <c:choose>
                                     <c:when test="${user.gender == 'FEMALE'}">
@@ -2506,35 +2669,34 @@
                                     </c:otherwise>
                                 </c:choose>
                             </div>
-                            <div>
+                            <div class="dean-top-text">
                                 <div class="d-flex align-items-center gap-2">
-                                    <span class="fw-extrabold text-dark"
+                                    <span class="fw-extrabold text-dark text-truncate"
                                         style="font-size: 1.05rem; letter-spacing: -0.02em;">Dean Admin</span>
                                     <span
-                                        class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-2 py-0"
-                                        style="font-size:0.65rem; font-weight:700;">DEAN</span>
+                                        class="dean-top-role badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-2 py-0"
+                                        style="font-size:0.75rem; font-weight:700;">DEAN</span>
                                 </div>
                                 <div class="text-muted small fw-medium text-truncate"
-                                    style="max-width: 170px; font-size: 0.75rem;">${user.fullName}</div>
+                                    style="font-size: 0.75rem;">${user.fullName}</div>
                             </div>
                         </div>
 
-                        <div class="d-flex align-items-center gap-2">
+                        <div class="dean-top-right d-flex align-items-center gap-2">
                             <button type="button"
-                                class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center shadow-xs"
-                                style="width: 38px; height: 38px; border: 1px solid rgba(226,232,240,0.8);"
+                                class="dean-top-btn btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center"
                                 data-bs-toggle="modal" data-bs-target="#schoolHolidaysModal"
                                 aria-label="School Holidays">
                                 <i class="bi bi-calendar-heart text-danger" style="font-size: 1rem;"></i>
                             </button>
                             <a href="${pageContext.request.contextPath}/professor/dashboard"
-                                class="dean-prof-switch-pill text-decoration-none" title="Switch to Professor View">
+                                class="dean-prof-switch-pill text-decoration-none" title="Switch to Professor View"
+                                aria-label="Switch to Professor View">
                                 <i class="bi bi-person-workspace text-primary"></i>
                                 <span>Prof View</span>
                             </a>
                             <button type="button"
-                                class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center shadow-xs"
-                                style="width: 38px; height: 38px; border: 1px solid rgba(226,232,240,0.8);"
+                                class="dean-top-btn btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center"
                                 onclick="switchDeanMobileTab('profile')" aria-label="Open profile settings">
                                 <i class="bi bi-gear-fill text-secondary" style="font-size: 1rem;"></i>
                             </button>
@@ -2545,19 +2707,19 @@
                 <section id="mobile-view-home" class="mobile-sub-view active" role="tabpanel"
                     aria-labelledby="dock-tab-home">
                     <div class="dean-hero-banner">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-1 font-monospace"
+                        <div class="dean-hero-top d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge dean-glass-badge text-white rounded-pill px-3 py-1 font-monospace"
                                 style="font-size:0.75rem; font-weight:700;">
                                 <i class="bi bi-mortarboard-fill me-1 text-warning"></i>${deanSchool.schoolName}
                             </span>
                             <span class="badge bg-success bg-opacity-90 text-white rounded-pill px-2 py-1"
-                                style="font-size:0.7rem; font-weight:700;">
+                                style="font-size:0.75rem; font-weight:700;">
                                 <i class="bi bi-circle-fill me-1" style="font-size:0.5rem;"></i>Active Term
                             </span>
                         </div>
                         <h2 class="fw-extrabold text-white mb-1" style="font-size:1.35rem; letter-spacing:-0.02em;">Dean
                             Leadership Hub</h2>
-                        <p class="text-white text-opacity-80 small mb-3">Academic Curriculum & Department Administration
+                        <p class="text-white text-opacity-75 small mb-3">Academic Curriculum & Department Administration
                         </p>
                     </div>
 
@@ -2569,12 +2731,12 @@
                                 <div>
                                     <div class="fw-bold small text-dark">${pendingTermRequests.size()} Student
                                         Request(s) Pending</div>
-                                    <div class="text-muted" style="font-size:0.72rem;">Tap to review and approve
+                                    <div class="text-muted" style="font-size:0.75rem;">Tap to review and approve
                                         registrations</div>
                                 </div>
                             </div>
                             <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1"
-                                style="font-size:0.7rem;">Review</span>
+                                style="font-size:0.75rem;">Review</span>
                         </div>
                     </c:if>
 
@@ -2724,6 +2886,9 @@
                                     </button>
                                 </div>
                             </c:forEach>
+                            <c:if test="${empty terms}">
+                                <div class="text-center text-muted py-3 small">No academic terms yet.</div>
+                            </c:if>
                         </div>
                     </div>
                 </section>
@@ -2739,12 +2904,12 @@
                         </div>
                         <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-bold"
                             data-bs-toggle="modal" data-bs-target="#addCourseModal"
-                            style="font-size:0.8rem; min-height:40px;">
+                            style="font-size:0.8rem; min-height:44px;">
                             <i class="bi bi-plus-lg me-1"></i> New Course
                         </button>
                     </div>
 
-                    <div class="dean-seg-control mb-3">
+                    <div class="dean-segmented-ctrl">
                         <button type="button" id="deanSegCatalogBtn" class="dean-seg-btn active"
                             onclick="toggleDeanCourseSegment('catalog')">
                             <i class="bi bi-book me-1"></i> Courses Catalog (${courses.size()})
@@ -2777,7 +2942,7 @@
                                     <button type="button"
                                         class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold"
                                         data-bs-toggle="modal" data-bs-target="#editCourseModal${course.id}"
-                                        style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
+                                        style="min-height:44px; display:inline-flex; align-items:center; gap:4px;">
                                         <i class="bi bi-pencil"></i> Edit
                                     </button>
                                     <form action="${pageContext.request.contextPath}/dean/dashboard" method="post"
@@ -2787,7 +2952,7 @@
                                         <button type="submit"
                                             class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold"
                                             onclick="return confirm('Are you sure you want to delete course ${course.courseCode}?');"
-                                            style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
+                                            style="min-height:44px; display:inline-flex; align-items:center; gap:4px;">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>
                                     </form>
@@ -2871,7 +3036,7 @@
                         </div>
                         <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-bold"
                             data-bs-toggle="modal" data-bs-target="#scheduleClassModal"
-                            style="font-size:0.8rem; min-height:42px;">
+                            style="font-size:0.8rem; min-height:44px;">
                             <i class="bi bi-plus-lg me-1"></i> Schedule
                         </button>
                     </div>
@@ -2887,12 +3052,12 @@
                                 <div>
                                     <div class="fw-bold text-dark" style="font-size:0.85rem;">School Holidays Calendar
                                     </div>
-                                    <div class="small text-muted" style="font-size:0.72rem;">View upcoming breaks &
+                                    <div class="small text-muted" style="font-size:0.75rem;">View upcoming breaks &
                                         observances</div>
                                 </div>
                             </div>
                             <span class="badge bg-danger text-white rounded-pill px-2.5 py-1"
-                                style="font-size:0.68rem;">View</span>
+                                style="font-size:0.75rem;">View</span>
                         </div>
                     </div>
 
@@ -2958,7 +3123,7 @@
                                     <button type="button"
                                         class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold"
                                         data-bs-toggle="modal" data-bs-target="#sectionStudentsModal${section.id}"
-                                        style="min-height:38px; display:inline-flex; align-items:center; gap:4px; font-size:0.8rem;">
+                                        style="min-height:44px; display:inline-flex; align-items:center; gap:4px; font-size:0.8rem;">
                                         <i class="bi bi-people"></i> Students (${section.enrolledCount})
                                     </button>
                                     <form action="${pageContext.request.contextPath}/dean/dashboard" method="post"
@@ -2968,7 +3133,7 @@
                                         <button type="submit"
                                             class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold"
                                             onclick="return confirm('Are you sure you want to delete this scheduled class section?');"
-                                            style="min-height:38px; display:inline-flex; align-items:center; gap:4px;">
+                                            style="min-height:44px; display:inline-flex; align-items:center; gap:4px;">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>
                                     </form>
@@ -3043,8 +3208,8 @@
                     </c:forEach>
 
                     <c:if test="${empty pendingTermRequests}">
-                        <div class="card border-0 shadow-sm rounded-4 p-5 text-center my-3">
-                            <i class="bi bi-inbox text-muted opacity-50 display-4 mb-2"></i>
+                        <div class="mobile-course-card text-center py-4 my-3">
+                            <i class="bi bi-inbox text-muted opacity-50 fs-1 mb-2 d-block"></i>
                             <h5 class="fw-bold text-dark mb-1">No Pending Requests</h5>
                             <p class="text-muted small mb-0">All student registration requests have been reviewed and
                                 processed.</p>
@@ -3097,14 +3262,14 @@
                                                 style="font-size:0.92rem;">${prof.fullName}</span>
                                             <span
                                                 class="badge bg-primary-subtle text-primary border rounded-pill px-2 py-0"
-                                                style="font-size:0.65rem;">FACULTY</span>
+                                                style="font-size:0.75rem;">FACULTY</span>
                                         </div>
                                         <div class="text-muted small text-truncate" style="font-size:0.78rem;">
                                             ${prof.email}</div>
                                         <div class="mt-1">
                                             <button type="button"
                                                 class="btn btn-sm btn-light border rounded-pill px-2 py-0 fw-bold font-monospace"
-                                                style="font-size:0.7rem;" data-id="${prof.formattedIdentifier}"
+                                                style="font-size:0.75rem;" data-id="${prof.formattedIdentifier}"
                                                 onclick="copyDeanId(this.getAttribute('data-id'), this)"
                                                 title="Copy Faculty ID">
                                                 <i class="bi bi-copy text-muted me-1"></i>${prof.formattedIdentifier}
@@ -3131,21 +3296,21 @@
                                                 style="font-size:0.92rem;">${student.fullName}</span>
                                             <span
                                                 class="badge bg-success-subtle text-success border rounded-pill px-2 py-0"
-                                                style="font-size:0.65rem;">STUDENT</span>
+                                                style="font-size:0.75rem;">STUDENT</span>
                                         </div>
                                         <div class="text-muted small text-truncate" style="font-size:0.78rem;">
                                             ${student.email}</div>
                                         <div class="mt-1 d-flex align-items-center gap-2">
                                             <button type="button"
                                                 class="btn btn-sm btn-light border rounded-pill px-2 py-0 fw-bold font-monospace"
-                                                style="font-size:0.7rem;" data-id="${student.formattedIdentifier}"
+                                                style="font-size:0.75rem;" data-id="${student.formattedIdentifier}"
                                                 onclick="copyDeanId(this.getAttribute('data-id'), this)"
                                                 title="Copy Student ID">
                                                 <i class="bi bi-copy text-muted me-1"></i>${student.formattedIdentifier}
                                             </button>
                                             <c:if test="${not empty student.major}">
                                                 <span class="badge bg-light text-muted border rounded-pill px-2 py-0"
-                                                    style="font-size:0.65rem;">${student.major}</span>
+                                                    style="font-size:0.75rem;">${student.major}</span>
                                             </c:if>
                                         </div>
                                     </div>
@@ -3174,25 +3339,25 @@
 
                     <!-- Executive Dean Digital Credential ID Card -->
                     <div class="dean-cred-card">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="dean-cred-head d-flex justify-content-between align-items-start mb-3">
                             <div class="d-flex align-items-center gap-2">
                                 <div
-                                    style="width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.25);">
+                                    style="width:34px; height:34px; border-radius:10px; flex-shrink:0; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.25);">
                                     <i class="bi bi-mortarboard-fill text-warning" style="font-size:1.1rem;"></i>
                                 </div>
                                 <div>
                                     <div class="fw-extrabold text-white text-uppercase"
-                                        style="font-size:0.72rem; letter-spacing:0.08em;">UniTRS University</div>
-                                    <div class="text-white text-opacity-70" style="font-size:0.65rem;">Office of
+                                        style="font-size:0.75rem; letter-spacing:0.08em;">UniTRS University</div>
+                                    <div class="text-white text-opacity-75" style="font-size:0.75rem;">Office of
                                         Academic Affairs</div>
                                 </div>
                             </div>
                             <span class="badge bg-warning text-dark fw-extrabold rounded-pill px-2 py-1"
-                                style="font-size:0.65rem; letter-spacing:0.04em;">EXECUTIVE DEAN</span>
+                                style="font-size:0.75rem; letter-spacing:0.04em;">EXECUTIVE DEAN</span>
                         </div>
 
                         <div class="mb-3">
-                            <div class="text-white text-opacity-70 small mb-0" style="font-size:0.72rem;">Dean of School
+                            <div class="text-white text-opacity-75 small mb-0" style="font-size:0.75rem;">Dean of School
                             </div>
                             <div class="fw-bold text-white text-truncate mb-2" style="font-size:0.95rem;">
                                 ${deanSchool.schoolName}</div>
@@ -3201,10 +3366,10 @@
                         </div>
 
                         <div
-                            class="d-flex justify-content-between align-items-end pt-3 border-top border-white border-opacity-20">
+                            class="dean-cred-foot d-flex justify-content-between align-items-end pt-3 border-top border-white border-opacity-25">
                             <div>
-                                <div class="text-white text-opacity-70"
-                                    style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.05em;">Dean ID
+                                <div class="text-white text-opacity-75"
+                                    style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">Dean ID
                                     / Barcode</div>
                                 <div class="d-flex align-items-center gap-2 mt-1">
                                     <button type="button"
@@ -3219,7 +3384,7 @@
 
                             <div class="d-flex align-items-center gap-2">
                                 <span
-                                    class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-25 rounded-pill px-3 py-1 font-monospace"
+                                    class="badge dean-glass-badge text-white border border-white border-opacity-25 rounded-pill px-3 py-1 font-monospace"
                                     style="font-size:0.75rem;">
                                     <i class="bi bi-shield-check me-1 text-warning"></i>VERIFIED DEAN
                                 </span>
@@ -3234,7 +3399,7 @@
                                 <div class="kpi-icon-box emerald mb-0"><i class="bi bi-building-fill"></i></div>
                                 <div>
                                     <div class="fw-bold text-dark small">Campus Facilities & Rooms</div>
-                                    <div class="text-muted" style="font-size:0.72rem;">${rooms.size()} classrooms
+                                    <div class="text-muted" style="font-size:0.75rem;">${rooms.size()} classrooms
                                         registered</div>
                                 </div>
                             </div>
@@ -3287,13 +3452,13 @@
                                 <div class="kpi-icon-box blue mb-0"><i class="bi bi-shield-lock-fill"></i></div>
                                 <div>
                                     <div class="fw-bold text-dark small">Two-Factor Authentication</div>
-                                    <div class="text-muted" style="font-size:0.72rem;">Enhance account login security
+                                    <div class="text-muted" style="font-size:0.75rem;">Enhance account login security
                                     </div>
                                 </div>
                             </div>
                             <span
                                 class="badge ${user.twoFactorEnabled ? 'bg-success' : 'bg-warning text-dark'} rounded-pill px-2 py-1"
-                                style="font-size:0.68rem; font-weight:700;">
+                                style="font-size:0.75rem; font-weight:700;">
                                 ${user.twoFactorEnabled ? 'Enabled' : 'Disabled'}
                             </span>
                         </div>
@@ -3351,7 +3516,7 @@
                         <c:if test="${not empty pendingTermRequests}">
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                style="font-size:0.58rem; transform: translate(-75%, 20%) !important;">
+                                style="font-size:0.75rem; transform: translate(-75%, 20%) !important;">
                                 ${pendingTermRequests.size()}
                             </span>
                         </c:if>
@@ -4173,7 +4338,7 @@
                         <div id="logoutConfirmModal"
                             style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);"
                             aria-modal="true" role="dialog" aria-labelledby="logoutModalTitle">
-                            <div
+                            <div class="logout-modal-card"
                                 style="background:#fff; border-radius:24px; padding:2.5rem 3rem; max-width:480px; width:90%; box-shadow:0 24px 64px -12px rgba(0,0,0,0.35); text-align:center; animation:slideUpModal 0.25s cubic-bezier(.34,1.56,.64,1);">
                                 <div
                                     style="width:64px;height:64px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
@@ -4183,7 +4348,7 @@
                                     Sign Out?</h4>
                                 <p style="color:#64748b;font-size:1rem;margin-bottom:2rem;line-height:1.5;">Are you sure
                                     you want to log out of your account? Any unsaved changes will be lost.</p>
-                                <div style="display:flex;gap:1rem;justify-content:center;">
+                                <div class="logout-modal-actions" style="display:flex;gap:1rem;justify-content:center;">
                                     <button type="button"
                                         onclick="document.getElementById('logoutConfirmModal').style.display='none'"
                                         style="flex:1;padding:0.75rem 1.5rem;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;"

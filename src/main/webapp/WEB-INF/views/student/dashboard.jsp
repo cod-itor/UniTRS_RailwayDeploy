@@ -6,7 +6,7 @@
 
         <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
             <title>Student Dashboard - UniTRS</title>
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,12 +113,20 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
+                        gap: 8px;
                     }
 
                     .mobile-user-info {
                         display: flex;
                         align-items: center;
                         gap: 12px;
+                        flex: 1 1 auto;
+                        min-width: 0;
+                        margin-right: auto;
+                    }
+
+                    .mobile-user-info > div:last-child {
+                        min-width: 0;
                     }
 
                     .mobile-avatar-frame {
@@ -146,6 +154,11 @@
                         margin-bottom: 2px;
                         line-height: 1.25;
                         letter-spacing: -0.02em;
+                        overflow-wrap: anywhere;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
                     }
 
                     .mobile-badge-pill {
@@ -154,11 +167,14 @@
                         gap: 5px;
                         background: #f1f5f9;
                         color: #475569;
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         padding: 3px 10px;
-                        border-radius: 20px;
+                        border-radius: 12px;
                         border: 1px solid #e2e8f0;
+                        max-width: 100%;
+                        line-height: 1.3;
+                        overflow-wrap: anywhere;
                     }
 
                     .mobile-top-action-btn {
@@ -175,6 +191,8 @@
                         font-size: 1.2rem;
                         cursor: pointer;
                         position: relative;
+                        flex-shrink: 0;
+                        margin: 0 !important;
                         transition: transform 0.15s ease, background 0.15s ease;
                     }
 
@@ -196,7 +214,7 @@
 
                     /* 7-Day Interactive Date Strip */
                     .date-strip-section {
-                        margin-bottom: 22px;
+                        margin-bottom: 20px;
                     }
 
                     .mobile-date-strip {
@@ -251,7 +269,7 @@
                     }
 
                     .ds-day {
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         text-transform: uppercase;
                         letter-spacing: 0.4px;
@@ -291,14 +309,14 @@
                     /* Next Class Hero Card */
                     .mobile-hero-banner {
                         background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 18px 20px;
                         color: #fff;
                         box-shadow: 0 12px 30px -6px rgba(15, 23, 42, 0.25);
                         display: flex;
                         align-items: center;
                         gap: 16px;
-                        margin-bottom: 22px;
+                        margin-bottom: 20px;
                         position: relative;
                         overflow: hidden;
                         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -339,7 +357,7 @@
                     }
 
                     .hero-label {
-                        font-size: 0.65rem;
+                        font-size:0.75rem;
                         font-weight: 800;
                         letter-spacing: 0.8px;
                         color: #94a3b8;
@@ -371,11 +389,12 @@
                     }
 
                     .hero-meta-row {
-                        font-size: 0.76rem;
+                        font-size: 0.78rem;
                         color: #cbd5e1;
                         display: flex;
+                        flex-wrap: wrap;
                         align-items: center;
-                        gap: 8px;
+                        gap: 2px 8px;
                         margin-bottom: 3px;
                     }
 
@@ -392,11 +411,13 @@
                         gap: 4px;
                         background: rgba(255, 255, 255, 0.12);
                         color: #f1f5f9;
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         padding: 3px 9px;
                         border-radius: 12px;
                         backdrop-filter: blur(6px);
+                        max-width: 100%;
+                        overflow-wrap: anywhere;
                     }
 
                     /* Academic Progress Swipeable Cards */
@@ -404,7 +425,14 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        margin-top: 8px;
                         margin-bottom: 12px;
+                    }
+
+                    .mobile-hero-banner + .section-header-wrap {
+                        margin-top: 0;
                     }
 
                     .mobile-section-heading {
@@ -416,7 +444,7 @@
                     }
 
                     .mobile-section-badge {
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         padding: 3px 10px;
                         border-radius: 20px;
@@ -427,7 +455,7 @@
 
                     .progress-swiper-wrap {
                         position: relative;
-                        margin-bottom: 22px;
+                        margin-bottom: 0;
                     }
 
                     .progress-swiper {
@@ -450,7 +478,7 @@
                         min-width: 270px;
                         scroll-snap-align: start;
                         background: #ffffff;
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 18px;
                         box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
                         border: 1px solid #e2e8f0;
@@ -481,7 +509,7 @@
                     }
 
                     .pc-gpa-label {
-                        font-size: 0.65rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         color: #64748b;
                         text-transform: uppercase;
@@ -513,7 +541,7 @@
                     }
 
                     .pc-score-label {
-                        font-size: 0.7rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         color: #64748b;
                         width: 88px;
@@ -535,7 +563,7 @@
                     }
 
                     .pc-score-val {
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 800;
                         color: #0f172a;
                         min-width: 28px;
@@ -563,7 +591,7 @@
                     .grade-na { color: #94a3b8; }
 
                     .pc-credits {
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         color: #64748b;
                         text-align: right;
                     }
@@ -580,7 +608,7 @@
                         justify-content: center;
                         gap: 6px;
                         margin-top: 4px;
-                        margin-bottom: 20px;
+                        margin-bottom: 0;
                     }
 
                     .swipe-dot {
@@ -628,8 +656,9 @@
                         font-size: 0.95rem;
                         font-weight: 800;
                         color: #0f172a;
-                        margin-bottom: 6px;
+                        margin-bottom: 8px;
                         line-height: 1.3;
+                        overflow-wrap: anywhere;
                     }
 
                     .mobile-card-meta {
@@ -642,8 +671,11 @@
 
                     .mobile-card-meta-row {
                         display: flex;
+                        flex-wrap: wrap;
                         align-items: center;
-                        gap: 6px;
+                        gap: 2px 6px;
+                        min-width: 0;
+                        overflow-wrap: anywhere;
                     }
 
                     .mobile-card-footer {
@@ -651,8 +683,10 @@
                         padding-top: 10px;
                         border-top: 1px solid #f1f5f9;
                         display: flex;
+                        flex-wrap: wrap;
                         justify-content: space-between;
                         align-items: center;
+                        gap: 8px;
                     }
 
                     /* Schedule Sub-View Day Pill Strip */
@@ -671,8 +705,8 @@
 
                     .schedule-filter-pill {
                         flex: 0 0 auto;
-                        min-height: 38px;
-                        padding: 0 14px;
+                        min-height: 44px;
+                        padding: 0 16px;
                         border-radius: 99px;
                         border: 1px solid #e2e8f0;
                         background: #fff;
@@ -683,6 +717,7 @@
                         align-items: center;
                         justify-content: center;
                         cursor: pointer;
+                        white-space: nowrap;
                         transition: all 0.18s ease;
                     }
 
@@ -715,7 +750,7 @@
                     /* Grades Hero & Metric Cards */
                     .grades-hero-card {
                         background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 20px;
                         color: #fff;
                         box-shadow: 0 12px 28px -6px rgba(5, 150, 105, 0.35);
@@ -743,7 +778,7 @@
                         background: rgba(255, 255, 255, 0.2);
                         padding: 4px 10px;
                         border-radius: 12px;
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         backdrop-filter: blur(4px);
                     }
@@ -751,7 +786,7 @@
                     /* Digital Student ID Card */
                     .student-id-card {
                         background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%);
-                        border-radius: 24px;
+                        border-radius: 20px;
                         padding: 22px;
                         color: #fff;
                         box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.45);
@@ -773,13 +808,15 @@
 
                     .id-card-top {
                         display: flex;
+                        flex-wrap: wrap;
                         justify-content: space-between;
                         align-items: center;
+                        gap: 8px;
                         margin-bottom: 16px;
                     }
 
                     .id-card-univ-title {
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 800;
                         letter-spacing: 1px;
                         text-transform: uppercase;
@@ -821,6 +858,7 @@
                         color: #ffffff;
                         line-height: 1.25;
                         margin-bottom: 4px;
+                        overflow-wrap: anywhere;
                     }
 
                     .id-number-pill {
@@ -835,6 +873,8 @@
                         font-weight: 700;
                         color: #93c5fd;
                         cursor: pointer;
+                        min-height: 44px;
+                        max-width: 100%;
                         transition: background 0.15s;
                     }
 
@@ -847,8 +887,10 @@
                         border-radius: 14px;
                         padding: 10px 14px;
                         display: flex;
+                        flex-wrap: wrap;
                         align-items: center;
                         justify-content: space-between;
+                        gap: 8px;
                         border: 1px solid rgba(255, 255, 255, 0.08);
                     }
 
@@ -894,13 +936,15 @@
                         background: transparent;
                         border: none;
                         color: #64748b;
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 600;
                         letter-spacing: -0.01em;
                         flex: 1;
                         max-width: 84px;
-                        min-height: 46px;
-                        padding: 5px 4px;
+                        min-height: 48px;
+                        padding: 5px 2px;
+                        min-width: 0;
+                        white-space: nowrap;
                         border-radius: 18px;
                         cursor: pointer;
                         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -982,7 +1026,10 @@
                         width: 100%;
                         max-width: 500px;
                         max-height: 88vh;
+                        max-height: 88dvh;
                         overflow-y: auto;
+                        overscroll-behavior: contain;
+                        -webkit-overflow-scrolling: touch;
                         padding: 0 0 calc(28px + env(safe-area-inset-bottom, 16px));
                         animation: springSlideUp 0.32s cubic-bezier(0.34, 1.2, 0.64, 1);
                         box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
@@ -1022,7 +1069,8 @@
                         font-weight: 800;
                         color: #0f172a;
                         line-height: 1.3;
-                        margin-bottom: 4px;
+                        margin-bottom: 8px;
+                        overflow-wrap: anywhere;
                     }
 
                     .sheet-header-meta {
@@ -1030,7 +1078,8 @@
                         color: #64748b;
                         display: flex;
                         flex-wrap: wrap;
-                        gap: 12px;
+                        gap: 4px 12px;
+                        overflow-wrap: anywhere;
                     }
 
                     .sheet-body {
@@ -1038,7 +1087,7 @@
                     }
 
                     .sheet-section-label {
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 800;
                         text-transform: uppercase;
                         letter-spacing: 0.6px;
@@ -1062,7 +1111,7 @@
                     }
 
                     .score-tile-label {
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         color: #64748b;
                         text-transform: uppercase;
@@ -1102,7 +1151,8 @@
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        padding: 10px 14px;
+                        gap: 8px;
+                        padding: 12px 16px;
                         background: #f8fafc;
                         border-radius: 14px;
                         border: 1px solid #f1f5f9;
@@ -1115,7 +1165,7 @@
                     }
 
                     .att-badge {
-                        font-size: 0.68rem;
+                        font-size:0.75rem;
                         font-weight: 800;
                         padding: 3px 10px;
                         border-radius: 99px;
@@ -1144,7 +1194,7 @@
                         display: inline-flex;
                         align-items: center;
                         gap: 5px;
-                        font-size: 0.72rem;
+                        font-size:0.75rem;
                         font-weight: 700;
                         padding: 4px 11px;
                         border-radius: 99px;
@@ -1164,6 +1214,7 @@
                         font-weight: 700;
                         box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
                         z-index: 1060;
+                        max-width: calc(100% - 32px);
                         opacity: 0;
                         pointer-events: none;
                         transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1176,6 +1227,115 @@
                         opacity: 1;
                         transform: translateX(-50%) translateY(0);
                     }
+
+                    /* ---- Mobile polish / consistency overrides ---- */
+
+                    /* Bootstrap has no bg-opacity-15/20 or these .5 spacing steps; without them the
+                       grade badges render solid (invisible text) and gaps collapse. */
+                    .bg-opacity-15 { --bs-bg-opacity: 0.15; }
+                    .bg-opacity-20 { --bs-bg-opacity: 0.2; }
+                    .gap-1\.5 { gap: 0.375rem !important; }
+                    .me-1\.5 { margin-right: 0.375rem !important; }
+                    .mb-1\.5 { margin-bottom: 0.375rem !important; }
+                    .px-2\.5 { padding-left: 0.625rem !important; padding-right: 0.625rem !important; }
+
+                    /* Consistent card radius and 44px tap targets */
+                    .mobile-app-container .rounded-4 { border-radius: 20px !important; }
+                    .mobile-app-container .btn,
+                    #enrollConfirmModal .btn,
+                    #dropConfirmModal .btn,
+                    #profileCompletionModal .btn,
+                    .course-modal-sheet .btn {
+                        min-height: 44px !important;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    .mobile-app-container .btn.w-100,
+                    #profileCompletionModal .btn.w-100 { display: flex; }
+                    .mobile-app-container .alert-dismissible .btn-close {
+                        top: 50%;
+                        transform: translateY(-50%);
+                        padding: 14px !important;
+                    }
+                    #enrollConfirmModal .btn-close,
+                    #dropConfirmModal .btn-close { padding: 14px; box-sizing: content-box; }
+                    .mobile-app-container .form-control,
+                    .mobile-app-container .form-select { min-height: 44px; font-size: 1rem; }
+
+                    .mobile-app-container .badge { font-size: 0.75rem; }
+
+                    /* Long term names must wrap instead of overflowing */
+                    .mobile-app-container .badge.text-uppercase { white-space: normal; max-width: 100%; }
+
+                    /* Sub-view title rows: allow wrapping at 320px */
+                    .mobile-sub-view > .d-flex.justify-content-between.align-items-center.mb-3 {
+                        flex-wrap: wrap;
+                        gap: 8px;
+                    }
+                    .mobile-sub-view .mobile-section-heading { overflow-wrap: anywhere; }
+
+                    /* Registration: nested card padding and badge/meta rows */
+                    .mobile-app-container .premium-registration-card {
+                        padding: 16px;
+                        gap: 16px;
+                        max-width: none;
+                        background: #ffffff;
+                        box-shadow: none;
+                        border: 1px solid #e2e8f0;
+                    }
+                    .mobile-app-container .premium-registration-card:hover {
+                        transform: none;
+                        box-shadow: none;
+                    }
+                    .mobile-app-container .reg-term-box { padding: 16px !important; }
+                    .mobile-app-container .reg-meta-list { padding: 0; }
+                    #mobile-view-courses .term-details { min-width: 0; overflow-wrap: anywhere; }
+                    #mobile-view-courses .border.rounded-3 > .d-flex.justify-content-between,
+                    #mobile-view-courses .border.rounded-3 > .small.d-flex {
+                        flex-wrap: wrap;
+                        gap: 4px 8px;
+                    }
+                    #mobile-view-courses .border.rounded-3 { overflow-wrap: anywhere; }
+                    #mobile-view-courses .border.rounded-3 > .d-flex .badge { white-space: nowrap; }
+
+                    /* Profile rows: long school/major/email values wrap and stay right aligned */
+                    #mobile-view-profile .d-flex.justify-content-between { gap: 12px; }
+                    #mobile-view-profile .d-flex.justify-content-between.py-2 > span:first-child { flex-shrink: 0; }
+                    #mobile-view-profile .d-flex.justify-content-between.py-2 > span:last-child {
+                        min-width: 0;
+                        text-align: right;
+                        overflow-wrap: anywhere;
+                    }
+                    #mobile-view-profile .d-flex.justify-content-between.align-items-center > div:first-child { min-width: 0; }
+
+                    #mobile-view-courses .alert.mx-1 { margin-left: 0 !important; margin-right: 0 !important; }
+                    #mobile-view-schedule .mobile-course-card.mb-2 { margin-bottom: 12px !important; }
+
+                    /* Course detail sheet / confirm modals */
+                    .course-modal-sheet .btn { width: 100%; }
+                    #enrollConfirmModal .modal-dialog,
+                    #dropConfirmModal .modal-dialog,
+                    #profileCompletionModal .modal-dialog { width: calc(100% - 32px); max-width: 420px; margin-left: auto; margin-right: auto; }
+                    #enrollConfirmModal .modal-body,
+                    #dropConfirmModal .modal-body { overflow-wrap: anywhere; }
+
+                    /* Logout confirm (shared inline-styled dialog) */
+                    #logoutConfirmModal > div {
+                        padding: 24px 20px !important;
+                        width: calc(100% - 32px) !important;
+                        border-radius: 20px !important;
+                    }
+                    #logoutConfirmModal > div > div[style*="display:flex"] { gap: 12px !important; }
+                    #logoutConfirmModal button,
+                    #logoutConfirmModal a {
+                        padding: 12px 8px !important;
+                        min-height: 44px;
+                        font-size: 0.95rem !important;
+                        white-space: nowrap;
+                    }
+                    #logoutConfirmModal h4 { font-size: 1.25rem; }
+                    #logoutConfirmModal p { font-size: 0.95rem !important; margin-bottom: 20px !important; }
                 }
             
 
@@ -2419,6 +2579,7 @@
             transform: none;
         }
     </style>
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dashboard-ui.css">
         </head>
 
         <body>
@@ -2464,31 +2625,11 @@
                                                             <i class="bi bi-gear"></i> Settings
                                                         </button>
                                                     </nav>
-
-                                                    <div class="sidebar-promo">
-                                                        <div class="star-icon"><i class="bi bi-star-fill"></i></div>
-                                                        <h4>Dean's List Honors</h4>
-                                                        <p>Maintain a term GPA of 3.8+ to achieve Dean's List honors this term.</p>
-                                                        <div class="mt-2">
-                                                            <span class="badge bg-white text-dark rounded-pill px-3 py-1.5 small fw-bold shadow-sm">
-                                                                <i class="bi bi-award-fill text-warning me-1"></i>Min GPA 3.80
-                                                            </span>
-                                                        </div>
-                                                    </div>
                                                 </aside>
 
                                                     <main class="desktop-main">
                                                             <header class="desktop-header">
-                                                                <div>
-                                                                    <div class="header-title">Student Overview</div>
-                                                                    <c:if test="${not empty studentSchool}">
-                                                                        <div class="text-muted small mt-1 fw-medium"><i
-                                                                                class="bi bi-building me-1"></i>
-                                                                            ${studentSchool.schoolName}</div>
-                                                                    </c:if>
-                                                                </div>
-
-                                                                <div class="header-actions">
+<div class="header-actions">
                                                                     <button type="button" class="btn btn-outline-light text-dark border bg-white rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-2 shadow-xs" onclick="switchDesktopTab('holidays', document.getElementById('tab-holidays'))" title="View School Holidays">
                                                                         <i class="bi bi-calendar-heart text-danger"></i>
                                                                         <span class="small">Holidays</span>
@@ -2667,15 +2808,6 @@
                                                                                             <div class="mc-subtitle">
                                                                                                 Academic Year 2026-2027
                                                                                             </div>
-                                                                                            <div class="mc-footer">
-                                                                                                <div
-                                                                                                    class="mc-trend positive">
-                                                                                                    <i
-                                                                                                        class="bi bi-arrow-up-right"></i>
-                                                                                                    Top 10%</div>
-                                                                                                <div class="mc-extra">
-                                                                                                    Excellent</div>
-                                                                                            </div>
                                                                                         </div>
 
                                                                                         <div class="metric-card">
@@ -2698,15 +2830,6 @@
                                                                                             <div class="mc-subtitle">
                                                                                                 Total Accumulated
                                                                                                 Credits</div>
-                                                                                            <div class="mc-footer">
-                                                                                                <div
-                                                                                                    class="mc-trend neutral">
-                                                                                                    <i
-                                                                                                        class="bi bi-dash"></i>
-                                                                                                    On Track</div>
-                                                                                                <div class="mc-extra">
-                                                                                                    120 Required</div>
-                                                                                            </div>
                                                                                         </div>
 
                                                                                         <div class="metric-card">
@@ -2730,12 +2853,7 @@
                                                                                                 Current Term Schedule
                                                                                             </div>
                                                                                             <div class="mc-footer">
-                                                                                                <div
-                                                                                                    class="mc-trend positive">
-                                                                                                    <i
-                                                                                                        class="bi bi-check-circle-fill"></i>
-                                                                                                    Active</div>
-                                                                                                <div class="mc-extra" role="button" tabindex="0" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))" style="cursor: pointer;" title="Open Weekly Schedule">
+<div class="mc-extra" role="button" tabindex="0" onclick="switchDesktopTab('schedule', document.getElementById('tab-schedule'))" style="cursor: pointer;" title="Open Weekly Schedule">
                                                                       View Schedule <i class="bi bi-arrow-right"></i>
                                                                   </div>
                                                                                             </div>
@@ -3576,7 +3694,7 @@
                                                                         <div>
                                                                             <div class="mobile-user-greeting">Hello, ${user.fullName}</div>
                                                                             <span class="mobile-badge-pill">
-                                                                                <i class="bi bi-mortarboard-fill text-primary" style="font-size:0.68rem;"></i>
+                                                                                <i class="bi bi-mortarboard-fill text-primary" style="font-size:0.75rem;"></i>
                                                                                 ${not empty studentSchool ? studentSchool.schoolName : 'UniTRS Student'}
                                                                             </span>
                                                                         </div>
@@ -3597,10 +3715,10 @@
                                                                     <%-- 7-Day Interactive Date Strip --%>
                                                                     <div class="date-strip-section">
                                                                         <div class="d-flex justify-content-between align-items-center mb-2 px-1">
-                                                                            <span class="small fw-bold text-muted text-uppercase" style="letter-spacing:0.6px;font-size:0.7rem;">
+                                                                            <span class="small fw-bold text-muted text-uppercase" style="letter-spacing:0.6px;font-size:0.75rem;">
                                                                                 <i class="bi bi-calendar2-week me-1 text-primary"></i>Weekly Schedule
                                                                             </span>
-                                                                            <span class="small text-muted" style="font-size:0.7rem;">Select day</span>
+                                                                            <span class="small text-muted" style="font-size:0.75rem;">Select day</span>
                                                                         </div>
                                                                         <div class="mobile-date-strip" id="mobileDateStrip" role="tablist" aria-label="Select day of week">
                                                                             <!-- Populated by JS -->
@@ -3685,8 +3803,8 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="mobile-card-footer">
-                                                                                            <span class="small text-muted" style="font-size:0.72rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for scores &amp; attendance</span>
-                                                                                            <span class="badge bg-light border text-secondary rounded-pill" style="font-size:0.7rem;">${enrollment.credits} Credits</span>
+                                                                                            <span class="small text-muted" style="font-size:0.75rem;"><i class="bi bi-chevron-right me-1 text-primary"></i>Tap for scores &amp; attendance</span>
+                                                                                            <span class="badge bg-light border text-secondary rounded-pill" style="font-size:0.75rem;">${enrollment.credits} Credits</span>
                                                                                         </div>
                                                                                     </div>
                                                                                 </c:forEach>
@@ -3828,10 +3946,10 @@
                                                                                 </div>
                                                                                 <div>
                                                                                     <div class="fw-bold text-dark" style="font-size:0.85rem;">School Holidays Calendar</div>
-                                                                                    <div class="small text-muted" style="font-size:0.72rem;">View upcoming breaks & observances</div>
+                                                                                    <div class="small text-muted" style="font-size:0.75rem;">View upcoming breaks & observances</div>
                                                                                 </div>
                                                                             </div>
-                                                                            <span class="badge bg-danger text-white rounded-pill px-2.5 py-1" style="font-size:0.68rem;">View</span>
+                                                                            <span class="badge bg-danger text-white rounded-pill px-2.5 py-1" style="font-size:0.75rem;">View</span>
                                                                         </div>
                                                                     </div>
 
@@ -3868,10 +3986,10 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="mobile-card-footer d-flex justify-content-between align-items-center">
-                                                                                            <span class="small text-primary fw-semibold" style="font-size:0.72rem;"><i class="bi bi-calendar3-range me-1"></i>Tap for 15-Week Schedule</span>
+                                                                                            <span class="small text-primary fw-semibold" style="font-size:0.75rem;"><i class="bi bi-calendar3-range me-1"></i>Tap for 15-Week Schedule</span>
                                                                                             <div class="d-flex align-items-center gap-2">
-                                                                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.7rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
-                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.7rem; min-height:26px;" data-section-id="${enrollment.classSectionId}" data-course-code="${enrollment.courseCode}" data-course-title="${fn:escapeXml(enrollment.courseTitle)}" onclick="event.stopPropagation(); handleDropCourseBtn(this)">
+                                                                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1" style="font-size:0.75rem;"><i class="bi bi-check2 me-1"></i>Enrolled</span>
+                                                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-semibold" style="font-size:0.75rem; min-height:26px;" data-section-id="${enrollment.classSectionId}" data-course-code="${enrollment.courseCode}" data-course-title="${fn:escapeXml(enrollment.courseTitle)}" onclick="event.stopPropagation(); handleDropCourseBtn(this)">
                                                                                                     <i class="bi bi-x me-1"></i>Drop
                                                                                                 </button>
                                                                                             </div>
@@ -3919,36 +4037,36 @@
                                                                                 <div class="bg-primary text-white text-center py-4 px-3 position-relative" style="background: linear-gradient(135deg, #0f172a 0%, #1e40af 60%, #2563eb 100%);">
                                                                                     <div class="position-absolute top-0 start-0 w-100 h-100" style="background: radial-gradient(circle at top right, rgba(255,255,255,0.18) 0%, transparent 60%); pointer-events: none;"></div>
                                                                                     <div class="position-relative">
-                                                                                        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-2.5 py-1 mb-2 text-uppercase fw-bold" style="letter-spacing: 0.05em; font-size: 0.7rem;">
+                                                                                        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-2.5 py-1 mb-2 text-uppercase fw-bold" style="letter-spacing: 0.05em; font-size:0.75rem;">
                                                                                             <i class="bi bi-calendar3 me-1"></i>${studentTerm.termName}
                                                                                         </span>
                                                                                         <h4 class="fw-bolder mb-1 text-white">Course Registration</h4>
                                                                                         <p class="text-white-50 small mb-2 mx-auto" style="max-width: 280px;">Standard course curriculum bundle for this term.</p>
                                                                                         <div class="d-inline-flex flex-wrap align-items-center justify-content-center gap-1.5 mt-1">
-                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.72rem;">
+                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
                                                                                                 <i class="bi bi-journal-code me-1"></i>${termCourseCount} Courses
                                                                                             </span>
-                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.72rem;">
+                                                                                            <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
                                                                                                 <i class="bi bi-award me-1"></i>${termTotalCredits} Credits
                                                                                             </span>
                                                                                             <c:choose>
                                                                                                 <c:when test="${isTermEnrolled}">
-                                                                                                    <span class="badge bg-success text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.72rem;">
+                                                                                                    <span class="badge bg-success text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.75rem;">
                                                                                                         <i class="bi bi-check-circle-fill me-1"></i>Enrolled
                                                                                                     </span>
                                                                                                 </c:when>
                                                                                                 <c:when test="${hasPendingTermRequest}">
-                                                                                                    <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.72rem;">
+                                                                                                    <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.75rem;">
                                                                                                         <i class="bi bi-hourglass-split me-1"></i>Pending Dean
                                                                                                     </span>
                                                                                                 </c:when>
                                                                                                 <c:when test="${isTermRegistered}">
-                                                                                                    <span class="badge bg-info text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.72rem;">
+                                                                                                    <span class="badge bg-info text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size:0.75rem;">
                                                                                                         <i class="bi bi-patch-check-fill me-1"></i>Approved
                                                                                                     </span>
                                                                                                 </c:when>
                                                                                                 <c:otherwise>
-                                                                                                    <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.72rem;">
+                                                                                                    <span class="badge bg-white bg-opacity-15 text-white border border-white border-opacity-25 rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
                                                                                                         <i class="bi bi-door-open me-1"></i>Open
                                                                                                     </span>
                                                                                                 </c:otherwise>
@@ -3967,29 +4085,29 @@
                                                                                         <c:forEach var="clazz" items="${termCourses}">
                                                                                             <div class="border rounded-3 p-3 position-relative overflow-hidden shadow-xs" style="background-color: #ffffff; border-left: 4px solid ${enrolledCourseCodes.contains(clazz.courseCode) ? '#10b981' : (hasPendingTermRequest ? '#f59e0b' : '#3b82f6')} !important;">
                                                                                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                                                                                    <span class="badge bg-primary text-white rounded-pill px-2 py-0.5" style="font-size:0.7rem;">${clazz.courseCode}</span>
+                                                                                                    <span class="badge bg-primary text-white rounded-pill px-2 py-0.5" style="font-size:0.75rem;">${clazz.courseCode}</span>
                                                                                                     <div class="d-flex align-items-center gap-1">
-                                                                                                        <span class="badge bg-light text-dark border px-2 py-0.5 rounded-pill" style="font-size:0.68rem;">
+                                                                                                        <span class="badge bg-light text-dark border px-2 py-0.5 rounded-pill" style="font-size:0.75rem;">
                                                                                                             <i class="bi bi-award me-1 text-warning"></i>${clazz.credits} Cr
                                                                                                         </span>
                                                                                                         <c:choose>
                                                                                                             <c:when test="${enrolledCourseCodes.contains(clazz.courseCode)}">
-                                                                                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0.5" style="font-size:0.75rem;">
                                                                                                                     <i class="bi bi-check2 me-1"></i>Enrolled
                                                                                                                 </span>
                                                                                                             </c:when>
                                                                                                             <c:when test="${hasPendingTermRequest}">
-                                                                                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-0.5" style="font-size:0.75rem;">
                                                                                                                     <i class="bi bi-hourglass-split me-1"></i>Pending
                                                                                                                 </span>
                                                                                                             </c:when>
                                                                                                             <c:when test="${isTermRegistered}">
-                                                                                                                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-0.5" style="font-size:0.75rem;">
                                                                                                                     <i class="bi bi-check2 me-1"></i>Approved
                                                                                                                 </span>
                                                                                                             </c:when>
                                                                                                             <c:otherwise>
-                                                                                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-0.5" style="font-size:0.68rem;">
+                                                                                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-0.5" style="font-size:0.75rem;">
                                                                                                                     <i class="bi bi-circle me-1"></i>Required
                                                                                                                 </span>
                                                                                                             </c:otherwise>
@@ -4038,7 +4156,7 @@
                                                                                                     </div>
                                                                                                     <div>
                                                                                                         <div class="fw-bold text-dark" style="font-size: 0.88rem;">Registration Pending Verification</div>
-                                                                                                        <span class="badge bg-warning text-dark rounded-pill px-2 py-0.5" style="font-size: 0.68rem;">Awaiting Dean</span>
+                                                                                                        <span class="badge bg-warning text-dark rounded-pill px-2 py-0.5" style="font-size:0.75rem;">Awaiting Dean</span>
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div class="text-muted" style="font-size: 0.78rem;">Please visit the Dean's Office to sign and complete payment for ${studentTerm.termName}.</div>
@@ -4073,7 +4191,7 @@
                                                                                                         <div class="sparkles" style="font-size: 12px; top:-5px; right:-5px;">✨</div>
                                                                                                     </div>
                                                                                                     <div class="term-details text-start">
-                                                                                                        <div class="text-uppercase fw-bold text-primary mb-1" style="font-size:0.65rem; letter-spacing:1px;">Current Term</div>
+                                                                                                        <div class="text-uppercase fw-bold text-primary mb-1" style="font-size:0.75rem; letter-spacing:1px;">Current Term</div>
                                                                                                         <h4 class="fw-bolder text-dark mb-1" style="font-size:1.1rem;">${studentTerm.termName}</h4>
                                                                                                     </div>
                                                                                                 </div>
@@ -4110,10 +4228,6 @@
                                                                 <section id="mobile-view-grades" class="mobile-sub-view" role="tabpanel" aria-labelledby="dock-tab-grades">
                                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                                         <h2 class="mobile-section-heading mb-0">Academic Transcript</h2>
-                                                                        <div class="bg-white border rounded-pill px-3 py-1 shadow-sm">
-                                                                            <span class="small text-muted me-1">Term GPA:</span>
-                                                                            <span class="fw-bold text-success">${termGpa}</span>
-                                                                        </div>
                                                                     </div>
 
                                                                     <%-- GPA Summary Hero Card --%>
@@ -4173,7 +4287,7 @@
                                                                                         <span>Score: <strong class="text-dark">${grade.totalScore > 0 ? grade.totalScore : '&mdash;'}</strong></span>
                                                                                         <span>GPA: <strong class="text-success">${grade.letterGrade != 'N/A' ? grade.gpaPoint : '&mdash;'}</strong></span>
                                                                                     </div>
-                                                                                    <div class="mt-2 d-flex align-items-center gap-1" style="font-size:0.68rem;color:#94a3b8;">
+                                                                                    <div class="mt-2 d-flex align-items-center gap-1" style="font-size:0.75rem;color:#94a3b8;">
                                                                                         <i class="bi bi-chevron-right text-primary"></i> Tap to view scores &amp; attendance
                                                                                     </div>
                                                                                 </div>
@@ -4199,7 +4313,7 @@
                                                                             <div class="id-card-univ-title">
                                                                                 <i class="bi bi-shield-fill-check me-1 text-primary"></i> UniTRS ACADEMIC ID
                                                                             </div>
-                                                                            <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2 py-1" style="font-size:0.68rem;">ACTIVE 2024-25</span>
+                                                                            <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2 py-1" style="font-size:0.75rem;">ACTIVE 2024-25</span>
                                                                         </div>
                                                                         <div class="id-card-body">
                                                                             <div class="id-photo-box" aria-hidden="true">
@@ -4216,11 +4330,11 @@
                                                                         </div>
                                                                         <div class="id-card-barcode-row">
                                                                             <div class="d-flex align-items-center gap-2">
-                                                                                <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2.5 py-1" style="font-size:0.7rem;">
+                                                                                <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
                                                                                     <i class="bi bi-patch-check-fill text-success me-1"></i> OFFICIAL DIGITAL ID
                                                                                 </span>
                                                                             </div>
-                                                                            <div class="text-white-50 small" style="font-size:0.7rem;font-family:monospace;">
+                                                                            <div class="text-white-50 small" style="font-size:0.75rem;font-family:monospace;">
                                                                                 <i class="bi bi-shield-check me-1"></i>UniTRS SECURE
                                                                             </div>
                                                                         </div>
@@ -4280,7 +4394,7 @@
                                                                                 <div class="fw-bold small text-dark">
                                                                                     <i class="bi bi-shield-lock me-2 text-primary"></i>Two-Factor Authentication
                                                                                 </div>
-                                                                                <div class="text-muted" style="font-size:0.72rem;">Email OTP security verification on login</div>
+                                                                                <div class="text-muted" style="font-size:0.75rem;">Email OTP security verification on login</div>
                                                                             </div>
                                                                             <span class="badge ${user.twoFactorEnabled ? 'bg-success' : 'bg-secondary'} rounded-pill">${user.twoFactorEnabled ? 'Enabled' : 'Disabled'}</span>
                                                                         </div>
@@ -4344,7 +4458,7 @@
                                                     <%--==================================================================--%>
                                                         <%-- COURSE DETAIL MODAL SHEET (shared, filled via JS) --%>
                                                             <%--==================================================================--%>
-                                                                <div class="course-modal-overlay d-md-none"
+                                                                <div class="course-modal-overlay d-md-none" role="dialog" aria-modal="true" aria-labelledby="sheetCourseTitle"
                                                                     id="courseModalOverlay"
                                                                     onclick="closeCourseModalOnOverlay(event)">
                                                                     <div class="course-modal-sheet"
